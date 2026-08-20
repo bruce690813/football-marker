@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.22</title>
+<title>足球場邊記錄器 v2.23</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -21,7 +21,7 @@ h1{font-size:18px;margin:0}
 .sub{font-size:11px;color:var(--muted)}
 .tagline{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.2px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px;margin-bottom:6px}
-.compactFields{display:grid;grid-template-columns:1fr 1fr auto;gap:6px}
+.compactFields{display:grid;grid-template-columns:1fr auto 1fr auto;gap:6px;align-items:center}
 .compactFields input,.venueRow input,.regRow input{
   width:100%;font-size:14px;padding:8px 10px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
@@ -34,9 +34,9 @@ h1{font-size:18px;margin:0}
 .venueRow{margin-top:5px}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
-.scoreRow{display:grid;grid-template-columns:1fr auto auto 1fr;gap:6px;align-items:center;margin-top:8px}
+.scoreRow{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-top:8px}
 .teamName{text-align:center;font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vsIcon{text-align:center;font-size:18px;line-height:1}
+.vsTop{text-align:center;font-size:18px;line-height:1}
 .scoreMid{text-align:center}
 .scoreText{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
 .scoreEdit{background:transparent;color:var(--muted);font-size:11px;padding:4px 8px;border:1px solid var(--line);margin-top:4px}
@@ -165,12 +165,13 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.22</div>
+    <div class="sub">v2.23</div>
   </div>
 
   <div class="card">
     <div class="compactFields">
       <input id="ourTeam" placeholder="我方">
+      <div class="vsTop">🆚</div>
       <input id="oppTeam" placeholder="對手">
       <button class="new" onclick="newMatch()">新比賽</button>
     </div>
@@ -180,7 +181,6 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 
     <div class="scoreRow">
       <div class="teamName" id="ourLabel">我方</div>
-      <div class="vsIcon">🆚</div>
       <div class="scoreMid">
         <div class="scoreText"><span id="ourScore">0</span> : <span id="oppScore">0</span></div>
         <button class="scoreEdit" onclick="openScoreModal()">✎ 修正比分</button>
