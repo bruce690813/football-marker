@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.43</title>
+<title>足球場邊記錄器 v2.44</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -309,7 +309,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.43</div>
+    <div class="sub">v2.44</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -375,12 +375,8 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   </div>
 
   <div class="card">
-    <div class="toolGrid twoCols">
-      <button class="secondary" onclick="undoLast()">↶ 復原</button>
-      <button class="secondary" onclick="openLogModal()">☰ 紀錄 <span id="count">0</span></button>
-    </div>
-    
-    </div>
+    <button class="secondary recordFullBtn" onclick="openLogModal()">☰ 紀錄 <span id="count">0</span></button>
+  </div>
 
 <div class="card finalToolsCard">
     <div class="toolGrid finalTools">
