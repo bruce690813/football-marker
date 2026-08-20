@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.17</title>
+<title>足球場邊記錄器 v2.18</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -25,6 +25,12 @@ h1{font-size:18px;margin:0}
 .compactFields input,.venueRow input,.regRow input{
   width:100%;font-size:14px;padding:8px 10px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
+#ourTeam.requiredError{
+  border-color:#ff6b6b;
+  box-shadow:0 0 0 2px rgba(255,107,107,.22);
+  background:#211318;
+}
+
 .venueRow{margin-top:5px}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
@@ -141,7 +147,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.17</div>
+    <div class="sub">v2.18</div>
   </div>
 
   <div class="card">
@@ -334,7 +340,8 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 </div>
 
 <script>
-const KEY='football_marker_v214';
+const KEY='football_marker_v218';
+const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
 let pendingGoalTime=null, pendingGoalTeam=null;
 let timeExpanded=false;
@@ -354,12 +361,19 @@ function saveState(){
   state.oppTeam=byId('oppTeam').value.trim();
   state.venue=byId('venue').value.trim();
   localStorage.setItem(KEY, JSON.stringify(state));
+  if(state.ourTeam){
+    localStorage.setItem(LAST_OUR_TEAM_KEY, state.ourTeam);
+  }
 }
 function loadState(){
   try{
     const raw=localStorage.getItem(KEY);
     if(raw) state={...state, ...JSON.parse(raw)};
   }catch(e){}
+  const rememberedOurTeam=localStorage.getItem(LAST_OUR_TEAM_KEY)||'';
+  if(!state.ourTeam && rememberedOurTeam){
+    state.ourTeam=rememberedOurTeam;
+  }
   byId('ourTeam').value=state.ourTeam||'';
   byId('oppTeam').value=state.oppTeam||'';
   byId('venue').value=state.venue||'';
@@ -455,6 +469,20 @@ function startMatch(){
     alert('本場比賽已結束，請先建立新比賽');
     return;
   }
+
+  const ourInput=byId('ourTeam');
+  const ourName=ourInput.value.trim();
+  if(!ourName){
+    ourInput.classList.add('requiredError');
+    alert('請先輸入我方隊伍名稱');
+    ourInput.focus();
+    return;
+  }
+
+  ourInput.classList.remove('requiredError');
+  state.ourTeam=ourName;
+  localStorage.setItem(LAST_OUR_TEAM_KEY, ourName);
+
   state.started=true;
   state.startEpoch=Date.now();
   state.endEpoch=null;
@@ -479,18 +507,25 @@ function finishMatch(){
 }
 function newMatch(){
   if((state.started || state.markers.length) && !confirm('建立新比賽會清空目前資料，確定嗎？')) return;
+
+  const rememberedOurTeam=(byId('ourTeam').value.trim() || localStorage.getItem(LAST_OUR_TEAM_KEY) || '').trim();
+
   state={
-    ourTeam:'', oppTeam:'', venue:'',
+    ourTeam:rememberedOurTeam, oppTeam:'', venue:'',
     started:false, finished:false, startEpoch:null, endEpoch:null, finalElapsed:0,
     regulationMinutes:null, ourScore:0, oppScore:0, markers:[]
   };
-  byId('ourTeam').value='';
+
+  byId('ourTeam').value=rememberedOurTeam;
+  byId('ourTeam').classList.remove('requiredError');
   byId('oppTeam').value='';
   byId('venue').value='';
   byId('regMinutes').value='';
   timeExpanded=false;
   saveState();
   render();
+
+  setTimeout(()=>byId('oppTeam').focus(), 50);
 }
 
 function saveRegulation(){
@@ -911,7 +946,13 @@ async function shareCSV(){
 }
 
 ['ourTeam','oppTeam','venue'].forEach(id=>{
-  byId(id).addEventListener('input', ()=>{ saveState(); render(); });
+  byId(id).addEventListener('input', ()=>{
+    if(id==='ourTeam' && byId('ourTeam').value.trim()){
+      byId('ourTeam').classList.remove('requiredError');
+    }
+    saveState();
+    render();
+  });
 });
 
 loadState();
