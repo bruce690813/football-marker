@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.40</title>
+<title>足球場邊記錄器 v2.41</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -130,7 +130,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .finalTools button{position:relative;z-index:21;pointer-events:auto;touch-action:manipulation}
 .share{background:#2f81f7}.export{background:#f8fafc;color:#111}
 
-.logWrap{display:none;margin-top:8px}.logWrap.open{display:block}
+.logWrap{display:none!important}
 .log{max-height:150px;overflow:auto}
 .item{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px}
 .time{color:#facc15;font-variant-numeric:tabular-nums}
@@ -172,6 +172,18 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .scoreBox input{background:#fff;color:#111;text-align:center;font-size:24px;font-weight:800}
 .scoreBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .saveScore{background:#1f6feb}.cancelScore{background:#777}
+
+
+.logModal{width:min(560px,calc(100vw - 14px));height:min(760px,calc(var(--vv-height,100dvh) - 24px));max-height:calc(var(--vv-height,100dvh) - 24px);padding:0;background:#0f1720;color:#fff;overflow:hidden;display:flex;flex-direction:column;border:1px solid #273244;box-shadow:0 18px 42px rgba(0,0,0,.45)}
+.logModalTop{padding:14px 16px;border-bottom:1px solid #2b3744;background:linear-gradient(180deg,#101826 0%,#0f1720 100%);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logModalTitle{font-size:16px;font-weight:900}
+.logModalCount{font-size:12px;color:#93a4b6}
+.logModalBody{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 14px 10px}
+.logModalBody .item{grid-template-columns:minmax(0,1fr) 68px 28px;font-size:13px;padding:10px 2px}
+.logModalBody .item b{font-size:13px}
+.logModalBody .time{font-size:13px;text-align:right}
+.logModalActions{flex:0 0 auto;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
+.logModalActions button{width:100%;background:#475569;min-height:44px}
 
 .reportModal{
   width:min(560px,calc(100vw - 14px));
@@ -294,7 +306,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.40</div>
+    <div class="sub">v2.41</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -362,13 +374,12 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   <div class="card">
     <div class="toolGrid twoCols">
       <button class="secondary" onclick="undoLast()">↶ 復原</button>
-      <button class="secondary" onclick="toggleLog()">☰ 紀錄 <span id="count">0</span></button>
+      <button class="secondary" onclick="openLogModal()">☰ 紀錄 <span id="count">0</span></button>
     </div>
     
-    <div class="logWrap" id="logWrap"><div class="log" id="log"></div></div>
-  </div>
+    </div>
 
-  <div class="card finalToolsCard">
+<div class="card finalToolsCard">
     <div class="toolGrid finalTools">
       <button class="reportBtn" onclick="openReport()">📋 摘要</button>
       <button class="pngBtn" onclick="saveReportImage()">🖼 儲存圖片</button>
@@ -439,6 +450,23 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   </div>
 </div>
 
+
+<!-- Log modal -->
+<div class="modalBack" id="logModal">
+  <div class="modal logModal">
+    <div class="logModalTop">
+      <div class="logModalTitle">☰ 本場事件紀錄</div>
+      <div class="logModalCount">共 <span id="logModalCount">0</span> 筆</div>
+    </div>
+    <div class="logModalBody">
+      <div class="log" id="logModalList"></div>
+    </div>
+    <div class="logModalActions">
+      <button type="button" onclick="closeLogModal()">關閉</button>
+    </div>
+  </div>
+</div>
+
 <!-- Report modal -->
 <div class="modalBack" id="reportModal">
   <div class="modal reportModal">
@@ -478,10 +506,9 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 
       
     </div>
-    <div class="reportActions">
+    <div class="reportActions twoReportActions">
       <button id="reportCloseBtn" class="closeReport" type="button">關閉</button>
-      <button id="reportShareBtn" class="shareReport" type="button">分享圖片</button>
-      <button id="reportSaveBtn" class="saveReport" type="button">儲存圖片</button>
+      <button id="reportShareBtn" class="shareReport" type="button">分享／儲存圖片</button>
     </div>
   </div>
 </div>
@@ -731,6 +758,7 @@ function startMatch(){
   state.finalElapsed=0;
   saveState();
   render();
+  if(byId('logModal')?.classList.contains('open')) renderLogModal();
 }
 function finishMatch(){
   if(!state.started){
@@ -915,24 +943,38 @@ function saveScoreModal(){
   render();
 }
 
-function renderLog(){
-  const log=byId('log');
-  log.innerHTML='';
-  let goalNo=0;
+function renderLogTo(container){
+  if(!container) return;
+  container.innerHTML='';
   state.markers.forEach((m,i)=>{
     const row=document.createElement('div');
     row.className='item';
     const team=teamDisplay(m.team);
     const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
-    if(m.event==='GOAL') goalNo++;
-    const ordinal=m.event==='GOAL'?`<span class="goalOrdinal">第${goalNo}球</span>`:'';
     row.innerHTML=`
-      <div>${ordinal}<b>${emoji(m.event)} ${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
+      <div><b>${emoji(m.event)} ${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
-      <button class="del" onclick="deleteMarker(${i})">✕</button>
+      <button class="del" onclick="deleteMarker(${i}); renderLogModal();">✕</button>
     `;
-    log.appendChild(row);
+    container.appendChild(row);
   });
+}
+function renderLog(){
+  renderLogTo(byId('log'));
+}
+function renderLogModal(){
+  byId('logModalCount').textContent=state.markers.length;
+  renderLogTo(byId('logModalList'));
+}
+function openLogModal(){
+  syncVisualViewport();
+  renderLogModal();
+  document.body.style.overflow='hidden';
+  byId('logModal').classList.add('open');
+}
+function closeLogModal(){
+  byId('logModal').classList.remove('open');
+  document.body.style.overflow='';
 }
 function render(){
   byId('ourScore').textContent=state.ourScore;
@@ -1439,7 +1481,6 @@ byId('venue').addEventListener('blur', ()=>{
 document.addEventListener('DOMContentLoaded',()=>{
   const closeBtn=byId('reportCloseBtn');
   const shareBtn=byId('reportShareBtn');
-  const saveBtn=byId('reportSaveBtn');
 
   const bindTap=(el,handler)=>{
     if(!el) return;
@@ -1461,7 +1502,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   bindTap(closeBtn, closeReport);
   bindTap(shareBtn, shareReportImage);
-  bindTap(saveBtn, saveReportImage);
   syncVisualViewport();
 });
 
@@ -1477,3 +1517,7 @@ tick();
 </script>
 </body>
 </html>
+
+<style>
+.reportActions.twoReportActions{grid-template-columns:1fr 1.35fr}
+</style>
