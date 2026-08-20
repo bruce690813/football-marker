@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.41</title>
+<title>足球場邊記錄器 v2.42</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -174,16 +174,18 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .saveScore{background:#1f6feb}.cancelScore{background:#777}
 
 
-.logModal{width:min(560px,calc(100vw - 14px));height:min(760px,calc(var(--vv-height,100dvh) - 24px));max-height:calc(var(--vv-height,100dvh) - 24px);padding:0;background:#0f1720;color:#fff;overflow:hidden;display:flex;flex-direction:column;border:1px solid #273244;box-shadow:0 18px 42px rgba(0,0,0,.45)}
-.logModalTop{padding:14px 16px;border-bottom:1px solid #2b3744;background:linear-gradient(180deg,#101826 0%,#0f1720 100%);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logModal{width:min(580px,calc(100vw - 10px));height:calc(var(--vv-height,100dvh) - 12px);max-height:calc(var(--vv-height,100dvh) - 12px);padding:0;background:#0f1720;color:#fff;overflow:hidden;display:flex;flex-direction:column;border:1px solid #273244;box-shadow:0 18px 42px rgba(0,0,0,.45)}
+.logModalTop{padding:10px 14px;border-bottom:1px solid #2b3744;background:linear-gradient(180deg,#101826 0%,#0f1720 100%);display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
 .logModalTitle{font-size:16px;font-weight:900}
 .logModalCount{font-size:12px;color:#93a4b6}
-.logModalBody{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 14px 10px}
-.logModalBody .item{grid-template-columns:minmax(0,1fr) 68px 28px;font-size:13px;padding:10px 2px}
+.logModalBody{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:4px 12px 6px}
+.logModalBody .item{grid-template-columns:52px minmax(0,1fr) 66px 28px;font-size:13px;padding:9px 2px}
 .logModalBody .item b{font-size:13px}
 .logModalBody .time{font-size:13px;text-align:right}
-.logModalActions{flex:0 0 auto;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
-.logModalActions button{width:100%;background:#475569;min-height:44px}
+.logModalBody .log{max-height:none!important;height:auto;overflow:visible}
+.logSeq{color:#7dd3fc;font-weight:900;font-size:12px;white-space:nowrap}
+.logModalActions{flex:0 0 54px;padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
+.logModalActions button{width:100%;background:#475569;min-height:42px;padding:8px}
 
 .reportModal{
   width:min(560px,calc(100vw - 14px));
@@ -306,7 +308,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.41</div>
+    <div class="sub">v2.42</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -952,6 +954,7 @@ function renderLogTo(container){
     const team=teamDisplay(m.team);
     const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
     row.innerHTML=`
+      <div class="logSeq">第${i+1}筆</div>
       <div><b>${emoji(m.event)} ${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
       <button class="del" onclick="deleteMarker(${i}); renderLogModal();">✕</button>
@@ -964,13 +967,20 @@ function renderLog(){
 }
 function renderLogModal(){
   byId('logModalCount').textContent=state.markers.length;
-  renderLogTo(byId('logModalList'));
+  const list=byId('logModalList');
+  renderLogTo(list);
+  if(!state.markers.length){
+    list.innerHTML='<div style="text-align:center;color:#91a0b6;padding:30px 10px">尚無事件紀錄</div>';
+  }
 }
 function openLogModal(){
   syncVisualViewport();
   renderLogModal();
   document.body.style.overflow='hidden';
-  byId('logModal').classList.add('open');
+  const modal=byId('logModal');
+  modal.classList.add('open');
+  const body=modal.querySelector('.logModalBody');
+  if(body) body.scrollTop=0;
 }
 function closeLogModal(){
   byId('logModal').classList.remove('open');
@@ -1520,4 +1530,17 @@ tick();
 
 <style>
 .reportActions.twoReportActions{grid-template-columns:1fr 1.35fr}
+</style>
+
+<style>
+@media (max-width:430px){
+  .logModal{width:calc(100vw - 8px);height:calc(var(--vv-height,100dvh) - 8px);max-height:calc(var(--vv-height,100dvh) - 8px);border-radius:18px}
+  .logModalTop{padding:9px 12px}
+  .logModalTitle{font-size:15px}
+  .logModalBody{padding:3px 10px 5px}
+  .logModalBody .item{grid-template-columns:48px minmax(0,1fr) 62px 24px;gap:5px;padding:8px 0;font-size:12px}
+  .logModalBody .item b{font-size:12px}
+  .logModalBody .time{font-size:12px}
+  .logSeq{font-size:11px}
+}
 </style>
