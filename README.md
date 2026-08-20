@@ -1,51 +1,39 @@
-# 足球精彩標記器 — GitHub Pages 版
+# 足球精彩標記器 v2.4
 
-## 上傳方式
+## 手機端調整
+- 主要操作壓縮到一個手機畫面
+- 「暫停」改成「比賽結束」
+- 比賽流程：開始比賽 → 標記 → 比賽結束 → 匯出
+- 新增「分享 CSV」
+- 保留「下載 CSV」
+- 保留 JSON 備份
+- 標記清單改成預設收合，節省畫面高度
 
-把這個資料夾中的 `index.html` 上傳到 GitHub Repository 的根目錄。
-
-例如 Repository 名稱：
-
-`football-marker`
-
-之後到 GitHub：
-
-Settings → Pages
-
-在 Build and deployment 選：
-
-Deploy from a branch
-
-Branch 選：
-
-main / root
-
-儲存後，GitHub Pages 會產生網址，例如：
-
-`https://你的帳號.github.io/football-marker/`
-
-## iPhone 使用
-
-Safari 打開 GitHub Pages 網址後：
-
-分享 → 加入主畫面
-
-之後桌面就會像 App 一樣出現「足球精彩標記器」。
-
-## 資料保存
-
-標記資料只儲存在手機瀏覽器的 LocalStorage。
-
-比賽完成後，記得按：
-
-「匯出 CSV 給 Mac 剪輯」
-
-把 CSV 保存到：
-- iCloud Drive
-- 檔案 App
+## CSV 如何到 Mac
+### 方法 1：分享 CSV
+iPhone Safari 點「分享 CSV」。
+若瀏覽器支援檔案分享，會打開 iOS 分享面板，可選：
 - AirDrop 到 Mac
+- 儲存到「檔案」
+- iCloud Drive
+- 寄信給自己等
 
-## 注意
+### 方法 2：下載 CSV
+點「下載 CSV」後，通常可在 iPhone：
+檔案 App → 下載項目 / Downloads
+找到 CSV，再 AirDrop 或 iCloud 同步到 Mac。
 
-若清除 Safari 網站資料、使用無痕模式，LocalStorage 可能會被清掉。
-所以每場比賽結束後建議立即匯出 CSV。
+## Mac 剪輯程式支援
+`marker_clip_tool_v2_4.py` 支援：
+- CSV
+- JSON
+
+不建議圖片當主要資料交換格式。
+圖片若要讀取時間，需要 OCR，準確性與流程都比 CSV/JSON 差。
+
+## Offset
+攝影機先錄 30 秒，正式開球時手機才按「開始」：
+Offset = +30 秒。
+
+手機標記 05:41 GOAL
+→ 對應影片 06:11。

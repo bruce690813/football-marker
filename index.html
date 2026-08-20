@@ -9,47 +9,62 @@
 <title>足球精彩標記器</title>
 <style>
 :root{
-  --bg:#0d1117; --card:#161b22; --line:#30363d; --text:#f0f6fc; --muted:#8b949e;
-  --green:#238636; --blue:#1f6feb; --gold:#d29922; --purple:#8957e5; --red:#da3633;
+  --bg:#0d1117;--card:#161b22;--line:#30363d;--text:#f0f6fc;--muted:#8b949e;
+  --green:#238636;--blue:#1f6feb;--gold:#d29922;--purple:#8957e5;--red:#b33a3a;--gray:#30363d;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
-.wrap{max-width:720px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 14px calc(24px + env(safe-area-inset-bottom))}
-h1{font-size:24px;margin:4px 0 5px}.sub{color:var(--muted);font-size:13px;margin-bottom:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px}
-label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}
-input{width:100%;font-size:18px;padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:#0d1117;color:white}
-.timer{text-align:center;font-variant-numeric:tabular-nums;font-size:54px;font-weight:800;letter-spacing:1px;margin:12px 0 14px}
-.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-button{border:0;border-radius:14px;padding:14px 9px;font-size:17px;font-weight:750;color:white;cursor:pointer}
-.start{background:var(--green)} .pause{background:#3a4655} .new{background:#512a2a}
-.events{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.event{min-height:108px;font-size:21px}
-.goal{background:var(--green)} .save{background:var(--blue)} .shot{background:var(--gold)} .play{background:var(--purple)}
-.event small{display:block;font-size:12px;font-weight:500;opacity:.85;margin-top:5px}
-.row{display:flex;gap:8px}.row button{flex:1}
-.secondary{background:#30363d}.export{background:#f0f6fc;color:#111;width:100%}
-.status{text-align:center;color:var(--muted);font-size:13px;margin-top:8px}
-.log{max-height:260px;overflow:auto}
-.item{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
-.item:last-child{border-bottom:0}.time{color:#f2cc60;font-variant-numeric:tabular-nums}.del{background:transparent;color:#ff7b72;padding:4px 6px;font-size:15px}
-.note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
-@media(max-width:460px){.timer{font-size:46px}.event{min-height:96px;font-size:19px}}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
+body{min-height:100dvh}
+.wrap{max-width:720px;margin:auto;padding:8px 10px calc(10px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+h1{font-size:21px;margin:0}
+.sub{font-size:11px;color:var(--muted);margin-left:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:10px;margin-bottom:8px}
+.matchrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+input{width:100%;font-size:16px;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:#0d1117;color:#fff}
+.timer{text-align:center;font-variant-numeric:tabular-nums;font-size:43px;font-weight:800;line-height:1;margin:9px 0}
+.mainControls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{border:0;border-radius:12px;padding:11px 8px;font-size:16px;font-weight:750;color:#fff;cursor:pointer}
+.start{background:var(--green)}.finish{background:var(--red)}.new{background:var(--gray)}
+.events{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.event{min-height:76px;font-size:18px}
+.goal{background:var(--green)}.save{background:var(--blue)}.shot{background:var(--gold)}.play{background:var(--purple)}
+.event small{display:block;font-size:11px;font-weight:500;opacity:.9;margin-top:3px}
+.status{text-align:center;color:var(--muted);font-size:11px;margin-top:6px}
+.toolbar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.secondary{background:var(--gray);font-size:13px;padding:9px 6px}
+.export{background:#f0f6fc;color:#111}
+.share{background:#2f81f7}
+.logwrap{display:none;margin-top:8px}
+.logwrap.open{display:block}
+.log{max-height:150px;overflow:auto}
+.item{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.time{color:#f2cc60;font-variant-numeric:tabular-nums}.del{background:transparent;color:#ff7b72;padding:3px 5px;font-size:13px}
+.summary{font-size:12px;color:var(--muted)}
+.finished{color:#ff9b9b;font-weight:700}
+@media(max-height:760px){
+  h1{font-size:19px}.timer{font-size:39px}
+  .event{min-height:68px}.card{padding:8px;margin-bottom:6px}
+  button{padding:9px 7px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>⚽ 足球精彩標記器</h1>
-  <div class="sub">球場只要手機即可｜資料只存在這支手機瀏覽器</div>
+  <div class="top">
+    <h1>⚽ 足球精彩標記器</h1>
+    <div class="sub">手機現場版</div>
+  </div>
 
   <div class="card">
-    <label>比賽名稱</label>
-    <input id="matchName" placeholder="例如：忠義 vs A隊">
+    <div class="matchrow">
+      <input id="matchName" placeholder="比賽名稱，例如：忠義 vs A隊">
+      <button class="new" onclick="newMatch()">新比賽</button>
+    </div>
     <div class="timer" id="timer">00:00.00</div>
-    <div class="controls">
-      <button class="start" onclick="startTimer()">▶ 開始</button>
-      <button class="pause" onclick="pauseTimer()">⏸ 暫停</button>
-      <button class="new" onclick="newMatch()">↺ 新比賽</button>
+    <div class="mainControls">
+      <button class="start" id="startBtn" onclick="startMatch()">▶ 開始比賽</button>
+      <button class="finish" id="finishBtn" onclick="finishMatch()">■ 比賽結束</button>
     </div>
     <div class="status" id="status">尚未開始</div>
   </div>
@@ -61,165 +76,170 @@ button{border:0;border-radius:14px;padding:14px 9px;font-size:17px;font-weight:7
       <button class="event shot" onclick="mark('SHOT')">🎯 SHOT<small>射門</small></button>
       <button class="event play" onclick="mark('GREAT_PLAY')">🔥 GREAT PLAY<small>精彩配合</small></button>
     </div>
-    <div class="status">精彩畫面出現時，只要按一下</div>
   </div>
 
   <div class="card">
-    <div class="row">
-      <button class="secondary" onclick="undoLast()">↶ 復原上一筆</button>
-      <button class="secondary" onclick="saveSnapshot()">💾 儲存目前狀態</button>
+    <div class="toolbar">
+      <button class="secondary" onclick="undoLast()">↶ 復原</button>
+      <button class="secondary" onclick="toggleLog()">☰ 紀錄 <span id="count">0</span></button>
+      <button class="secondary" onclick="saveNow()">💾 儲存</button>
     </div>
-    <div class="note">
-      網頁會自動使用 LocalStorage 保存。Safari 關掉後再次開啟，通常仍可恢復目前比賽與標記。
+    <div class="logwrap" id="logwrap">
+      <div class="log" id="log"></div>
     </div>
   </div>
 
   <div class="card">
-    <b>標記紀錄</b>
-    <div class="log" id="log"></div>
-  </div>
-
-  <div class="card">
-    <button class="export" onclick="exportCSV()">⬇ 匯出 CSV 給 Mac 剪輯</button>
-    <div style="height:8px"></div>
-    <button class="export" onclick="exportJSON()">⬇ 備份 JSON</button>
+    <div class="toolbar">
+      <button class="share" onclick="shareCSV()">分享 CSV</button>
+      <button class="export" onclick="downloadCSV()">下載 CSV</button>
+      <button class="secondary" onclick="downloadJSON()">JSON 備份</button>
+    </div>
+    <div class="status">比賽結束後建議立即分享或下載 CSV</div>
   </div>
 </div>
 
 <script>
-const STORAGE_KEY='football_highlight_mobile_v23';
+const KEY='football_marker_v24';
 let state={
   matchName:'',
-  running:false,
-  elapsedBefore:0,
+  started:false,
+  finished:false,
   startEpoch:null,
+  finalElapsed:0,
   markers:[]
 };
 
-function load(){
-  try{
-    const raw=localStorage.getItem(STORAGE_KEY);
-    if(raw){
-      const s=JSON.parse(raw);
-      state={...state,...s};
-      if(state.running && state.startEpoch==null){
-        state.running=false;
-      }
-    }
-  }catch(e){}
-  document.getElementById('matchName').value=state.matchName||'';
-  renderLog(); renderStatus();
-}
 function save(){
   state.matchName=document.getElementById('matchName').value.trim();
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+  localStorage.setItem(KEY,JSON.stringify(state));
+}
+function load(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw) state={...state,...JSON.parse(raw)};
+  }catch(e){}
+  document.getElementById('matchName').value=state.matchName||'';
+  render();
 }
 function elapsed(){
-  if(state.running && state.startEpoch){
-    return state.elapsedBefore + (Date.now()-state.startEpoch)/1000;
+  if(state.started && !state.finished && state.startEpoch){
+    return (Date.now()-state.startEpoch)/1000;
   }
-  return state.elapsedBefore;
+  return state.finalElapsed||0;
 }
 function fmt(sec){
   sec=Math.max(0,Number(sec)||0);
-  const m=Math.floor(sec/60), s=sec-m*60;
+  const m=Math.floor(sec/60),s=sec-m*60;
   return String(m).padStart(2,'0')+':'+s.toFixed(2).padStart(5,'0');
 }
 function tick(){
   document.getElementById('timer').textContent=fmt(elapsed());
   requestAnimationFrame(tick);
 }
-function renderStatus(){
-  document.getElementById('status').textContent=state.running?'比賽計時中':'計時已暫停';
-}
-function startTimer(){
-  if(!state.running){
-    state.startEpoch=Date.now();
-    state.running=true;
-    save(); renderStatus();
+function startMatch(){
+  if(state.started && !state.finished)return;
+  if(state.finished){
+    alert('本場比賽已結束，請先按「新比賽」');
+    return;
   }
+  state.started=true;
+  state.startEpoch=Date.now();
+  state.finalElapsed=0;
+  save();render();
 }
-function pauseTimer(){
-  if(state.running){
-    state.elapsedBefore=elapsed();
-    state.running=false;
-    state.startEpoch=null;
-    save(); renderStatus();
+function finishMatch(){
+  if(!state.started || state.finished){
+    if(!state.started) alert('比賽尚未開始');
+    return;
   }
+  if(!confirm('確定本場比賽已結束嗎？'))return;
+  state.finalElapsed=elapsed();
+  state.finished=true;
+  save();render();
 }
 function newMatch(){
-  if(state.markers.length && !confirm('建立新比賽會清空目前標記，確定嗎？')) return;
-  const currentName=document.getElementById('matchName').value.trim();
-  state={matchName:currentName,running:false,elapsedBefore:0,startEpoch:null,markers:[]};
-  save(); renderLog(); renderStatus();
+  if((state.started || state.markers.length) && !confirm('建立新比賽會清空目前計時與標記，確定嗎？'))return;
+  state={matchName:'',started:false,finished:false,startEpoch:null,finalElapsed:0,markers:[]};
+  document.getElementById('matchName').value='';
+  save();render();
 }
 function mark(event){
-  if(!state.running){alert('請先按「開始」');return}
+  if(!state.started){alert('請先按「開始比賽」');return}
+  if(state.finished){alert('本場比賽已結束');return}
   const sec=elapsed();
-  state.markers.push({
-    event,
-    seconds:sec,
-    time:fmt(sec),
-    recorded_at:new Date().toISOString()
-  });
-  save(); renderLog();
-  if(navigator.vibrate) navigator.vibrate(35);
+  state.markers.push({event,seconds:sec,time:fmt(sec),recorded_at:new Date().toISOString()});
+  save();render();
+  if(navigator.vibrate)navigator.vibrate(35);
 }
 function undoLast(){
   if(!state.markers.length)return;
-  state.markers.pop(); save(); renderLog();
+  state.markers.pop();save();render();
 }
 function deleteMarker(i){
-  state.markers.splice(i,1); save(); renderLog();
+  state.markers.splice(i,1);save();render();
 }
-function renderLog(){
+function render(){
+  document.getElementById('count').textContent=state.markers.length;
+  let text='尚未開始',cls='';
+  if(state.started&&!state.finished)text='比賽進行中';
+  if(state.finished){text='比賽已結束｜'+fmt(state.finalElapsed);cls='finished'}
+  const st=document.getElementById('status');
+  st.textContent=text;st.className='status '+cls;
+
   const log=document.getElementById('log');
   log.innerHTML='';
-  if(!state.markers.length){
-    log.innerHTML='<div class="note">尚未有標記</div>';
-    return;
-  }
   state.markers.forEach((m,i)=>{
-    const d=document.createElement('div');
-    d.className='item';
+    const d=document.createElement('div');d.className='item';
     d.innerHTML=`<div><b>${emoji(m.event)} ${m.event}</b></div><div class="time">${fmt(m.seconds)}</div><button class="del" onclick="deleteMarker(${i})">✕</button>`;
     log.appendChild(d);
   });
 }
-function emoji(e){
-  return {GOAL:'⚽',SAVE:'🧤',SHOT:'🎯',GREAT_PLAY:'🔥'}[e]||'•';
-}
+function toggleLog(){document.getElementById('logwrap').classList.toggle('open')}
+function emoji(e){return {GOAL:'⚽',SAVE:'🧤',SHOT:'🎯',GREAT_PLAY:'🔥'}[e]||'•'}
 function csvEscape(v){
   const s=String(v??'');
   return /[",\n]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;
 }
-function exportCSV(){
+function csvText(){
   save();
   const rows=[['match_name','time','seconds','event','note','recorded_at']];
-  state.markers.forEach(m=>{
-    rows.push([state.matchName,fmt(m.seconds),m.seconds.toFixed(3),m.event,'',m.recorded_at]);
-  });
-  const text='\ufeff'+rows.map(r=>r.map(csvEscape).join(',')).join('\n');
-  downloadBlob(text,'text/csv;charset=utf-8',filename('markers','csv'));
+  state.markers.forEach(m=>rows.push([state.matchName,fmt(m.seconds),m.seconds.toFixed(3),m.event,'',m.recorded_at]));
+  return '\ufeff'+rows.map(r=>r.map(csvEscape).join(',')).join('\n');
 }
-function exportJSON(){
-  save();
-  downloadBlob(JSON.stringify(state,null,2),'application/json',filename('backup','json'));
+function safeName(){
+  return (state.matchName||'match').replace(/[\\/:*?"<>|]/g,'_');
 }
-function filename(kind,ext){
-  const safe=(state.matchName||'match').replace(/[\\/:*?"<>|]/g,'_');
+function dateStamp(){
   const d=new Date();
-  const stamp=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
-  return `${stamp}_${safe}_${kind}.${ext}`;
+  return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
 }
+function csvFilename(){return `${dateStamp()}_${safeName()}_markers.csv`}
 function downloadBlob(content,type,name){
   const blob=new Blob([content],{type});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-function saveSnapshot(){save();alert('已儲存在這支手機瀏覽器')}
+function downloadCSV(){downloadBlob(csvText(),'text/csv;charset=utf-8',csvFilename())}
+function downloadJSON(){
+  save();
+  downloadBlob(JSON.stringify(state,null,2),'application/json',`${dateStamp()}_${safeName()}_backup.json`);
+}
+async function shareCSV(){
+  const file=new File([csvText()],csvFilename(),{type:'text/csv'});
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try{
+      await navigator.share({title:'足球精彩標記 CSV',text:state.matchName||'足球比賽標記',files:[file]});
+      return;
+    }catch(e){
+      if(e.name==='AbortError')return;
+    }
+  }
+  alert('這個瀏覽器目前無法直接分享檔案，將改為下載 CSV。');
+  downloadCSV();
+}
+function saveNow(){save();alert('已儲存在手機瀏覽器')}
 document.getElementById('matchName').addEventListener('change',save);
 load();tick();
 </script>
