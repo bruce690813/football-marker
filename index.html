@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球精彩標記器 v2.14</title>
+<title>足球精彩標記器 v2.15</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -65,9 +65,9 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .goal{background:var(--green)}.save{background:var(--blue)}.shot{background:var(--gold)}.play{background:var(--purple)}
 .event small{display:block;font-size:11px;font-weight:600;opacity:.9;margin-top:3px}
 
-.toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.toolGrid.twoCols{grid-template-columns:1fr 1fr}
 .toolGrid button{font-size:13px;padding:9px 6px}
-.reportBtn{background:#0f766e}.pngBtn{background:#7c3aed}.htmlBtn{background:#475569}
+.reportBtn{background:#0f766e}.pngBtn{background:#7c3aed}
 .share{background:#2f81f7}.export{background:#f8fafc;color:#111}
 
 .logWrap{display:none;margin-top:8px}.logWrap.open{display:block}
@@ -136,7 +136,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 <div class="wrap">
   <div class="top">
     <h1>⚽ 足球精彩標記器</h1>
-    <div class="sub">單頁精簡版 v2.14</div>
+    <div class="sub">單頁精簡版 v2.15</div>
   </div>
 
   <div class="card">
@@ -206,27 +206,25 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   </div>
 
   <div class="card">
-    <div class="toolGrid">
+    <div class="toolGrid twoCols">
       <button class="secondary" onclick="undoLast()">↶ 復原</button>
       <button class="secondary" onclick="toggleLog()">☰ 紀錄 <span id="count">0</span></button>
-      <button class="secondary" onclick="saveNow()">💾 儲存</button>
     </div>
+    <div class="note">資料會自動儲存在此手機</div>
     <div class="logWrap" id="logWrap"><div class="log" id="log"></div></div>
   </div>
 
   <div class="card">
-    <div class="toolGrid">
+    <div class="toolGrid twoCols">
       <button class="reportBtn" onclick="openReport()">📋 摘要</button>
       <button class="pngBtn" onclick="saveReportImage()">🖼 儲存圖片</button>
-      <button class="htmlBtn" onclick="downloadReportHTML()">🌐 HTML</button>
     </div>
     <div style="height:6px"></div>
-    <div class="toolGrid">
+    <div class="toolGrid twoCols">
       <button class="share" onclick="shareCSV()">分享 CSV</button>
       <button class="export" onclick="downloadCSV()">下載 CSV</button>
-      <button class="secondary" onclick="downloadJSON()">JSON</button>
     </div>
-    <div class="note">CSV 給剪輯程式使用｜圖片可用分享面板「儲存影像」</div>
+    <div class="note">CSV 給剪輯程式使用｜資料會自動儲存｜圖片可存到照片</div>
   </div>
 </div>
 
@@ -909,10 +907,6 @@ async function shareCSV(){
   }
   alert('這個瀏覽器目前無法直接分享檔案，將改為下載 CSV。');
   downloadCSV();
-}
-function saveNow(){
-  saveState();
-  alert('已儲存在手機瀏覽器');
 }
 
 ['ourTeam','oppTeam','venue'].forEach(id=>{
