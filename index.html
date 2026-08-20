@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.25</title>
+<title>足球場邊記錄器 v2.29</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -35,7 +35,7 @@ h1{font-size:18px;margin:0}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
 .scoreRow{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-top:8px}
-.teamName{text-align:center;font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.teamName{text-align:center;font-weight:850;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vsTop{text-align:center;font-size:18px;line-height:1}
 .scoreMid{text-align:center}
 .scoreText{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
@@ -167,18 +167,18 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.25</div>
+    <div class="sub">v2.29</div>
   </div>
 
   <div class="card">
     <div class="compactFields">
-      <input id="ourTeam" placeholder="我方" enterkeyhint="next" autocomplete="off">
+      <input id="ourTeam" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off">
       <div class="vsTop">🆚</div>
-      <input id="oppTeam" placeholder="對手" enterkeyhint="next" autocomplete="off">
+      <input id="oppTeam" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off">
       <button class="new" onclick="newMatch()">新比賽</button>
     </div>
     <div class="venueRow">
-      <input id="venue" placeholder="🏟️ 場地" enterkeyhint="done" autocomplete="off">
+      <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off">
     </div>
 
     <div class="scoreRow">
@@ -212,7 +212,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
         <div class="regBox">
           <div class="regTitle">規定時間（可賽後補填）</div>
           <div class="regRow">
-            <input id="regMinutes" type="number" min="1" max="180" inputmode="numeric" placeholder="例如 20">
+            <input id="regMinutes" type="number" min="1" max="90" step="1" inputmode="numeric" placeholder="例如 20">
             <button onclick="saveRegulation()">套用</button>
             <button onclick="clearRegulation()">清除</button>
           </div>
@@ -288,7 +288,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       </div>
     </div>
     <div class="customRow" id="customRow">
-      <input id="customNumber" type="number" min="0" max="99" inputmode="numeric" placeholder="背號">
+      <input id="customNumber" type="number" min="1" max="99" step="1" inputmode="numeric" placeholder="背號">
       <button onclick="saveCustomNumber()">確定</button>
     </div>
     <button class="cancel" onclick="cancelNumber()">取消整筆 GOAL</button>
@@ -303,11 +303,11 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
     <div class="scoreForm">
       <div class="scoreBox">
         <label id="scoreOurName">我方</label>
-        <input id="editOur" type="number" min="0" inputmode="numeric">
+        <input id="editOur" type="number" min="0" max="99" step="1" inputmode="numeric">
       </div>
       <div class="scoreBox">
         <label id="scoreOppName">對手</label>
-        <input id="editOpp" type="number" min="0" inputmode="numeric">
+        <input id="editOpp" type="number" min="0" max="99" step="1" inputmode="numeric">
       </div>
     </div>
     <div class="scoreBtns">
@@ -363,12 +363,13 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 <script>
 const KEY='football_marker_v218';
 const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
+const LAST_VENUE_KEY='football_marker_last_venue';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
 let pendingGoalTime=null, pendingGoalTeam=null;
 let timeExpanded=false;
 
 let state={
-  ourTeam:'', oppTeam:'', venue:'',
+  ourTeam:'忠義', oppTeam:'', venue:'',
   started:false, finished:false,
   startEpoch:null, endEpoch:null, finalElapsed:0,
   regulationMinutes:null,
@@ -377,13 +378,77 @@ let state={
 };
 
 function byId(id){ return document.getElementById(id); }
+
+function validateTextField(id, label, required, maxLength){
+  const el=byId(id);
+  const value=el.value.trim();
+
+  if(required && !value){
+    el.classList.add('requiredError');
+    alert(`請先輸入${label}`);
+    el.focus();
+    return null;
+  }
+  if(value.length>maxLength){
+    el.classList.add('requiredError');
+    alert(`${label}最多可輸入 ${maxLength} 個字`);
+    el.focus();
+    return null;
+  }
+  if(/[<>\r\n]/.test(value)){
+    el.classList.add('requiredError');
+    alert(`${label}不可包含 <、> 或換行字元`);
+    el.focus();
+    return null;
+  }
+
+  el.classList.remove('requiredError');
+  return value;
+}
+
+function validateIntegerField(id, label, min, max, allowBlank=false){
+  const el=byId(id);
+  const raw=String(el.value).trim();
+
+  if(raw===''){
+    if(allowBlank) return null;
+    alert(`請輸入${label}`);
+    el.focus();
+    return undefined;
+  }
+
+  const n=Number(raw);
+  if(!Number.isInteger(n) || n<min || n>max){
+    alert(`${label}請輸入 ${min}～${max} 的整數`);
+    el.focus();
+    return undefined;
+  }
+  return n;
+}
+
+function validateMatchTextFields(){
+  const our=validateTextField('ourTeam','我方隊伍名稱',true,15);
+  if(our===null) return false;
+
+  const opp=validateTextField('oppTeam','對手隊伍名稱',false,15);
+  if(opp===null) return false;
+
+  const v=validateTextField('venue','場地',false,15);
+  if(v===null) return false;
+
+  return true;
+}
+
 function saveState(){
   state.ourTeam=byId('ourTeam').value.trim();
   state.oppTeam=byId('oppTeam').value.trim();
   state.venue=byId('venue').value.trim();
   localStorage.setItem(KEY, JSON.stringify(state));
-  if(state.ourTeam){
+  if(state.ourTeam && !/[<>\r\n]/.test(state.ourTeam)){
     localStorage.setItem(LAST_OUR_TEAM_KEY, state.ourTeam);
+  }
+  if(state.venue && !/[<>\r\n]/.test(state.venue)){
+    localStorage.setItem(LAST_VENUE_KEY, state.venue);
   }
 }
 function loadState(){
@@ -392,8 +457,16 @@ function loadState(){
     if(raw) state={...state, ...JSON.parse(raw)};
   }catch(e){}
   const rememberedOurTeam=localStorage.getItem(LAST_OUR_TEAM_KEY)||'';
-  if(!state.ourTeam && rememberedOurTeam){
+  const rememberedVenue=localStorage.getItem(LAST_VENUE_KEY)||'';
+
+  if(rememberedOurTeam){
     state.ourTeam=rememberedOurTeam;
+  }else if(!state.ourTeam){
+    state.ourTeam='忠義';
+  }
+
+  if(!state.venue && rememberedVenue){
+    state.venue=rememberedVenue;
   }
   byId('ourTeam').value=state.ourTeam||'';
   byId('oppTeam').value=state.oppTeam||'';
@@ -491,18 +564,16 @@ function startMatch(){
     return;
   }
 
-  const ourInput=byId('ourTeam');
-  const ourName=ourInput.value.trim();
-  if(!ourName){
-    ourInput.classList.add('requiredError');
-    alert('請先輸入我方隊伍名稱');
-    ourInput.focus();
-    return;
-  }
+  if(!validateMatchTextFields()) return;
 
-  ourInput.classList.remove('requiredError');
+  const ourName=byId('ourTeam').value.trim();
   state.ourTeam=ourName;
+  state.oppTeam=byId('oppTeam').value.trim();
+  state.venue=byId('venue').value.trim();
   localStorage.setItem(LAST_OUR_TEAM_KEY, ourName);
+  if(state.venue){
+    localStorage.setItem(LAST_VENUE_KEY, state.venue);
+  }
 
   state.started=true;
   state.startEpoch=Date.now();
@@ -529,10 +600,11 @@ function finishMatch(){
 function newMatch(){
   if((state.started || state.markers.length) && !confirm('建立新比賽會清空目前資料，確定嗎？')) return;
 
-  const rememberedOurTeam=(byId('ourTeam').value.trim() || localStorage.getItem(LAST_OUR_TEAM_KEY) || '').trim();
+  const rememberedOurTeam=(byId('ourTeam').value.trim() || localStorage.getItem(LAST_OUR_TEAM_KEY) || '忠義').trim();
+  const rememberedVenue=(byId('venue').value.trim() || localStorage.getItem(LAST_VENUE_KEY) || '').trim();
 
   state={
-    ourTeam:rememberedOurTeam, oppTeam:'', venue:'',
+    ourTeam:rememberedOurTeam, oppTeam:'', venue:rememberedVenue,
     started:false, finished:false, startEpoch:null, endEpoch:null, finalElapsed:0,
     regulationMinutes:null, ourScore:0, oppScore:0, markers:[]
   };
@@ -540,7 +612,7 @@ function newMatch(){
   byId('ourTeam').value=rememberedOurTeam;
   byId('ourTeam').classList.remove('requiredError');
   byId('oppTeam').value='';
-  byId('venue').value='';
+  byId('venue').value=rememberedVenue;
   byId('regMinutes').value='';
   timeExpanded=false;
   saveState();
@@ -553,13 +625,8 @@ function newMatch(){
 }
 
 function saveRegulation(){
-  const raw=byId('regMinutes').value.trim();
-  if(!raw){ state.regulationMinutes=null; saveState(); render(); return; }
-  const n=Number(raw);
-  if(!Number.isFinite(n) || n<=0 || n>180){
-    alert('請輸入 1–180 分鐘');
-    return;
-  }
+  const n=validateIntegerField('regMinutes','規定比賽時間',1,90,true);
+  if(n===undefined) return;
   state.regulationMinutes=n;
   saveState();
   render();
@@ -601,13 +668,8 @@ function showCustomNumber(){
   setTimeout(()=>byId('customNumber').focus(), 50);
 }
 function saveCustomNumber(){
-  const raw=byId('customNumber').value.trim();
-  if(raw===''){ alert('請輸入背號'); return; }
-  const n=parseInt(raw,10);
-  if(!Number.isInteger(n) || n<0 || n>99){
-    alert('背號請輸入 0–99');
-    return;
-  }
+  const n=validateIntegerField('customNumber','球員背號',1,99,false);
+  if(n===undefined) return;
   finishGoal(String(n));
 }
 function cancelNumber(){
@@ -616,8 +678,19 @@ function cancelNumber(){
 }
 function finishGoal(playerNumber){
   if(pendingGoalTime===null || !pendingGoalTeam) return;
-  if(pendingGoalTeam==='OUR') state.ourScore += 1;
-  else state.oppScore += 1;
+  if(pendingGoalTeam==='OUR'){
+    if(state.ourScore>=99){
+      alert('我方比分已達上限 99，無法再增加');
+      return;
+    }
+    state.ourScore += 1;
+  }else{
+    if(state.oppScore>=99){
+      alert('對手比分已達上限 99，無法再增加');
+      return;
+    }
+    state.oppScore += 1;
+  }
   state.markers.push({
     event:'GOAL',
     team:pendingGoalTeam,
@@ -680,8 +753,13 @@ function openScoreModal(){
 }
 function closeScoreModal(){ byId('scoreModal').classList.remove('open'); }
 function saveScoreModal(){
-  state.ourScore=Math.max(0, parseInt(byId('editOur').value||'0',10));
-  state.oppScore=Math.max(0, parseInt(byId('editOpp').value||'0',10));
+  const our=validateIntegerField('editOur','我方比分',0,99,false);
+  if(our===undefined) return;
+  const opp=validateIntegerField('editOpp','對手比分',0,99,false);
+  if(opp===undefined) return;
+
+  state.ourScore=our;
+  state.oppScore=opp;
   closeScoreModal();
   saveState();
   render();
@@ -983,12 +1061,8 @@ async function shareCSV(){
 byId('ourTeam').addEventListener('keydown', e=>{
   if(e.key==='Enter'){
     e.preventDefault();
-    const value=byId('ourTeam').value.trim();
-    if(!value){
-      byId('ourTeam').classList.add('requiredError');
-      return;
-    }
-    byId('ourTeam').classList.remove('requiredError');
+    const value=validateTextField('ourTeam','我方隊伍名稱',true,15);
+    if(value===null) return;
     saveState();
     byId('oppTeam').focus();
   }
@@ -997,6 +1071,8 @@ byId('ourTeam').addEventListener('keydown', e=>{
 byId('oppTeam').addEventListener('keydown', e=>{
   if(e.key==='Enter'){
     e.preventDefault();
+    const value=validateTextField('oppTeam','對手隊伍名稱',false,15);
+    if(value===null) return;
     saveState();
     byId('venue').focus();
   }
@@ -1005,8 +1081,27 @@ byId('oppTeam').addEventListener('keydown', e=>{
 byId('venue').addEventListener('keydown', e=>{
   if(e.key==='Enter'){
     e.preventDefault();
+    const value=validateTextField('venue','場地',false,15);
+    if(value===null) return;
     saveState();
     byId('venue').blur();
+  }
+});
+
+
+byId('ourTeam').addEventListener('blur', ()=>{
+  if(byId('ourTeam').value.trim()){
+    validateTextField('ourTeam','我方隊伍名稱',true,15);
+  }
+});
+byId('oppTeam').addEventListener('blur', ()=>{
+  if(byId('oppTeam').value.trim()){
+    validateTextField('oppTeam','對手隊伍名稱',false,15);
+  }
+});
+byId('venue').addEventListener('blur', ()=>{
+  if(byId('venue').value.trim()){
+    validateTextField('venue','場地',false,15);
   }
 });
 
