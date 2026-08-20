@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.39</title>
+<title>足球場邊記錄器 v2.40</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -14,21 +14,21 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
 body{min-height:100dvh}
-.wrap{max-width:720px;margin:auto;padding:8px 10px calc(150px + env(safe-area-inset-bottom));scroll-padding-bottom:calc(150px + env(safe-area-inset-bottom))}
-.card:last-of-type{margin-bottom:calc(26px + env(safe-area-inset-bottom))}
-.top{display:flex;align-items:end;justify-content:space-between;margin-bottom:8px}
+.wrap{max-width:720px;margin:auto;padding:5px 10px calc(92px + env(safe-area-inset-bottom));scroll-padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+.card:last-of-type{margin-bottom:calc(8px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:end;justify-content:space-between;margin-bottom:5px}
 h1{font-size:18px;margin:0}
 .sub{font-size:11px;color:var(--muted)}
-.tagline{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.2px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px;margin-bottom:6px}
+.tagline{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:7px;margin-bottom:4px}
 .matchMetaRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
 .matchMetaRow input,.regRow input{
-  width:100%;font-size:14px;padding:9px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
+  width:100%;font-size:14px;padding:7px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
 #venue{min-width:0}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
-.scoreRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;margin-top:10px;padding:3px 2px 0}
+.scoreRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;margin-top:6px;padding:1px 2px 0}
 .teamNameInput{
   width:100%;
   min-width:0;
@@ -42,7 +42,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   font-weight:900;
   font-size:26px;
   line-height:1.15;
-  padding:7px 2px 6px;
+  padding:4px 2px 4px;
   border-radius:8px;
   white-space:nowrap;
   overflow:hidden;
@@ -62,11 +62,11 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 }
 .scoreMid{text-align:center}
 .scoreText{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
-.scoreEdit{background:transparent;color:var(--muted);font-size:11px;padding:4px 8px;border:1px solid var(--line);margin-top:4px}
-.timer{font-size:42px;font-weight:900;text-align:center;line-height:1;margin:8px 0 7px;font-variant-numeric:tabular-nums}
+.scoreEdit{background:transparent;color:var(--muted);font-size:11px;padding:3px 8px;border:1px solid var(--line);margin-top:2px}
+.timer{font-size:39px;font-weight:900;text-align:center;line-height:1;margin:5px 0 5px;font-variant-numeric:tabular-nums}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .start{background:var(--green)}.finish{background:var(--red)}
-.status{text-align:center;color:var(--muted);font-size:11px;margin-top:6px}
+.status{text-align:center;color:var(--muted);font-size:11px;margin-top:4px}
 .finished{color:#ffb3b3;font-weight:800}
 .liveStatus{color:#9de6b2;font-weight:800}
 .idleStatus{color:#91a0b6}
@@ -75,11 +75,11 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .matchCard.liveState{background:linear-gradient(180deg,rgba(35,134,54,.42) 0%,rgba(18,38,27,.98) 32%,#121a26 100%);border-color:rgba(77,213,104,.82);box-shadow:inset 0 4px 0 rgba(77,213,104,.95),0 0 22px rgba(35,134,54,.32)}
 .matchCard.finishedState{background:linear-gradient(180deg,rgba(214,69,69,.38) 0%,rgba(45,24,28,.98) 34%,#121a26 100%);border-color:rgba(255,123,114,.76);box-shadow:inset 0 4px 0 rgba(255,123,114,.92),0 0 22px rgba(214,69,69,.27)}
 
-.timeSummary{border:1px solid var(--line);border-radius:14px;background:#0d1522;margin:8px 0 8px;overflow:hidden}
-.timeHead{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid var(--line)}
+.timeSummary{border:1px solid var(--line);border-radius:14px;background:#0d1522;margin:5px 0 6px;overflow:hidden}
+.timeHead{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--line)}
 .timeTitle{font-size:13px;font-weight:800}
-.timeToggle{background:#243244;font-size:12px;padding:7px 12px}
-.timeCompact{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;padding:8px 4px}
+.timeToggle{background:#243244;font-size:12px;padding:6px 12px}
+.timeCompact{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;padding:6px 4px}
 .timeCell{text-align:center;border-right:1px solid var(--line)}
 .timeCell:last-child{border-right:0}
 .timeCell .label{font-size:10px;color:var(--muted)}
@@ -99,8 +99,8 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .regRow button{background:#334155;font-size:12px;padding:9px 12px}
 .diff{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}.diff.early{color:#ff7b72;font-weight:800}.diff.over{color:#f7d26e;font-weight:800}
 
-.events{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.event{min-height:60px;font-size:17px}
+.events{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.event{min-height:54px;font-size:17px}
 .goal{background:var(--green)}.save{background:var(--blue)}.shot{background:var(--gold)}.play{background:var(--purple)}
 .event small{display:block;font-size:11px;font-weight:600;opacity:.9;margin-top:3px}
 .eventIcon{
@@ -124,8 +124,10 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 
 
 .toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.toolGrid.twoCols{grid-template-columns:1fr 1fr}.toolGrid.finalTools{grid-template-columns:1fr 1fr 1fr}
-.toolGrid button{font-size:13px;padding:9px 6px}
+.toolGrid button{font-size:13px;padding:8px 6px;min-height:42px;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 .reportBtn{background:#0f766e}.pngBtn{background:#7c3aed}
+.finalToolsCard{position:relative;z-index:20}
+.finalTools button{position:relative;z-index:21;pointer-events:auto;touch-action:manipulation}
 .share{background:#2f81f7}.export{background:#f8fafc;color:#111}
 
 .logWrap{display:none;margin-top:8px}.logWrap.open{display:block}
@@ -266,13 +268,22 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 }
 
 @media (max-height: 900px){
+  .wrap{padding-top:4px}
   h1{font-size:17px}
-  .card{padding:8px}
-  .timer{font-size:40px}
-  .scoreText{font-size:30px}
-  .teamNameInput{font-size:24px}
-  .event{min-height:62px}
-  button{padding:9px 7px}
+  .card{padding:6px}
+  .matchMetaRow input{padding-top:6px;padding-bottom:6px}
+  .scoreRow{margin-top:4px}
+  .teamNameInput{font-size:24px;padding-top:3px;padding-bottom:3px}
+  .scoreText{font-size:31px}
+  .scoreEdit{padding-top:2px;padding-bottom:2px}
+  .timer{font-size:37px;margin:4px 0}
+  .timeSummary{margin:4px 0 5px}
+  .timeHead{padding-top:5px;padding-bottom:5px}
+  .timeCompact{padding-top:5px;padding-bottom:5px}
+  .event{min-height:50px}
+  .eventTop{font-size:20px}
+  button{padding:8px 7px}
+  .toolGrid button{padding:7px 5px;min-height:40px}
 }
 </style>
 </head>
@@ -283,7 +294,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.39</div>
+    <div class="sub">v2.40</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -357,7 +368,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
     <div class="logWrap" id="logWrap"><div class="log" id="log"></div></div>
   </div>
 
-  <div class="card">
+  <div class="card finalToolsCard">
     <div class="toolGrid finalTools">
       <button class="reportBtn" onclick="openReport()">📋 摘要</button>
       <button class="pngBtn" onclick="saveReportImage()">🖼 儲存圖片</button>
@@ -1452,6 +1463,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   bindTap(shareBtn, shareReportImage);
   bindTap(saveBtn, saveReportImage);
   syncVisualViewport();
+});
+
+
+document.querySelectorAll('.finalTools button').forEach(btn=>{
+  btn.addEventListener('touchstart',()=>{ btn.style.transform='scale(.985)'; },{passive:true});
+  btn.addEventListener('touchend',()=>{ btn.style.transform=''; },{passive:true});
+  btn.addEventListener('touchcancel',()=>{ btn.style.transform=''; },{passive:true});
 });
 
 loadState();
