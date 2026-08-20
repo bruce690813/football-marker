@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球精彩標記器 v2.15</title>
+<title>足球精彩標記器 v2.16</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -18,12 +18,12 @@ body{min-height:100dvh}
 .top{display:flex;align-items:end;justify-content:space-between;margin-bottom:8px}
 h1{font-size:18px;margin:0}
 .sub{font-size:11px;color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px;margin-bottom:6px}
 .compactFields{display:grid;grid-template-columns:1fr 1fr auto;gap:6px}
 .compactFields input,.venueRow input,.regRow input{
   width:100%;font-size:14px;padding:8px 10px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
-.venueRow{margin-top:6px}
+.venueRow{margin-top:5px}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
 .scoreRow{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-top:8px}
@@ -31,7 +31,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .scoreMid{text-align:center}
 .scoreText{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
 .scoreEdit{background:transparent;color:var(--muted);font-size:11px;padding:4px 8px;border:1px solid var(--line);margin-top:4px}
-.timer{font-size:44px;font-weight:900;text-align:center;line-height:1;margin:10px 0 8px;font-variant-numeric:tabular-nums}
+.timer{font-size:42px;font-weight:900;text-align:center;line-height:1;margin:8px 0 7px;font-variant-numeric:tabular-nums}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .start{background:var(--green)}.finish{background:var(--red)}
 .status{text-align:center;color:var(--muted);font-size:11px;margin-top:6px}.finished{color:#ffb3b3;font-weight:800}
@@ -61,11 +61,11 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .diff{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}.diff.early{color:#ff7b72;font-weight:800}.diff.over{color:#f7d26e;font-weight:800}
 
 .events{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.event{min-height:66px;font-size:17px}
+.event{min-height:60px;font-size:17px}
 .goal{background:var(--green)}.save{background:var(--blue)}.shot{background:var(--gold)}.play{background:var(--purple)}
 .event small{display:block;font-size:11px;font-weight:600;opacity:.9;margin-top:3px}
 
-.toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.toolGrid.twoCols{grid-template-columns:1fr 1fr}
+.toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.toolGrid.twoCols{grid-template-columns:1fr 1fr}.toolGrid.finalTools{grid-template-columns:1fr 1fr 1fr}
 .toolGrid button{font-size:13px;padding:9px 6px}
 .reportBtn{background:#0f766e}.pngBtn{background:#7c3aed}
 .share{background:#2f81f7}.export{background:#f8fafc;color:#111}
@@ -136,7 +136,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 <div class="wrap">
   <div class="top">
     <h1>⚽ 足球精彩標記器</h1>
-    <div class="sub">單頁精簡版 v2.15</div>
+    <div class="sub">單頁精簡版 v2.16</div>
   </div>
 
   <div class="card">
@@ -210,21 +210,17 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <button class="secondary" onclick="undoLast()">↶ 復原</button>
       <button class="secondary" onclick="toggleLog()">☰ 紀錄 <span id="count">0</span></button>
     </div>
-    <div class="note">資料會自動儲存在此手機</div>
+    
     <div class="logWrap" id="logWrap"><div class="log" id="log"></div></div>
   </div>
 
   <div class="card">
-    <div class="toolGrid twoCols">
+    <div class="toolGrid finalTools">
       <button class="reportBtn" onclick="openReport()">📋 摘要</button>
       <button class="pngBtn" onclick="saveReportImage()">🖼 儲存圖片</button>
-    </div>
-    <div style="height:6px"></div>
-    <div class="toolGrid twoCols">
       <button class="share" onclick="shareCSV()">分享 CSV</button>
-      <button class="export" onclick="downloadCSV()">下載 CSV</button>
     </div>
-    <div class="note">CSV 給剪輯程式使用｜資料會自動儲存｜圖片可存到照片</div>
+    
   </div>
 </div>
 
