@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.48</title>
+<title>足球場邊記錄器 v2.49</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
-  --green:#238636;--blue:#1f6feb;--gold:#d29922;--purple:#8957e5;--red:#d64545;--gray:#334155;--cyan:#37b3ff;
+  --green:#238636;--teal:#0f9f8f;--blue:#1f6feb;--gold:#d29922;--purple:#8957e5;--red:#d64545;--gray:#334155;--cyan:#37b3ff;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
@@ -28,6 +28,7 @@ h1{font-size:18px;margin:0}
 #venue{min-width:0}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
+.new{background:#475569}
 .broadcastScoreboard{
   margin-top:7px;
   border:1px solid rgba(96,165,250,.38);
@@ -143,7 +144,11 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   background:linear-gradient(180deg,rgba(8,17,28,.20) 0%,rgba(8,17,28,.62) 100%)
 }
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.start{background:var(--green)}.finish{background:var(--red)}
+.start{
+  background:linear-gradient(180deg,#12a594 0%,#0d7f73 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10)
+}
+.finish{background:var(--red)}
 .status{text-align:center;color:var(--muted);font-size:11px;margin-top:4px}
 .finished{color:#ffb3b3;font-weight:800}
 .liveStatus{color:#9de6b2;font-weight:800}
@@ -174,7 +179,15 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .regBox{border:1px solid var(--line);border-radius:12px;padding:10px;background:#111a28}
 .regTitle{font-size:12px;font-weight:800;margin-bottom:8px}
 .regRow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center}
-.regRow button{background:#334155;font-size:12px;padding:9px 12px}
+.regInputWrap{position:relative;min-width:0}
+.regInputWrap input{padding-right:48px}
+.regUnit{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  font-size:12px;font-weight:800;color:#91a0b6;pointer-events:none
+}
+.regApply{background:#2563eb!important}
+.regClear{background:#475569!important}
+.regRow button{font-size:12px;padding:9px 12px}
 .diff{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}.diff.early{color:#ff7b72;font-weight:800}.diff.over{color:#f7d26e;font-weight:800}
 
 .events{display:grid;grid-template-columns:1fr 1fr;gap:6px}
@@ -399,7 +412,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.48</div>
+    <div class="sub">v2.49</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -449,9 +462,12 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
         <div class="regBox">
           <div class="regTitle">規定時間（可賽後補填）</div>
           <div class="regRow">
-            <input id="regMinutes" type="number" min="1" max="90" step="1" inputmode="numeric" placeholder="例如 20">
-            <button onclick="saveRegulation()">套用</button>
-            <button onclick="clearRegulation()">清除</button>
+            <div class="regInputWrap">
+              <input id="regMinutes" type="number" min="1" max="90" step="1" inputmode="numeric" placeholder="例如 20" aria-label="規定比賽時間（分鐘）">
+              <span class="regUnit">分鐘</span>
+            </div>
+            <button class="regApply" onclick="saveRegulation()">套用</button>
+            <button class="regClear" onclick="clearRegulation()">清除</button>
           </div>
           <div class="diff" id="diffText">未設定規定時間</div>
         </div>
