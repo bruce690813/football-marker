@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.29</title>
+<title>足球場邊記錄器 v2.30</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -35,7 +35,7 @@ h1{font-size:18px;margin:0}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
 .scoreRow{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-top:8px}
-.teamName{text-align:center;font-weight:850;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.teamName{text-align:center;font-weight:900;font-size:24px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.15}
 .vsTop{text-align:center;font-size:18px;line-height:1}
 .scoreMid{text-align:center}
 .scoreText{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
@@ -43,7 +43,14 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .timer{font-size:42px;font-weight:900;text-align:center;line-height:1;margin:8px 0 7px;font-variant-numeric:tabular-nums}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .start{background:var(--green)}.finish{background:var(--red)}
-.status{text-align:center;color:var(--muted);font-size:11px;margin-top:6px}.finished{color:#ffb3b3;font-weight:800}
+.status{text-align:center;color:var(--muted);font-size:11px;margin-top:6px}
+.finished{color:#ffb3b3;font-weight:800}
+.liveStatus{color:#9de6b2;font-weight:800}
+.idleStatus{color:#91a0b6}
+.matchCard{transition:background .2s ease,border-color .2s ease,box-shadow .2s ease}
+.matchCard.idleState{background:linear-gradient(180deg,#121a26 0%, #111827 100%);border-color:#283344;box-shadow:none}
+.matchCard.liveState{background:linear-gradient(180deg,rgba(35,134,54,.23) 0%, rgba(18,26,38,.98) 38%, #121a26 100%);border-color:rgba(82,196,26,.55);box-shadow:0 0 0 1px rgba(82,196,26,.12),0 10px 24px rgba(35,134,54,.18)}
+.matchCard.finishedState{background:linear-gradient(180deg,rgba(214,69,69,.22) 0%, rgba(18,26,38,.98) 40%, #121a26 100%);border-color:rgba(255,120,120,.46);box-shadow:0 0 0 1px rgba(255,120,120,.10),0 10px 24px rgba(214,69,69,.16)}
 
 .timeSummary{border:1px solid var(--line);border-radius:14px;background:#0d1522;margin:8px 0 8px;overflow:hidden}
 .timeHead{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid var(--line)}
@@ -155,6 +162,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   .card{padding:8px}
   .timer{font-size:40px}
   .scoreText{font-size:30px}
+  .teamName{font-size:22px}
   .event{min-height:62px}
   button{padding:9px 7px}
 }
@@ -167,10 +175,10 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.29</div>
+    <div class="sub">v2.30</div>
   </div>
 
-  <div class="card">
+  <div class="card matchCard idleState" id="matchCard">
     <div class="compactFields">
       <input id="ourTeam" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off">
       <div class="vsTop">🆚</div>
@@ -498,7 +506,15 @@ function fmtDateTime(epoch){
   return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+' '+fmtClock(epoch);
 }
 function emoji(ev){
-  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🎯', GREAT_PLAY:'🔥'}[ev] || '•';
+  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', GREAT_PLAY:'🙌'}[ev] || '•';
+}
+function eventLabel(ev){
+  return {GOAL:'進球', SAVE:'撲救', SHOT:'射門', GREAT_PLAY:'精彩配合'}[ev] || ev;
+}
+function teamDisplay(code){
+  if(code==='OUR') return state.ourTeam || '我方';
+  if(code==='OPP') return state.oppTeam || '對手';
+  return '';
 }
 
 function tick(){
@@ -771,10 +787,10 @@ function renderLog(){
   state.markers.forEach((m,i)=>{
     const row=document.createElement('div');
     row.className='item';
-    const team=m.team==='OUR'?'我方':m.team==='OPP'?'對手':'';
+    const team=teamDisplay(m.team);
     const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
     row.innerHTML=`
-      <div><b>${emoji(m.event)} ${m.event}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
+      <div><b>${emoji(m.event)} ${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
       <button class="del" onclick="deleteMarker(${i})">✕</button>
     `;
@@ -787,20 +803,30 @@ function render(){
   byId('ourScore').textContent=state.ourScore;
   byId('oppScore').textContent=state.oppScore;
   byId('count').textContent=state.markers.length;
-  let txt='尚未開始', cls='';
-  if(state.started && !state.finished) txt='比賽進行中';
-  if(state.finished){ txt=`比賽已結束｜${fmtMMSS(state.finalElapsed)}｜${state.ourScore}:${state.oppScore}`; cls='finished'; }
+  let txt='尚未開始', cls='idleStatus', cardCls='idleState';
+  if(state.started && !state.finished){
+    txt='比賽進行中';
+    cls='liveStatus';
+    cardCls='liveState';
+  }
+  if(state.finished){
+    txt=`比賽已結束｜${fmtMMSS(state.finalElapsed)}｜${state.ourScore}:${state.oppScore}`;
+    cls='finished';
+    cardCls='finishedState';
+  }
   byId('status').textContent=txt;
   byId('status').className='status '+cls;
+  const mc=byId('matchCard');
+  mc.className='card matchCard '+cardCls;
   renderTimeBox();
   renderLog();
 }
 
 /* Report */
 function reportEventHTML(m){
-  const team=m.team==='OUR' ? (state.ourTeam||'我方') : m.team==='OPP' ? (state.oppTeam||'對手') : '';
+  const team=teamDisplay(m.team);
   const num=m.player_number ? ` #${m.player_number}` : '';
-  const label=m.event==='GOAL' ? `⚽ ${team}${num}` : `${emoji(m.event)} ${m.event}`;
+  const label=`${emoji(m.event)} ${eventLabel(m.event)}${team ? ` · ${team}` : ''}${num}`;
   return `<div class="reportEvent"><div class="rtime">${fmtMMSS(m.seconds)}</div><div>${label}</div><div class="rscore">${m.score_after||''}</div></div>`;
 }
 function buildReportDOM(){
@@ -845,15 +871,16 @@ function reportLines(){
   const goals=state.markers.filter(m=>m.event==='GOAL');
   if(!goals.length) lines.push({type:'event', text:'— 尚未標記進球事件'});
   goals.forEach(m=>{
-    const team=m.team==='OUR'?(state.ourTeam||'我方'):(state.oppTeam||'對手');
+    const team=teamDisplay(m.team);
     const num=m.player_number ? ` #${m.player_number}` : '';
-    lines.push({type:'event', text:`${fmtMMSS(m.seconds)}   ⚽ ${team}${num}   ${m.score_after||''}`});
+    lines.push({type:'event', text:`${fmtMMSS(m.seconds)}   ⚽ 進球 · ${team}${num}   ${m.score_after||''}`});
   });
   lines.push({type:'section', text:'其他精彩標記事件'});
   const others=state.markers.filter(m=>m.event!=='GOAL');
   if(!others.length) lines.push({type:'event', text:'— 尚未標記其他精彩事件'});
   others.forEach(m=>{
-    lines.push({type:'event', text:`${fmtMMSS(m.seconds)}   ${emoji(m.event)} ${m.event}   ${m.score_after||''}`});
+    const team=teamDisplay(m.team);
+    lines.push({type:'event', text:`${fmtMMSS(m.seconds)}   ${emoji(m.event)} ${eventLabel(m.event)}${team ? ` · ${team}` : ''}   ${m.score_after||''}`});
   });
   return lines;
 }
@@ -937,11 +964,14 @@ function reportHTMLText(){
   const goals=state.markers.filter(m=>m.event==='GOAL');
   const others=state.markers.filter(m=>m.event!=='GOAL');
   const goalHtml=goals.length ? goals.map(m=>{
-    const team=m.team==='OUR'?(state.ourTeam||'我方'):(state.oppTeam||'對手');
+    const team=teamDisplay(m.team);
     const num=m.player_number?` #${m.player_number}`:'';
-    return `<li><span>${fmtMMSS(m.seconds)}</span> ⚽ ${escapeHtml(team+num)} <b>${escapeHtml(m.score_after||'')}</b></li>`;
+    return `<li><span>${fmtMMSS(m.seconds)}</span> ⚽ 進球 · ${escapeHtml(team+num)} <b>${escapeHtml(m.score_after||'')}</b></li>`;
   }).join('') : '<li>尚未標記進球事件</li>';
-  const otherHtml=others.length ? others.map(m=>`<li><span>${fmtMMSS(m.seconds)}</span> ${emoji(m.event)} ${escapeHtml(m.event)} <b>${escapeHtml(m.score_after||'')}</b></li>`).join('') : '<li>尚未標記其他精彩事件</li>';
+  const otherHtml=others.length ? others.map(m=>{
+    const team=teamDisplay(m.team);
+    return `<li><span>${fmtMMSS(m.seconds)}</span> ${emoji(m.event)} ${escapeHtml(eventLabel(m.event))}${team ? ' · '+escapeHtml(team) : ''} <b>${escapeHtml(m.score_after||'')}</b></li>`;
+  }).join('') : '<li>尚未標記其他精彩事件</li>';
   let diff='';
   if(state.regulationMinutes && state.finished){
     const d=Math.round(state.finalElapsed-state.regulationMinutes*60);
