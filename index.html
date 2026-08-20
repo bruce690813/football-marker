@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.37</title>
+<title>足球場邊記錄器 v2.38</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -113,7 +113,20 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .numberTag{color:#7ee787;font-weight:800;margin-left:5px}.scoreSnap{color:#9caac0;font-size:11px;margin-left:5px}
 .note{text-align:center;color:var(--muted);font-size:10px;margin-top:6px}
 
-.modalBack{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000}
+.modalBack{
+  position:fixed;
+  left:0;
+  right:0;
+  top:var(--vv-top,0px);
+  height:var(--vv-height,100dvh);
+  background:rgba(0,0,0,.72);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:10px;
+  z-index:1000;
+  overflow:hidden;
+}
 .modalBack.open{display:flex}
 .modal{width:min(430px,100%);background:#f6f7fb;color:#111;border-radius:20px;padding:18px;max-height:88vh;overflow:auto}
 .modal h2{margin:0 0 6px;font-size:23px}
@@ -135,7 +148,19 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .scoreBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .saveScore{background:#1f6feb}.cancelScore{background:#777}
 
-.reportModal{width:min(560px,calc(100vw - 18px));max-height:min(88vh,820px);padding:0;background:#0f1720;color:#fff;overflow:hidden;display:flex;flex-direction:column;border:1px solid #273244;box-shadow:0 18px 42px rgba(0,0,0,.45)}
+.reportModal{
+  width:min(560px,calc(100vw - 14px));
+  height:min(780px,calc(var(--vv-height,100dvh) - 20px));
+  max-height:calc(var(--vv-height,100dvh) - 20px);
+  padding:0;
+  background:#0f1720;
+  color:#fff;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  border:1px solid #273244;
+  box-shadow:0 18px 42px rgba(0,0,0,.45);
+}
 .reportTop{padding:16px 16px 12px;border-bottom:1px solid #2b3744;background:linear-gradient(180deg,#101826 0%,#0f1720 100%);flex:0 0 auto}
 .reportTitle{font-size:13px;color:#93a4b6;letter-spacing:.3px}
 .reportScoreRow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-top:10px;padding:14px 16px;border:1px solid #314155;border-radius:16px;background:linear-gradient(180deg,#132033 0%,#0c1420 100%);box-shadow:inset 0 0 0 1px rgba(59,130,246,.08)}
@@ -146,7 +171,15 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .reportStatusBadge.idle{background:#1f2937;color:#cbd5e1;border-color:#334155}
 .reportStatusBadge.running{background:#052e1b;color:#86efac;border-color:#166534;box-shadow:0 0 0 1px rgba(34,197,94,.15) inset}
 .reportStatusBadge.finished{background:#3b0a0a;color:#fca5a5;border-color:#7f1d1d;box-shadow:0 0 0 1px rgba(239,68,68,.15) inset}
-.reportBody{padding:12px 14px 8px;flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.reportBody{
+  padding:10px 12px 8px;
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+}
 .reportSectionTitle{font-size:13px;font-weight:900;color:#7dd3fc;margin:3px 0 8px;letter-spacing:.3px}
 .reportTimeCard{border:1px solid #2b3744;border-radius:12px;padding:10px;background:#111b26;margin-bottom:14px}
 .reportTimeGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px}
@@ -173,17 +206,39 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .reportTableBody .reportEvent:nth-child(odd){background:#0f1720}
 
 .reportNote{font-size:10px;color:#738190;margin-top:10px;text-align:center}
-.reportActions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720;position:relative;z-index:20;flex:0 0 auto;pointer-events:auto}
-.reportActions button{font-size:12px;padding:11px 5px;position:relative;z-index:21;pointer-events:auto;touch-action:manipulation}
+.reportActions{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  padding:10px 10px 12px;
+  border-top:1px solid #2b3744;
+  background:#0f1720;
+  position:relative;
+  z-index:50;
+  flex:0 0 64px;
+  min-height:64px;
+  pointer-events:auto;
+}
+.reportActions button{
+  font-size:12px;
+  padding:11px 5px;
+  min-height:44px;
+  position:relative;
+  z-index:51;
+  pointer-events:auto;
+  touch-action:manipulation;
+  -webkit-user-select:none;
+  user-select:none;
+}
 .closeReport{background:#475569}.shareReport{background:#2563eb}.saveReport{background:#7c3aed}
 @media (max-width:430px){
-  .reportModal{width:min(calc(100vw - 12px),560px);max-height:84vh}
+  .reportModal{width:min(calc(100vw - 10px),560px)}
   .reportTop{padding:13px 12px 10px}
   .reportScoreRow{padding:12px 12px}
   .reportTeam{font-size:24px}
   .reportScore{font-size:46px}
   .reportBody{padding:10px 12px 6px}
-  .reportActions{padding:10px 10px calc(10px + env(safe-area-inset-bottom,0px));gap:6px}
+  .reportActions{padding:9px 9px 11px;gap:6px}
   .reportActions button{font-size:11.5px;padding:11px 4px}
 }
 
@@ -205,7 +260,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.37</div>
+    <div class="sub">v2.38</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -395,9 +450,9 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       
     </div>
     <div class="reportActions">
-      <button id="reportCloseBtn" class="closeReport" type="button" onclick="closeReport()">關閉</button>
-      <button id="reportShareBtn" class="shareReport" type="button" onclick="shareReportImage()">分享圖片</button>
-      <button id="reportSaveBtn" class="saveReport" type="button" onclick="saveReportImage()">儲存圖片</button>
+      <button id="reportCloseBtn" class="closeReport" type="button">關閉</button>
+      <button id="reportShareBtn" class="shareReport" type="button">分享圖片</button>
+      <button id="reportSaveBtn" class="saveReport" type="button">儲存圖片</button>
     </div>
   </div>
 </div>
@@ -908,11 +963,37 @@ function buildReportDOM(){
     ? `<div class="reportTable others"><div class="reportTableHead"><div>類型</div><div>時間</div><div>事件</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportEventHTML(m)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記其他精彩事件</div>';
 }
-function openReport(){
-  buildReportDOM();
-  byId('reportModal').classList.add('open');
+
+function syncVisualViewport(){
+  const vv=window.visualViewport;
+  if(vv){
+    document.documentElement.style.setProperty('--vv-top', `${vv.offsetTop}px`);
+    document.documentElement.style.setProperty('--vv-height', `${vv.height}px`);
+  }else{
+    document.documentElement.style.setProperty('--vv-top', '0px');
+    document.documentElement.style.setProperty('--vv-height', `${window.innerHeight}px`);
+  }
 }
-function closeReport(){ byId('reportModal').classList.remove('open'); }
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', syncVisualViewport);
+  window.visualViewport.addEventListener('scroll', syncVisualViewport);
+}
+window.addEventListener('resize', syncVisualViewport);
+syncVisualViewport();
+
+function openReport(){
+  syncVisualViewport();
+  buildReportDOM();
+  document.body.style.overflow='hidden';
+  const modal=byId('reportModal');
+  modal.classList.add('open');
+  const body=modal.querySelector('.reportBody');
+  if(body) body.scrollTop=0;
+}
+function closeReport(){
+  byId('reportModal').classList.remove('open');
+  document.body.style.overflow='';
+}
 
 /* PNG report */
 function reportLines(){
@@ -1142,6 +1223,8 @@ function shareReportImage(){
   return shareImageFile('share');
 }
 function saveReportImage(){
+  // iPhone Safari 沒有網頁直接寫入 Photos 的權限；
+  // 正確做法是叫出系統分享面板，再選「儲存影像」。
   return shareImageFile('save');
 }
 
@@ -1325,36 +1408,34 @@ byId('venue').addEventListener('blur', ()=>{
 });
 
 
+
 document.addEventListener('DOMContentLoaded',()=>{
   const closeBtn=byId('reportCloseBtn');
   const shareBtn=byId('reportShareBtn');
   const saveBtn=byId('reportSaveBtn');
 
-  // 用 addEventListener 作為 iOS Safari footer 點擊的備援。
-  if(closeBtn){
-    closeBtn.onclick=null;
-    closeBtn.addEventListener('click', e=>{
+  const bindTap=(el,handler)=>{
+    if(!el) return;
+    let touched=false;
+    el.addEventListener('touchend',e=>{
+      touched=true;
       e.preventDefault();
       e.stopPropagation();
-      closeReport();
-    });
-  }
-  if(shareBtn){
-    shareBtn.onclick=null;
-    shareBtn.addEventListener('click', e=>{
+      handler();
+      setTimeout(()=>{touched=false;},350);
+    },{passive:false});
+    el.addEventListener('click',e=>{
+      if(touched) return;
       e.preventDefault();
       e.stopPropagation();
-      shareReportImage();
+      handler();
     });
-  }
-  if(saveBtn){
-    saveBtn.onclick=null;
-    saveBtn.addEventListener('click', e=>{
-      e.preventDefault();
-      e.stopPropagation();
-      saveReportImage();
-    });
-  }
+  };
+
+  bindTap(closeBtn, closeReport);
+  bindTap(shareBtn, shareReportImage);
+  bindTap(saveBtn, saveReportImage);
+  syncVisualViewport();
 });
 
 loadState();
