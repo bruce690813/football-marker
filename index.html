@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.47</title>
+<title>足球場邊記錄器 v2.48</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -28,11 +28,45 @@ h1{font-size:18px;margin:0}
 #venue{min-width:0}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
-.scoreRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;margin-top:6px;padding:1px 2px 0}
+.broadcastScoreboard{
+  margin-top:7px;
+  border:1px solid rgba(96,165,250,.38);
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(8,17,28,.98) 0%,rgba(12,24,39,.98) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 8px 18px rgba(0,0,0,.16);
+  overflow:hidden;
+}
+.broadcastBar{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:26px;
+  padding:4px 10px;
+  border-bottom:1px solid rgba(96,165,250,.20);
+  background:rgba(15,30,49,.94);
+}
+.broadcastStage{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:66px;
+  padding:3px 10px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.8px;
+  color:#cbd5e1;
+  background:#263447;
+  border:1px solid rgba(148,163,184,.22);
+}
+.broadcastStage.live{color:#bbf7d0;background:#06351d;border-color:#22c55e;box-shadow:0 0 12px rgba(34,197,94,.18)}
+.broadcastStage.half{color:#bfdbfe;background:#10294a;border-color:#3b82f6}
+.broadcastStage.full{color:#fecaca;background:#441313;border-color:#ef4444}
+.scoreRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center;margin-top:0;padding:10px 10px 5px}
 .teamNameBox{
   width:100%;
   min-width:0;
-  min-height:58px;
+  min-height:64px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -45,7 +79,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   min-width:0;
   text-align:center;
   font-weight:900;
-  font-size:26px;
+  font-size:27px;
   line-height:1.12;
   color:var(--text);
   overflow:hidden;
@@ -84,10 +118,30 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   background:rgba(255,107,107,.08);
   box-shadow:0 4px 12px rgba(255,107,107,.12);
 }
-.scoreMid{text-align:center}
-.scoreText{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
-.scoreEdit{background:transparent;color:var(--muted);font-size:11px;padding:3px 8px;border:1px solid var(--line);margin-top:2px}
-.timer{font-size:39px;font-weight:900;text-align:center;line-height:1;margin:5px 0 5px;font-variant-numeric:tabular-nums}
+.scoreMid{
+  text-align:center;
+  min-width:104px;
+  padding:2px 8px 4px;
+  border-radius:14px;
+  background:linear-gradient(180deg,#08111c 0%,#0b1725 100%);
+  border:1px solid rgba(96,165,250,.42);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.018)
+}
+.scoreText{font-size:40px;font-weight:950;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:1px}
+.scoreEdit{background:transparent;color:#94a3b8;font-size:10px;padding:3px 7px;border:0;margin-top:3px}
+.timer{
+  font-size:37px;
+  font-weight:950;
+  text-align:center;
+  line-height:1;
+  margin:0;
+  padding:7px 10px 9px;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:1.5px;
+  color:#f8fafc;
+  border-top:1px solid rgba(96,165,250,.15);
+  background:linear-gradient(180deg,rgba(8,17,28,.20) 0%,rgba(8,17,28,.62) 100%)
+}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .start{background:var(--green)}.finish{background:var(--red)}
 .status{text-align:center;color:var(--muted);font-size:11px;margin-top:4px}
@@ -311,11 +365,11 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   h1{font-size:17px}
   .card{padding:6px}
   .matchMetaRow input{padding-top:6px;padding-bottom:6px}
-  .scoreRow{margin-top:4px}
-  .teamNameDisplay{font-size:24px}.teamNameEditor{font-size:21px}.teamNameBox{min-height:54px}
-  .scoreText{font-size:31px}
+  .scoreRow{margin-top:0;padding:8px 7px 4px}
+  .teamNameDisplay{font-size:24px}.teamNameEditor{font-size:21px}.teamNameBox{min-height:58px}
+  .scoreText{font-size:36px}
   .scoreEdit{padding-top:2px;padding-bottom:2px}
-  .timer{font-size:37px;margin:4px 0}
+  .timer{font-size:34px;padding:6px 8px 8px}
   .timeSummary{margin:4px 0 5px}
   .timeHead{padding-top:5px;padding-bottom:5px}
   .timeCompact{padding-top:5px;padding-bottom:5px}
@@ -345,7 +399,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.47</div>
+    <div class="sub">v2.48</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -354,22 +408,26 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <button class="new" onclick="newMatch()">新比賽</button>
     </div>
 
-    <div class="scoreRow">
-      <div class="teamNameBox" id="ourTeamBox" onclick="editTeamName('ourTeam')">
-        <div class="teamNameDisplay" id="ourTeamDisplay">忠義</div>
-        <input id="ourTeam" class="teamNameEditor" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱">
+    <div class="broadcastScoreboard">
+      <div class="broadcastBar">
+        <span class="broadcastStage" id="broadcastStage">賽前</span>
       </div>
-      <div class="scoreMid">
-        <div class="scoreText"><span id="ourScore">0</span> : <span id="oppScore">0</span></div>
-        <button class="scoreEdit" onclick="openScoreModal()">✎ 修正比分</button>
+      <div class="scoreRow">
+        <div class="teamNameBox" id="ourTeamBox" onclick="editTeamName('ourTeam')">
+          <div class="teamNameDisplay" id="ourTeamDisplay">忠義</div>
+          <input id="ourTeam" class="teamNameEditor" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱">
+        </div>
+        <div class="scoreMid">
+          <div class="scoreText"><span id="ourScore">0</span> : <span id="oppScore">0</span></div>
+          <button class="scoreEdit" onclick="openScoreModal()">✎ 修正比分</button>
+        </div>
+        <div class="teamNameBox" id="oppTeamBox" onclick="editTeamName('oppTeam')">
+          <div class="teamNameDisplay empty" id="oppTeamDisplay">對手</div>
+          <input id="oppTeam" class="teamNameEditor" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="對手隊伍名稱">
+        </div>
       </div>
-      <div class="teamNameBox" id="oppTeamBox" onclick="editTeamName('oppTeam')">
-        <div class="teamNameDisplay empty" id="oppTeamDisplay">對手</div>
-        <input id="oppTeam" class="teamNameEditor" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="對手隊伍名稱">
-      </div>
+      <div class="timer" id="timer">00:00</div>
     </div>
-
-    <div class="timer" id="timer">00:00</div>
 
     <div class="timeSummary" id="timeSummary">
       <div class="timeHead">
@@ -1218,6 +1276,23 @@ function render(){
   }
   byId('startBtn').textContent=state.awaitingNextPeriod?'▶ 開始下半場':'▶ 開始比賽';
   byId('finishBtn').textContent=state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 比賽結束';
+
+  const stage=byId('broadcastStage');
+  if(stage){
+    let stageText='賽前', stageClass='';
+    if(state.awaitingNextPeriod){
+      stageText='中場';
+      stageClass='half';
+    }else if(state.started && !state.finished){
+      stageText=(state.multiPeriod && state.currentPeriod===2)?'下半場':'比賽中';
+      stageClass='live';
+    }else if(state.finished){
+      stageText='全場';
+      stageClass='full';
+    }
+    stage.textContent=stageText;
+    stage.className='broadcastStage '+stageClass;
+  }
   byId('status').textContent=txt;
   byId('status').className='status '+cls;
   const mc=byId('matchCard');
