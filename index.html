@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.42</title>
+<title>足球場邊記錄器 v2.43</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -126,6 +126,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.toolGrid.twoCols{grid-template-columns:1fr 1fr}.toolGrid.finalTools{grid-template-columns:1fr 1fr 1fr}
 .toolGrid button{font-size:13px;padding:8px 6px;min-height:42px;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 .reportBtn{background:#0f766e}.pngBtn{background:#7c3aed}
+.recordFullBtn{width:100%;min-height:44px;font-size:14px;touch-action:manipulation}
 .finalToolsCard{position:relative;z-index:20}
 .finalTools button{position:relative;z-index:21;pointer-events:auto;touch-action:manipulation}
 .share{background:#2f81f7}.export{background:#f8fafc;color:#111}
@@ -308,7 +309,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.42</div>
+    <div class="sub">v2.43</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -899,16 +900,6 @@ function mark(event, team='OUR'){
     score_after:`${state.ourScore}:${state.oppScore}`,
     recorded_at:new Date().toISOString()
   });
-  saveState();
-  render();
-}
-function undoLast(){
-  if(!state.markers.length) return;
-  const m=state.markers.pop();
-  if(m.event==='GOAL'){
-    if(m.team==='OUR') state.ourScore=Math.max(0, state.ourScore-1);
-    if(m.team==='OPP') state.oppScore=Math.max(0, state.oppScore-1);
-  }
   saveState();
   render();
 }
