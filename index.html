@@ -4,127 +4,195 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0d1117">
-<title>足球精彩標記器 v2.13</title>
+<meta name="theme-color" content="#0b1220">
+<title>足球精彩標記器 v2.14</title>
 <style>
 :root{
-  --bg:#0d1117;--card:#161b22;--line:#30363d;--text:#f0f6fc;--muted:#8b949e;
-  --green:#238636;--blue:#1f6feb;--gold:#d29922;--purple:#8957e5;--red:#c93f3f;--gray:#30363d;--cyan:#39a9ff;
+  --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
+  --green:#238636;--blue:#1f6feb;--gold:#d29922;--purple:#8957e5;--red:#d64545;--gray:#334155;--cyan:#37b3ff;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
 body{min-height:100dvh}
-.wrap{max-width:720px;margin:auto;padding:8px 10px calc(10px + env(safe-area-inset-bottom))}
-.top{display:flex;align-items:center;margin-bottom:7px}
-h1{font-size:21px;margin:0}.sub{font-size:11px;color:var(--muted);margin-left:auto}
-.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:10px;margin-bottom:8px}
-.meta{display:grid;grid-template-columns:1fr auto;gap:7px}.venue{grid-column:1/3}
-input{width:100%;font-size:15px;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:#0d1117;color:#fff}
-button{border:0;border-radius:12px;padding:11px 8px;font-size:16px;font-weight:750;color:#fff}
+.wrap{max-width:720px;margin:auto;padding:8px 10px calc(14px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:end;justify-content:space-between;margin-bottom:8px}
+h1{font-size:18px;margin:0}
+.sub{font-size:11px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:8px}
+.compactFields{display:grid;grid-template-columns:1fr 1fr auto;gap:6px}
+.compactFields input,.venueRow input,.regRow input{
+  width:100%;font-size:14px;padding:8px 10px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
+}
+.venueRow{margin-top:6px}
+button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
-.scorebar{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin:8px 0 1px}
-.team{text-align:center;font-size:13px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.scoremid{text-align:center}.score{font-size:29px;font-weight:900;font-variant-numeric:tabular-nums}
-.scoreedit{background:transparent;color:var(--muted);font-size:11px;padding:4px 7px;border:1px solid var(--line);margin-top:2px}
-.timer{text-align:center;font-variant-numeric:tabular-nums;font-size:42px;font-weight:850;line-height:1;margin:8px 0}
-
-.timePanel{border:1px solid var(--line);border-radius:12px;background:#0d1117;margin:7px 0 8px;overflow:hidden}
-.timePanelHead{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid var(--line)}
-.timePanelTitle{font-size:12px;font-weight:800}
-.timeToggle{background:#222b35;color:#d7dee7;font-size:11px;padding:5px 8px;border:1px solid var(--line)}
-.timeCompact{display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 6px;gap:3px}
-.timeMini{text-align:center;border-right:1px solid var(--line)}.timeMini:last-child{border-right:0}
-.timeMini .label{font-size:10px;color:var(--muted);margin-bottom:3px}.timeMini .value{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
-.timeMini.actual .value{color:var(--cyan);font-size:14px}
-.timeExpanded{display:none;padding:10px}.timePanel.expanded .timeCompact{display:none}.timePanel.expanded .timeExpanded{display:block}
-.evidenceRow{display:grid;grid-template-columns:90px 1fr;gap:8px;padding:5px 0;font-size:13px}
-.evidenceRow .label{color:var(--muted)}.evidenceRow .value{font-variant-numeric:tabular-nums}
-.actualBig{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 0;margin:7px 0;text-align:center}
-.actualBig .label{font-size:12px;color:var(--cyan);font-weight:800}.actualBig .value{font-size:30px;color:var(--cyan);font-weight:900;font-variant-numeric:tabular-nums;margin-top:3px}
-.regBox{margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:9px;background:#111820}
-.regRow{display:grid;grid-template-columns:1fr auto auto;gap:7px;align-items:center}.regRow input{font-size:13px;padding:8px}.regRow button{background:#30363d;font-size:12px;padding:8px 10px}
-.diff{font-size:12px;color:var(--muted);text-align:center;margin-top:7px}.diff.early{color:#ff7b72;font-weight:800}.diff.over{color:#f2cc60;font-weight:800}
-
-.controls,.events{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.scoreRow{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-top:8px}
+.teamName{text-align:center;font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scoreMid{text-align:center}
+.scoreText{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
+.scoreEdit{background:transparent;color:var(--muted);font-size:11px;padding:4px 8px;border:1px solid var(--line);margin-top:4px}
+.timer{font-size:44px;font-weight:900;text-align:center;line-height:1;margin:10px 0 8px;font-variant-numeric:tabular-nums}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .start{background:var(--green)}.finish{background:var(--red)}
-.event{min-height:74px;font-size:18px}.goal{background:var(--green)}.save{background:var(--blue)}.shot{background:var(--gold)}.play{background:var(--purple)}
-.event small{display:block;font-size:11px;font-weight:500;opacity:.9;margin-top:3px}
-.status{text-align:center;color:var(--muted);font-size:11px;margin-top:6px}.finished{color:#ff9b9b;font-weight:700}
-.toolbar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.secondary{font-size:13px;padding:9px 6px}
-.share{background:#2f81f7}.export{background:#f0f6fc;color:#111}.reportBtn{background:#0f766e}.pngBtn{background:#7c3aed}.htmlBtn{background:#475569}
-.logwrap{display:none;margin-top:8px}.logwrap.open{display:block}.log{max-height:185px;overflow:auto}
-.item{display:grid;grid-template-columns:1fr auto auto;gap:7px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px}
-.time{color:#f2cc60;font-variant-numeric:tabular-nums}.del{background:transparent;color:#ff7b72;padding:3px 5px;font-size:13px}
-.scoreSnap{color:#9da7b3;font-size:11px;margin-left:5px}.numberTag{color:#7ee787;font-weight:800;margin-left:5px}
+.status{text-align:center;color:var(--muted);font-size:11px;margin-top:6px}.finished{color:#ffb3b3;font-weight:800}
+
+.timeSummary{border:1px solid var(--line);border-radius:14px;background:#0d1522;margin:8px 0 8px;overflow:hidden}
+.timeHead{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid var(--line)}
+.timeTitle{font-size:13px;font-weight:800}
+.timeToggle{background:#243244;font-size:12px;padding:7px 12px}
+.timeCompact{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;padding:8px 4px}
+.timeCell{text-align:center;border-right:1px solid var(--line)}
+.timeCell:last-child{border-right:0}
+.timeCell .label{font-size:10px;color:var(--muted)}
+.timeCell .value{font-size:13px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
+.timeCell.actual .value{color:var(--cyan);font-size:15px}
+.timeDetail{display:none;padding:10px}
+.timeSummary.open .timeDetail{display:block}
+.timeSummary.open .timeCompact{display:none}
+.detailRow{display:grid;grid-template-columns:72px 1fr;gap:8px;padding:4px 0;font-size:13px}
+.detailRow .label{color:var(--muted)} .detailRow .value{font-variant-numeric:tabular-nums}
+.actualBox{margin:8px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;text-align:center}
+.actualBox .label{font-size:12px;font-weight:800;color:var(--cyan)}
+.actualBox .value{font-size:30px;font-weight:900;color:var(--cyan);font-variant-numeric:tabular-nums;margin-top:3px}
+.regBox{border:1px solid var(--line);border-radius:12px;padding:10px;background:#111a28}
+.regTitle{font-size:12px;font-weight:800;margin-bottom:8px}
+.regRow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center}
+.regRow button{background:#334155;font-size:12px;padding:9px 12px}
+.diff{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}.diff.early{color:#ff7b72;font-weight:800}.diff.over{color:#f7d26e;font-weight:800}
+
+.events{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.event{min-height:66px;font-size:17px}
+.goal{background:var(--green)}.save{background:var(--blue)}.shot{background:var(--gold)}.play{background:var(--purple)}
+.event small{display:block;font-size:11px;font-weight:600;opacity:.9;margin-top:3px}
+
+.toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.toolGrid button{font-size:13px;padding:9px 6px}
+.reportBtn{background:#0f766e}.pngBtn{background:#7c3aed}.htmlBtn{background:#475569}
+.share{background:#2f81f7}.export{background:#f8fafc;color:#111}
+
+.logWrap{display:none;margin-top:8px}.logWrap.open{display:block}
+.log{max-height:150px;overflow:auto}
+.item{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px}
+.time{color:#facc15;font-variant-numeric:tabular-nums}
+.del{background:transparent;color:#ff7b72;padding:2px 4px;font-size:13px}
+.numberTag{color:#7ee787;font-weight:800;margin-left:5px}.scoreSnap{color:#9caac0;font-size:11px;margin-left:5px}
+.note{text-align:center;color:var(--muted);font-size:10px;margin-top:6px}
 
 .modalBack{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000}
 .modalBack.open{display:flex}
 .modal{width:min(430px,100%);background:#f6f7fb;color:#111;border-radius:20px;padding:18px;max-height:88vh;overflow:auto}
-.modal h2{margin:0 0 5px;font-size:23px}.modal p{margin:0 0 14px;color:#666;font-size:13px}
-.choice{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice button{min-height:86px;font-size:18px}
+.modal h2{margin:0 0 6px;font-size:23px}
+.modal p{margin:0 0 14px;color:#666;font-size:13px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice button{min-height:84px;font-size:18px}
 .our{background:#238636}.opp{background:#c93f3f}.cancel{background:#dfe3e8;color:#222;width:100%;margin-top:10px}
-.numberGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.numBtn{background:#fff;color:#111;border:1px solid #aeb5bd;min-height:46px;padding:8px 3px;font-size:17px}
-.numberActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.otherNum{background:#5d6670}.skipNum{background:#8b949e}
-.customRow{display:none;grid-template-columns:1fr auto;gap:8px;margin-top:10px}.customRow.open{display:grid}
-.customRow input{background:#fff;color:#111;font-size:18px;text-align:center}.customRow button{background:#1f6feb}
-.scoreForm{display:grid;grid-template-columns:1fr 1fr;gap:10px}.scoreBox label{display:block;color:#666;font-size:12px;margin-bottom:4px}
-.scoreBox input{background:white;color:#111;text-align:center;font-size:24px;font-weight:800}
-.scoreBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.saveScore{background:#1f6feb}.cancelScore{background:#777}
+.numberGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+.numBtn{background:#fff;color:#111;border:1px solid #aeb5bd;min-height:44px;padding:8px 3px;font-size:17px}
+.numberActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.otherNum{background:#5d6670}.skipNum{background:#8b949e}
+.customRow{display:none;grid-template-columns:1fr auto;gap:8px;margin-top:10px}
+.customRow.open{display:grid}
+.customRow input{background:#fff;color:#111;font-size:18px;text-align:center}
+.customRow button{background:#1f6feb}
+.scoreForm{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scoreBox label{display:block;color:#666;font-size:12px;margin-bottom:4px}
+.scoreBox input{background:#fff;color:#111;text-align:center;font-size:24px;font-weight:800}
+.scoreBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.saveScore{background:#1f6feb}.cancelScore{background:#777}
 
 .reportModal{width:min(520px,100%);padding:0;background:#0f1720;color:#fff;overflow:hidden}
-.reportTop{padding:18px;border-bottom:1px solid #2b3744}
-.reportTitle{font-size:13px;color:#93a4b6}.reportScoreRow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-top:10px}
-.reportTeam{text-align:center;font-size:18px;font-weight:800}.reportScore{font-size:38px;font-weight:900}
+.reportTop{padding:16px;border-bottom:1px solid #2b3744}
+.reportTitle{font-size:13px;color:#93a4b6}
+.reportScoreRow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-top:10px}
+.reportTeam{text-align:center;font-size:18px;font-weight:800}
+.reportScore{font-size:36px;font-weight:900}
 .reportMeta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px;color:#aeb9c5;font-size:12px}
-.reportBody{padding:16px;max-height:56vh;overflow:auto}.reportSectionTitle{font-size:12px;font-weight:800;color:#7dd3fc;margin-bottom:8px}
+.reportBody{padding:14px;max-height:56vh;overflow:auto}
+.reportSectionTitle{font-size:12px;font-weight:800;color:#7dd3fc;margin-bottom:8px}
 .reportTimeCard{border:1px solid #2b3744;border-radius:12px;padding:10px;background:#111b26;margin-bottom:14px}
-.reportTimeGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px}.reportActual{font-size:26px;font-weight:900;color:#38bdf8;text-align:center;margin-top:10px}
-.reportEvent{display:grid;grid-template-columns:70px 1fr auto;gap:8px;padding:8px 0;border-bottom:1px solid #25303b;font-size:13px}
-.reportEvent:last-child{border-bottom:0}.reportEvent .rtime{color:#facc15}.reportEvent .rscore{color:#aeb9c5}
-.reportEmpty{color:#8997a6;font-size:12px;padding:8px 0}.reportNote{font-size:10px;color:#738190;margin-top:10px;text-align:center}
+.reportTimeGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px}
+.reportActual{font-size:24px;font-weight:900;color:#38bdf8;text-align:center;margin-top:8px}
+.reportEvent{display:grid;grid-template-columns:62px 1fr auto;gap:8px;padding:8px 0;border-bottom:1px solid #25303b;font-size:13px}
+.reportEvent:last-child{border-bottom:0}
+.reportEvent .rtime{color:#facc15}
+.reportEvent .rscore{color:#aeb9c5}
+.reportEmpty{color:#8997a6;font-size:12px;padding:8px 0}
+.reportNote{font-size:10px;color:#738190;margin-top:10px;text-align:center}
 .reportActions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;padding:12px;border-top:1px solid #2b3744}
-.reportActions button{font-size:12px;padding:9px 5px}.closeReport{background:#475569}.shareReport{background:#2563eb}.saveReport{background:#7c3aed}
-@media(max-height:760px){h1{font-size:19px}.timer{font-size:38px}.score{font-size:26px}.event{min-height:66px}.card{padding:8px;margin-bottom:6px}button{padding:9px 7px}}
+.reportActions button{font-size:12px;padding:10px 5px}
+.closeReport{background:#475569}.shareReport{background:#2563eb}.saveReport{background:#7c3aed}
+
+@media (max-height: 900px){
+  h1{font-size:17px}
+  .card{padding:8px}
+  .timer{font-size:40px}
+  .scoreText{font-size:30px}
+  .event{min-height:62px}
+  button{padding:9px 7px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><h1>⚽ 足球精彩標記器</h1><div class="sub">比賽摘要版 v2.13</div></div>
+  <div class="top">
+    <h1>⚽ 足球精彩標記器</h1>
+    <div class="sub">單頁精簡版 v2.14</div>
+  </div>
 
   <div class="card">
-    <div class="meta">
-      <input id="ourTeam" placeholder="我方隊伍，例如：忠義">
+    <div class="compactFields">
+      <input id="ourTeam" placeholder="我方">
+      <input id="oppTeam" placeholder="對手">
       <button class="new" onclick="newMatch()">新比賽</button>
-      <input id="oppTeam" placeholder="對手隊伍，例如：A隊">
-      <input id="venue" class="venue" placeholder="比賽場地，例如：百齡足球場">
     </div>
-    <div class="scorebar">
-      <div class="team" id="ourLabel">我方</div>
-      <div class="scoremid"><div class="score"><span id="ourScore">0</span> : <span id="oppScore">0</span></div><button class="scoreedit" onclick="openScoreModal()">✎ 修正比分</button></div>
-      <div class="team" id="oppLabel">對手</div>
+    <div class="venueRow">
+      <input id="venue" placeholder="場地">
     </div>
-    <div class="timer" id="timer">00:00.00</div>
 
-    <div class="timePanel" id="timePanel">
-      <div class="timePanelHead"><div class="timePanelTitle">⏱ 時間紀錄</div><button class="timeToggle" id="timeToggle" onclick="toggleTimePanel()">展開詳情</button></div>
-      <div class="timeCompact">
-        <div class="timeMini"><div class="label">開始</div><div class="value" id="compactStart">--:--:--</div></div>
-        <div class="timeMini"><div class="label">結束</div><div class="value" id="compactEnd">--:--:--</div></div>
-        <div class="timeMini actual"><div class="label">實際時間</div><div class="value" id="compactDuration">00:00.00</div></div>
+    <div class="scoreRow">
+      <div class="teamName" id="ourLabel">我方</div>
+      <div class="scoreMid">
+        <div class="scoreText"><span id="ourScore">0</span> : <span id="oppScore">0</span></div>
+        <button class="scoreEdit" onclick="openScoreModal()">✎ 修正比分</button>
       </div>
-      <div class="timeExpanded">
-        <div class="evidenceRow"><div class="label">開始時間</div><div class="value" id="fullStart">--</div></div>
-        <div class="evidenceRow"><div class="label">結束時間</div><div class="value" id="fullEnd">--</div></div>
-        <div class="actualBig"><div class="label">實際比賽時間</div><div class="value" id="fullDuration">00:00.000</div></div>
+      <div class="teamName" id="oppLabel">對手</div>
+    </div>
+
+    <div class="timer" id="timer">00:00</div>
+
+    <div class="timeSummary" id="timeSummary">
+      <div class="timeHead">
+        <div class="timeTitle">⏱ 時間紀錄</div>
+        <button class="timeToggle" id="timeToggle" onclick="toggleTimeBox()">展開</button>
+      </div>
+      <div class="timeCompact">
+        <div class="timeCell"><div class="label">開始</div><div class="value" id="compactStart">--:--:--</div></div>
+        <div class="timeCell"><div class="label">結束</div><div class="value" id="compactEnd">--:--:--</div></div>
+        <div class="timeCell actual"><div class="label">實際</div><div class="value" id="compactDuration">00:00</div></div>
+      </div>
+      <div class="timeDetail">
+        <div class="detailRow"><div class="label">開始</div><div class="value" id="fullStart">--</div></div>
+        <div class="detailRow"><div class="label">結束</div><div class="value" id="fullEnd">--</div></div>
+        <div class="actualBox">
+          <div class="label">實際比賽時間</div>
+          <div class="value" id="fullDuration">00:00</div>
+        </div>
         <div class="regBox">
-          <div style="font-size:12px;font-weight:800;margin-bottom:7px">規定時間（可賽後補填）</div>
-          <div class="regRow"><input id="regMinutes" type="number" min="1" max="180" inputmode="numeric" placeholder="例如 20"><button onclick="saveRegulation()">套用</button><button onclick="clearRegulation()">清除</button></div>
+          <div class="regTitle">規定時間（可賽後補填）</div>
+          <div class="regRow">
+            <input id="regMinutes" type="number" min="1" max="180" inputmode="numeric" placeholder="例如 20">
+            <button onclick="saveRegulation()">套用</button>
+            <button onclick="clearRegulation()">清除</button>
+          </div>
           <div class="diff" id="diffText">未設定規定時間</div>
         </div>
       </div>
     </div>
 
-    <div class="controls"><button class="start" onclick="startMatch()">▶ 開始比賽</button><button class="finish" onclick="finishMatch()">■ 比賽結束</button></div>
+    <div class="controls">
+      <button class="start" onclick="startMatch()">▶ 開始比賽</button>
+      <button class="finish" onclick="finishMatch()">■ 比賽結束</button>
+    </div>
     <div class="status" id="status">尚未開始</div>
   </div>
 
@@ -138,152 +206,721 @@ button{border:0;border-radius:12px;padding:11px 8px;font-size:16px;font-weight:7
   </div>
 
   <div class="card">
-    <div class="toolbar"><button class="secondary" onclick="undoLast()">↶ 復原</button><button class="secondary" onclick="toggleLog()">☰ 紀錄 <span id="count">0</span></button><button class="secondary" onclick="saveNow()">💾 儲存</button></div>
-    <div class="logwrap" id="logwrap"><div class="log" id="log"></div></div>
+    <div class="toolGrid">
+      <button class="secondary" onclick="undoLast()">↶ 復原</button>
+      <button class="secondary" onclick="toggleLog()">☰ 紀錄 <span id="count">0</span></button>
+      <button class="secondary" onclick="saveNow()">💾 儲存</button>
+    </div>
+    <div class="logWrap" id="logWrap"><div class="log" id="log"></div></div>
   </div>
 
   <div class="card">
-    <div class="toolbar"><button class="reportBtn" onclick="openReport()">📋 比賽摘要</button><button class="pngBtn" onclick="downloadReportPNG()">🖼 匯出圖片</button><button class="htmlBtn" onclick="downloadReportHTML()">🌐 HTML 報表</button></div>
-    <div style="height:7px"></div>
-    <div class="toolbar"><button class="share" onclick="shareCSV()">分享 CSV</button><button class="export" onclick="downloadCSV()">下載 CSV</button><button class="secondary" onclick="downloadJSON()">JSON 備份</button></div>
-    <div class="status">報表為「本場標記事件摘要」，CSV 供後續剪輯使用</div>
+    <div class="toolGrid">
+      <button class="reportBtn" onclick="openReport()">📋 摘要</button>
+      <button class="pngBtn" onclick="saveReportImage()">🖼 儲存圖片</button>
+      <button class="htmlBtn" onclick="downloadReportHTML()">🌐 HTML</button>
+    </div>
+    <div style="height:6px"></div>
+    <div class="toolGrid">
+      <button class="share" onclick="shareCSV()">分享 CSV</button>
+      <button class="export" onclick="downloadCSV()">下載 CSV</button>
+      <button class="secondary" onclick="downloadJSON()">JSON</button>
+    </div>
+    <div class="note">CSV 給剪輯程式使用｜圖片可用分享面板「儲存影像」</div>
   </div>
 </div>
 
-<div class="modalBack" id="goalModal"><div class="modal">
-  <h2>⚽ 這是誰的進球？</h2><p>GOAL 時間已先記住，後續選擇期間比賽時間仍持續。</p>
-  <div class="choice"><button class="our" onclick="chooseGoalTeam('OUR')">我方進球<br><small id="goalOurName">我方</small></button><button class="opp" onclick="chooseGoalTeam('OPP')">對手進球<br><small id="goalOppName">對手</small></button></div>
-  <button class="cancel" onclick="cancelGoal()">取消</button>
-</div></div>
-
-<div class="modalBack" id="numberModal"><div class="modal">
-  <h2 id="numberTitle">選擇進球球員背號</h2><p id="numberHint"></p>
-  <div id="ourNumberArea"><div class="numberGrid" id="numberGrid"></div><div class="numberActions"><button class="otherNum" onclick="showCustomNumber()">其他背號</button><button class="skipNum" onclick="finishGoal('')">不記錄背號</button></div></div>
-  <div id="oppNumberArea" style="display:none"><div class="numberActions"><button class="otherNum" onclick="showCustomNumber()">輸入對手背號</button><button class="skipNum" onclick="finishGoal('')">不記錄背號</button></div></div>
-  <div class="customRow" id="customRow"><input id="customNumber" type="number" min="0" max="99" inputmode="numeric" placeholder="輸入背號"><button onclick="saveCustomNumber()">確定</button></div>
-  <button class="cancel" onclick="cancelNumber()">取消整筆 GOAL</button>
-</div></div>
-
-<div class="modalBack" id="scoreModal"><div class="modal">
-  <h2>修正比分</h2><p>只調整目前比分，不會刪除既有事件紀錄。</p>
-  <div class="scoreForm"><div class="scoreBox"><label id="scoreOurName">我方</label><input id="editOur" type="number" min="0" inputmode="numeric"></div><div class="scoreBox"><label id="scoreOppName">對手</label><input id="editOpp" type="number" min="0" inputmode="numeric"></div></div>
-  <div class="scoreBtns"><button class="cancelScore" onclick="closeScoreModal()">取消</button><button class="saveScore" onclick="saveScoreModal()">確定</button></div>
-</div></div>
-
-<div class="modalBack" id="reportModal"><div class="modal reportModal">
-  <div class="reportTop">
-    <div class="reportTitle">⚽ 比賽摘要｜本場標記事件</div>
-    <div class="reportScoreRow"><div class="reportTeam" id="reportOurTeam">我方</div><div class="reportScore" id="reportScore">0 : 0</div><div class="reportTeam" id="reportOppTeam">對手</div></div>
-    <div class="reportMeta"><span id="reportVenue">📍 未填場地</span><span id="reportDuration">⏱ 00:00</span></div>
+<!-- Goal modal -->
+<div class="modalBack" id="goalModal">
+  <div class="modal">
+    <h2>⚽ 這是誰的進球？</h2>
+    <p>GOAL 時間已先記住，選擇期間比賽時間仍持續。</p>
+    <div class="choice">
+      <button class="our" onclick="chooseGoalTeam('OUR')">我方進球<br><small id="goalOurName">我方</small></button>
+      <button class="opp" onclick="chooseGoalTeam('OPP')">對手進球<br><small id="goalOppName">對手</small></button>
+    </div>
+    <button class="cancel" onclick="cancelGoal()">取消</button>
   </div>
-  <div class="reportBody">
-    <div class="reportSectionTitle">時間紀錄</div>
-    <div class="reportTimeCard"><div class="reportTimeGrid"><div>開始：<span id="reportStart">--</span></div><div>結束：<span id="reportEnd">--</span></div></div><div class="reportActual" id="reportActual">00:00.000</div><div class="diff" id="reportDiff"></div></div>
-    <div class="reportSectionTitle">進球紀錄</div><div id="reportGoals"></div>
-    <div style="height:12px"></div><div class="reportSectionTitle">其他精彩標記事件</div><div id="reportOthers"></div>
-    <div class="reportNote">本頁僅整理使用者於現場主動標記的事件，非官方完整技術統計。</div>
+</div>
+
+<!-- Number modal -->
+<div class="modalBack" id="numberModal">
+  <div class="modal">
+    <h2 id="numberTitle">選擇背號</h2>
+    <p id="numberHint"></p>
+    <div id="ourNumberArea">
+      <div class="numberGrid" id="numberGrid"></div>
+      <div class="numberActions">
+        <button class="otherNum" onclick="showCustomNumber()">其他背號</button>
+        <button class="skipNum" onclick="finishGoal('')">不記錄</button>
+      </div>
+    </div>
+    <div id="oppNumberArea" style="display:none">
+      <div class="numberActions">
+        <button class="otherNum" onclick="showCustomNumber()">輸入對手背號</button>
+        <button class="skipNum" onclick="finishGoal('')">不記錄</button>
+      </div>
+    </div>
+    <div class="customRow" id="customRow">
+      <input id="customNumber" type="number" min="0" max="99" inputmode="numeric" placeholder="背號">
+      <button onclick="saveCustomNumber()">確定</button>
+    </div>
+    <button class="cancel" onclick="cancelNumber()">取消整筆 GOAL</button>
   </div>
-  <div class="reportActions"><button class="closeReport" onclick="closeReport()">關閉</button><button class="shareReport" onclick="shareReportPNG()">分享圖片</button><button class="saveReport" onclick="downloadReportPNG()">下載 PNG</button></div>
-</div></div>
+</div>
+
+<!-- Score modal -->
+<div class="modalBack" id="scoreModal">
+  <div class="modal">
+    <h2>修正比分</h2>
+    <p>只調整目前比分，不會刪除既有事件。</p>
+    <div class="scoreForm">
+      <div class="scoreBox">
+        <label id="scoreOurName">我方</label>
+        <input id="editOur" type="number" min="0" inputmode="numeric">
+      </div>
+      <div class="scoreBox">
+        <label id="scoreOppName">對手</label>
+        <input id="editOpp" type="number" min="0" inputmode="numeric">
+      </div>
+    </div>
+    <div class="scoreBtns">
+      <button class="cancelScore" onclick="closeScoreModal()">取消</button>
+      <button class="saveScore" onclick="saveScoreModal()">確定</button>
+    </div>
+  </div>
+</div>
+
+<!-- Report modal -->
+<div class="modalBack" id="reportModal">
+  <div class="modal reportModal">
+    <div class="reportTop">
+      <div class="reportTitle">⚽ 比賽摘要｜本場標記事件</div>
+      <div class="reportScoreRow">
+        <div class="reportTeam" id="reportOurTeam">我方</div>
+        <div class="reportScore" id="reportScore">0 : 0</div>
+        <div class="reportTeam" id="reportOppTeam">對手</div>
+      </div>
+      <div class="reportMeta">
+        <span id="reportVenue">📍 未填場地</span>
+        <span id="reportDuration">⏱ 00:00</span>
+      </div>
+    </div>
+    <div class="reportBody">
+      <div class="reportSectionTitle">時間紀錄</div>
+      <div class="reportTimeCard">
+        <div class="reportTimeGrid">
+          <div>開始：<span id="reportStart">--</span></div>
+          <div>結束：<span id="reportEnd">--</span></div>
+        </div>
+        <div class="reportActual" id="reportActual">00:00</div>
+        <div class="diff" id="reportDiff"></div>
+      </div>
+
+      <div class="reportSectionTitle">進球紀錄</div>
+      <div id="reportGoals"></div>
+
+      <div style="height:12px"></div>
+      <div class="reportSectionTitle">其他精彩標記事件</div>
+      <div id="reportOthers"></div>
+
+      <div class="reportNote">本頁僅整理使用者於現場主動標記的事件，非官方完整技術統計。</div>
+    </div>
+    <div class="reportActions">
+      <button class="closeReport" onclick="closeReport()">關閉</button>
+      <button class="shareReport" onclick="shareReportImage()">分享圖片</button>
+      <button class="saveReport" onclick="saveReportImage()">儲存圖片</button>
+    </div>
+  </div>
+</div>
 
 <script>
-const KEY='football_marker_v213';
+const KEY='football_marker_v214';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
-let pendingGoalTime=null,pendingGoalTeam=null,manualTimeExpanded=false;
-let state={ourTeam:'',oppTeam:'',venue:'',started:false,finished:false,startEpoch:null,endEpoch:null,finalElapsed:0,regulationMinutes:null,ourScore:0,oppScore:0,markers:[]};
+let pendingGoalTime=null, pendingGoalTeam=null;
+let timeExpanded=false;
 
-function save(){state.ourTeam=ourTeam.value.trim();state.oppTeam=oppTeam.value.trim();state.venue=venue.value.trim();localStorage.setItem(KEY,JSON.stringify(state))}
-function load(){try{const raw=localStorage.getItem(KEY);if(raw)state={...state,...JSON.parse(raw)}}catch(e){}ourTeam.value=state.ourTeam||'';oppTeam.value=state.oppTeam||'';venue.value=state.venue||'';regMinutes.value=state.regulationMinutes||'';buildNumberGrid();if(state.finished)manualTimeExpanded=true;render()}
-function buildNumberGrid(){numberGrid.innerHTML='';COMMON_NUMBERS.forEach(n=>{const b=document.createElement('button');b.className='numBtn';b.textContent=n;b.onclick=()=>finishGoal(String(n));numberGrid.appendChild(b)})}
-function elapsed(){if(state.started&&!state.finished&&state.startEpoch)return (Date.now()-state.startEpoch)/1000;return state.finalElapsed||0}
-function fmt(sec,digits=2){sec=Math.max(0,Number(sec)||0);const m=Math.floor(sec/60),s=sec-m*60;return String(m).padStart(2,'0')+':'+s.toFixed(digits).padStart(digits===3?6:5,'0')}
-function fmtClock(epoch,full=false){if(!epoch)return full?'----/--/-- --:--:--.---':'--:--:--';const d=new Date(epoch),hh=String(d.getHours()).padStart(2,'0'),mm=String(d.getMinutes()).padStart(2,'0'),ss=String(d.getSeconds()).padStart(2,'0');if(!full)return `${hh}:${mm}:${ss}`;return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${hh}:${mm}:${ss}.${String(d.getMilliseconds()).padStart(3,'0')}`}
-function tick(){const e=elapsed();timer.textContent=fmt(e,2);compactDuration.textContent=fmt(e,2);fullDuration.textContent=fmt(e,3);requestAnimationFrame(tick)}
-function toggleTimePanel(){manualTimeExpanded=!timePanel.classList.contains('expanded');renderTimePanel()}
-function renderTimePanel(){const shouldExpand=state.finished||manualTimeExpanded;timePanel.classList.toggle('expanded',shouldExpand);timeToggle.textContent=shouldExpand?'收合':'展開詳情';compactStart.textContent=fmtClock(state.startEpoch,false);compactEnd.textContent=fmtClock(state.endEpoch,false);fullStart.textContent=fmtClock(state.startEpoch,true);fullEnd.textContent=fmtClock(state.endEpoch,true);renderDiff(diffText)}
-function startMatch(){if(state.started&&!state.finished)return;if(state.finished){alert('本場比賽已結束，請先建立新比賽');return}state.started=true;state.startEpoch=Date.now();state.endEpoch=null;state.finalElapsed=0;manualTimeExpanded=false;save();render()}
-function finishMatch(){if(!state.started||state.finished){if(!state.started)alert('比賽尚未開始');return}const candidateEndEpoch=Date.now(),candidateElapsed=elapsed();if(!confirm('確定本場比賽已結束嗎？')){render();return}state.endEpoch=candidateEndEpoch;state.finalElapsed=candidateElapsed;state.finished=true;manualTimeExpanded=true;save();render()}
-function newMatch(){if((state.started||state.markers.length)&&!confirm('建立新比賽會清空目前計時、比分與標記，確定嗎？'))return;state={ourTeam:'',oppTeam:'',venue:'',started:false,finished:false,startEpoch:null,endEpoch:null,finalElapsed:0,regulationMinutes:null,ourScore:0,oppScore:0,markers:[]};ourTeam.value='';oppTeam.value='';venue.value='';regMinutes.value='';manualTimeExpanded=false;save();render()}
-function saveRegulation(){const raw=regMinutes.value.trim();if(raw===''){state.regulationMinutes=null;save();render();return}const n=Number(raw);if(!Number.isFinite(n)||n<=0||n>180){alert('請輸入 1–180 分鐘');return}state.regulationMinutes=n;save();render()}
-function clearRegulation(){state.regulationMinutes=null;regMinutes.value='';save();render()}
-function renderDiff(el){el.className='diff';if(!state.regulationMinutes){el.textContent='未設定規定時間';return}const target=state.regulationMinutes*60,actual=state.finished?state.finalElapsed:elapsed(),d=actual-target;if(!state.finished){el.textContent=`規定 ${state.regulationMinutes} 分鐘｜比賽結束後顯示差異`}else if(d<0){el.textContent=`⚠ 提前 ${fmt(Math.abs(d),3)}`;el.classList.add('early')}else if(d>0){el.textContent=`超過 ${fmt(d,3)}`;el.classList.add('over')}else el.textContent='時間一致'}
-function openGoalModal(){if(!state.started){alert('請先按「開始比賽」');return}if(state.finished){alert('本場比賽已結束');return}pendingGoalTime=elapsed();pendingGoalTeam=null;goalOurName.textContent=state.ourTeam||'我方';goalOppName.textContent=state.oppTeam||'對手';goalModal.classList.add('open')}
-function chooseGoalTeam(team){pendingGoalTeam=team;goalModal.classList.remove('open');customRow.classList.remove('open');customNumber.value='';const isOur=team==='OUR';ourNumberArea.style.display=isOur?'block':'none';oppNumberArea.style.display=isOur?'none':'block';numberTitle.textContent=isOur?'選擇我方進球球員背號':'對手進球球員背號';numberHint.textContent=isOur?'常用背號可直接點選；其他背號再手動輸入。':'對手背號可手動輸入或略過。';numberModal.classList.add('open')}
-function showCustomNumber(){customRow.classList.add('open');setTimeout(()=>customNumber.focus(),50)}
-function saveCustomNumber(){const raw=customNumber.value.trim();if(raw===''){alert('請輸入背號');return}const n=parseInt(raw,10);if(!Number.isInteger(n)||n<0||n>99){alert('背號請輸入 0–99');return}finishGoal(String(n))}
-function finishGoal(playerNumber){if(pendingGoalTime===null||!pendingGoalTeam)return;if(pendingGoalTeam==='OUR')state.ourScore+=1;else state.oppScore+=1;state.markers.push({event:'GOAL',team:pendingGoalTeam,player_number:playerNumber,seconds:pendingGoalTime,time:fmt(pendingGoalTime,2),score_after:`${state.ourScore}:${state.oppScore}`,recorded_at:new Date().toISOString()});pendingGoalTime=null;pendingGoalTeam=null;numberModal.classList.remove('open');save();render()}
-function cancelGoal(){pendingGoalTime=null;pendingGoalTeam=null;goalModal.classList.remove('open')}
-function cancelNumber(){pendingGoalTime=null;pendingGoalTeam=null;numberModal.classList.remove('open')}
-function mark(event,team='OUR'){if(!state.started){alert('請先按「開始比賽」');return}if(state.finished){alert('本場比賽已結束');return}const sec=elapsed();state.markers.push({event,team,player_number:'',seconds:sec,time:fmt(sec,2),score_after:`${state.ourScore}:${state.oppScore}`,recorded_at:new Date().toISOString()});save();render()}
-function undoLast(){if(!state.markers.length)return;const m=state.markers.pop();if(m.event==='GOAL'){if(m.team==='OUR')state.ourScore=Math.max(0,state.ourScore-1);if(m.team==='OPP')state.oppScore=Math.max(0,state.oppScore-1)}save();render()}
-function deleteMarker(i){const m=state.markers[i];state.markers.splice(i,1);if(m&&m.event==='GOAL'){if(m.team==='OUR')state.ourScore=Math.max(0,state.ourScore-1);if(m.team==='OPP')state.oppScore=Math.max(0,state.oppScore-1)}save();render()}
-function openScoreModal(){editOur.value=state.ourScore;editOpp.value=state.oppScore;scoreOurName.textContent=state.ourTeam||'我方';scoreOppName.textContent=state.oppTeam||'對手';scoreModal.classList.add('open')}
-function closeScoreModal(){scoreModal.classList.remove('open')}
-function saveScoreModal(){state.ourScore=Math.max(0,parseInt(editOur.value||'0',10));state.oppScore=Math.max(0,parseInt(editOpp.value||'0',10));closeScoreModal();save();render()}
-function render(){ourScore.textContent=state.ourScore;oppScore.textContent=state.oppScore;ourLabel.textContent=state.ourTeam||'我方';oppLabel.textContent=state.oppTeam||'對手';count.textContent=state.markers.length;let text='尚未開始',cls='';if(state.started&&!state.finished)text='比賽進行中';if(state.finished){text=`比賽已結束｜${fmt(state.finalElapsed,2)}｜${state.ourScore}:${state.oppScore}`;cls='finished'}status.textContent=text;status.className='status '+cls;renderTimePanel();log.innerHTML='';state.markers.forEach((m,i)=>{const d=document.createElement('div');d.className='item';const team=m.team==='OUR'?'我方':m.team==='OPP'?'對手':'',num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';d.innerHTML=`<div><b>${emoji(m.event)} ${m.event}</b> ${team?'<span style="color:#8b949e">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div><div class="time">${fmt(m.seconds,2)}</div><button class="del" onclick="deleteMarker(${i})">✕</button>`;log.appendChild(d)})}
-function toggleLog(){logwrap.classList.toggle('open')}
-function emoji(e){return {GOAL:'⚽',SAVE:'🧤',SHOT:'🎯',GREAT_PLAY:'🔥'}[e]||'•'}
+let state={
+  ourTeam:'', oppTeam:'', venue:'',
+  started:false, finished:false,
+  startEpoch:null, endEpoch:null, finalElapsed:0,
+  regulationMinutes:null,
+  ourScore:0, oppScore:0,
+  markers:[]
+};
 
-function openReport(){buildReportDOM();reportModal.classList.add('open')}
-function closeReport(){reportModal.classList.remove('open')}
-function buildReportDOM(){
-  reportOurTeam.textContent=state.ourTeam||'我方';reportOppTeam.textContent=state.oppTeam||'對手';reportScore.textContent=`${state.ourScore} : ${state.oppScore}`;
-  reportVenue.textContent=`📍 ${state.venue||'未填場地'}`;reportDuration.textContent=`⏱ ${fmt(state.finished?state.finalElapsed:elapsed(),2)}`;
-  reportStart.textContent=fmtClock(state.startEpoch,true);reportEnd.textContent=fmtClock(state.endEpoch,true);reportActual.textContent=fmt(state.finished?state.finalElapsed:elapsed(),3);renderDiff(reportDiff);
-  const goals=state.markers.filter(m=>m.event==='GOAL'),others=state.markers.filter(m=>m.event!=='GOAL');
-  reportGoals.innerHTML=goals.length?goals.map(reportEventHTML).join(''):'<div class="reportEmpty">尚未標記進球事件</div>';
-  reportOthers.innerHTML=others.length?others.map(reportEventHTML).join(''):'<div class="reportEmpty">尚未標記其他精彩事件</div>';
+function byId(id){ return document.getElementById(id); }
+function saveState(){
+  state.ourTeam=byId('ourTeam').value.trim();
+  state.oppTeam=byId('oppTeam').value.trim();
+  state.venue=byId('venue').value.trim();
+  localStorage.setItem(KEY, JSON.stringify(state));
 }
-function reportEventHTML(m){const team=m.team==='OUR'?(state.ourTeam||'我方'):m.team==='OPP'?(state.oppTeam||'對手'):'',num=m.player_number?` #${m.player_number}`:'';const label=m.event==='GOAL'?`⚽ ${team}${num}`:`${emoji(m.event)} ${m.event}`;return `<div class="reportEvent"><div class="rtime">${fmt(m.seconds,2)}</div><div>${label}</div><div class="rscore">${m.score_after||''}</div></div>`}
-function reportLines(){const lines=[];lines.push({type:'title',text:'足球比賽摘要'});lines.push({type:'score',left:state.ourTeam||'我方',score:`${state.ourScore} : ${state.oppScore}`,right:state.oppTeam||'對手'});lines.push({type:'meta',text:`場地：${state.venue||'未填場地'}`});lines.push({type:'meta',text:`實際比賽時間：${fmt(state.finished?state.finalElapsed:elapsed(),3)}`});if(state.startEpoch)lines.push({type:'meta',text:`開始：${fmtClock(state.startEpoch,true)}`});if(state.endEpoch)lines.push({type:'meta',text:`結束：${fmtClock(state.endEpoch,true)}`});if(state.regulationMinutes){const d=(state.finished?state.finalElapsed:elapsed())-state.regulationMinutes*60;lines.push({type:'meta',text:`規定時間：${state.regulationMinutes} 分鐘｜${d<0?'提前':'超過'} ${fmt(Math.abs(d),3)}`})}lines.push({type:'section',text:'進球紀錄'});const goals=state.markers.filter(m=>m.event==='GOAL');if(!goals.length)lines.push({type:'event',text:'— 尚未標記進球事件'});goals.forEach(m=>{const team=m.team==='OUR'?(state.ourTeam||'我方'):(state.oppTeam||'對手'),num=m.player_number?` #${m.player_number}`:'';lines.push({type:'event',text:`${fmt(m.seconds,2)}   ⚽ ${team}${num}   ${m.score_after||''}`})});lines.push({type:'section',text:'其他精彩標記事件'});const others=state.markers.filter(m=>m.event!=='GOAL');if(!others.length)lines.push({type:'event',text:'— 尚未標記其他精彩事件'});others.forEach(m=>lines.push({type:'event',text:`${fmt(m.seconds,2)}   ${emoji(m.event)} ${m.event}   ${m.score_after||''}`}));lines.push({type:'note',text:'※ 本報表僅整理現場主動標記事件，非官方完整技術統計。'});return lines}
+function loadState(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw) state={...state, ...JSON.parse(raw)};
+  }catch(e){}
+  byId('ourTeam').value=state.ourTeam||'';
+  byId('oppTeam').value=state.oppTeam||'';
+  byId('venue').value=state.venue||'';
+  byId('regMinutes').value=state.regulationMinutes||'';
+  buildNumberGrid();
+  render();
+}
+
+function elapsed(){
+  if(state.started && !state.finished && state.startEpoch){
+    return (Date.now()-state.startEpoch)/1000;
+  }
+  return state.finalElapsed || 0;
+}
+function fmtMMSS(sec){
+  sec=Math.max(0, Math.floor(Number(sec)||0));
+  const m=Math.floor(sec/60), s=sec%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function fmtClock(epoch){
+  if(!epoch) return '--:--:--';
+  const d=new Date(epoch);
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+}
+function fmtDateTime(epoch){
+  if(!epoch) return '--';
+  const d=new Date(epoch);
+  return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+' '+fmtClock(epoch);
+}
+function emoji(ev){
+  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🎯', GREAT_PLAY:'🔥'}[ev] || '•';
+}
+
+function tick(){
+  const sec=elapsed();
+  byId('timer').textContent=fmtMMSS(sec);
+  byId('compactDuration').textContent=fmtMMSS(sec);
+  byId('fullDuration').textContent=fmtMMSS(sec);
+  requestAnimationFrame(tick);
+}
+
+function toggleTimeBox(){
+  timeExpanded=!timeExpanded;
+  renderTimeBox();
+}
+function renderTimeBox(){
+  const box=byId('timeSummary');
+  box.classList.toggle('open', timeExpanded);
+  byId('timeToggle').textContent=timeExpanded?'收合':'展開';
+  byId('compactStart').textContent=fmtClock(state.startEpoch);
+  byId('compactEnd').textContent=fmtClock(state.endEpoch);
+  byId('fullStart').textContent=fmtDateTime(state.startEpoch);
+  byId('fullEnd').textContent=fmtDateTime(state.endEpoch);
+  renderDiff(byId('diffText'));
+}
+function renderDiff(el){
+  el.className='diff';
+  if(!state.regulationMinutes){
+    el.textContent='未設定規定時間';
+    return;
+  }
+  const target=state.regulationMinutes*60;
+  const actual=state.finished ? state.finalElapsed : elapsed();
+  const diff=Math.round(actual-target);
+  if(!state.finished){
+    el.textContent=`規定 ${state.regulationMinutes} 分鐘｜比賽結束後顯示差異`;
+  }else if(diff<0){
+    el.textContent=`⚠ 提前 ${fmtMMSS(Math.abs(diff))}`;
+    el.classList.add('early');
+  }else if(diff>0){
+    el.textContent=`超過 ${fmtMMSS(diff)}`;
+    el.classList.add('over');
+  }else{
+    el.textContent='時間一致';
+  }
+}
+
+function buildNumberGrid(){
+  const grid=byId('numberGrid');
+  grid.innerHTML='';
+  COMMON_NUMBERS.forEach(n=>{
+    const btn=document.createElement('button');
+    btn.className='numBtn';
+    btn.textContent=n;
+    btn.onclick=()=>finishGoal(String(n));
+    grid.appendChild(btn);
+  });
+}
+
+function startMatch(){
+  if(state.started && !state.finished) return;
+  if(state.finished){
+    alert('本場比賽已結束，請先建立新比賽');
+    return;
+  }
+  state.started=true;
+  state.startEpoch=Date.now();
+  state.endEpoch=null;
+  state.finalElapsed=0;
+  saveState();
+  render();
+}
+function finishMatch(){
+  if(!state.started){
+    alert('比賽尚未開始');
+    return;
+  }
+  if(state.finished) return;
+  const candidateEnd=Date.now();
+  const candidateElapsed=elapsed();
+  if(!confirm('確定本場比賽已結束嗎？')) return;
+  state.endEpoch=candidateEnd;
+  state.finalElapsed=candidateElapsed;
+  state.finished=true;
+  saveState();
+  render();
+}
+function newMatch(){
+  if((state.started || state.markers.length) && !confirm('建立新比賽會清空目前資料，確定嗎？')) return;
+  state={
+    ourTeam:'', oppTeam:'', venue:'',
+    started:false, finished:false, startEpoch:null, endEpoch:null, finalElapsed:0,
+    regulationMinutes:null, ourScore:0, oppScore:0, markers:[]
+  };
+  byId('ourTeam').value='';
+  byId('oppTeam').value='';
+  byId('venue').value='';
+  byId('regMinutes').value='';
+  timeExpanded=false;
+  saveState();
+  render();
+}
+
+function saveRegulation(){
+  const raw=byId('regMinutes').value.trim();
+  if(!raw){ state.regulationMinutes=null; saveState(); render(); return; }
+  const n=Number(raw);
+  if(!Number.isFinite(n) || n<=0 || n>180){
+    alert('請輸入 1–180 分鐘');
+    return;
+  }
+  state.regulationMinutes=n;
+  saveState();
+  render();
+}
+function clearRegulation(){
+  state.regulationMinutes=null;
+  byId('regMinutes').value='';
+  saveState();
+  render();
+}
+
+function openGoalModal(){
+  if(!state.started){ alert('請先按「開始比賽」'); return; }
+  if(state.finished){ alert('本場比賽已結束'); return; }
+  pendingGoalTime=elapsed();
+  pendingGoalTeam=null;
+  byId('goalOurName').textContent=state.ourTeam||'我方';
+  byId('goalOppName').textContent=state.oppTeam||'對手';
+  byId('goalModal').classList.add('open');
+}
+function cancelGoal(){
+  pendingGoalTime=null; pendingGoalTeam=null;
+  byId('goalModal').classList.remove('open');
+}
+function chooseGoalTeam(team){
+  pendingGoalTeam=team;
+  byId('goalModal').classList.remove('open');
+  byId('customRow').classList.remove('open');
+  byId('customNumber').value='';
+  const isOur=team==='OUR';
+  byId('ourNumberArea').style.display=isOur?'block':'none';
+  byId('oppNumberArea').style.display=isOur?'none':'block';
+  byId('numberTitle').textContent=isOur?'選擇我方進球背號':'對手進球背號';
+  byId('numberHint').textContent=isOur?'常用背號可直接點選；其他背號可手動輸入。':'對手背號可手動輸入或略過。';
+  byId('numberModal').classList.add('open');
+}
+function showCustomNumber(){
+  byId('customRow').classList.add('open');
+  setTimeout(()=>byId('customNumber').focus(), 50);
+}
+function saveCustomNumber(){
+  const raw=byId('customNumber').value.trim();
+  if(raw===''){ alert('請輸入背號'); return; }
+  const n=parseInt(raw,10);
+  if(!Number.isInteger(n) || n<0 || n>99){
+    alert('背號請輸入 0–99');
+    return;
+  }
+  finishGoal(String(n));
+}
+function cancelNumber(){
+  pendingGoalTime=null; pendingGoalTeam=null;
+  byId('numberModal').classList.remove('open');
+}
+function finishGoal(playerNumber){
+  if(pendingGoalTime===null || !pendingGoalTeam) return;
+  if(pendingGoalTeam==='OUR') state.ourScore += 1;
+  else state.oppScore += 1;
+  state.markers.push({
+    event:'GOAL',
+    team:pendingGoalTeam,
+    player_number:playerNumber,
+    seconds:pendingGoalTime,
+    time:fmtMMSS(pendingGoalTime),
+    score_after:`${state.ourScore}:${state.oppScore}`,
+    recorded_at:new Date().toISOString()
+  });
+  pendingGoalTime=null;
+  pendingGoalTeam=null;
+  byId('numberModal').classList.remove('open');
+  saveState();
+  render();
+}
+
+function mark(event, team='OUR'){
+  if(!state.started){ alert('請先按「開始比賽」'); return; }
+  if(state.finished){ alert('本場比賽已結束'); return; }
+  const sec=elapsed();
+  state.markers.push({
+    event, team,
+    player_number:'',
+    seconds:sec,
+    time:fmtMMSS(sec),
+    score_after:`${state.ourScore}:${state.oppScore}`,
+    recorded_at:new Date().toISOString()
+  });
+  saveState();
+  render();
+}
+function undoLast(){
+  if(!state.markers.length) return;
+  const m=state.markers.pop();
+  if(m.event==='GOAL'){
+    if(m.team==='OUR') state.ourScore=Math.max(0, state.ourScore-1);
+    if(m.team==='OPP') state.oppScore=Math.max(0, state.oppScore-1);
+  }
+  saveState();
+  render();
+}
+function deleteMarker(i){
+  const m=state.markers[i];
+  state.markers.splice(i,1);
+  if(m && m.event==='GOAL'){
+    if(m.team==='OUR') state.ourScore=Math.max(0, state.ourScore-1);
+    if(m.team==='OPP') state.oppScore=Math.max(0, state.oppScore-1);
+  }
+  saveState();
+  render();
+}
+function toggleLog(){ byId('logWrap').classList.toggle('open'); }
+
+function openScoreModal(){
+  byId('editOur').value=state.ourScore;
+  byId('editOpp').value=state.oppScore;
+  byId('scoreOurName').textContent=state.ourTeam||'我方';
+  byId('scoreOppName').textContent=state.oppTeam||'對手';
+  byId('scoreModal').classList.add('open');
+}
+function closeScoreModal(){ byId('scoreModal').classList.remove('open'); }
+function saveScoreModal(){
+  state.ourScore=Math.max(0, parseInt(byId('editOur').value||'0',10));
+  state.oppScore=Math.max(0, parseInt(byId('editOpp').value||'0',10));
+  closeScoreModal();
+  saveState();
+  render();
+}
+
+function renderLog(){
+  const log=byId('log');
+  log.innerHTML='';
+  state.markers.forEach((m,i)=>{
+    const row=document.createElement('div');
+    row.className='item';
+    const team=m.team==='OUR'?'我方':m.team==='OPP'?'對手':'';
+    const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
+    row.innerHTML=`
+      <div><b>${emoji(m.event)} ${m.event}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
+      <div class="time">${fmtMMSS(m.seconds)}</div>
+      <button class="del" onclick="deleteMarker(${i})">✕</button>
+    `;
+    log.appendChild(row);
+  });
+}
+function render(){
+  byId('ourLabel').textContent=state.ourTeam||'我方';
+  byId('oppLabel').textContent=state.oppTeam||'對手';
+  byId('ourScore').textContent=state.ourScore;
+  byId('oppScore').textContent=state.oppScore;
+  byId('count').textContent=state.markers.length;
+  let txt='尚未開始', cls='';
+  if(state.started && !state.finished) txt='比賽進行中';
+  if(state.finished){ txt=`比賽已結束｜${fmtMMSS(state.finalElapsed)}｜${state.ourScore}:${state.oppScore}`; cls='finished'; }
+  byId('status').textContent=txt;
+  byId('status').className='status '+cls;
+  renderTimeBox();
+  renderLog();
+}
+
+/* Report */
+function reportEventHTML(m){
+  const team=m.team==='OUR' ? (state.ourTeam||'我方') : m.team==='OPP' ? (state.oppTeam||'對手') : '';
+  const num=m.player_number ? ` #${m.player_number}` : '';
+  const label=m.event==='GOAL' ? `⚽ ${team}${num}` : `${emoji(m.event)} ${m.event}`;
+  return `<div class="reportEvent"><div class="rtime">${fmtMMSS(m.seconds)}</div><div>${label}</div><div class="rscore">${m.score_after||''}</div></div>`;
+}
+function buildReportDOM(){
+  byId('reportOurTeam').textContent=state.ourTeam||'我方';
+  byId('reportOppTeam').textContent=state.oppTeam||'對手';
+  byId('reportScore').textContent=`${state.ourScore} : ${state.oppScore}`;
+  byId('reportVenue').textContent=`📍 ${state.venue||'未填場地'}`;
+  byId('reportDuration').textContent=`⏱ ${fmtMMSS(state.finished?state.finalElapsed:elapsed())}`;
+  byId('reportStart').textContent=fmtClock(state.startEpoch);
+  byId('reportEnd').textContent=fmtClock(state.endEpoch);
+  byId('reportActual').textContent=fmtMMSS(state.finished?state.finalElapsed:elapsed());
+  renderDiff(byId('reportDiff'));
+  const goals=state.markers.filter(m=>m.event==='GOAL');
+  const others=state.markers.filter(m=>m.event!=='GOAL');
+  byId('reportGoals').innerHTML=goals.length ? goals.map(reportEventHTML).join('') : '<div class="reportEmpty">尚未標記進球事件</div>';
+  byId('reportOthers').innerHTML=others.length ? others.map(reportEventHTML).join('') : '<div class="reportEmpty">尚未標記其他精彩事件</div>';
+}
+function openReport(){
+  buildReportDOM();
+  byId('reportModal').classList.add('open');
+}
+function closeReport(){ byId('reportModal').classList.remove('open'); }
+
+/* PNG report */
+function reportLines(){
+  const lines=[];
+  lines.push({type:'title', text:'足球比賽摘要'});
+  lines.push({type:'score', left:state.ourTeam||'我方', score:`${state.ourScore} : ${state.oppScore}`, right:state.oppTeam||'對手'});
+  lines.push({type:'meta', text:`場地：${state.venue||'未填場地'}`});
+  lines.push({type:'meta', text:`實際比賽時間：${fmtMMSS(state.finished?state.finalElapsed:elapsed())}`});
+  if(state.startEpoch) lines.push({type:'meta', text:`開始：${fmtDateTime(state.startEpoch)}`});
+  if(state.endEpoch) lines.push({type:'meta', text:`結束：${fmtDateTime(state.endEpoch)}`});
+  if(state.regulationMinutes){
+    const diff=Math.round((state.finished?state.finalElapsed:elapsed()) - state.regulationMinutes*60);
+    if(state.finished){
+      lines.push({type:'meta', text:`規定時間：${state.regulationMinutes} 分鐘｜${diff<0?'提前':'超過'} ${fmtMMSS(Math.abs(diff))}`});
+    }else{
+      lines.push({type:'meta', text:`規定時間：${state.regulationMinutes} 分鐘`});
+    }
+  }
+  lines.push({type:'section', text:'進球紀錄'});
+  const goals=state.markers.filter(m=>m.event==='GOAL');
+  if(!goals.length) lines.push({type:'event', text:'— 尚未標記進球事件'});
+  goals.forEach(m=>{
+    const team=m.team==='OUR'?(state.ourTeam||'我方'):(state.oppTeam||'對手');
+    const num=m.player_number ? ` #${m.player_number}` : '';
+    lines.push({type:'event', text:`${fmtMMSS(m.seconds)}   ⚽ ${team}${num}   ${m.score_after||''}`});
+  });
+  lines.push({type:'section', text:'其他精彩標記事件'});
+  const others=state.markers.filter(m=>m.event!=='GOAL');
+  if(!others.length) lines.push({type:'event', text:'— 尚未標記其他精彩事件'});
+  others.forEach(m=>{
+    lines.push({type:'event', text:`${fmtMMSS(m.seconds)}   ${emoji(m.event)} ${m.event}   ${m.score_after||''}`});
+  });
+  lines.push({type:'note', text:'本報表僅整理現場主動標記事件，非官方完整技術統計。'});
+  return lines;
+}
 function makeReportCanvas(){
-  const lines=reportLines(),W=1080,pad=70;let H=Math.max(900,260+lines.length*62);
-  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');ctx.fillStyle='#0f1720';ctx.fillRect(0,0,W,H);ctx.textBaseline='middle';let y=70;
+  const lines=reportLines(), W=1080, pad=70;
+  const H=Math.max(900, 260 + lines.length*58);
+  const canvas=document.createElement('canvas');
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#0f1720';
+  ctx.fillRect(0,0,W,H);
+  ctx.textBaseline='middle';
+  let y=72;
   for(const line of lines){
-    if(line.type==='title'){ctx.fillStyle='#f8fafc';ctx.font='700 50px -apple-system, sans-serif';ctx.fillText(line.text,pad,y);y+=85}
-    else if(line.type==='score'){ctx.fillStyle='#e2e8f0';ctx.font='700 34px -apple-system, sans-serif';ctx.textAlign='left';ctx.fillText(line.left,pad,y);ctx.font='900 58px -apple-system, sans-serif';ctx.textAlign='center';ctx.fillText(line.score,W/2,y);ctx.font='700 34px -apple-system, sans-serif';ctx.textAlign='right';ctx.fillText(line.right,W-pad,y);ctx.textAlign='left';y+=90}
-    else if(line.type==='section'){ctx.fillStyle='#38bdf8';ctx.font='700 28px -apple-system, sans-serif';ctx.fillText(line.text,pad,y);y+=52}
-    else if(line.type==='event'){ctx.fillStyle='#f1f5f9';ctx.font='500 27px -apple-system, sans-serif';ctx.fillText(line.text,pad,y);y+=50}
-    else if(line.type==='note'){ctx.fillStyle='#64748b';ctx.font='400 21px -apple-system, sans-serif';ctx.fillText(line.text,pad,y);y+=45}
-    else{ctx.fillStyle='#aeb9c5';ctx.font='500 25px -apple-system, sans-serif';ctx.fillText(line.text,pad,y);y+=45}
+    if(line.type==='title'){
+      ctx.fillStyle='#f8fafc'; ctx.font='700 50px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText(line.text,pad,y); y+=85;
+    }else if(line.type==='score'){
+      ctx.fillStyle='#e2e8f0';
+      ctx.font='700 34px -apple-system, sans-serif'; ctx.textAlign='left'; ctx.fillText(line.left,pad,y);
+      ctx.font='900 58px -apple-system, sans-serif'; ctx.textAlign='center'; ctx.fillText(line.score,W/2,y);
+      ctx.font='700 34px -apple-system, sans-serif'; ctx.textAlign='right'; ctx.fillText(line.right,W-pad,y);
+      ctx.textAlign='left'; y+=88;
+    }else if(line.type==='section'){
+      ctx.fillStyle='#38bdf8'; ctx.font='700 28px -apple-system, sans-serif'; ctx.fillText(line.text,pad,y); y+=50;
+    }else if(line.type==='event'){
+      ctx.fillStyle='#f1f5f9'; ctx.font='500 27px -apple-system, sans-serif'; ctx.fillText(line.text,pad,y); y+=48;
+    }else if(line.type==='note'){
+      ctx.fillStyle='#64748b'; ctx.font='400 21px -apple-system, sans-serif'; ctx.fillText(line.text,pad,y); y+=40;
+    }else{
+      ctx.fillStyle='#aeb9c5'; ctx.font='500 25px -apple-system, sans-serif'; ctx.fillText(line.text,pad,y); y+=42;
+    }
   }
   return canvas;
 }
-function reportFilename(ext){const safe=`${state.ourTeam||'OurTeam'}_vs_${state.oppTeam||'Opponent'}`.replace(/[\\/:*?"<>|]/g,'_');return `${stamp()}_${safe}_${state.ourScore}-${state.oppScore}_summary.${ext}`}
-function downloadReportPNG(){const c=makeReportCanvas();c.toBlob(blob=>{if(blob)downloadBlob(blob,'image/png',reportFilename('png'),true)},'image/png',0.95)}
-async function shareReportPNG(){const c=makeReportCanvas();c.toBlob(async blob=>{if(!blob)return;const file=new File([blob],reportFilename('png'),{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({title:'足球比賽摘要',files:[file]});return}catch(e){if(e.name==='AbortError')return}}downloadBlob(blob,'image/png',reportFilename('png'),true)},'image/png',0.95)}
-function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function reportHTMLText(){
-  const goalHtml=state.markers.filter(m=>m.event==='GOAL').map(m=>{const team=m.team==='OUR'?(state.ourTeam||'我方'):(state.oppTeam||'對手'),num=m.player_number?` #${m.player_number}`:'';return `<li><span>${fmt(m.seconds,2)}</span> ⚽ ${escapeHTML(team+num)} <b>${escapeHTML(m.score_after||'')}</b></li>`}).join('')||'<li>尚未標記進球事件</li>';
-  const otherHtml=state.markers.filter(m=>m.event!=='GOAL').map(m=>`<li><span>${fmt(m.seconds,2)}</span> ${emoji(m.event)} ${escapeHTML(m.event)} <b>${escapeHTML(m.score_after||'')}</b></li>`).join('')||'<li>尚未標記其他精彩事件</li>';
-  let diff='';if(state.regulationMinutes){const d=(state.finished?state.finalElapsed:elapsed())-state.regulationMinutes*60;diff=`<p><b>規定時間：</b>${state.regulationMinutes} 分鐘　<b>${d<0?'提前':'超過'}：</b>${fmt(Math.abs(d),3)}</p>`}
-  return `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>足球比賽摘要</title><style>body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;background:#0f1720;color:#f8fafc;margin:0;padding:24px}.wrap{max-width:720px;margin:auto}.card{background:#16202b;border:1px solid #334155;border-radius:18px;padding:22px;margin-bottom:16px}h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;text-align:center;font-weight:800}.meta{color:#aeb9c5;text-align:center;margin-top:10px}h2{font-size:16px;color:#38bdf8}ul{list-style:none;padding:0;margin:0}li{padding:10px 0;border-bottom:1px solid #334155}li span{display:inline-block;width:90px;color:#facc15}.note{font-size:12px;color:#64748b;text-align:center}</style></head><body><div class="wrap"><div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHTML(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHTML(state.oppTeam||'對手')}</div></div><div class="meta">📍 ${escapeHTML(state.venue||'未填場地')}　⏱ ${fmt(state.finished?state.finalElapsed:elapsed(),3)}</div></div><div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHTML(fmtClock(state.startEpoch,true))}</p><p><b>結束：</b>${escapeHTML(fmtClock(state.endEpoch,true))}</p><p><b>實際比賽時間：</b>${fmt(state.finished?state.finalElapsed:elapsed(),3)}</p>${diff}</div><div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div><div class="card"><h2>其他精彩標記事件</h2><ul>${otherHtml}</ul></div><div class="note">本報表僅整理使用者於現場主動標記的事件，非官方完整技術統計。</div></div></body></html>`;
+function stamp(){
+  const d=new Date();
+  return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
 }
-function downloadReportHTML(){downloadBlob(reportHTMLText(),'text/html;charset=utf-8',reportFilename('html'))}
+function safeName(){
+  return `${state.ourTeam||'OurTeam'}_VS_${state.oppTeam||'Opponent'}`.replace(/[\\/:*?"<>|]/g,'_');
+}
+function reportFilename(ext){
+  return `${stamp()}_${safeName()}_${state.ourScore}-${state.oppScore}_summary.${ext}`;
+}
+function blobToObjectUrl(blob){ return URL.createObjectURL(blob); }
 
-function csvEscape(v){const s=String(v??'');return /[",\n]/.test(s)?'"'+s.replaceAll('"','""')+'"':s}
-function diffSeconds(){if(!state.regulationMinutes||!state.finished)return '';return (state.finalElapsed-state.regulationMinutes*60).toFixed(3)}
+async function shareReportImage(){
+  const canvas=makeReportCanvas();
+  canvas.toBlob(async blob=>{
+    if(!blob) return;
+    const file=new File([blob], reportFilename('png'), {type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      try{
+        await navigator.share({
+          title:'足球比賽摘要',
+          text:'可在分享面板選擇「儲存到照片 / 儲存影像」',
+          files:[file]
+        });
+        return;
+      }catch(e){
+        if(e.name==='AbortError') return;
+      }
+    }
+    // fallback: open image in new tab for long-press save
+    const url=blobToObjectUrl(blob);
+    window.open(url, '_blank');
+    setTimeout(()=>URL.revokeObjectURL(url), 60000);
+    alert('此裝置若未跳出分享面板，已改為開啟圖片新分頁。可長按圖片後選擇「儲存到照片」。');
+  }, 'image/png', 0.95);
+}
+async function saveReportImage(){
+  // same experience as share, but with wording aligned to user's need
+  await shareReportImage();
+}
+
+function escapeHtml(s){
+  return String(s??'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+function reportHTMLText(){
+  const goals=state.markers.filter(m=>m.event==='GOAL');
+  const others=state.markers.filter(m=>m.event!=='GOAL');
+  const goalHtml=goals.length ? goals.map(m=>{
+    const team=m.team==='OUR'?(state.ourTeam||'我方'):(state.oppTeam||'對手');
+    const num=m.player_number?` #${m.player_number}`:'';
+    return `<li><span>${fmtMMSS(m.seconds)}</span> ⚽ ${escapeHtml(team+num)} <b>${escapeHtml(m.score_after||'')}</b></li>`;
+  }).join('') : '<li>尚未標記進球事件</li>';
+  const otherHtml=others.length ? others.map(m=>`<li><span>${fmtMMSS(m.seconds)}</span> ${emoji(m.event)} ${escapeHtml(m.event)} <b>${escapeHtml(m.score_after||'')}</b></li>`).join('') : '<li>尚未標記其他精彩事件</li>';
+  let diff='';
+  if(state.regulationMinutes && state.finished){
+    const d=Math.round(state.finalElapsed-state.regulationMinutes*60);
+    diff=`<p><b>規定時間：</b>${state.regulationMinutes} 分鐘　<b>${d<0?'提前':'超過'}：</b>${fmtMMSS(Math.abs(d))}</p>`;
+  }
+  return `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>足球比賽摘要</title><style>
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;background:#0f1720;color:#f8fafc;margin:0;padding:24px}
+.wrap{max-width:720px;margin:auto}.card{background:#16202b;border:1px solid #334155;border-radius:18px;padding:22px;margin-bottom:16px}
+h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;text-align:center;font-weight:800}
+.meta{color:#aeb9c5;text-align:center;margin-top:10px}h2{font-size:16px;color:#38bdf8}ul{list-style:none;padding:0;margin:0}li{padding:10px 0;border-bottom:1px solid #334155}li span{display:inline-block;width:90px;color:#facc15}.note{font-size:12px;color:#64748b;text-align:center}
+</style></head><body><div class="wrap">
+<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">📍 ${escapeHtml(state.venue||'未填場地')}　⏱ ${fmtMMSS(state.finished?state.finalElapsed:elapsed())}</div></div>
+<div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtDateTime(state.startEpoch))}</p><p><b>結束：</b>${escapeHtml(fmtDateTime(state.endEpoch))}</p><p><b>實際比賽時間：</b>${fmtMMSS(state.finished?state.finalElapsed:elapsed())}</p>${diff}</div>
+<div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
+<div class="card"><h2>其他精彩標記事件</h2><ul>${otherHtml}</ul></div>
+<div class="note">本報表僅整理使用者於現場主動標記的事件，非官方完整技術統計。</div>
+</div></body></html>`;
+}
+function downloadReportHTML(){
+  downloadBlob(reportHTMLText(), 'text/html;charset=utf-8', reportFilename('html'));
+}
+
+/* Export data */
+function csvEscape(v){
+  const s=String(v??'');
+  return /[",\n]/.test(s) ? '"' + s.replaceAll('"','""') + '"' : s;
+}
+function diffSecondsExport(){
+  if(!state.regulationMinutes || !state.finished) return '';
+  return Math.round(state.finalElapsed-state.regulationMinutes*60);
+}
 function csvText(){
-  save();
-  const rows=[['our_team','opponent_team','venue','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','time','seconds','event','team','player_number','score_after','note','recorded_at']];
+  saveState();
+  const rows=[['our_team','opponent_team','venue','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','time','seconds','event','team','player_number','score_after','recorded_at']];
   if(state.markers.length===0){
-    rows.push([state.ourTeam,state.oppTeam,state.venue,state.startEpoch?new Date(state.startEpoch).toISOString():'',state.endEpoch?new Date(state.endEpoch).toISOString():'',state.finished?state.finalElapsed.toFixed(3):'',state.regulationMinutes||'',diffSeconds(),state.ourScore,state.oppScore,'','','','','','','','']);
+    rows.push([
+      state.ourTeam, state.oppTeam, state.venue,
+      state.startEpoch?fmtDateTime(state.startEpoch):'',
+      state.endEpoch?fmtDateTime(state.endEpoch):'',
+      Math.round(state.finished?state.finalElapsed:0),
+      state.regulationMinutes||'',
+      diffSecondsExport(),
+      state.ourScore, state.oppScore,
+      '', '', '', '', '', '', ''
+    ]);
   }else{
-    state.markers.forEach(m=>rows.push([state.ourTeam,state.oppTeam,state.venue,state.startEpoch?new Date(state.startEpoch).toISOString():'',state.endEpoch?new Date(state.endEpoch).toISOString():'',state.finished?state.finalElapsed.toFixed(3):'',state.regulationMinutes||'',diffSeconds(),state.ourScore,state.oppScore,fmt(m.seconds,2),m.seconds.toFixed(3),m.event,m.team||'',m.player_number||'',m.score_after||'','',m.recorded_at]));
+    state.markers.forEach(m=>{
+      rows.push([
+        state.ourTeam, state.oppTeam, state.venue,
+        state.startEpoch?fmtDateTime(state.startEpoch):'',
+        state.endEpoch?fmtDateTime(state.endEpoch):'',
+        Math.round(state.finished?state.finalElapsed:0),
+        state.regulationMinutes||'',
+        diffSecondsExport(),
+        state.ourScore, state.oppScore,
+        fmtMMSS(m.seconds),
+        Math.round(m.seconds),
+        m.event,
+        m.team||'',
+        m.player_number||'',
+        m.score_after||'',
+        m.recorded_at
+      ]);
+    });
   }
   return '\ufeff'+rows.map(r=>r.map(csvEscape).join(',')).join('\n');
 }
-function safeName(){return `${state.ourTeam||'OurTeam'}_vs_${state.oppTeam||'Opponent'}`.replace(/[\\/:*?"<>|]/g,'_')}
-function stamp(){const d=new Date();return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`}
-function csvFilename(){return `${stamp()}_${safeName()}_${state.ourScore}-${state.oppScore}_markers.csv`}
-function downloadBlob(content,type,name,isBlob=false){const blob=isBlob?content:new Blob([content],{type});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function downloadCSV(){downloadBlob(csvText(),'text/csv;charset=utf-8',csvFilename())}
-function downloadJSON(){save();downloadBlob(JSON.stringify(state,null,2),'application/json',`${stamp()}_${safeName()}_backup.json`)}
-async function shareCSV(){const file=new File([csvText()],csvFilename(),{type:'text/csv'});if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({title:'足球精彩標記 CSV',text:`${state.ourTeam||'我方'} ${state.ourScore}:${state.oppScore} ${state.oppTeam||'對手'}｜${state.venue||'未填場地'}`,files:[file]});return}catch(e){if(e.name==='AbortError')return}}alert('這個瀏覽器目前無法直接分享檔案，將改為下載 CSV。');downloadCSV()}
-function saveNow(){save();alert('已儲存在手機瀏覽器')}
+function csvFilename(){
+  return `${stamp()}_${safeName()}_${state.ourScore}-${state.oppScore}_markers.csv`;
+}
+function downloadBlob(content, type, name){
+  const blob = content instanceof Blob ? content : new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+function downloadCSV(){ downloadBlob(csvText(), 'text/csv;charset=utf-8', csvFilename()); }
+function downloadJSON(){
+  saveState();
+  downloadBlob(JSON.stringify(state, null, 2), 'application/json', `${stamp()}_${safeName()}_backup.json`);
+}
+async function shareCSV(){
+  const file=new File([csvText()], csvFilename(), {type:'text/csv'});
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try{
+      await navigator.share({
+        title:'足球精彩標記 CSV',
+        text:`${state.ourTeam||'我方'} ${state.ourScore}:${state.oppScore} ${state.oppTeam||'對手'}｜${state.venue||'未填場地'}`,
+        files:[file]
+      });
+      return;
+    }catch(e){
+      if(e.name==='AbortError') return;
+    }
+  }
+  alert('這個瀏覽器目前無法直接分享檔案，將改為下載 CSV。');
+  downloadCSV();
+}
+function saveNow(){
+  saveState();
+  alert('已儲存在手機瀏覽器');
+}
 
-['ourTeam','oppTeam','venue'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{save();render()}));
-load();tick();
+['ourTeam','oppTeam','venue'].forEach(id=>{
+  byId(id).addEventListener('input', ()=>{ saveState(); render(); });
+});
+
+loadState();
+tick();
 </script>
 </body>
 </html>
