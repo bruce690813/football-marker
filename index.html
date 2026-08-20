@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.38</title>
+<title>足球場邊記錄器 v2.39</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -21,22 +21,45 @@ h1{font-size:18px;margin:0}
 .sub{font-size:11px;color:var(--muted)}
 .tagline{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.2px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px;margin-bottom:6px}
-.compactFields{display:grid;grid-template-columns:1fr auto 1fr auto;gap:6px;align-items:center}
-.compactFields input,.venueRow input,.regRow input{
-  width:100%;font-size:14px;padding:8px 10px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
+.matchMetaRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.matchMetaRow input,.regRow input{
+  width:100%;font-size:14px;padding:9px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
-#ourTeam.requiredError{
-  border-color:#ff6b6b;
-  box-shadow:0 0 0 2px rgba(255,107,107,.22);
-  background:#211318;
-}
-
-.venueRow{margin-top:5px}
+#venue{min-width:0}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
-.scoreRow{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-top:8px}
-.teamName{text-align:center;font-weight:900;font-size:24px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.15}
-.vsTop{text-align:center;font-size:18px;line-height:1}
+.scoreRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;margin-top:10px;padding:3px 2px 0}
+.teamNameInput{
+  width:100%;
+  min-width:0;
+  border:0;
+  border-bottom:2px solid transparent;
+  outline:0;
+  background:transparent;
+  color:var(--text);
+  text-align:center;
+  font-family:inherit;
+  font-weight:900;
+  font-size:26px;
+  line-height:1.15;
+  padding:7px 2px 6px;
+  border-radius:8px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  transition:border-color .15s ease,background .15s ease,box-shadow .15s ease;
+}
+.teamNameInput::placeholder{color:#8997a6;opacity:.8}
+.teamNameInput:focus{
+  border-bottom-color:#38bdf8;
+  background:rgba(56,189,248,.07);
+  box-shadow:0 4px 12px rgba(56,189,248,.08);
+}
+#ourTeam.requiredError{
+  border-bottom-color:#ff6b6b;
+  background:rgba(255,107,107,.08);
+  box-shadow:0 4px 12px rgba(255,107,107,.12);
+}
 .scoreMid{text-align:center}
 .scoreText{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
 .scoreEdit{background:transparent;color:var(--muted);font-size:11px;padding:4px 8px;border:1px solid var(--line);margin-top:4px}
@@ -247,7 +270,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   .card{padding:8px}
   .timer{font-size:40px}
   .scoreText{font-size:30px}
-  .teamName{font-size:22px}
+  .teamNameInput{font-size:24px}
   .event{min-height:62px}
   button{padding:9px 7px}
 }
@@ -260,27 +283,22 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.38</div>
+    <div class="sub">v2.39</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
-    <div class="compactFields">
-      <input id="ourTeam" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off">
-      <div class="vsTop">🆚</div>
-      <input id="oppTeam" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off">
+    <div class="matchMetaRow">
+      <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
       <button class="new" onclick="newMatch()">新比賽</button>
-    </div>
-    <div class="venueRow">
-      <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off">
     </div>
 
     <div class="scoreRow">
-      <div class="teamName" id="ourLabel">我方</div>
+      <input id="ourTeam" class="teamNameInput" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱">
       <div class="scoreMid">
         <div class="scoreText"><span id="ourScore">0</span> : <span id="oppScore">0</span></div>
         <button class="scoreEdit" onclick="openScoreModal()">✎ 修正比分</button>
       </div>
-      <div class="teamName" id="oppLabel">對手</div>
+      <input id="oppTeam" class="teamNameInput" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="對手隊伍名稱">
     </div>
 
     <div class="timer" id="timer">00:00</div>
@@ -906,8 +924,6 @@ function renderLog(){
   });
 }
 function render(){
-  byId('ourLabel').textContent=state.ourTeam||'我方';
-  byId('oppLabel').textContent=state.oppTeam||'對手';
   byId('ourScore').textContent=state.ourScore;
   byId('oppScore').textContent=state.oppScore;
   byId('count').textContent=state.markers.length;
