@@ -1,18 +1,10 @@
-# 足球場邊記錄器 v2.36
+# 足球場邊記錄器 v2.37
 
-本版更新：
-- 表格欄寬再優化，摘要內「進球紀錄 / 其他精彩標記事件」更接近正式小報表
-- 摘要圖片記分板樣式再強化，更像正式賽事報表
-- 手機版摘要視窗高度與底部按鈕位置微調，閱讀與操作更穩定
-
-使用方式：
-1. 上傳 `index.html` 到 GitHub Pages 或直接以瀏覽器開啟。
-2. 在手機上填入我方、對手、場地後即可開始記錄。
-3. 點「摘要」可查看表格式賽事摘要，並可分享圖片或儲存圖片。
-
-
-## v2.36
-- 「儲存圖片」不再另開圖片預覽頁。
-- iPhone / iPad Safari 直接開啟系統分享面板，可選「儲存影像 / 儲存到照片」。
-- 儲存完成或取消後會回到原本的足球場邊記錄器頁面。
-- 不支援檔案分享的瀏覽器則改用一般下載方式。
+## 本版修正
+- 修正 iPhone Safari 摘要視窗底部「關閉 / 分享圖片 / 儲存圖片」按鈕看得到但點擊無反應的問題。
+- 移除摘要 footer 的 `position: sticky`，改為獨立固定在 modal flex 底部的 footer，避免 Safari hit-test 被捲動內容遮住。
+- footer 與按鈕增加 z-index / pointer-events / touch-action。
+- 三個按鈕增加明確的 DOM event listener，避免 iOS Safari 對 inline onclick 的偶發觸控問題。
+- 圖片產生流程由非同步 `canvas.toBlob()` 改為同步 `canvas.toDataURL()` → Blob/File。
+- 因此可在使用者點擊當下立即呼叫 `navigator.share()`，避免 iOS Safari 遺失 user activation。
+- 「儲存圖片」仍會叫出 iPhone 分享面板，可選「儲存影像 / 儲存到照片」；完成或取消後留在原頁。
