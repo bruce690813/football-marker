@@ -1,39 +1,24 @@
-# 足球精彩標記器 v2.4
+# 足球精彩標記器 v2.5
 
-## 手機端調整
-- 主要操作壓縮到一個手機畫面
-- 「暫停」改成「比賽結束」
-- 比賽流程：開始比賽 → 標記 → 比賽結束 → 匯出
-- 新增「分享 CSV」
-- 保留「下載 CSV」
-- 保留 JSON 備份
-- 標記清單改成預設收合，節省畫面高度
+## 新增
+- 手機端新增「比賽場地」
+- LocalStorage 會保存比賽場地
+- CSV 新增 `venue` 欄位
+- JSON 新增 `venue`
+- 分享 CSV 時會帶入比賽名稱與場地
+- Mac 剪輯程式會顯示：
+  - 比賽名稱
+  - 比賽場地
 
-## CSV 如何到 Mac
-### 方法 1：分享 CSV
-iPhone Safari 點「分享 CSV」。
-若瀏覽器支援檔案分享，會打開 iOS 分享面板，可選：
-- AirDrop 到 Mac
-- 儲存到「檔案」
-- iCloud Drive
-- 寄信給自己等
+## CSV 格式
+例如：
 
-### 方法 2：下載 CSV
-點「下載 CSV」後，通常可在 iPhone：
-檔案 App → 下載項目 / Downloads
-找到 CSV，再 AirDrop 或 iCloud 同步到 Mac。
+match_name,venue,time,seconds,event,note,recorded_at
+忠義 vs A隊,百齡足球場,05:41.22,341.220,GOAL,,2026-08-20T...
 
-## Mac 剪輯程式支援
-`marker_clip_tool_v2_4.py` 支援：
-- CSV
-- JSON
+## Mac
+執行：
 
-不建議圖片當主要資料交換格式。
-圖片若要讀取時間，需要 OCR，準確性與流程都比 CSV/JSON 差。
+start_mac.command
 
-## Offset
-攝影機先錄 30 秒，正式開球時手機才按「開始」：
-Offset = +30 秒。
-
-手機標記 05:41 GOAL
-→ 對應影片 06:11。
+匯入手機 CSV 或 JSON 後，介面會顯示比賽名稱與場地。

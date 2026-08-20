@@ -20,7 +20,8 @@ body{min-height:100dvh}
 h1{font-size:21px;margin:0}
 .sub{font-size:11px;color:var(--muted);margin-left:auto}
 .card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:10px;margin-bottom:8px}
-.matchrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.metaGrid{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center}
+.metaGrid input{grid-column:1/2}
 input{width:100%;font-size:16px;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:#0d1117;color:#fff}
 .timer{text-align:center;font-variant-numeric:tabular-nums;font-size:43px;font-weight:800;line-height:1;margin:9px 0}
 .mainControls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -40,7 +41,6 @@ button{border:0;border-radius:12px;padding:11px 8px;font-size:16px;font-weight:7
 .log{max-height:150px;overflow:auto}
 .item{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
 .time{color:#f2cc60;font-variant-numeric:tabular-nums}.del{background:transparent;color:#ff7b72;padding:3px 5px;font-size:13px}
-.summary{font-size:12px;color:var(--muted)}
 .finished{color:#ff9b9b;font-weight:700}
 @media(max-height:760px){
   h1{font-size:19px}.timer{font-size:39px}
@@ -57,15 +57,19 @@ button{border:0;border-radius:12px;padding:11px 8px;font-size:16px;font-weight:7
   </div>
 
   <div class="card">
-    <div class="matchrow">
+    <div class="metaGrid">
       <input id="matchName" placeholder="比賽名稱，例如：忠義 vs A隊">
       <button class="new" onclick="newMatch()">新比賽</button>
+      <input id="venue" placeholder="比賽場地，例如：百齡足球場">
     </div>
+
     <div class="timer" id="timer">00:00.00</div>
+
     <div class="mainControls">
-      <button class="start" id="startBtn" onclick="startMatch()">▶ 開始比賽</button>
-      <button class="finish" id="finishBtn" onclick="finishMatch()">■ 比賽結束</button>
+      <button class="start" onclick="startMatch()">▶ 開始比賽</button>
+      <button class="finish" onclick="finishMatch()">■ 比賽結束</button>
     </div>
+
     <div class="status" id="status">尚未開始</div>
   </div>
 
@@ -100,9 +104,11 @@ button{border:0;border-radius:12px;padding:11px 8px;font-size:16px;font-weight:7
 </div>
 
 <script>
-const KEY='football_marker_v24';
+const KEY='football_marker_v25';
+
 let state={
   matchName:'',
+  venue:'',
   started:false,
   finished:false,
   startEpoch:null,
@@ -112,31 +118,38 @@ let state={
 
 function save(){
   state.matchName=document.getElementById('matchName').value.trim();
+  state.venue=document.getElementById('venue').value.trim();
   localStorage.setItem(KEY,JSON.stringify(state));
 }
+
 function load(){
   try{
     const raw=localStorage.getItem(KEY);
     if(raw) state={...state,...JSON.parse(raw)};
   }catch(e){}
   document.getElementById('matchName').value=state.matchName||'';
+  document.getElementById('venue').value=state.venue||'';
   render();
 }
+
 function elapsed(){
   if(state.started && !state.finished && state.startEpoch){
     return (Date.now()-state.startEpoch)/1000;
   }
   return state.finalElapsed||0;
 }
+
 function fmt(sec){
   sec=Math.max(0,Number(sec)||0);
   const m=Math.floor(sec/60),s=sec-m*60;
   return String(m).padStart(2,'0')+':'+s.toFixed(2).padStart(5,'0');
 }
+
 function tick(){
   document.getElementById('timer').textContent=fmt(elapsed());
   requestAnimationFrame(tick);
 }
+
 function startMatch(){
   if(state.started && !state.finished)return;
   if(state.finished){
@@ -146,8 +159,10 @@ function startMatch(){
   state.started=true;
   state.startEpoch=Date.now();
   state.finalElapsed=0;
-  save();render();
+  save();
+  render();
 }
+
 function finishMatch(){
   if(!state.started || state.finished){
     if(!state.started) alert('比賽尚未開始');
@@ -156,81 +171,143 @@ function finishMatch(){
   if(!confirm('確定本場比賽已結束嗎？'))return;
   state.finalElapsed=elapsed();
   state.finished=true;
-  save();render();
+  save();
+  render();
 }
+
 function newMatch(){
   if((state.started || state.markers.length) && !confirm('建立新比賽會清空目前計時與標記，確定嗎？'))return;
-  state={matchName:'',started:false,finished:false,startEpoch:null,finalElapsed:0,markers:[]};
+  state={matchName:'',venue:'',started:false,finished:false,startEpoch:null,finalElapsed:0,markers:[]};
   document.getElementById('matchName').value='';
-  save();render();
+  document.getElementById('venue').value='';
+  save();
+  render();
 }
+
 function mark(event){
   if(!state.started){alert('請先按「開始比賽」');return}
   if(state.finished){alert('本場比賽已結束');return}
   const sec=elapsed();
-  state.markers.push({event,seconds:sec,time:fmt(sec),recorded_at:new Date().toISOString()});
-  save();render();
+  state.markers.push({
+    event,
+    seconds:sec,
+    time:fmt(sec),
+    recorded_at:new Date().toISOString()
+  });
+  save();
+  render();
   if(navigator.vibrate)navigator.vibrate(35);
 }
+
 function undoLast(){
   if(!state.markers.length)return;
-  state.markers.pop();save();render();
+  state.markers.pop();
+  save();
+  render();
 }
+
 function deleteMarker(i){
-  state.markers.splice(i,1);save();render();
+  state.markers.splice(i,1);
+  save();
+  render();
 }
+
 function render(){
   document.getElementById('count').textContent=state.markers.length;
   let text='尚未開始',cls='';
   if(state.started&&!state.finished)text='比賽進行中';
   if(state.finished){text='比賽已結束｜'+fmt(state.finalElapsed);cls='finished'}
   const st=document.getElementById('status');
-  st.textContent=text;st.className='status '+cls;
+  st.textContent=text;
+  st.className='status '+cls;
 
   const log=document.getElementById('log');
   log.innerHTML='';
   state.markers.forEach((m,i)=>{
-    const d=document.createElement('div');d.className='item';
+    const d=document.createElement('div');
+    d.className='item';
     d.innerHTML=`<div><b>${emoji(m.event)} ${m.event}</b></div><div class="time">${fmt(m.seconds)}</div><button class="del" onclick="deleteMarker(${i})">✕</button>`;
     log.appendChild(d);
   });
 }
-function toggleLog(){document.getElementById('logwrap').classList.toggle('open')}
-function emoji(e){return {GOAL:'⚽',SAVE:'🧤',SHOT:'🎯',GREAT_PLAY:'🔥'}[e]||'•'}
+
+function toggleLog(){
+  document.getElementById('logwrap').classList.toggle('open');
+}
+
+function emoji(e){
+  return {GOAL:'⚽',SAVE:'🧤',SHOT:'🎯',GREAT_PLAY:'🔥'}[e]||'•';
+}
+
 function csvEscape(v){
   const s=String(v??'');
   return /[",\n]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;
 }
+
 function csvText(){
   save();
-  const rows=[['match_name','time','seconds','event','note','recorded_at']];
-  state.markers.forEach(m=>rows.push([state.matchName,fmt(m.seconds),m.seconds.toFixed(3),m.event,'',m.recorded_at]));
+  const rows=[['match_name','venue','time','seconds','event','note','recorded_at']];
+  state.markers.forEach(m=>{
+    rows.push([
+      state.matchName,
+      state.venue,
+      fmt(m.seconds),
+      m.seconds.toFixed(3),
+      m.event,
+      '',
+      m.recorded_at
+    ]);
+  });
   return '\ufeff'+rows.map(r=>r.map(csvEscape).join(',')).join('\n');
 }
+
 function safeName(){
   return (state.matchName||'match').replace(/[\\/:*?"<>|]/g,'_');
 }
+
 function dateStamp(){
   const d=new Date();
   return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
 }
-function csvFilename(){return `${dateStamp()}_${safeName()}_markers.csv`}
+
+function csvFilename(){
+  return `${dateStamp()}_${safeName()}_markers.csv`;
+}
+
 function downloadBlob(content,type,name){
   const blob=new Blob([content],{type});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-function downloadCSV(){downloadBlob(csvText(),'text/csv;charset=utf-8',csvFilename())}
+
+function downloadCSV(){
+  downloadBlob(csvText(),'text/csv;charset=utf-8',csvFilename());
+}
+
 function downloadJSON(){
   save();
-  downloadBlob(JSON.stringify(state,null,2),'application/json',`${dateStamp()}_${safeName()}_backup.json`);
+  downloadBlob(
+    JSON.stringify(state,null,2),
+    'application/json',
+    `${dateStamp()}_${safeName()}_backup.json`
+  );
 }
+
 async function shareCSV(){
   const file=new File([csvText()],csvFilename(),{type:'text/csv'});
   if(navigator.canShare && navigator.canShare({files:[file]})){
     try{
-      await navigator.share({title:'足球精彩標記 CSV',text:state.matchName||'足球比賽標記',files:[file]});
+      await navigator.share({
+        title:'足球精彩標記 CSV',
+        text:`${state.matchName||'足球比賽'}｜${state.venue||'未填場地'}`,
+        files:[file]
+      });
       return;
     }catch(e){
       if(e.name==='AbortError')return;
@@ -239,9 +316,17 @@ async function shareCSV(){
   alert('這個瀏覽器目前無法直接分享檔案，將改為下載 CSV。');
   downloadCSV();
 }
-function saveNow(){save();alert('已儲存在手機瀏覽器')}
+
+function saveNow(){
+  save();
+  alert('已儲存在手機瀏覽器');
+}
+
 document.getElementById('matchName').addEventListener('change',save);
-load();tick();
+document.getElementById('venue').addEventListener('change',save);
+
+load();
+tick();
 </script>
 </body>
 </html>
