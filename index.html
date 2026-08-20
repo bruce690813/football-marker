@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.18</title>
+<title>足球場邊記錄器 v2.22</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -34,8 +34,9 @@ h1{font-size:18px;margin:0}
 .venueRow{margin-top:5px}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
-.scoreRow{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-top:8px}
+.scoreRow{display:grid;grid-template-columns:1fr auto auto 1fr;gap:6px;align-items:center;margin-top:8px}
 .teamName{text-align:center;font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vsIcon{text-align:center;font-size:18px;line-height:1}
 .scoreMid{text-align:center}
 .scoreText{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
 .scoreEdit{background:transparent;color:var(--muted);font-size:11px;padding:4px 8px;border:1px solid var(--line);margin-top:4px}
@@ -72,6 +73,23 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .event{min-height:60px;font-size:17px}
 .goal{background:var(--green)}.save{background:var(--blue)}.shot{background:var(--gold)}.play{background:var(--purple)}
 .event small{display:block;font-size:11px;font-weight:600;opacity:.9;margin-top:3px}
+.eventIcon{
+  display:inline-block;
+  font-size:1.3em;
+  line-height:0;
+  vertical-align:-0.08em;
+  margin-right:2px;
+}
+.eventTop{
+  display:block;
+  font-size:17px;
+  font-weight:800;
+  line-height:1.05;
+}
+.event small{
+  margin-top:4px;
+}
+
 
 .toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.toolGrid.twoCols{grid-template-columns:1fr 1fr}.toolGrid.finalTools{grid-template-columns:1fr 1fr 1fr}
 .toolGrid button{font-size:13px;padding:9px 6px}
@@ -147,7 +165,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.18</div>
+    <div class="sub">v2.22</div>
   </div>
 
   <div class="card">
@@ -157,11 +175,12 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <button class="new" onclick="newMatch()">新比賽</button>
     </div>
     <div class="venueRow">
-      <input id="venue" placeholder="場地">
+      <input id="venue" placeholder="🏟️ 場地">
     </div>
 
     <div class="scoreRow">
       <div class="teamName" id="ourLabel">我方</div>
+      <div class="vsIcon">🆚</div>
       <div class="scoreMid">
         <div class="scoreText"><span id="ourScore">0</span> : <span id="oppScore">0</span></div>
         <button class="scoreEdit" onclick="openScoreModal()">✎ 修正比分</button>
@@ -209,10 +228,10 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 
   <div class="card">
     <div class="events">
-      <button class="event goal" onclick="openGoalModal()">⚽ GOAL<small>進球</small></button>
-      <button class="event save" onclick="mark('SAVE','OUR')">🧤 SAVE<small>撲救</small></button>
-      <button class="event shot" onclick="mark('SHOT','OUR')">🎯 SHOT<small>射門</small></button>
-      <button class="event play" onclick="mark('GREAT_PLAY','OUR')">🔥 GREAT PLAY<small>精彩配合</small></button>
+      <button class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span><small>GOAL</small></button>
+      <button class="event save" onclick="mark('SAVE','OUR')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span><small>SAVE</small></button>
+      <button class="event shot" onclick="mark('SHOT','OUR')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span><small>SHOT</small></button>
+      <button class="event play" onclick="mark('GREAT_PLAY','OUR')"><span class="eventTop"><span class="eventIcon">🙌</span> 精彩配合</span><small>GREAT PLAY</small></button>
     </div>
   </div>
 
@@ -229,7 +248,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
     <div class="toolGrid finalTools">
       <button class="reportBtn" onclick="openReport()">📋 摘要</button>
       <button class="pngBtn" onclick="saveReportImage()">🖼 儲存圖片</button>
-      <button class="share" onclick="shareCSV()">分享 CSV</button>
+      <button class="share" onclick="shareCSV()">📹 分享 CSV</button>
     </div>
     
   </div>
@@ -525,7 +544,10 @@ function newMatch(){
   saveState();
   render();
 
-  setTimeout(()=>byId('oppTeam').focus(), 50);
+  // 新比賽建立後不自動聚焦任何輸入欄位，避免 iPhone 顯示藍色選取框。
+  if(document.activeElement && typeof document.activeElement.blur==='function'){
+    document.activeElement.blur();
+  }
 }
 
 function saveRegulation(){
