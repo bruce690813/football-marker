@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1117">
+<title>足球精彩標記器</title>
+<style>
+:root{
+  --bg:#0d1117; --card:#161b22; --line:#30363d; --text:#f0f6fc; --muted:#8b949e;
+  --green:#238636; --blue:#1f6feb; --gold:#d29922; --purple:#8957e5; --red:#da3633;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 14px calc(24px + env(safe-area-inset-bottom))}
+h1{font-size:24px;margin:4px 0 5px}.sub{color:var(--muted);font-size:13px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px}
+label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}
+input{width:100%;font-size:18px;padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:#0d1117;color:white}
+.timer{text-align:center;font-variant-numeric:tabular-nums;font-size:54px;font-weight:800;letter-spacing:1px;margin:12px 0 14px}
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+button{border:0;border-radius:14px;padding:14px 9px;font-size:17px;font-weight:750;color:white;cursor:pointer}
+.start{background:var(--green)} .pause{background:#3a4655} .new{background:#512a2a}
+.events{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.event{min-height:108px;font-size:21px}
+.goal{background:var(--green)} .save{background:var(--blue)} .shot{background:var(--gold)} .play{background:var(--purple)}
+.event small{display:block;font-size:12px;font-weight:500;opacity:.85;margin-top:5px}
+.row{display:flex;gap:8px}.row button{flex:1}
+.secondary{background:#30363d}.export{background:#f0f6fc;color:#111;width:100%}
+.status{text-align:center;color:var(--muted);font-size:13px;margin-top:8px}
+.log{max-height:260px;overflow:auto}
+.item{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}.time{color:#f2cc60;font-variant-numeric:tabular-nums}.del{background:transparent;color:#ff7b72;padding:4px 6px;font-size:15px}
+.note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
+@media(max-width:460px){.timer{font-size:46px}.event{min-height:96px;font-size:19px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>⚽ 足球精彩標記器</h1>
+  <div class="sub">球場只要手機即可｜資料只存在這支手機瀏覽器</div>
+
+  <div class="card">
+    <label>比賽名稱</label>
+    <input id="matchName" placeholder="例如：忠義 vs A隊">
+    <div class="timer" id="timer">00:00.00</div>
+    <div class="controls">
+      <button class="start" onclick="startTimer()">▶ 開始</button>
+      <button class="pause" onclick="pauseTimer()">⏸ 暫停</button>
+      <button class="new" onclick="newMatch()">↺ 新比賽</button>
+    </div>
+    <div class="status" id="status">尚未開始</div>
+  </div>
+
+  <div class="card">
+    <div class="events">
+      <button class="event goal" onclick="mark('GOAL')">⚽ GOAL<small>進球</small></button>
+      <button class="event save" onclick="mark('SAVE')">🧤 SAVE<small>撲救</small></button>
+      <button class="event shot" onclick="mark('SHOT')">🎯 SHOT<small>射門</small></button>
+      <button class="event play" onclick="mark('GREAT_PLAY')">🔥 GREAT PLAY<small>精彩配合</small></button>
+    </div>
+    <div class="status">精彩畫面出現時，只要按一下</div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <button class="secondary" onclick="undoLast()">↶ 復原上一筆</button>
+      <button class="secondary" onclick="saveSnapshot()">💾 儲存目前狀態</button>
+    </div>
+    <div class="note">
+      網頁會自動使用 LocalStorage 保存。Safari 關掉後再次開啟，通常仍可恢復目前比賽與標記。
+    </div>
+  </div>
+
+  <div class="card">
+    <b>標記紀錄</b>
+    <div class="log" id="log"></div>
+  </div>
+
+  <div class="card">
+    <button class="export" onclick="exportCSV()">⬇ 匯出 CSV 給 Mac 剪輯</button>
+    <div style="height:8px"></div>
+    <button class="export" onclick="exportJSON()">⬇ 備份 JSON</button>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY='football_highlight_mobile_v23';
+let state={
+  matchName:'',
+  running:false,
+  elapsedBefore:0,
+  startEpoch:null,
+  markers:[]
+};
+
+function load(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const s=JSON.parse(raw);
+      state={...state,...s};
+      if(state.running && state.startEpoch==null){
+        state.running=false;
+      }
+    }
+  }catch(e){}
+  document.getElementById('matchName').value=state.matchName||'';
+  renderLog(); renderStatus();
+}
+function save(){
+  state.matchName=document.getElementById('matchName').value.trim();
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+}
+function elapsed(){
+  if(state.running && state.startEpoch){
+    return state.elapsedBefore + (Date.now()-state.startEpoch)/1000;
+  }
+  return state.elapsedBefore;
+}
+function fmt(sec){
+  sec=Math.max(0,Number(sec)||0);
+  const m=Math.floor(sec/60), s=sec-m*60;
+  return String(m).padStart(2,'0')+':'+s.toFixed(2).padStart(5,'0');
+}
+function tick(){
+  document.getElementById('timer').textContent=fmt(elapsed());
+  requestAnimationFrame(tick);
+}
+function renderStatus(){
+  document.getElementById('status').textContent=state.running?'比賽計時中':'計時已暫停';
+}
+function startTimer(){
+  if(!state.running){
+    state.startEpoch=Date.now();
+    state.running=true;
+    save(); renderStatus();
+  }
+}
+function pauseTimer(){
+  if(state.running){
+    state.elapsedBefore=elapsed();
+    state.running=false;
+    state.startEpoch=null;
+    save(); renderStatus();
+  }
+}
+function newMatch(){
+  if(state.markers.length && !confirm('建立新比賽會清空目前標記，確定嗎？')) return;
+  const currentName=document.getElementById('matchName').value.trim();
+  state={matchName:currentName,running:false,elapsedBefore:0,startEpoch:null,markers:[]};
+  save(); renderLog(); renderStatus();
+}
+function mark(event){
+  if(!state.running){alert('請先按「開始」');return}
+  const sec=elapsed();
+  state.markers.push({
+    event,
+    seconds:sec,
+    time:fmt(sec),
+    recorded_at:new Date().toISOString()
+  });
+  save(); renderLog();
+  if(navigator.vibrate) navigator.vibrate(35);
+}
+function undoLast(){
+  if(!state.markers.length)return;
+  state.markers.pop(); save(); renderLog();
+}
+function deleteMarker(i){
+  state.markers.splice(i,1); save(); renderLog();
+}
+function renderLog(){
+  const log=document.getElementById('log');
+  log.innerHTML='';
+  if(!state.markers.length){
+    log.innerHTML='<div class="note">尚未有標記</div>';
+    return;
+  }
+  state.markers.forEach((m,i)=>{
+    const d=document.createElement('div');
+    d.className='item';
+    d.innerHTML=`<div><b>${emoji(m.event)} ${m.event}</b></div><div class="time">${fmt(m.seconds)}</div><button class="del" onclick="deleteMarker(${i})">✕</button>`;
+    log.appendChild(d);
+  });
+}
+function emoji(e){
+  return {GOAL:'⚽',SAVE:'🧤',SHOT:'🎯',GREAT_PLAY:'🔥'}[e]||'•';
+}
+function csvEscape(v){
+  const s=String(v??'');
+  return /[",\n]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;
+}
+function exportCSV(){
+  save();
+  const rows=[['match_name','time','seconds','event','note','recorded_at']];
+  state.markers.forEach(m=>{
+    rows.push([state.matchName,fmt(m.seconds),m.seconds.toFixed(3),m.event,'',m.recorded_at]);
+  });
+  const text='\ufeff'+rows.map(r=>r.map(csvEscape).join(',')).join('\n');
+  downloadBlob(text,'text/csv;charset=utf-8',filename('markers','csv'));
+}
+function exportJSON(){
+  save();
+  downloadBlob(JSON.stringify(state,null,2),'application/json',filename('backup','json'));
+}
+function filename(kind,ext){
+  const safe=(state.matchName||'match').replace(/[\\/:*?"<>|]/g,'_');
+  const d=new Date();
+  const stamp=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  return `${stamp}_${safe}_${kind}.${ext}`;
+}
+function downloadBlob(content,type,name){
+  const blob=new Blob([content],{type});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function saveSnapshot(){save();alert('已儲存在這支手機瀏覽器')}
+document.getElementById('matchName').addEventListener('change',save);
+load();tick();
+</script>
+</body>
+</html>
