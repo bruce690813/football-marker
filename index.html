@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.35</title>
+<title>足球場邊記錄器 v2.36</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -205,7 +205,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.35</div>
+    <div class="sub">v2.36</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1083,25 +1083,21 @@ function blobToObjectUrl(blob){ return URL.createObjectURL(blob); }
 function canvasBlob(canvas){
   return new Promise(resolve=>canvas.toBlob(resolve,'image/png',0.95));
 }
-function openImagePreview(dataUrl){
-  const w=window.open('', '_blank');
-  if(w){
-    w.document.write(`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>足球比賽摘要圖片</title><style>body{margin:0;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,sans-serif;display:flex;flex-direction:column;align-items:center}p{padding:14px 16px 2px;font-size:14px;color:#cbd5e1}img{max-width:100%;height:auto;display:block}</style></head><body><p>長按圖片可儲存到照片</p><img src="${dataUrl}" alt="足球比賽摘要"></body></html>`);
-    w.document.close();
-  }else{
-    location.href=dataUrl;
-  }
-}
-async function shareReportImage(){
-  const canvas=makeReportCanvas();
+async function shareImageFile(canvas, mode='share'){
   const blob=await canvasBlob(canvas);
-  if(!blob) return;
+  if(!blob){
+    alert('圖片產生失敗，請再試一次。');
+    return;
+  }
   const file=new File([blob], reportFilename('png'), {type:'image/png'});
+
+  // iPhone / iPad Safari：直接開啟系統分享面板。
+  // 使用者可選「儲存影像 / 儲存到照片」，完成後會回到目前頁面。
   if(navigator.canShare && navigator.canShare({files:[file]})){
     try{
       await navigator.share({
         title:'足球比賽摘要',
-        text:'可在分享面板選擇「儲存到照片 / 儲存影像」',
+        text: mode==='save' ? '請選擇「儲存影像 / 儲存到照片」' : '足球比賽摘要',
         files:[file]
       });
       return;
@@ -1109,11 +1105,22 @@ async function shareReportImage(){
       if(e.name==='AbortError') return;
     }
   }
-  openImagePreview(canvas.toDataURL('image/png'));
+
+  // 不支援檔案分享時，改用下載，不再另開圖片預覽頁。
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=reportFilename('png');
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+async function shareReportImage(){
+  await shareImageFile(makeReportCanvas(),'share');
 }
 async function saveReportImage(){
-  const canvas=makeReportCanvas();
-  openImagePreview(canvas.toDataURL('image/png'));
+  await shareImageFile(makeReportCanvas(),'save');
 }
 
 function escapeHtml(s){
