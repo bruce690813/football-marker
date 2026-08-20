@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.23</title>
+<title>足球場邊記錄器 v2.24</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -165,18 +165,18 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.23</div>
+    <div class="sub">v2.24</div>
   </div>
 
   <div class="card">
     <div class="compactFields">
-      <input id="ourTeam" placeholder="我方">
+      <input id="ourTeam" placeholder="我方" enterkeyhint="next" autocomplete="off">
       <div class="vsTop">🆚</div>
-      <input id="oppTeam" placeholder="對手">
+      <input id="oppTeam" placeholder="對手" enterkeyhint="next" autocomplete="off">
       <button class="new" onclick="newMatch()">新比賽</button>
     </div>
     <div class="venueRow">
-      <input id="venue" placeholder="🏟️ 場地">
+      <input id="venue" placeholder="🏟️ 場地" enterkeyhint="done" autocomplete="off">
     </div>
 
     <div class="scoreRow">
@@ -348,7 +348,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <div class="reportSectionTitle">其他精彩標記事件</div>
       <div id="reportOthers"></div>
 
-      <div class="reportNote">本頁僅整理使用者於現場主動標記的事件，非官方完整技術統計。</div>
+      
     </div>
     <div class="reportActions">
       <button class="closeReport" onclick="closeReport()">關閉</button>
@@ -775,7 +775,6 @@ function reportLines(){
   others.forEach(m=>{
     lines.push({type:'event', text:`${fmtMMSS(m.seconds)}   ${emoji(m.event)} ${m.event}   ${m.score_after||''}`});
   });
-  lines.push({type:'note', text:'本報表僅整理現場主動標記事件，非官方完整技術統計。'});
   return lines;
 }
 function makeReportCanvas(){
@@ -878,7 +877,7 @@ h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtDateTime(state.startEpoch))}</p><p><b>結束：</b>${escapeHtml(fmtDateTime(state.endEpoch))}</p><p><b>實際比賽時間：</b>${fmtMMSS(state.finished?state.finalElapsed:elapsed())}</p>${diff}</div>
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
 <div class="card"><h2>其他精彩標記事件</h2><ul>${otherHtml}</ul></div>
-<div class="note">本報表僅整理使用者於現場主動標記的事件，非官方完整技術統計。</div>
+
 </div></body></html>`;
 }
 function downloadReportHTML(){
@@ -975,6 +974,38 @@ async function shareCSV(){
     saveState();
     render();
   });
+});
+
+// 輸入流程引導：我方 → 對手 → 場地。
+// 以 Enter / iPhone 鍵盤「下一步」作為明確完成動作，避免使用者打字途中被自動跳欄位。
+byId('ourTeam').addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const value=byId('ourTeam').value.trim();
+    if(!value){
+      byId('ourTeam').classList.add('requiredError');
+      return;
+    }
+    byId('ourTeam').classList.remove('requiredError');
+    saveState();
+    byId('oppTeam').focus();
+  }
+});
+
+byId('oppTeam').addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    saveState();
+    byId('venue').focus();
+  }
+});
+
+byId('venue').addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    saveState();
+    byId('venue').blur();
+  }
 });
 
 loadState();
