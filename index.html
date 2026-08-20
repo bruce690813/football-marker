@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.49</title>
+<title>足球場邊記錄器 v2.50</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -403,6 +403,17 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .periodSummaryRow .ptime{color:#aeb9c5}
 .periodSummaryRow .pscore{text-align:right;font-weight:900}
 
+
+button:disabled{
+  background:#2b3543!important;
+  color:#7f8a99!important;
+  box-shadow:none!important;
+  opacity:.72;
+  cursor:not-allowed;
+  filter:grayscale(.45);
+}
+button:disabled:active{transform:none!important}
+
 </style>
 </head>
 <body>
@@ -412,7 +423,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.49</div>
+    <div class="sub">v2.50</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1290,8 +1301,30 @@ function render(){
     cls='finished';
     cardCls='finishedState';
   }
-  byId('startBtn').textContent=state.awaitingNextPeriod?'▶ 開始下半場':'▶ 開始比賽';
-  byId('finishBtn').textContent=state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 比賽結束';
+  const startBtn=byId('startBtn');
+  const finishBtn=byId('finishBtn');
+
+  startBtn.textContent=state.awaitingNextPeriod?'▶ 開始下半場':'▶ 開始比賽';
+  finishBtn.textContent=state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 比賽結束';
+
+  // 按鈕依比賽狀態啟用 / 禁用，避免現場誤觸。
+  if(state.finished){
+    // 全場結束：兩顆都鎖定，只能建立新比賽。
+    startBtn.disabled=true;
+    finishBtn.disabled=true;
+  }else if(state.awaitingNextPeriod){
+    // 中場：只能開始下半場。
+    startBtn.disabled=false;
+    finishBtn.disabled=true;
+  }else if(state.started){
+    // 比賽中：只能結束目前比賽 / 半場。
+    startBtn.disabled=true;
+    finishBtn.disabled=false;
+  }else{
+    // 賽前：只能開始比賽。
+    startBtn.disabled=false;
+    finishBtn.disabled=true;
+  }
 
   const stage=byId('broadcastStage');
   if(stage){
