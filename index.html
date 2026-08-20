@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.45</title>
+<title>足球場邊記錄器 v2.47</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -29,32 +29,56 @@ h1{font-size:18px;margin:0}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
 .scoreRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;margin-top:6px;padding:1px 2px 0}
-.teamNameInput{
+.teamNameBox{
+  width:100%;
+  min-width:0;
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  cursor:text;
+  padding:2px 3px;
+}
+.teamNameDisplay{
+  width:100%;
+  min-width:0;
+  text-align:center;
+  font-weight:900;
+  font-size:26px;
+  line-height:1.12;
+  color:var(--text);
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  line-clamp:2;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  max-height:2.24em;
+}
+.teamNameDisplay.empty{color:#8997a6}
+.teamNameEditor{
+  display:none;
   width:100%;
   min-width:0;
   border:0;
-  border-bottom:2px solid transparent;
+  border-bottom:2px solid #38bdf8;
   outline:0;
-  background:transparent;
+  background:rgba(56,189,248,.07);
   color:var(--text);
   text-align:center;
   font-family:inherit;
   font-weight:900;
-  font-size:26px;
+  font-size:22px;
   line-height:1.15;
-  padding:4px 2px 4px;
+  padding:5px 2px;
   border-radius:8px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  transition:border-color .15s ease,background .15s ease,box-shadow .15s ease;
-}
-.teamNameInput::placeholder{color:#8997a6;opacity:.8}
-.teamNameInput:focus{
-  border-bottom-color:#38bdf8;
-  background:rgba(56,189,248,.07);
   box-shadow:0 4px 12px rgba(56,189,248,.08);
 }
+.teamNameBox.editing .teamNameDisplay{display:none}
+.teamNameBox.editing .teamNameEditor{display:block}
+.teamNameEditor::placeholder{color:#8997a6;opacity:.8}
 #ourTeam.requiredError{
   border-bottom-color:#ff6b6b;
   background:rgba(255,107,107,.08);
@@ -288,7 +312,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   .card{padding:6px}
   .matchMetaRow input{padding-top:6px;padding-bottom:6px}
   .scoreRow{margin-top:4px}
-  .teamNameInput{font-size:24px;padding-top:3px;padding-bottom:3px}
+  .teamNameDisplay{font-size:24px}.teamNameEditor{font-size:21px}.teamNameBox{min-height:54px}
   .scoreText{font-size:31px}
   .scoreEdit{padding-top:2px;padding-bottom:2px}
   .timer{font-size:37px;margin:4px 0}
@@ -321,7 +345,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.45</div>
+    <div class="sub">v2.47</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -331,12 +355,18 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
     </div>
 
     <div class="scoreRow">
-      <input id="ourTeam" class="teamNameInput" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱">
+      <div class="teamNameBox" id="ourTeamBox" onclick="editTeamName('ourTeam')">
+        <div class="teamNameDisplay" id="ourTeamDisplay">忠義</div>
+        <input id="ourTeam" class="teamNameEditor" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱">
+      </div>
       <div class="scoreMid">
         <div class="scoreText"><span id="ourScore">0</span> : <span id="oppScore">0</span></div>
         <button class="scoreEdit" onclick="openScoreModal()">✎ 修正比分</button>
       </div>
-      <input id="oppTeam" class="teamNameInput" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="對手隊伍名稱">
+      <div class="teamNameBox" id="oppTeamBox" onclick="editTeamName('oppTeam')">
+        <div class="teamNameDisplay empty" id="oppTeamDisplay">對手</div>
+        <input id="oppTeam" class="teamNameEditor" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="對手隊伍名稱">
+      </div>
     </div>
 
     <div class="timer" id="timer">00:00</div>
@@ -748,7 +778,7 @@ function scorerStatsHTML(){
 }
 
 function tick(){
-  const sec=elapsed();
+  const sec=state.awaitingNextPeriod ? 0 : elapsed();
   byId('timer').textContent=fmtMMSS(sec);
   byId('compactDuration').textContent=fmtMMSS(sec);
   byId('fullDuration').textContent=fmtMMSS(sec);
@@ -880,7 +910,8 @@ function confirmFinishHalf(){
   state.multiPeriod=true;
   archiveCurrentPeriod('上半場');
   state.endEpoch=pendingFinishEnd;
-  state.finalElapsed=pendingFinishElapsed;
+  // 上半場時間已完整封存在 periods；等待下半場時，現在這一段的計時歸零。
+  state.finalElapsed=0;
   state.started=false;
   state.finished=false;
   state.awaitingNextPeriod=true;
@@ -926,6 +957,8 @@ function newMatch(){
   byId('ourTeam').value=rememberedOurTeam;
   byId('ourTeam').classList.remove('requiredError');
   byId('oppTeam').value='';
+  byId('ourTeamBox')?.classList.remove('editing');
+  byId('oppTeamBox')?.classList.remove('editing');
   byId('venue').value=rememberedVenue;
   byId('regMinutes').value='';
   timeExpanded=false;
@@ -1114,13 +1147,63 @@ function closeLogModal(){
   byId('logModal').classList.remove('open');
   document.body.style.overflow='';
 }
+function updateTeamNameDisplays(){
+  const our=(byId('ourTeam')?.value || state.ourTeam || '').trim();
+  const opp=(byId('oppTeam')?.value || state.oppTeam || '').trim();
+
+  const ourDisplay=byId('ourTeamDisplay');
+  const oppDisplay=byId('oppTeamDisplay');
+
+  if(ourDisplay){
+    ourDisplay.textContent=our || '我方';
+    ourDisplay.classList.toggle('empty', !our);
+  }
+  if(oppDisplay){
+    oppDisplay.textContent=opp || '對手';
+    oppDisplay.classList.toggle('empty', !opp);
+  }
+}
+
+function editTeamName(id){
+  const box=byId(id+'Box');
+  const input=byId(id);
+  if(!box || !input) return;
+  box.classList.add('editing');
+  setTimeout(()=>{
+    input.focus();
+    try{ input.setSelectionRange(input.value.length,input.value.length); }catch(e){}
+  },0);
+}
+
+function finishTeamNameEdit(id){
+  const box=byId(id+'Box');
+  const input=byId(id);
+  if(!box || !input) return;
+
+  const label=id==='ourTeam'?'我方隊伍名稱':'對手隊伍名稱';
+  const required=id==='ourTeam';
+  const value=validateTextField(id,label,required,15);
+
+  if(value===null){
+    box.classList.add('editing');
+    return;
+  }
+
+  saveState();
+  box.classList.remove('editing');
+  updateTeamNameDisplays();
+}
+
 function render(){
+  updateTeamNameDisplays();
   byId('ourScore').textContent=state.ourScore;
   byId('oppScore').textContent=state.oppScore;
   byId('count').textContent=state.markers.length;
   let txt='尚未開始', cls='idleStatus', cardCls='idleState';
   if(state.awaitingNextPeriod){
-    txt=`上半場結束｜${fmtMMSS(state.finalElapsed)}｜目前 ${state.ourScore}:${state.oppScore}`;
+    const firstHalf=state.periods.find(p=>Number(p.number)===1);
+    const firstHalfDuration=firstHalf ? (Number(firstHalf.duration)||0) : 0;
+    txt=`上半場結束｜${fmtMMSS(firstHalfDuration)}｜目前 ${state.ourScore}:${state.oppScore}`;
     cls='idleStatus';
     cardCls='idleState';
   }else if(state.started && !state.finished){
@@ -1575,6 +1658,11 @@ async function shareCSV(){
   downloadCSV();
 }
 
+
+['ourTeam','oppTeam'].forEach(id=>{
+  byId(id).addEventListener('click',e=>e.stopPropagation());
+});
+
 ['ourTeam','oppTeam','venue'].forEach(id=>{
   byId(id).addEventListener('input', ()=>{
     if(id==='ourTeam' && byId('ourTeam').value.trim()){
@@ -1593,7 +1681,9 @@ byId('ourTeam').addEventListener('keydown', e=>{
     const value=validateTextField('ourTeam','我方隊伍名稱',true,15);
     if(value===null) return;
     saveState();
-    byId('oppTeam').focus();
+    byId('ourTeamBox').classList.remove('editing');
+    updateTeamNameDisplays();
+    editTeamName('oppTeam');
   }
 });
 
@@ -1603,6 +1693,8 @@ byId('oppTeam').addEventListener('keydown', e=>{
     const value=validateTextField('oppTeam','對手隊伍名稱',false,15);
     if(value===null) return;
     saveState();
+    byId('oppTeamBox').classList.remove('editing');
+    updateTeamNameDisplays();
     byId('venue').focus();
   }
 });
@@ -1618,15 +1710,28 @@ byId('venue').addEventListener('keydown', e=>{
 });
 
 
+byId('ourTeam').addEventListener('focus', ()=>{
+  byId('ourTeamBox').classList.add('editing');
+});
+byId('oppTeam').addEventListener('focus', ()=>{
+  byId('oppTeamBox').classList.add('editing');
+});
+
 byId('ourTeam').addEventListener('blur', ()=>{
-  if(byId('ourTeam').value.trim()){
+  const value=byId('ourTeam').value.trim();
+  if(value){
     validateTextField('ourTeam','我方隊伍名稱',true,15);
   }
+  byId('ourTeamBox').classList.remove('editing');
+  updateTeamNameDisplays();
 });
 byId('oppTeam').addEventListener('blur', ()=>{
-  if(byId('oppTeam').value.trim()){
+  const value=byId('oppTeam').value.trim();
+  if(value){
     validateTextField('oppTeam','對手隊伍名稱',false,15);
   }
+  byId('oppTeamBox').classList.remove('editing');
+  updateTeamNameDisplays();
 });
 byId('venue').addEventListener('blur', ()=>{
   if(byId('venue').value.trim()){
