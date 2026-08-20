@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.24</title>
+<title>足球場邊記錄器 v2.25</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -81,10 +81,12 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   margin-right:2px;
 }
 .eventTop{
-  display:block;
-  font-size:17px;
-  font-weight:800;
-  line-height:1.05;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+  font-weight:850;
+  line-height:1;
 }
 .event small{
   margin-top:4px;
@@ -165,7 +167,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.24</div>
+    <div class="sub">v2.25</div>
   </div>
 
   <div class="card">
@@ -228,10 +230,10 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 
   <div class="card">
     <div class="events">
-      <button class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span><small>GOAL</small></button>
-      <button class="event save" onclick="mark('SAVE','OUR')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span><small>SAVE</small></button>
-      <button class="event shot" onclick="mark('SHOT','OUR')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span><small>SHOT</small></button>
-      <button class="event play" onclick="mark('GREAT_PLAY','OUR')"><span class="eventTop"><span class="eventIcon">🙌</span> 精彩配合</span><small>GREAT PLAY</small></button>
+      <button class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
+      <button class="event save" onclick="mark('SAVE','OUR')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span></button>
+      <button class="event shot" onclick="mark('SHOT','OUR')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span></button>
+      <button class="event play" onclick="mark('GREAT_PLAY','OUR')"><span class="eventTop"><span class="eventIcon">🙌</span> 精彩配合</span></button>
     </div>
   </div>
 
