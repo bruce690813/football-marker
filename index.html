@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.79</title>
+<title>足球場邊記錄器 v2.80</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -223,12 +223,11 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .timeHead{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--line)}
 .timeTitle{font-size:13px;font-weight:800}
 .timeToggle{background:#243244;font-size:12px;padding:6px 12px}
-.timeCompact{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;padding:6px 4px}
+.timeCompact{display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:7px 4px}
 .timeCell{text-align:center;border-right:1px solid var(--line)}
 .timeCell:last-child{border-right:0}
 .timeCell .label{font-size:10px;color:var(--muted)}
-.timeCell .value{font-size:13px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
-.timeCell.actual .value{color:var(--cyan);font-size:15px}
+.timeCell .value{font-size:14px;font-weight:850;margin-top:3px;font-variant-numeric:tabular-nums}
 .timeDetail{display:none;padding:10px}
 .timeSummary.open .timeDetail{display:block}
 .timeSummary.open .timeCompact{display:none}
@@ -676,7 +675,7 @@ button:disabled:active{transform:none!important}
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.79</div>
+    <div class="sub">v2.80</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -714,7 +713,6 @@ button:disabled:active{transform:none!important}
       <div class="timeCompact">
         <div class="timeCell"><div class="label">開始時間</div><div class="value" id="compactStart">--:--:--</div></div>
         <div class="timeCell"><div class="label">結束時間</div><div class="value" id="compactEnd">--:--:--</div></div>
-        <div class="timeCell actual"><div class="label">比賽時間</div><div class="value" id="compactDuration">00:00</div></div>
       </div>
       <div class="timeDetail">
         <div class="detailRow"><div class="label">開始</div><div class="value" id="fullStart">--</div></div>
@@ -1154,7 +1152,6 @@ function scorerStatsHTML(){
 function tick(){
   const sec=state.awaitingNextPeriod ? 0 : elapsed();
   byId('timer').textContent=fmtMMSS(sec);
-  byId('compactDuration').textContent=fmtMMSS(sec);
   byId('fullDuration').textContent=fmtMMSS(sec);
   requestAnimationFrame(tick);
 }
