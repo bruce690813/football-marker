@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.61</title>
+<title>足球場邊記錄器 v2.63</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -46,52 +46,72 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:30px;
-  padding:5px 10px;
+  min-height:42px;
+  padding:8px 10px;
   border-bottom:1px solid rgba(96,165,250,.24);
   background:linear-gradient(180deg,rgba(18,37,59,.98) 0%,rgba(13,29,47,.98) 100%);
+  position:relative;
 }
 .broadcastStage{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-width:78px;
-  min-height:28px;
-  padding:4px 13px;
+  min-width:106px;
+  min-height:38px;
+  padding:7px 18px;
   border-radius:999px;
-  font-size:11px;
+  font-size:15px;
   font-weight:950;
-  letter-spacing:.7px;
+  letter-spacing:.4px;
   color:#d7e0ea;
   background:#334155;
-  border:1px solid rgba(148,163,184,.35);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-  transition:background .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease;
+  border:1px solid rgba(148,163,184,.40);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 4px 12px rgba(0,0,0,.16);
+  transition:background .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease;
 }
 .broadcastStage.live{
-  color:#052e1a;
-  background:linear-gradient(180deg,#5ee98a 0%,#32cf68 100%);
-  border-color:#7bf6a3;
-  box-shadow:0 0 0 1px rgba(34,197,94,.20),0 0 16px rgba(34,197,94,.30),inset 0 1px 0 rgba(255,255,255,.34);
+  min-width:158px;
+  min-height:40px;
+  padding:6px 14px;
+  font-size:17px;
+  color:#f8fafc;
+  background:linear-gradient(180deg,#121c2a 0%,#0b1420 100%);
+  border:1px solid #2dd36f;
+  box-shadow:0 0 0 1px rgba(45,211,111,.16),0 0 18px rgba(45,211,111,.22),inset 0 1px 0 rgba(255,255,255,.07),0 4px 12px rgba(0,0,0,.22);
+  text-shadow:none;
+  gap:8px;
 }
 .broadcastStage.live::before{
-  content:'●';
-  margin-right:6px;
-  font-size:9px;
-  color:#075d2c;
+  content:'● LIVE';
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  padding:4px 7px;
+  border-radius:7px;
+  background:linear-gradient(180deg,#ff4d5a 0%,#d92736 100%);
+  color:#ffffff;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.5px;
   line-height:1;
+  box-shadow:0 0 10px rgba(239,68,68,.28),inset 0 1px 0 rgba(255,255,255,.20);
 }
 .broadcastStage.half{
-  color:#e5f1ff;
-  background:linear-gradient(180deg,#2d6db2 0%,#245991 100%);
-  border-color:#60a5fa;
-  box-shadow:0 0 12px rgba(59,130,246,.18),inset 0 1px 0 rgba(255,255,255,.12);
+  min-width:114px;
+  font-size:16px;
+  color:#f3f8ff;
+  background:linear-gradient(180deg,#3f7ec2 0%,#2b5f9b 100%);
+  border-color:#7ab6ff;
+  box-shadow:0 0 14px rgba(59,130,246,.24),inset 0 1px 0 rgba(255,255,255,.16),0 4px 12px rgba(0,0,0,.16);
 }
 .broadcastStage.full{
-  color:#fff1f2;
-  background:linear-gradient(180deg,#c93e48 0%,#a62832 100%);
-  border-color:#fb7185;
-  box-shadow:0 0 12px rgba(239,68,68,.18),inset 0 1px 0 rgba(255,255,255,.12);
+  min-width:124px;
+  font-size:16px;
+  color:#fff7f8;
+  background:linear-gradient(180deg,#df565f 0%,#bf3640 100%);
+  border-color:#ff9cab;
+  box-shadow:0 0 14px rgba(239,68,68,.24),inset 0 1px 0 rgba(255,255,255,.16),0 4px 12px rgba(0,0,0,.16);
 }
 .scoreRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center;margin-top:0;padding:10px 10px 5px}
 .teamNameBox{
@@ -521,7 +541,7 @@ button:disabled:active{transform:none!important}
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.61</div>
+    <div class="sub">v2.63</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
