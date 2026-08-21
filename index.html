@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.78</title>
+<title>足球場邊記錄器 v2.79</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -286,9 +286,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   position:absolute;right:14px;top:50%;transform:translateY(-50%);
   font-size:12px;font-weight:900;color:#8fb6ff;pointer-events:none
 }
-.regCustomHint{font-size:11px;color:#8ea0b8;margin-top:8px;text-align:center;transition:color .16s ease,font-weight .16s ease}
-.regCustomHint.warn{color:#fbbf24;font-weight:900}
-.regCustomHint.ok{color:#86efac;font-weight:850}
+.regCustomHint{font-size:11px;color:#8ea0b8;margin-top:8px;text-align:center}
 .diff{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}.diff.early{color:#ff7b72;font-weight:800}.diff.over{color:#f7d26e;font-weight:800}
 
 .events{display:grid;grid-template-columns:1fr 1fr;gap:6px}
@@ -678,7 +676,7 @@ button:disabled:active{transform:none!important}
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.78</div>
+    <div class="sub">v2.79</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -714,9 +712,9 @@ button:disabled:active{transform:none!important}
         <button class="timeToggle" id="timeToggle" onclick="toggleTimeBox()">展開</button>
       </div>
       <div class="timeCompact">
-        <div class="timeCell"><div class="label">開始</div><div class="value" id="compactStart">--:--:--</div></div>
-        <div class="timeCell"><div class="label">結束</div><div class="value" id="compactEnd">--:--:--</div></div>
-        <div class="timeCell actual"><div class="label">實際</div><div class="value" id="compactDuration">00:00</div></div>
+        <div class="timeCell"><div class="label">開始時間</div><div class="value" id="compactStart">--:--:--</div></div>
+        <div class="timeCell"><div class="label">結束時間</div><div class="value" id="compactEnd">--:--:--</div></div>
+        <div class="timeCell actual"><div class="label">比賽時間</div><div class="value" id="compactDuration">00:00</div></div>
       </div>
       <div class="timeDetail">
         <div class="detailRow"><div class="label">開始</div><div class="value" id="fullStart">--</div></div>
@@ -741,10 +739,10 @@ button:disabled:active{transform:none!important}
               <div class="regCustomCard" id="regCustomCard">
                 <div class="regCustomLabel">自訂分鐘</div>
                 <div class="regCustomInputWrap">
-                  <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" autocomplete="off" placeholder="請輸入 1–45" aria-label="自訂規定比賽時間（分鐘）" oninput="sanitizeRegCustomMinutes()" onblur="finalizeRegCustomMinutes()">
+                  <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" placeholder="請輸入 1–45" aria-label="自訂規定比賽時間（分鐘）">
                   <span class="regUnit">分鐘</span>
                 </div>
-                <div class="regCustomHint" id="regCustomHint">可輸入 1–45 分鐘整數，預設不帶值</div>
+                <div class="regCustomHint">可輸入 1–45 分鐘整數，預設不帶值</div>
               </div>
             </div>
             <div class="regButtons">
@@ -1206,55 +1204,6 @@ function toggleRegCustomInput(){
   if(customInput && !isCustom) customInput.value='';
 }
 
-function setRegCustomHint(message='', type=''){
-  const hint=byId('regCustomHint');
-  if(!hint) return;
-  hint.className='regCustomHint'+(type ? ' '+type : '');
-  hint.textContent=message || '可輸入 1–45 分鐘整數，預設不帶值';
-}
-
-function sanitizeRegCustomMinutes(){
-  const input=byId('regCustomMinutes');
-  if(!input) return;
-  let raw=String(input.value||'').replace(/[^0-9]/g,'');
-  if(raw===''){
-    input.value='';
-    setRegCustomHint();
-    return;
-  }
-  let value=parseInt(raw,10);
-  if(!Number.isFinite(value)){
-    input.value='';
-    setRegCustomHint();
-    return;
-  }
-  if(value>45){
-    input.value='45';
-    setRegCustomHint('最多 45 分鐘，已自動調整為 45','warn');
-    return;
-  }
-  input.value=String(value);
-  if(value<1){
-    setRegCustomHint('請輸入 1～45 分鐘的整數','warn');
-  }else{
-    setRegCustomHint(`自訂 ${value} 分鐘`,'ok');
-  }
-}
-
-function finalizeRegCustomMinutes(){
-  const input=byId('regCustomMinutes');
-  if(!input || input.value==='') return;
-  let value=parseInt(input.value,10);
-  if(!Number.isFinite(value)) return;
-  if(value<1){
-    input.value='1';
-    setRegCustomHint('最少 1 分鐘，已自動調整為 1','warn');
-  }else if(value>45){
-    input.value='45';
-    setRegCustomHint('最多 45 分鐘，已自動調整為 45','warn');
-  }
-}
-
 function syncRegulationInputsFromState(){
   const preset=byId('regPreset');
   const customInput=byId('regCustomMinutes');
@@ -1271,7 +1220,6 @@ function syncRegulationInputsFromState(){
     customInput.value=String(value);
   }
   toggleRegCustomInput();
-  setRegCustomHint();
 }
 
 function getRegulationMinutesInput(){
