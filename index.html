@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.60</title>
+<title>足球場邊記錄器 v2.61</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -521,7 +521,7 @@ button:disabled:active{transform:none!important}
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.60</div>
+    <div class="sub">v2.61</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1681,7 +1681,7 @@ function reportLines(){
   return lines;
 }
 
-function drawTeamNameTwoLines(ctx, text, centerX, centerY, maxWidth, maxFont=52, minFont=34){
+function drawTeamNameTwoLines(ctx, text, centerX, centerY, maxWidth, maxFont=48, minFont=32){
   const raw=String(text||'').trim() || '對手';
   let fontSize=maxFont;
 
@@ -1781,24 +1781,31 @@ function makeReportCanvas(){
       const statusColor=line.status==='比賽結束' ? '#ef4444' : (line.status==='比賽中' ? '#22c55e' : '#64748b');
       ctx.fillStyle='#0d1622'; roundRect(ctx,boxX,boxY,boxW,boxH,22,true,false);
       ctx.strokeStyle='#35516f'; ctx.lineWidth=2; roundRect(ctx,boxX,boxY,boxW,boxH,22,false,true);
-      ctx.fillStyle='#102033'; roundRect(ctx,boxX+18,boxY+38,246,96,16,true,false);
-      ctx.fillStyle='#102033'; roundRect(ctx,boxX+boxW-264,boxY+38,246,96,16,true,false);
-      ctx.fillStyle='#08111c'; roundRect(ctx,boxX+boxW/2-184,boxY+32,368,96,20,true,false);
-      ctx.strokeStyle=statusColor; ctx.lineWidth=4; roundRect(ctx,boxX+boxW/2-184,boxY+32,368,96,20,false,true);
+      // 匯出圖片使用與摘要預覽相同的優先順序：先保留完整隊名，再保留中央比分。
+      // 左右隊名區加寬；中央比分框固定且縮窄，避免長隊名被比分框擠壓。
+      const sideCardW=286;
+      const sideInset=16;
+      const scoreCardW=302;
+      const sideCenterOffset=sideInset+sideCardW/2;
+      const teamAreaW=sideCardW-24;
+
+      ctx.fillStyle='#102033'; roundRect(ctx,boxX+sideInset,boxY+38,sideCardW,96,16,true,false);
+      ctx.fillStyle='#102033'; roundRect(ctx,boxX+boxW-sideInset-sideCardW,boxY+38,sideCardW,96,16,true,false);
+      ctx.fillStyle='#08111c'; roundRect(ctx,boxX+boxW/2-scoreCardW/2,boxY+32,scoreCardW,96,20,true,false);
+      ctx.strokeStyle=statusColor; ctx.lineWidth=4; roundRect(ctx,boxX+boxW/2-scoreCardW/2,boxY+32,scoreCardW,96,20,false,true);
       ctx.fillStyle=statusColor; roundRect(ctx,boxX+boxW/2-94,boxY+8,188,30,15,true,false);
       ctx.fillStyle='#ffffff'; ctx.font='900 17px -apple-system, sans-serif'; ctx.textAlign='center'; ctx.fillText(line.status, boxX+boxW/2, boxY+23);
-      // 左右隊名各自限制在固定區塊內，最多兩行，不再壓到中央比分框。
-      const teamAreaW=230;
-      ctx.fillStyle='#f8fafc';
-      drawTeamNameTwoLines(ctx,line.left,boxX+141,boxY+87,teamAreaW,52,34);
 
-      ctx.font='900 90px -apple-system, sans-serif';
+      ctx.fillStyle='#f8fafc';
+      drawTeamNameTwoLines(ctx,line.left,boxX+sideCenterOffset,boxY+87,teamAreaW,48,32);
+
+      ctx.font='900 86px -apple-system, sans-serif';
       ctx.textAlign='center';
       ctx.textBaseline='middle';
       ctx.fillText(line.score,boxX+boxW/2,boxY+89);
 
       ctx.fillStyle='#f8fafc';
-      drawTeamNameTwoLines(ctx,line.right,boxX+boxW-141,boxY+87,teamAreaW,52,34);
+      drawTeamNameTwoLines(ctx,line.right,boxX+boxW-sideCenterOffset,boxY+87,teamAreaW,48,32);
 
       ctx.textAlign='left'; y+=186;
     }else if(line.type==='section'){
@@ -1909,6 +1916,9 @@ function dataURLToBlob(dataUrl){
   for(let i=0;i<len;i++) bytes[i]=binary.charCodeAt(i);
   return new Blob([bytes],{type:mime});
 }
+
+// 預先讓瀏覽器完成字型量測；匯出時仍保持同步，以免 iOS Safari 遺失分享手勢權限。
+if(document.fonts && document.fonts.ready){ document.fonts.ready.catch(()=>{}); }
 
 function buildReportImageFile(){
   // 同步完成 Canvas → File，避免 iOS Safari 因等待 toBlob()
