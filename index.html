@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.56</title>
+<title>足球場邊記錄器 v2.60</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -365,30 +365,31 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   -webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
 }
-.reportSectionTitle{font-size:13px;font-weight:900;color:#7dd3fc;margin:3px 0 8px;letter-spacing:.3px}
+.reportSectionTitle{position:relative;font-size:13px;font-weight:950;color:#dbeafe;margin:6px 0 8px;padding-left:10px;letter-spacing:.35px}
+.reportSectionTitle::before{content:'';position:absolute;left:0;top:1px;bottom:1px;width:3px;border-radius:3px;background:#38bdf8}
 .reportTimeCard{border:1px solid #2b3744;border-radius:12px;padding:10px;background:#111b26;margin-bottom:14px}
 .reportTimeGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px}
 .reportActual{font-size:24px;font-weight:900;color:#38bdf8;text-align:center;margin-top:8px}
-.reportEvent{gap:8px;padding:9px 10px;border-bottom:1px solid #25303b;font-size:11.5px;align-items:center;background:#0f1720}
+.reportEvent{gap:6px;padding:8px 9px;border-bottom:1px solid #25303b;font-size:11px;align-items:center;background:#0f1720}
 .reportEvent:last-child{border-bottom:0}
 .reportEvent .rtime{color:#facc15;font-variant-numeric:tabular-nums;font-weight:800}
-.reportEvent .rscore{color:#cbd5e1;text-align:right;font-variant-numeric:tabular-nums;font-weight:800}
+.reportEvent .rscore{color:#f1f5f9;text-align:right;font-variant-numeric:tabular-nums;font-weight:900}
 .reportEmpty{color:#8997a6;font-size:12px;padding:10px 12px}
 .scorerStats{border:1px solid #2b3744;border-radius:12px;background:#111b26;padding:4px 10px 6px;margin-bottom:14px}
 .scorerRow{display:block;padding:8px 0;border-bottom:1px solid #25303b;font-size:13px}
 .scorerRow:last-child{border-bottom:0}
 .scorerName{font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .scorerBalls{letter-spacing:2px;font-size:15px;white-space:nowrap}
-.goalOrdinal{display:inline-block;color:#7dd3fc;font-size:11px;font-weight:900;white-space:nowrap}
-.reportLabel{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.goalOrdinal{display:inline-block;color:#7dd3fc;font-size:10px;font-weight:950;white-space:nowrap;letter-spacing:.3px}
+.reportLabel{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-weight:700}
 .reportGoalLine{display:contents}
-.reportTable{border:1px solid #2b3744;border-radius:12px;overflow:hidden;background:#111b26;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
-.reportTableHead{gap:8px;padding:9px 10px;background:#172435;color:#93c5fd;font-size:10.5px;font-weight:900;letter-spacing:.5px}
+.reportTable{border:1px solid #314155;border-radius:12px;overflow:hidden;background:#0f1720;box-shadow:0 4px 12px rgba(0,0,0,.10),inset 0 0 0 1px rgba(255,255,255,.02)}
+.reportTableHead{gap:6px;padding:8px 9px;background:linear-gradient(180deg,#1b2d45 0%,#172435 100%);color:#bfdbfe;font-size:10px;font-weight:950;letter-spacing:.45px;border-bottom:1px solid #334155}
 .reportTableHead div:last-child{text-align:right}
-.reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{display:grid;grid-template-columns:64px 64px minmax(0,1fr) 54px}
-.reportTable.others .reportTableHead,.reportTable.others .reportEvent{display:grid;grid-template-columns:64px 96px minmax(0,1fr) 44px;gap:6px}
-.reportTableBody .reportEvent:nth-child(even){background:#111b26}
-.reportTableBody .reportEvent:nth-child(odd){background:#0f1720}
+.reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{display:grid;grid-template-columns:108px 52px minmax(0,1fr) 44px;gap:6px}
+.reportTable.others .reportTableHead,.reportTable.others .reportEvent{display:grid;grid-template-columns:108px 66px minmax(0,1fr) 44px;gap:6px}
+.reportTableBody .reportEvent:nth-child(even){background:#111c29}
+.reportTableBody .reportEvent:nth-child(odd){background:#0d1620}
 
 .reportNote{font-size:10px;color:#738190;margin-top:10px;text-align:center}
 .reportActions{
@@ -422,7 +423,14 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   .reportScoreRow{padding:12px 12px}
   .reportTeam{font-size:24px}
   .reportScore{font-size:46px}
-  .reportBody{padding:10px 12px 6px}
+  .reportBody{padding:8px 10px 6px}
+  .reportSectionTitle{margin:2px 0 6px}
+  .reportTableHead{padding:7px 8px;font-size:9.6px}
+  .reportEvent{padding:7px 8px;font-size:10.5px}
+  .reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{grid-template-columns:96px 46px minmax(0,1fr) 40px;gap:5px}
+  .reportTable.others .reportTableHead,.reportTable.others .reportEvent{grid-template-columns:96px 60px minmax(0,1fr) 40px;gap:5px}
+  .reportPeriodTime,.reportType,.goalOrdinal{font-size:9.4px}
+  .reportLabel{font-size:10.2px}
   .reportActions{padding:9px 9px 11px;gap:6px}
   .reportActions button{font-size:11.5px;padding:11px 4px}
 }
@@ -490,24 +498,17 @@ button:disabled:active{transform:none!important}
 }
 
 
-.reportTable.others .reportLabel{
-  font-size:11px;
-  font-weight:700;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
 .reportPeriodTime{
   color:#facc15;
   font-variant-numeric:tabular-nums;
-  font-weight:800;
-  font-size:10.5px;
+  font-weight:900;
+  font-size:10px;
   white-space:nowrap;
 }
 .reportType{
   color:#7dd3fc;
-  font-weight:900;
-  font-size:10.5px;
+  font-weight:950;
+  font-size:10px;
   white-space:nowrap;
 }
 
@@ -520,7 +521,7 @@ button:disabled:active{transform:none!important}
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.56</div>
+    <div class="sub">v2.60</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1536,14 +1537,13 @@ function render(){
 
 /* Report */
 function reportEventHTML(m, goalIndex=null){
-  const team=teamDisplay(m.team);
+  const team=teamDisplay(m.team) || '未指定';
   const num=m.player_number ? ` #${m.player_number}` : '';
-  const ordinal=(m.event==='GOAL' && goalIndex!==null) ? `第${goalIndex+1}球` : eventLabel(m.event);
-  const pfx=state.multiPeriod ? `${periodLabel(m.period||1)} · ` : '';
-  const label = m.event==='GOAL'
-    ? `${pfx}${emoji(m.event)} ${team||'未指定'}${num}`
-    : `${pfx}${emoji(m.event)} ${eventLabel(m.event)}${team ? ` · ${team}` : ''}${num}`;
-  return `<div class="reportEvent"><div class="goalOrdinal">${ordinal}</div><div class="rtime">${fmtMMSS(m.seconds)}</div><div class="reportLabel" title="${escapeHtml(label)}">${label}</div><div class="rscore">${m.score_after||''}</div></div>`;
+  const ordinal=(m.event==='GOAL' && goalIndex!==null) ? `G${goalIndex+1}` : eventLabel(m.event);
+  const period=state.multiPeriod ? periodLabel(m.period||1) : '';
+  const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
+  const label = `${team}${num}`;
+  return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="goalOrdinal">${ordinal}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="rscore">${m.score_after||''}</div></div>`;
 }
 function reportOtherEventHTML(m){
   const team=teamDisplay(m.team) || '未指定';
@@ -1553,8 +1553,8 @@ function reportOtherEventHTML(m){
   const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
   const actor=`${team}${num}`;
   return `<div class="reportEvent">
-    <div class="reportType">${escapeHtml(type)}</div>
     <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
+    <div class="reportType">${escapeHtml(type)}</div>
     <div class="reportLabel" title="${escapeHtml(actor)}">${escapeHtml(actor)}</div>
     <div class="rscore">${m.score_after||''}</div>
   </div>`;
@@ -1581,10 +1581,10 @@ function buildReportDOM(){
   const others=state.markers.filter(m=>m.event!=='GOAL');
   byId('reportScorers').innerHTML=scorerStatsHTML();
   byId('reportGoals').innerHTML=goals.length
-    ? `<div class="reportTable goals"><div class="reportTableHead"><div>進球序</div><div>時間</div><div>事件</div><div>比分</div></div><div class="reportTableBody">${goals.map((m,i)=>reportEventHTML(m,i)).join('')}</div></div>`
+    ? `<div class="reportTable goals"><div class="reportTableHead"><div>半場 / 時間</div><div>進球</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${goals.map((m,i)=>reportEventHTML(m,i)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記進球事件</div>';
   byId('reportOthers').innerHTML=others.length
-    ? `<div class="reportTable others"><div class="reportTableHead"><div>類型</div><div>半場 / 時間</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportOtherEventHTML(m)).join('')}</div></div>`
+    ? `<div class="reportTable others"><div class="reportTableHead"><div>半場 / 時間</div><div>類型</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportOtherEventHTML(m)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記其他精彩事件</div>';
 }
 
@@ -1654,7 +1654,14 @@ function reportLines(){
   goals.forEach((m,i)=>{
     const team=teamDisplay(m.team);
     const num=m.player_number ? ` #${m.player_number}` : '';
-    lines.push({type:'goalEvent', ordinal:`第${i+1}球`, time:fmtMMSS(m.seconds), label:`${state.multiPeriod?periodLabel(m.period||1)+' · ':''}⚽ 進球 · ${team}${num}`, score:m.score_after||''});
+    const period=state.multiPeriod ? periodLabel(m.period||1) : '';
+    lines.push({
+      type:'goalEvent',
+      periodTime:period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds),
+      ordinal:`G${i+1}`,
+      label:`${team}${num}`,
+      score:m.score_after||''
+    });
   });
   lines.push({type:'section', text:'其他精彩標記事件'});
   const others=state.markers.filter(m=>m.event!=='GOAL');
@@ -1810,40 +1817,40 @@ function makeReportCanvas(){
     }else if(line.type==='goalTableHeader'){
       ctx.fillStyle='#172435'; roundRect(ctx,pad,y-18,W-pad*2,34,10,true,false);
       ctx.fillStyle='#93c5fd'; ctx.font='800 20px -apple-system, sans-serif'; ctx.textAlign='left';
-      ctx.fillText('進球序',pad+12,y); ctx.fillText('時間',pad+140,y); ctx.fillText('事件',pad+250,y);
+      ctx.fillText('半場 / 時間',pad+12,y); ctx.fillText('進球',pad+245,y); ctx.fillText('球員 / 隊伍',pad+375,y);
       ctx.textAlign='right'; ctx.fillText('比分',W-pad-12,y); ctx.textAlign='left';
       y+=42;
     }else if(line.type==='goalEvent'){
       const rowX=pad, rowY=y-19, rowH=38;
       ctx.fillStyle='#0f1720'; ctx.fillRect(rowX,rowY,W-pad*2,rowH);
-      const ordinalX=pad+8, timeX=pad+138, labelX=pad+250, scoreX=W-pad-8;
-      ctx.fillStyle='#7dd3fc'; ctx.font='700 24px -apple-system, sans-serif'; ctx.textAlign='left'; ctx.fillText(line.ordinal, ordinalX, y);
-      ctx.fillStyle='#facc15'; ctx.font='700 25px -apple-system, sans-serif'; ctx.fillText(line.time, timeX, y);
-      ctx.fillStyle='#f1f5f9'; ctx.font='500 25px -apple-system, Apple Color Emoji, sans-serif'; ctx.fillText(line.label, labelX, y);
+      const periodTimeX=pad+8, ordinalX=pad+245, labelX=pad+375, scoreX=W-pad-8;
+      ctx.fillStyle='#facc15'; ctx.font='700 23px -apple-system, sans-serif'; ctx.textAlign='left'; ctx.fillText(line.periodTime, periodTimeX, y);
+      ctx.fillStyle='#7dd3fc'; ctx.font='700 23px -apple-system, sans-serif'; ctx.fillText(line.ordinal, ordinalX, y);
+      ctx.fillStyle='#f1f5f9'; ctx.font='600 23px -apple-system, sans-serif'; ctx.fillText(line.label, labelX, y);
       ctx.fillStyle='#cbd5e1'; ctx.font='700 25px -apple-system, sans-serif'; ctx.textAlign='right'; ctx.fillText(line.score, scoreX, y);
       ctx.strokeStyle='#263442'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pad,y+19); ctx.lineTo(W-pad,y+19); ctx.stroke();
       ctx.textAlign='left'; y+=52;
     }else if(line.type==='otherTableHeader'){
       ctx.fillStyle='#172435'; roundRect(ctx,pad,y-18,W-pad*2,34,10,true,false);
       ctx.fillStyle='#93c5fd'; ctx.font='800 20px -apple-system, sans-serif'; ctx.textAlign='left';
-      ctx.fillText('類型',pad+12,y);
-      ctx.fillText('半場 / 時間',pad+180,y);
-      ctx.fillText('球員 / 隊伍',pad+410,y);
+      ctx.fillText('半場 / 時間',pad+12,y);
+      ctx.fillText('類型',pad+245,y);
+      ctx.fillText('球員 / 隊伍',pad+375,y);
       ctx.textAlign='right'; ctx.fillText('比分',W-pad-12,y); ctx.textAlign='left';
       y+=42;
     }else if(line.type==='otherEvent'){
       const rowX=pad, rowY=y-19, rowH=38;
       ctx.fillStyle='#0f1720'; ctx.fillRect(rowX,rowY,W-pad*2,rowH);
-      const typeX=pad+8, periodTimeX=pad+180, actorX=pad+410, scoreX=W-pad-8;
-
-      ctx.fillStyle='#7dd3fc';
-      ctx.font='700 23px -apple-system, Apple Color Emoji, sans-serif';
-      ctx.textAlign='left';
-      ctx.fillText(line.typeLabel, typeX, y);
+      const periodTimeX=pad+8, typeX=pad+245, actorX=pad+375, scoreX=W-pad-8;
 
       ctx.fillStyle='#facc15';
       ctx.font='700 23px -apple-system, sans-serif';
+      ctx.textAlign='left';
       ctx.fillText(line.periodTime, periodTimeX, y);
+
+      ctx.fillStyle='#7dd3fc';
+      ctx.font='700 23px -apple-system, Apple Color Emoji, sans-serif';
+      ctx.fillText(line.typeLabel, typeX, y);
 
       ctx.fillStyle='#f1f5f9';
       ctx.font='600 23px -apple-system, sans-serif';
