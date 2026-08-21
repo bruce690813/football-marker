@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.50</title>
+<title>足球場邊記錄器 v2.53</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -28,7 +28,12 @@ h1{font-size:18px;margin:0}
 #venue{min-width:0}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
-.new{background:#475569}
+.new{
+  background:linear-gradient(180deg,#3b536f 0%,#2f435b 100%);
+  border:1px solid rgba(148,163,184,.20);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+  white-space:nowrap
+}
 .broadcastScoreboard{
   margin-top:7px;
   border:1px solid rgba(96,165,250,.38);
@@ -149,7 +154,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   box-shadow:inset 0 1px 0 rgba(255,255,255,.10)
 }
 .finish{background:var(--red)}
-.status{text-align:center;color:var(--muted);font-size:11px;margin-top:4px}
+.status{display:none}
 .finished{color:#ffb3b3;font-weight:800}
 .liveStatus{color:#9de6b2;font-weight:800}
 .idleStatus{color:#91a0b6}
@@ -217,9 +222,18 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.toolGrid.twoCols{grid-template-columns:1fr 1fr}.toolGrid.finalTools{grid-template-columns:1fr 1fr 1fr}
 .toolGrid button{font-size:13px;padding:8px 6px;min-height:42px;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 .reportBtn{background:#0f766e}.pngBtn{background:#7c3aed}
-.recordFullBtn{width:100%;min-height:44px;font-size:14px;touch-action:manipulation}
+.recordFullBtn{
+  width:100%;
+  min-height:44px;
+  font-size:14px;
+  touch-action:manipulation;
+  background:linear-gradient(180deg,#365574 0%,#29435e 100%);
+  border:1px solid rgba(96,165,250,.20);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)
+}
 .finalToolsCard{position:relative;z-index:20}
 .finalTools button{position:relative;z-index:21;pointer-events:auto;touch-action:manipulation}
+.finalTools button:disabled{pointer-events:none}
 .share{background:#2f81f7}.export{background:#f8fafc;color:#111}
 
 .logWrap{display:none!important}
@@ -295,7 +309,22 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .reportTop{padding:16px 16px 12px;border-bottom:1px solid #2b3744;background:linear-gradient(180deg,#101826 0%,#0f1720 100%);flex:0 0 auto}
 .reportTitle{font-size:13px;color:#93a4b6;letter-spacing:.3px}
 .reportScoreRow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-top:10px;padding:14px 16px;border:1px solid #314155;border-radius:16px;background:linear-gradient(180deg,#132033 0%,#0c1420 100%);box-shadow:inset 0 0 0 1px rgba(59,130,246,.08)}
-.reportTeam{text-align:center;font-size:26px;font-weight:900;letter-spacing:.5px}
+.reportTeam{
+  text-align:center;
+  font-size:26px;
+  font-weight:900;
+  letter-spacing:.5px;
+  line-height:1.12;
+  min-width:0;
+  max-width:100%;
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  line-clamp:2;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
 .reportScore{font-size:50px;font-weight:900;line-height:1}
 .reportMeta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px;color:#aeb9c5;font-size:12px}
 .reportStatusBadge{display:inline-flex;align-items:center;justify-content:center;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.4px;margin:10px auto 0;border:1px solid transparent}
@@ -414,6 +443,17 @@ button:disabled{
 }
 button:disabled:active{transform:none!important}
 
+
+.event:disabled{
+  background:#2b3543!important;
+  color:#7f8a99!important;
+  border-color:#384454!important;
+  box-shadow:none!important;
+  opacity:.68;
+  filter:grayscale(.55);
+}
+.event:disabled .eventIcon{opacity:.55}
+
 </style>
 </head>
 <body>
@@ -423,13 +463,13 @@ button:disabled:active{transform:none!important}
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.50</div>
+    <div class="sub">v2.53</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
     <div class="matchMetaRow">
       <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
-      <button class="new" onclick="newMatch()">新比賽</button>
+      <button class="new" onclick="newMatch()">＋ 新比賽</button>
     </div>
 
     <div class="broadcastScoreboard">
@@ -494,10 +534,10 @@ button:disabled:active{transform:none!important}
 
   <div class="card">
     <div class="events">
-      <button class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
-      <button class="event save" onclick="mark('SAVE','OUR')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span></button>
-      <button class="event shot" onclick="mark('SHOT','OUR')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span></button>
-      <button class="event play" onclick="mark('GREAT_PLAY','OUR')"><span class="eventTop"><span class="eventIcon">🙌</span> 精彩配合</span></button>
+      <button id="goalBtn" class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
+      <button id="saveBtn" class="event save" onclick="openPlayerEvent('SAVE')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span></button>
+      <button id="shotBtn" class="event shot" onclick="openPlayerEvent('SHOT')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span></button>
+      <button id="greatPlayBtn" class="event play" onclick="mark('GREAT_PLAY','OUR')"><span class="eventTop"><span class="eventIcon">🙌</span> 精彩配合</span></button>
     </div>
   </div>
 
@@ -507,9 +547,9 @@ button:disabled:active{transform:none!important}
 
 <div class="card finalToolsCard">
     <div class="toolGrid finalTools">
-      <button class="reportBtn" onclick="openReport()">📋 摘要</button>
-      <button class="pngBtn" onclick="saveReportImage()">🖼 儲存圖片</button>
-      <button class="share" onclick="shareCSV()">📹 分享 CSV</button>
+      <button id="reportBtn" class="reportBtn" onclick="openReport()">📋 摘要</button>
+      <button id="saveImageBtn" class="pngBtn" onclick="saveReportImage()">🖼 儲存圖片</button>
+      <button id="shareCsvBtn" class="share" onclick="shareCSV()">📹 分享 CSV</button>
     </div>
     
   </div>
@@ -533,10 +573,9 @@ button:disabled:active{transform:none!important}
 <div class="modalBack" id="goalModal">
   <div class="modal">
     <h2>⚽ 這是誰的進球？</h2>
-    <p>GOAL 時間已先記住，選擇期間比賽時間仍持續。</p>
     <div class="choice">
-      <button class="our" onclick="chooseGoalTeam('OUR')">我方進球<br><small id="goalOurName">我方</small></button>
-      <button class="opp" onclick="chooseGoalTeam('OPP')">對手進球<br><small id="goalOppName">對手</small></button>
+      <button class="our" onclick="chooseGoalTeam('OUR')"><span id="goalOurName">我方</span></button>
+      <button class="opp" onclick="chooseGoalTeam('OPP')"><span id="goalOppName">對手</span></button>
     </div>
     <button class="cancel" onclick="cancelGoal()">取消</button>
   </div>
@@ -551,20 +590,20 @@ button:disabled:active{transform:none!important}
       <div class="numberGrid" id="numberGrid"></div>
       <div class="numberActions">
         <button class="otherNum" onclick="showCustomNumber()">其他背號</button>
-        <button class="skipNum" onclick="finishGoal('')">不記錄</button>
+        <button class="skipNum" onclick="finishNumberSelection('')">略過背號</button>
       </div>
     </div>
     <div id="oppNumberArea" style="display:none">
       <div class="numberActions">
         <button class="otherNum" onclick="showCustomNumber()">輸入對手背號</button>
-        <button class="skipNum" onclick="finishGoal('')">不記錄</button>
+        <button class="skipNum" onclick="finishNumberSelection('')">略過背號</button>
       </div>
     </div>
     <div class="customRow" id="customRow">
       <input id="customNumber" type="number" min="1" max="99" step="1" inputmode="numeric" placeholder="背號">
       <button onclick="saveCustomNumber()">確定</button>
     </div>
-    <button class="cancel" onclick="cancelNumber()">取消整筆 GOAL</button>
+    <button class="cancel" id="cancelNumberBtn" onclick="cancelNumber()">取消這筆事件</button>
   </div>
 </div>
 
@@ -664,6 +703,7 @@ const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const LAST_VENUE_KEY='football_marker_last_venue';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
 let pendingGoalTime=null, pendingGoalTeam=null;
+let pendingNumberEvent=null, pendingNumberTime=null, pendingNumberTeam=null;
 let pendingFinishEnd=null, pendingFinishElapsed=null;
 let timeExpanded=false;
 
@@ -913,7 +953,7 @@ function buildNumberGrid(){
     const btn=document.createElement('button');
     btn.className='numBtn';
     btn.textContent=n;
-    btn.onclick=()=>finishGoal(String(n));
+    btn.onclick=()=>finishNumberSelection(String(n));
     grid.appendChild(btn);
   });
 }
@@ -1083,31 +1123,97 @@ function cancelGoal(){
   pendingGoalTime=null; pendingGoalTeam=null;
   byId('goalModal').classList.remove('open');
 }
-function chooseGoalTeam(team){
-  pendingGoalTeam=team;
-  byId('goalModal').classList.remove('open');
+function openNumberSelection(event, team, sec){
+  pendingNumberEvent=event;
+  pendingNumberTeam=team;
+  pendingNumberTime=sec;
+
   byId('customRow').classList.remove('open');
   byId('customNumber').value='';
+
   const isOur=team==='OUR';
   byId('ourNumberArea').style.display=isOur?'block':'none';
   byId('oppNumberArea').style.display=isOur?'none':'block';
-  byId('numberTitle').textContent=isOur?'選擇我方進球背號':'對手進球背號';
-  byId('numberHint').textContent=isOur?'常用背號可直接點選；其他背號可手動輸入。':'對手背號可手動輸入或略過。';
+
+  const label=eventLabel(event);
+  if(event==='GOAL'){
+    byId('numberTitle').textContent=isOur?'選擇進球球員背號':'選擇對手進球背號';
+    byId('numberHint').textContent=isOur?'選填：可直接點常用背號，也可以略過。':'選填：可輸入對手背號，也可以略過。';
+  }else{
+    byId('numberTitle').textContent=`選擇${label}球員背號`;
+    byId('numberHint').textContent='選填：可直接點常用背號，也可以略過。';
+  }
+
+  const cancelBtn=byId('cancelNumberBtn');
+  if(cancelBtn) cancelBtn.textContent=`取消這筆${label}`;
+
   byId('numberModal').classList.add('open');
 }
+
+function chooseGoalTeam(team){
+  pendingGoalTeam=team;
+  byId('goalModal').classList.remove('open');
+  openNumberSelection('GOAL', team, pendingGoalTime);
+}
+
+function openPlayerEvent(event){
+  if(!state.started){ alert('請先按「開始比賽」'); return; }
+  if(state.finished){ alert('本場比賽已結束'); return; }
+  openNumberSelection(event, 'OUR', elapsed());
+}
+
 function showCustomNumber(){
   byId('customRow').classList.add('open');
   setTimeout(()=>byId('customNumber').focus(), 50);
 }
+
 function saveCustomNumber(){
   const n=validateIntegerField('customNumber','球員背號',1,99,false);
   if(n===undefined) return;
-  finishGoal(String(n));
+  finishNumberSelection(String(n));
 }
+
+function resetPendingNumber(){
+  pendingNumberEvent=null;
+  pendingNumberTeam=null;
+  pendingNumberTime=null;
+}
+
 function cancelNumber(){
-  pendingGoalTime=null; pendingGoalTeam=null;
+  if(pendingNumberEvent==='GOAL'){
+    pendingGoalTime=null;
+    pendingGoalTeam=null;
+  }
+  resetPendingNumber();
   byId('numberModal').classList.remove('open');
 }
+
+function finishNumberSelection(playerNumber){
+  if(!pendingNumberEvent || pendingNumberTime===null) return;
+
+  if(pendingNumberEvent==='GOAL'){
+    finishGoal(playerNumber);
+    return;
+  }
+
+  state.markers.push({
+    event:pendingNumberEvent,
+    team:pendingNumberTeam||'OUR',
+    period:state.currentPeriod||1,
+    period_label:state.multiPeriod ? periodLabel(state.currentPeriod||1) : '',
+    player_number:playerNumber,
+    seconds:pendingNumberTime,
+    time:fmtMMSS(pendingNumberTime),
+    score_after:`${state.ourScore}:${state.oppScore}`,
+    recorded_at:new Date().toISOString()
+  });
+
+  resetPendingNumber();
+  byId('numberModal').classList.remove('open');
+  saveState();
+  render();
+}
+
 function finishGoal(playerNumber){
   if(pendingGoalTime===null || !pendingGoalTeam) return;
   if(pendingGoalTeam==='OUR'){
@@ -1123,6 +1229,7 @@ function finishGoal(playerNumber){
     }
     state.oppScore += 1;
   }
+
   state.markers.push({
     event:'GOAL',
     period:state.currentPeriod||1,
@@ -1134,8 +1241,10 @@ function finishGoal(playerNumber){
     score_after:`${state.ourScore}:${state.oppScore}`,
     recorded_at:new Date().toISOString()
   });
+
   pendingGoalTime=null;
   pendingGoalTeam=null;
+  resetPendingNumber();
   byId('numberModal').classList.remove('open');
   saveState();
   render();
@@ -1326,6 +1435,19 @@ function render(){
     finishBtn.disabled=true;
   }
 
+  // 賽後輸出功能只在「全場結束」後啟用。
+  ['reportBtn','saveImageBtn','shareCsvBtn'].forEach(id=>{
+    const btn=byId(id);
+    if(btn) btn.disabled=!state.finished;
+  });
+
+  // 比賽事件按鈕只在「比賽進行中」啟用。
+  const eventEnabled=state.started && !state.finished && !state.awaitingNextPeriod;
+  ['goalBtn','saveBtn','shotBtn','greatPlayBtn'].forEach(id=>{
+    const btn=byId(id);
+    if(btn) btn.disabled=!eventEnabled;
+  });
+
   const stage=byId('broadcastStage');
   if(stage){
     let stageText='賽前', stageClass='';
@@ -1358,7 +1480,7 @@ function reportEventHTML(m, goalIndex=null){
   const pfx=state.multiPeriod ? `${periodLabel(m.period||1)} · ` : '';
   const label = m.event==='GOAL'
     ? `${pfx}${emoji(m.event)} ${team||'未指定'}${num}`
-    : `${pfx}${emoji(m.event)} ${eventLabel(m.event)}${team ? ` · ${team}` : ''}`;
+    : `${pfx}${emoji(m.event)} ${eventLabel(m.event)}${team ? ` · ${team}` : ''}${num}`;
   return `<div class="reportEvent"><div class="goalOrdinal">${ordinal}</div><div class="rtime">${fmtMMSS(m.seconds)}</div><div class="reportLabel" title="${escapeHtml(label)}">${label}</div><div class="rscore">${m.score_after||''}</div></div>`;
 }
 function buildReportDOM(){
@@ -1463,10 +1585,72 @@ function reportLines(){
   if(others.length) lines.push({type:'otherTableHeader'});
   others.forEach(m=>{
     const team=teamDisplay(m.team);
-    lines.push({type:'otherEvent', typeLabel:eventLabel(m.event), time:fmtMMSS(m.seconds), label:`${state.multiPeriod?periodLabel(m.period||1)+' · ':''}${emoji(m.event)} ${eventLabel(m.event)}${team ? ` · ${team}` : ''}`, score:m.score_after||''});
+    lines.push({type:'otherEvent', typeLabel:eventLabel(m.event), time:fmtMMSS(m.seconds), label:`${state.multiPeriod?periodLabel(m.period||1)+' · ':''}${emoji(m.event)} ${eventLabel(m.event)}${team ? ` · ${team}` : ''}${m.player_number ? ` #${m.player_number}` : ''}`, score:m.score_after||''});
   });
   return lines;
 }
+
+function drawTeamNameTwoLines(ctx, text, centerX, centerY, maxWidth, maxFont=52, minFont=34){
+  const raw=String(text||'').trim() || '對手';
+  let fontSize=maxFont;
+
+  const setFont=()=>{
+    ctx.font=`900 ${fontSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
+  };
+
+  // Try one line first.
+  setFont();
+  if(ctx.measureText(raw).width<=maxWidth){
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(raw,centerX,centerY);
+    return;
+  }
+
+  // Find the best two-line split with the smallest maximum line width.
+  const chars=[...raw];
+  let best=null;
+  for(let i=1;i<chars.length;i++){
+    const a=chars.slice(0,i).join('');
+    const b=chars.slice(i).join('');
+    setFont();
+    const wa=ctx.measureText(a).width;
+    const wb=ctx.measureText(b).width;
+    const score=Math.max(wa,wb);
+    if(!best || score<best.score) best={a,b,score};
+  }
+
+  // Shrink only if even the optimal two-line split is too wide.
+  while(best && best.score>maxWidth && fontSize>minFont){
+    fontSize-=2;
+    setFont();
+    best.score=Math.max(ctx.measureText(best.a).width,ctx.measureText(best.b).width);
+  }
+
+  if(!best){
+    ctx.fillText(raw,centerX,centerY);
+    return;
+  }
+
+  // If still too wide, trim only the second line as last resort.
+  const fit=(s)=>{
+    let out=s;
+    while(out.length>1 && ctx.measureText(out+'…').width>maxWidth){
+      out=out.slice(0,-1);
+    }
+    return out===s?s:out+'…';
+  };
+
+  const line1=fit(best.a);
+  const line2=fit(best.b);
+  const gap=fontSize*0.95;
+
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText(line1,centerX,centerY-gap/2);
+  ctx.fillText(line2,centerX,centerY+gap/2);
+}
+
 function makeReportCanvas(){
   const lines=reportLines(), W=1080, pad=72;
   let dynamic=0;
@@ -1499,8 +1683,6 @@ function makeReportCanvas(){
     if(line.type==='title'){
       ctx.fillStyle='#f8fafc'; ctx.font='800 48px -apple-system, BlinkMacSystemFont, sans-serif'; ctx.textAlign='left';
       ctx.fillText(line.text,pad,y);
-      ctx.fillStyle='#94a3b8'; ctx.font='500 22px -apple-system, sans-serif'; ctx.textAlign='right';
-      ctx.fillText('正式賽事小報表',W-pad,y);
       ctx.strokeStyle='#334155'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(pad,y+48); ctx.lineTo(W-pad,y+48); ctx.stroke();
       y+=105;
     }else if(line.type==='score'){
@@ -1508,15 +1690,25 @@ function makeReportCanvas(){
       const statusColor=line.status==='比賽結束' ? '#ef4444' : (line.status==='比賽中' ? '#22c55e' : '#64748b');
       ctx.fillStyle='#0d1622'; roundRect(ctx,boxX,boxY,boxW,boxH,22,true,false);
       ctx.strokeStyle='#35516f'; ctx.lineWidth=2; roundRect(ctx,boxX,boxY,boxW,boxH,22,false,true);
-      ctx.fillStyle='#102033'; roundRect(ctx,boxX+18,boxY+46,246,78,16,true,false);
-      ctx.fillStyle='#102033'; roundRect(ctx,boxX+boxW-264,boxY+46,246,78,16,true,false);
+      ctx.fillStyle='#102033'; roundRect(ctx,boxX+18,boxY+38,246,96,16,true,false);
+      ctx.fillStyle='#102033'; roundRect(ctx,boxX+boxW-264,boxY+38,246,96,16,true,false);
       ctx.fillStyle='#08111c'; roundRect(ctx,boxX+boxW/2-184,boxY+32,368,96,20,true,false);
       ctx.strokeStyle=statusColor; ctx.lineWidth=4; roundRect(ctx,boxX+boxW/2-184,boxY+32,368,96,20,false,true);
       ctx.fillStyle=statusColor; roundRect(ctx,boxX+boxW/2-94,boxY+8,188,30,15,true,false);
       ctx.fillStyle='#ffffff'; ctx.font='900 17px -apple-system, sans-serif'; ctx.textAlign='center'; ctx.fillText(line.status, boxX+boxW/2, boxY+23);
-      ctx.fillStyle='#f8fafc'; ctx.font='900 52px -apple-system, sans-serif'; ctx.textAlign='center'; ctx.fillText(line.left,boxX+141,boxY+87);
-      ctx.font='900 90px -apple-system, sans-serif'; ctx.fillText(line.score,boxX+boxW/2,boxY+89);
-      ctx.font='900 52px -apple-system, sans-serif'; ctx.fillText(line.right,boxX+boxW-141,boxY+87);
+      // 左右隊名各自限制在固定區塊內，最多兩行，不再壓到中央比分框。
+      const teamAreaW=230;
+      ctx.fillStyle='#f8fafc';
+      drawTeamNameTwoLines(ctx,line.left,boxX+141,boxY+87,teamAreaW,52,34);
+
+      ctx.font='900 90px -apple-system, sans-serif';
+      ctx.textAlign='center';
+      ctx.textBaseline='middle';
+      ctx.fillText(line.score,boxX+boxW/2,boxY+89);
+
+      ctx.fillStyle='#f8fafc';
+      drawTeamNameTwoLines(ctx,line.right,boxX+boxW-141,boxY+87,teamAreaW,52,34);
+
       ctx.textAlign='left'; y+=186;
     }else if(line.type==='section'){
       ctx.fillStyle='#38bdf8'; ctx.fillRect(pad,y-14,6,34);
@@ -1673,7 +1865,7 @@ function reportHTMLText(){
   }).join('') : '<li>尚未標記進球事件</li>';
   const otherHtml=others.length ? others.map(m=>{
     const team=teamDisplay(m.team);
-    return `<li><span>${fmtMMSS(m.seconds)}</span> ${emoji(m.event)} ${escapeHtml(eventLabel(m.event))}${team ? ' · '+escapeHtml(team) : ''} <b>${escapeHtml(m.score_after||'')}</b></li>`;
+    return `<li><span>${fmtMMSS(m.seconds)}</span> ${emoji(m.event)} ${escapeHtml(eventLabel(m.event))}${team ? ' · '+escapeHtml(team) : ''}${m.player_number ? ' #'+escapeHtml(m.player_number) : ''} <b>${escapeHtml(m.score_after||'')}</b></li>`;
   }).join('') : '<li>尚未標記其他精彩事件</li>';
   let diff='';
   if(state.regulationMinutes && state.finished){
