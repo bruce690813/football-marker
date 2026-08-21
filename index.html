@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.71</title>
+<title>足球場邊記錄器 v2.76</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -56,26 +56,28 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  gap:12px;
-  min-width:148px;
-  min-height:48px;
-  padding:7px 20px;
+  gap:8px;
+  min-width:108px;
+  min-height:36px;
+  padding:5px 16px;
   border-radius:999px;
-  font-size:22px;
-  font-weight:1000;
-  letter-spacing:.5px;
-  color:#f8fbff;
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:.35px;
+  color:#eef3f8;
   background:linear-gradient(180deg,#203247 0%,#101b28 100%);
-  border:1px solid rgba(148,163,184,.38);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 20px rgba(0,0,0,.20);
-  text-shadow:0 1px 2px rgba(0,0,0,.30);
+  border:1px solid rgba(148,163,184,.34);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 12px rgba(0,0,0,.16);
+  text-shadow:0 1px 2px rgba(0,0,0,.24);
   transition:background .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease;
 }
 .broadcastStage.pre{
-  min-width:148px;
-  background:linear-gradient(180deg,#4f5f76 0%,#364358 100%);
-  border-color:rgba(203,213,225,.34);
-  box-shadow:0 0 0 1px rgba(148,163,184,.12),0 0 14px rgba(148,163,184,.12),inset 0 1px 0 rgba(255,255,255,.10),0 8px 18px rgba(0,0,0,.18);
+  min-width:108px;
+  min-height:36px;
+  font-size:16px;
+  background:linear-gradient(180deg,#46566c 0%,#334052 100%);
+  border-color:rgba(203,213,225,.28);
+  box-shadow:0 0 0 1px rgba(148,163,184,.08),inset 0 1px 0 rgba(255,255,255,.08),0 4px 10px rgba(0,0,0,.14);
 }
 .broadcastStage.live{
   min-width:218px;
@@ -110,14 +112,18 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   box-shadow:0 0 0 1px rgba(56,189,248,.16),0 0 18px rgba(56,189,248,.24),inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.22);
 }
 .broadcastStage.halftime{
-  min-width:148px;
+  min-width:108px;
+  min-height:36px;
+  font-size:16px;
   background:linear-gradient(180deg,#5a4312 0%,#34260b 100%);
   border-color:rgba(245,158,11,.50);
   color:#fff8e5;
   box-shadow:0 0 0 1px rgba(245,158,11,.14),0 0 18px rgba(245,158,11,.22),inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.18);
 }
 .broadcastStage.full{
-  min-width:148px;
+  min-width:108px;
+  min-height:36px;
+  font-size:16px;
   background:linear-gradient(180deg,#522029 0%,#321015 100%);
   border-color:rgba(251,113,133,.50);
   color:#fff5f7;
@@ -242,7 +248,24 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .actualBox .value{font-size:30px;font-weight:900;color:var(--cyan);font-variant-numeric:tabular-nums;margin-top:3px}
 .regBox{border:1px solid var(--line);border-radius:12px;padding:10px;background:#111a28}
 .regTitle{font-size:12px;font-weight:800;margin-bottom:8px}
-.regRow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center}
+.regRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;align-items:center}
+.regSelect{
+  width:100%;
+  min-width:0;
+  min-height:40px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#0d1522;
+  color:var(--text);
+  font:inherit;
+  font-size:14px;
+  font-weight:750;
+  padding:9px 34px 9px 12px;
+  outline:none;
+}
+.regSelect:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15)}
+.regCustomRow{display:none;grid-template-columns:1fr;gap:6px;margin-top:7px}
+.regCustomRow.show{display:grid}
 .regInputWrap{position:relative;min-width:0}
 .regInputWrap input{padding-right:48px}
 .regUnit{
@@ -283,12 +306,82 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .reportBtn{background:#0f766e}.pngBtn{background:#7c3aed}
 .recordFullBtn{
   width:100%;
-  min-height:44px;
-  font-size:14px;
+  min-height:54px;
+  padding:7px 12px;
   touch-action:manipulation;
-  background:linear-gradient(180deg,#365574 0%,#29435e 100%);
-  border:1px solid rgba(96,165,250,.20);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)
+  background:linear-gradient(180deg,#4778aa 0%,#2d5f94 100%);
+  border:1px solid rgba(125,190,255,.52);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 3px 0 0 rgba(111,205,255,.72),0 6px 16px rgba(37,99,235,.18);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  overflow:hidden;
+}
+.recordCardMain{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:9px;
+}
+.recordIconWrap{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:linear-gradient(180deg,rgba(9,28,48,.34) 0%,rgba(7,20,35,.52) 100%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.recordIcon{
+  display:inline-block;
+  font-size:22px;
+  line-height:1;
+  color:#ffffff;
+}
+.recordLabel{
+  display:inline-flex;
+  align-items:center;
+  font-size:21px;
+  font-weight:850;
+  line-height:1;
+  color:#ffffff;
+  letter-spacing:.2px;
+}
+.recordMeta{
+  flex:0 0 auto;
+  min-width:82px;
+  height:34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  padding:0 10px;
+  border-radius:8px;
+  background:linear-gradient(180deg,#10263d 0%,#091725 100%);
+  border:1px solid rgba(147,197,253,.34);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 6px rgba(0,0,0,.18);
+  color:#dcecff;
+  font-variant-numeric:tabular-nums;
+}
+.recordMetaPrefix,.recordMetaSuffix{
+  font-size:11px;
+  font-weight:850;
+  color:#a9bdd4;
+  line-height:1;
+}
+.recordCount{
+  min-width:18px;
+  text-align:center;
+  font-size:20px;
+  font-weight:1000;
+  line-height:1;
+  color:#ffffff;
+  text-shadow:0 1px 2px rgba(0,0,0,.25);
 }
 .finalToolsCard{position:relative;z-index:20}
 .finalTools button{position:relative;z-index:21;pointer-events:auto;touch-action:manipulation}
@@ -530,6 +623,22 @@ button:disabled:active{transform:none!important}
   opacity:.68;
   filter:grayscale(.55);
 }
+.recordFullBtn:disabled .recordIconWrap{
+  background:rgba(148,163,184,.08);
+  border-color:rgba(148,163,184,.12);
+}
+.recordFullBtn:disabled .recordMeta{
+  background:#202a37;
+  border-color:#394657;
+  color:rgba(255,255,255,.62);
+}
+.recordFullBtn:disabled .recordMetaPrefix,
+.recordFullBtn:disabled .recordMetaSuffix{
+  color:#7f8a99;
+}
+.recordFullBtn:disabled .recordCount{
+  color:#9aa5b4;
+}
 
 
 .reportPeriodTime{
@@ -555,7 +664,7 @@ button:disabled:active{transform:none!important}
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.71</div>
+    <div class="sub">v2.76</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -605,12 +714,21 @@ button:disabled:active{transform:none!important}
         <div class="regBox">
           <div class="regTitle">規定時間（可賽後補填）</div>
           <div class="regRow">
-            <div class="regInputWrap">
-              <input id="regMinutes" type="number" min="1" max="90" step="1" inputmode="numeric" placeholder="例如 20" aria-label="規定比賽時間（分鐘）">
-              <span class="regUnit">分鐘</span>
-            </div>
+            <select id="regPreset" class="regSelect" aria-label="選擇規定比賽時間" onchange="handleRegPresetChange()">
+              <option value="">選擇規定時間</option>
+              <option value="15">15 分鐘</option>
+              <option value="20">20 分鐘</option>
+              <option value="25">25 分鐘</option>
+              <option value="custom">自訂分鐘</option>
+            </select>
             <button class="regApply" onclick="saveRegulation()">套用</button>
             <button class="regClear" onclick="clearRegulation()">清除</button>
+          </div>
+          <div class="regCustomRow" id="regCustomRow">
+            <div class="regInputWrap">
+              <input id="regMinutes" type="number" min="1" max="90" step="1" inputmode="numeric" placeholder="輸入 1～90" aria-label="自訂規定比賽時間（分鐘）">
+              <span class="regUnit">分鐘</span>
+            </div>
           </div>
           <div class="diff" id="diffText">未設定規定時間</div>
         </div>
@@ -634,7 +752,7 @@ button:disabled:active{transform:none!important}
   </div>
 
   <div class="card">
-    <button id="recordBtn" class="secondary recordFullBtn" onclick="openLogModal()">☰ 紀錄 <span id="count">0</span></button>
+    <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">紀錄</span></span><span class="recordMeta"><span class="recordMetaPrefix">共</span><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
   </div>
 
 <div class="card finalToolsCard">
@@ -933,7 +1051,7 @@ function loadState(){
   byId('ourTeam').value=state.ourTeam||'';
   byId('oppTeam').value=state.oppTeam||'';
   byId('venue').value=state.venue||'';
-  byId('regMinutes').value=state.regulationMinutes||'';
+  syncRegulationControls();
   buildNumberGrid();
   render();
 }
@@ -1260,16 +1378,62 @@ function newMatch(){
   }
 }
 
+function syncRegulationControls(){
+  const preset=byId('regPreset');
+  const input=byId('regMinutes');
+  const customRow=byId('regCustomRow');
+  if(!preset || !input || !customRow) return;
+
+  const n=Number(state.regulationMinutes)||0;
+  if([15,20,25].includes(n)){
+    preset.value=String(n);
+    input.value='';
+    customRow.classList.remove('show');
+  }else if(n>=1 && n<=90){
+    preset.value='custom';
+    input.value=String(n);
+    customRow.classList.add('show');
+  }else{
+    preset.value='';
+    input.value='';
+    customRow.classList.remove('show');
+  }
+}
+function handleRegPresetChange(){
+  const preset=byId('regPreset');
+  const input=byId('regMinutes');
+  const customRow=byId('regCustomRow');
+  if(!preset || !input || !customRow) return;
+  const isCustom=preset.value==='custom';
+  customRow.classList.toggle('show',isCustom);
+  if(!isCustom) input.value='';
+  if(isCustom) setTimeout(()=>input.focus(),0);
+}
 function saveRegulation(){
-  const n=validateIntegerField('regMinutes','規定比賽時間',1,90,true);
-  if(n===undefined) return;
+  const preset=byId('regPreset').value;
+  if(!preset){
+    alert('請先選擇規定時間');
+    return;
+  }
+
+  let n;
+  if(preset==='custom'){
+    n=validateIntegerField('regMinutes','規定比賽時間',1,90,true);
+    if(n===undefined) return;
+  }else{
+    n=Number(preset);
+  }
+
   state.regulationMinutes=n;
   saveState();
+  syncRegulationControls();
   render();
 }
 function clearRegulation(){
   state.regulationMinutes=null;
+  byId('regPreset').value='';
   byId('regMinutes').value='';
+  byId('regCustomRow').classList.remove('show');
   saveState();
   render();
 }
