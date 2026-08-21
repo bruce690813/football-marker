@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.63</title>
+<title>足球場邊記錄器 v2.71</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -56,62 +56,72 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-width:106px;
-  min-height:38px;
-  padding:7px 18px;
+  gap:12px;
+  min-width:148px;
+  min-height:48px;
+  padding:7px 20px;
   border-radius:999px;
-  font-size:15px;
-  font-weight:950;
-  letter-spacing:.4px;
-  color:#d7e0ea;
-  background:#334155;
-  border:1px solid rgba(148,163,184,.40);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 4px 12px rgba(0,0,0,.16);
+  font-size:22px;
+  font-weight:1000;
+  letter-spacing:.5px;
+  color:#f8fbff;
+  background:linear-gradient(180deg,#203247 0%,#101b28 100%);
+  border:1px solid rgba(148,163,184,.38);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 20px rgba(0,0,0,.20);
+  text-shadow:0 1px 2px rgba(0,0,0,.30);
   transition:background .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease;
 }
+.broadcastStage.pre{
+  min-width:148px;
+  background:linear-gradient(180deg,#4f5f76 0%,#364358 100%);
+  border-color:rgba(203,213,225,.34);
+  box-shadow:0 0 0 1px rgba(148,163,184,.12),0 0 14px rgba(148,163,184,.12),inset 0 1px 0 rgba(255,255,255,.10),0 8px 18px rgba(0,0,0,.18);
+}
 .broadcastStage.live{
-  min-width:158px;
-  min-height:40px;
-  padding:6px 14px;
-  font-size:17px;
-  color:#f8fafc;
-  background:linear-gradient(180deg,#121c2a 0%,#0b1420 100%);
-  border:1px solid #2dd36f;
-  box-shadow:0 0 0 1px rgba(45,211,111,.16),0 0 18px rgba(45,211,111,.22),inset 0 1px 0 rgba(255,255,255,.07),0 4px 12px rgba(0,0,0,.22);
-  text-shadow:none;
-  gap:8px;
+  min-width:218px;
+  min-height:50px;
+  padding:7px 18px;
+  font-size:22px;
+  color:#ffffff;
+  background:linear-gradient(180deg,#13283b 0%,#09131f 100%);
+  border-color:rgba(34,197,94,.54);
+  box-shadow:0 0 0 1px rgba(34,197,94,.16),0 0 18px rgba(34,197,94,.24),inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.22);
 }
 .broadcastStage.live::before{
   content:'● LIVE';
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-width:54px;
-  padding:4px 7px;
-  border-radius:7px;
-  background:linear-gradient(180deg,#ff4d5a 0%,#d92736 100%);
+  min-width:82px;
+  min-height:30px;
+  padding:5px 13px;
+  border-radius:9px;
+  background:linear-gradient(180deg,#ff727c 0%,#e11d48 100%);
   color:#ffffff;
-  font-size:10px;
-  font-weight:950;
-  letter-spacing:.5px;
+  font-size:14px;
+  font-weight:1000;
+  letter-spacing:.9px;
   line-height:1;
-  box-shadow:0 0 10px rgba(239,68,68,.28),inset 0 1px 0 rgba(255,255,255,.20);
+  text-shadow:0 1px 2px rgba(0,0,0,.28);
+  box-shadow:0 0 12px rgba(239,68,68,.34),inset 0 1px 0 rgba(255,255,255,.26),0 2px 6px rgba(0,0,0,.20);
 }
-.broadcastStage.half{
-  min-width:114px;
-  font-size:16px;
-  color:#f3f8ff;
-  background:linear-gradient(180deg,#3f7ec2 0%,#2b5f9b 100%);
-  border-color:#7ab6ff;
-  box-shadow:0 0 14px rgba(59,130,246,.24),inset 0 1px 0 rgba(255,255,255,.16),0 4px 12px rgba(0,0,0,.16);
+.broadcastStage.live.secondHalf{
+  border-color:rgba(56,189,248,.54);
+  box-shadow:0 0 0 1px rgba(56,189,248,.16),0 0 18px rgba(56,189,248,.24),inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.22);
+}
+.broadcastStage.halftime{
+  min-width:148px;
+  background:linear-gradient(180deg,#5a4312 0%,#34260b 100%);
+  border-color:rgba(245,158,11,.50);
+  color:#fff8e5;
+  box-shadow:0 0 0 1px rgba(245,158,11,.14),0 0 18px rgba(245,158,11,.22),inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.18);
 }
 .broadcastStage.full{
-  min-width:124px;
-  font-size:16px;
-  color:#fff7f8;
-  background:linear-gradient(180deg,#df565f 0%,#bf3640 100%);
-  border-color:#ff9cab;
-  box-shadow:0 0 14px rgba(239,68,68,.24),inset 0 1px 0 rgba(255,255,255,.16),0 4px 12px rgba(0,0,0,.16);
+  min-width:148px;
+  background:linear-gradient(180deg,#522029 0%,#321015 100%);
+  border-color:rgba(251,113,133,.50);
+  color:#fff5f7;
+  box-shadow:0 0 0 1px rgba(251,113,133,.14),0 0 18px rgba(239,68,68,.24),inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.18);
 }
 .scoreRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center;margin-top:0;padding:10px 10px 5px}
 .teamNameBox{
@@ -198,7 +208,11 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   background:linear-gradient(180deg,#12a594 0%,#0d7f73 100%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.10)
 }
-.finish{background:var(--red)}
+.finish{
+  background:linear-gradient(180deg,#b53a42 0%,#8f2830 100%);
+  border:1px solid rgba(244,114,120,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 3px 10px rgba(105,20,28,.22)
+}
 .status{display:none}
 .finished{color:#ffb3b3;font-weight:800}
 .liveStatus{color:#9de6b2;font-weight:800}
@@ -541,7 +555,7 @@ button:disabled:active{transform:none!important}
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.63</div>
+    <div class="sub">v2.71</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -862,6 +876,27 @@ function validateMatchTextFields(){
   return true;
 }
 
+function rememberVenueIfEligible(value){
+  const venue=String(value||'').trim();
+  const chineseCount=(venue.match(/[\u3400-\u4DBF\u4E00-\u9FFF]/g)||[]).length;
+
+  // 場地只有在：
+  // 1. 去除前後空白後長度 3～15 字
+  // 2. 至少包含 2 個中文字
+  // 3. 不含 <、>、換行
+  // 才更新「上次有效場地」。
+  if(
+    venue.length>=3 &&
+    venue.length<=15 &&
+    chineseCount>=2 &&
+    !/[<>\r\n]/.test(venue)
+  ){
+    localStorage.setItem(LAST_VENUE_KEY, venue);
+    return true;
+  }
+  return false;
+}
+
 function saveState(){
   state.ourTeam=byId('ourTeam').value.trim();
   state.oppTeam=byId('oppTeam').value.trim();
@@ -870,9 +905,7 @@ function saveState(){
   if(state.ourTeam && !/[<>\r\n]/.test(state.ourTeam)){
     localStorage.setItem(LAST_OUR_TEAM_KEY, state.ourTeam);
   }
-  if(state.venue && !/[<>\r\n]/.test(state.venue)){
-    localStorage.setItem(LAST_VENUE_KEY, state.venue);
-  }
+  rememberVenueIfEligible(state.venue);
 }
 function loadState(){
   try{
@@ -1036,6 +1069,37 @@ function buildNumberGrid(){
   });
 }
 
+
+function validateTeamNameValue(value, label, required=false){
+  const name=String(value||'').trim();
+
+  if(required && !name){
+    alert(`請先輸入${label}`);
+    return false;
+  }
+
+  if(!name) return true;
+
+  if(name.length>15){
+    alert(`${label}最多 15 字`);
+    return false;
+  }
+
+  if(/[<>\r\n]/.test(name)){
+    alert(`${label}不可包含 <、> 或換行`);
+    return false;
+  }
+
+  // 隊伍名稱不可全部為數字；只要包含至少一個非數字字元即可。
+  // 例如 U12忠義、FC123、2026忠義皆允許；12345、001 則不允許。
+  if(/^\d+$/.test(name)){
+    alert(`${label}不可全部為數字`);
+    return false;
+  }
+
+  return true;
+}
+
 function startMatch(){
   if(state.started && !state.finished) return;
   if(state.finished){
@@ -1046,11 +1110,22 @@ function startMatch(){
   if(!validateMatchTextFields()) return;
 
   const ourName=byId('ourTeam').value.trim();
+  const oppName=byId('oppTeam').value.trim();
+  if(!validateTeamNameValue(ourName,'我方隊伍名稱',true)){
+    byId('ourTeam').classList.add('inputError');
+    byId('ourTeam').focus();
+    return;
+  }
+  if(!validateTeamNameValue(oppName,'對手隊伍名稱',false)){
+    byId('oppTeam').classList.add('inputError');
+    byId('oppTeam').focus();
+    return;
+  }
   state.ourTeam=ourName;
   state.oppTeam=byId('oppTeam').value.trim();
   state.venue=byId('venue').value.trim();
   localStorage.setItem(LAST_OUR_TEAM_KEY, ourName);
-  if(state.venue) localStorage.setItem(LAST_VENUE_KEY, state.venue);
+  rememberVenueIfEligible(state.venue);
 
   if(state.awaitingNextPeriod){
     state.currentPeriod=2;
@@ -1147,7 +1222,18 @@ function newMatch(){
   if((state.started || state.markers.length) && !confirm('建立新比賽會清空目前資料，確定嗎？')) return;
 
   const rememberedOurTeam=(byId('ourTeam').value.trim() || localStorage.getItem(LAST_OUR_TEAM_KEY) || '忠義').trim();
-  const rememberedVenue=(byId('venue').value.trim() || localStorage.getItem(LAST_VENUE_KEY) || '').trim();
+  const currentVenue=byId('venue').value.trim();
+  const currentVenueChineseCount=(currentVenue.match(/[\u3400-\u4DBF\u4E00-\u9FFF]/g)||[]).length;
+  const currentVenueEligible=
+    currentVenue.length>=3 &&
+    currentVenue.length<=15 &&
+    currentVenueChineseCount>=2 &&
+    !/[<>\r\n]/.test(currentVenue);
+
+  const rememberedVenue=(currentVenueEligible
+    ? currentVenue
+    : (localStorage.getItem(LAST_VENUE_KEY) || '')
+  ).trim();
 
   state={
     ourTeam:rememberedOurTeam, oppTeam:'', venue:rememberedVenue,
@@ -1533,15 +1619,21 @@ function render(){
 
   const stage=byId('broadcastStage');
   if(stage){
-    let stageText='賽前', stageClass='';
+    let stageText='賽前', stageClass='pre';
     if(state.awaitingNextPeriod){
       stageText='中場';
-      stageClass='half';
+      stageClass='halftime';
     }else if(state.started && !state.finished){
-      stageText=(state.multiPeriod && state.currentPeriod===2)?'下半場':'比賽中';
-      stageClass='live';
+      if(state.multiPeriod && state.currentPeriod===2){
+        stageText='下半場';
+        stageClass='live secondHalf';
+      }else{
+        // 開賽當下無法知道這場是否還有下半場，因此第一段一律顯示「比賽中」。
+        stageText='比賽中';
+        stageClass='live';
+      }
     }else if(state.finished){
-      stageText='全場結束';
+      stageText='全場';
       stageClass='full';
     }
     stage.textContent=stageText;
