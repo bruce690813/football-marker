@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.55</title>
+<title>足球場邊記錄器 v2.56</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -386,7 +386,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .reportTableHead{gap:8px;padding:9px 10px;background:#172435;color:#93c5fd;font-size:10.5px;font-weight:900;letter-spacing:.5px}
 .reportTableHead div:last-child{text-align:right}
 .reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{display:grid;grid-template-columns:64px 64px minmax(0,1fr) 54px}
-.reportTable.others .reportTableHead,.reportTable.others .reportEvent{display:grid;grid-template-columns:58px 64px minmax(0,1fr) 54px}
+.reportTable.others .reportTableHead,.reportTable.others .reportEvent{display:grid;grid-template-columns:64px 96px minmax(0,1fr) 44px;gap:6px}
 .reportTableBody .reportEvent:nth-child(even){background:#111b26}
 .reportTableBody .reportEvent:nth-child(odd){background:#0f1720}
 
@@ -489,6 +489,28 @@ button:disabled:active{transform:none!important}
   filter:grayscale(.55);
 }
 
+
+.reportTable.others .reportLabel{
+  font-size:11px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.reportPeriodTime{
+  color:#facc15;
+  font-variant-numeric:tabular-nums;
+  font-weight:800;
+  font-size:10.5px;
+  white-space:nowrap;
+}
+.reportType{
+  color:#7dd3fc;
+  font-weight:900;
+  font-size:10.5px;
+  white-space:nowrap;
+}
+
 </style>
 </head>
 <body>
@@ -498,7 +520,7 @@ button:disabled:active{transform:none!important}
       <h1>⚽ 足球場邊記錄器</h1>
       <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="sub">v2.55</div>
+    <div class="sub">v2.56</div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1523,6 +1545,21 @@ function reportEventHTML(m, goalIndex=null){
     : `${pfx}${emoji(m.event)} ${eventLabel(m.event)}${team ? ` · ${team}` : ''}${num}`;
   return `<div class="reportEvent"><div class="goalOrdinal">${ordinal}</div><div class="rtime">${fmtMMSS(m.seconds)}</div><div class="reportLabel" title="${escapeHtml(label)}">${label}</div><div class="rscore">${m.score_after||''}</div></div>`;
 }
+function reportOtherEventHTML(m){
+  const team=teamDisplay(m.team) || '未指定';
+  const num=m.player_number ? ` #${m.player_number}` : '';
+  const type=`${emoji(m.event)} ${eventLabel(m.event)}`;
+  const period=state.multiPeriod ? periodLabel(m.period||1) : '';
+  const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
+  const actor=`${team}${num}`;
+  return `<div class="reportEvent">
+    <div class="reportType">${escapeHtml(type)}</div>
+    <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
+    <div class="reportLabel" title="${escapeHtml(actor)}">${escapeHtml(actor)}</div>
+    <div class="rscore">${m.score_after||''}</div>
+  </div>`;
+}
+
 function buildReportDOM(){
   byId('reportOurTeam').textContent=state.ourTeam||'我方';
   byId('reportOppTeam').textContent=state.oppTeam||'對手';
@@ -1547,7 +1584,7 @@ function buildReportDOM(){
     ? `<div class="reportTable goals"><div class="reportTableHead"><div>進球序</div><div>時間</div><div>事件</div><div>比分</div></div><div class="reportTableBody">${goals.map((m,i)=>reportEventHTML(m,i)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記進球事件</div>';
   byId('reportOthers').innerHTML=others.length
-    ? `<div class="reportTable others"><div class="reportTableHead"><div>類型</div><div>時間</div><div>事件</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportEventHTML(m)).join('')}</div></div>`
+    ? `<div class="reportTable others"><div class="reportTableHead"><div>類型</div><div>半場 / 時間</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportOtherEventHTML(m)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記其他精彩事件</div>';
 }
 
@@ -1624,8 +1661,15 @@ function reportLines(){
   if(!others.length) lines.push({type:'event', text:'— 尚未標記其他精彩事件'});
   if(others.length) lines.push({type:'otherTableHeader'});
   others.forEach(m=>{
-    const team=teamDisplay(m.team);
-    lines.push({type:'otherEvent', typeLabel:eventLabel(m.event), time:fmtMMSS(m.seconds), label:`${state.multiPeriod?periodLabel(m.period||1)+' · ':''}${emoji(m.event)} ${eventLabel(m.event)}${team ? ` · ${team}` : ''}${m.player_number ? ` #${m.player_number}` : ''}`, score:m.score_after||''});
+    const team=teamDisplay(m.team) || '未指定';
+    const period=state.multiPeriod ? periodLabel(m.period||1) : '';
+    lines.push({
+      type:'otherEvent',
+      typeLabel:`${emoji(m.event)} ${eventLabel(m.event)}`,
+      periodTime:period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds),
+      actor:`${team}${m.player_number ? ` #${m.player_number}` : ''}`,
+      score:m.score_after||''
+    });
   });
   return lines;
 }
@@ -1782,17 +1826,41 @@ function makeReportCanvas(){
     }else if(line.type==='otherTableHeader'){
       ctx.fillStyle='#172435'; roundRect(ctx,pad,y-18,W-pad*2,34,10,true,false);
       ctx.fillStyle='#93c5fd'; ctx.font='800 20px -apple-system, sans-serif'; ctx.textAlign='left';
-      ctx.fillText('類型',pad+12,y); ctx.fillText('時間',pad+132,y); ctx.fillText('事件',pad+244,y);
+      ctx.fillText('類型',pad+12,y);
+      ctx.fillText('半場 / 時間',pad+180,y);
+      ctx.fillText('球員 / 隊伍',pad+410,y);
       ctx.textAlign='right'; ctx.fillText('比分',W-pad-12,y); ctx.textAlign='left';
       y+=42;
     }else if(line.type==='otherEvent'){
       const rowX=pad, rowY=y-19, rowH=38;
       ctx.fillStyle='#0f1720'; ctx.fillRect(rowX,rowY,W-pad*2,rowH);
-      const typeX=pad+8, timeX=pad+130, labelX=pad+244, scoreX=W-pad-8;
-      ctx.fillStyle='#7dd3fc'; ctx.font='700 24px -apple-system, sans-serif'; ctx.textAlign='left'; ctx.fillText(line.typeLabel, typeX, y);
-      ctx.fillStyle='#facc15'; ctx.font='700 25px -apple-system, sans-serif'; ctx.fillText(line.time, timeX, y);
-      ctx.fillStyle='#f1f5f9'; ctx.font='500 25px -apple-system, Apple Color Emoji, sans-serif'; ctx.fillText(line.label, labelX, y);
-      ctx.fillStyle='#cbd5e1'; ctx.font='700 25px -apple-system, sans-serif'; ctx.textAlign='right'; ctx.fillText(line.score, scoreX, y);
+      const typeX=pad+8, periodTimeX=pad+180, actorX=pad+410, scoreX=W-pad-8;
+
+      ctx.fillStyle='#7dd3fc';
+      ctx.font='700 23px -apple-system, Apple Color Emoji, sans-serif';
+      ctx.textAlign='left';
+      ctx.fillText(line.typeLabel, typeX, y);
+
+      ctx.fillStyle='#facc15';
+      ctx.font='700 23px -apple-system, sans-serif';
+      ctx.fillText(line.periodTime, periodTimeX, y);
+
+      ctx.fillStyle='#f1f5f9';
+      ctx.font='600 23px -apple-system, sans-serif';
+      // actor 欄不再重複事件名稱，因此能保留更多空間給完整隊名與背號
+      let actor=String(line.actor||'');
+      const actorMax=W-pad-90-actorX;
+      while(actor.length>1 && ctx.measureText(actor).width>actorMax){
+        actor=actor.slice(0,-1);
+      }
+      if(actor!==line.actor) actor+='…';
+      ctx.fillText(actor, actorX, y);
+
+      ctx.fillStyle='#cbd5e1';
+      ctx.font='700 25px -apple-system, sans-serif';
+      ctx.textAlign='right';
+      ctx.fillText(line.score, scoreX, y);
+
       ctx.strokeStyle='#263442'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pad,y+19); ctx.lineTo(W-pad,y+19); ctx.stroke();
       ctx.textAlign='left'; y+=52;
     }else if(line.type==='event'){
