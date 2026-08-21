@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.84</title>
+<title>足球場邊記錄器 v2.85</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -16,7 +16,7 @@ html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-sys
 body{min-height:100dvh}
 .wrap{max-width:720px;margin:auto;padding:5px 10px calc(92px + env(safe-area-inset-bottom));scroll-padding-bottom:calc(92px + env(safe-area-inset-bottom))}
 .card:last-of-type{margin-bottom:calc(8px + env(safe-area-inset-bottom))}
-.top{display:flex;align-items:end;justify-content:space-between;margin-bottom:5px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 h1{font-size:18px;margin:0}
 .sub{font-size:11px;color:var(--muted)}
 .versionInfo{display:flex;align-items:center;gap:7px;flex:0 0 auto}
@@ -724,9 +724,8 @@ button:disabled:active{transform:none!important}
   <div class="top titleBlock">
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
-      <div class="tagline">比分・精彩時刻・比賽時間一鍵記錄</div>
     </div>
-    <div class="versionInfo"><span class="sub">v2.84</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="關於足球場邊記錄器">ⓘ</button></div>
+    <div class="versionInfo"><span class="sub">v2.85</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="關於足球場邊記錄器">ⓘ</button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -843,7 +842,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">SIDELINE MATCH TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v2.84</div>
+      <div class="aboutVersion">v2.85</div>
       <div class="aboutHero">場邊一按，精彩就不錯過。</div>
       <div class="aboutIntro">從即時標記、比分紀錄到賽後剪輯，把一場比賽的重要片刻完整串起來。</div>
     </div>
