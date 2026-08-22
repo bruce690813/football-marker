@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.00</title>
+<title>足球場邊記錄器 v3.01</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -541,29 +541,15 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .logModalTitle{font-size:18px;font-weight:950;letter-spacing:.2px}
 .logModalCount{font-size:15px;color:#aab9c9;font-weight:800}.logModalCount span{font-size:1.15em;color:#fff;font-weight:950}
 .logModalBody{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 14px 8px}
-.logModalBody .item{grid-template-columns:62px 66px minmax(86px,1fr) 74px 44px 38px 28px;gap:7px;font-size:15px;line-height:1.4;padding:12px 2px;align-items:center}
+.logModalBody .item{grid-template-columns:64px 70px minmax(0,1fr) 40px 30px;font-size:15px;line-height:1.45;padding:12px 2px;align-items:center}
 .logModalBody .item b{font-size:15px}
-.logModalBody .item .logSeq,
-.logModalBody .item .time,
-.logModalBody .item .logPlayer,
-.logModalBody .item .logEvent,
-.logModalBody .item .logScore,
-.logModalBody .item .numberTag,
-.logModalBody .item .periodBadge{
-  font-size:15px!important;
-  line-height:1.4;
-}
-.logPlayer{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#b9c6d6;font-weight:800}
-.logPlayer .numberTag{margin-left:4px;color:#7ee787;font-weight:950}
-.logEvent{white-space:nowrap;color:#f2f6fb;font-weight:900}
-.logScore{text-align:center;color:#b8c5d6;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
-.logModalBody .time{text-align:center;color:#facc15;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.2px}
+.logModalBody .time{font-size:17px;text-align:center;color:#facc15;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.3px}
 .logModalBody .log{max-height:none!important;height:auto;overflow:visible}
-.logSeq{color:#7dd3fc;font-weight:950;white-space:nowrap;text-align:left}
+.logSeq{color:#7dd3fc;font-weight:950;font-size:15px;white-space:nowrap;text-align:left}
 .logModalActions{flex:0 0 54px;padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
 .logModalActions button{width:100%;background:#475569;min-height:42px;padding:8px}
 
-.logModalBody .item{grid-template-columns:62px 66px minmax(86px,1fr) 74px 44px 38px 28px}
+.logModalBody .item{grid-template-columns:58px 62px minmax(0,1fr) 36px 28px}
 .editMarkerBtn{
   width:32px;height:32px;min-width:32px;padding:0;
   display:inline-flex;align-items:center;justify-content:center;
@@ -684,8 +670,8 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .reportTable{border:1px solid #314155;border-radius:12px;overflow:hidden;background:#0f1720;box-shadow:0 4px 12px rgba(0,0,0,.10),inset 0 0 0 1px rgba(255,255,255,.02)}
 .reportTableHead{gap:6px;padding:8px 9px;background:linear-gradient(180deg,#1b2d45 0%,#172435 100%);color:#bfdbfe;font-size:10px;font-weight:950;letter-spacing:.45px;border-bottom:1px solid #334155}
 .reportTableHead div:last-child{text-align:right}
-.reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{display:grid;grid-template-columns:108px 52px minmax(0,1fr) 44px;gap:6px}
-.reportTable.others .reportTableHead,.reportTable.others .reportEvent{display:grid;grid-template-columns:108px 66px minmax(0,1fr) 44px;gap:6px}
+.reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{display:grid;grid-template-columns:108px minmax(0,1fr) 52px 44px;gap:6px}
+.reportTable.others .reportTableHead,.reportTable.others .reportEvent{display:grid;grid-template-columns:108px minmax(0,1fr) 66px 44px;gap:6px}
 .reportTableBody .reportEvent:nth-child(even){background:#111c29}
 .reportTableBody .reportEvent:nth-child(odd){background:#0d1620}
 
@@ -725,8 +711,8 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   .reportSectionTitle{margin:2px 0 6px}
   .reportTableHead{padding:7px 8px;font-size:9.6px}
   .reportEvent{padding:7px 8px;font-size:10.5px}
-  .reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{grid-template-columns:96px 46px minmax(0,1fr) 40px;gap:5px}
-  .reportTable.others .reportTableHead,.reportTable.others .reportEvent{grid-template-columns:96px 60px minmax(0,1fr) 40px;gap:5px}
+  .reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{grid-template-columns:96px minmax(0,1fr) 46px 40px;gap:5px}
+  .reportTable.others .reportTableHead,.reportTable.others .reportEvent{grid-template-columns:96px minmax(0,1fr) 60px 40px;gap:5px}
   .reportPeriodTime,.reportType,.goalOrdinal{font-size:9.4px}
   .reportLabel{font-size:10.2px}
   .reportActions{padding:9px 9px 11px;gap:6px}
@@ -844,7 +830,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.00</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.01</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -966,7 +952,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.00</div>
+      <div class="aboutVersion">v3.01</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -2091,13 +2077,10 @@ function renderLogTo(container){
     row.className='item';
     const team=teamDisplay(m.team);
     const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
-    const playerText=team ? `${escapeHtml(team)}${num}` : (num || '—');
     row.innerHTML=`
       <div class="logSeq">第${i+1}筆</div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
-      <div class="logPlayer">${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span> `:''}${playerText}</div>
-      <div class="logEvent">${emoji(m.event)} ${eventLabel(m.event)}</div>
-      <div class="logScore">${m.score_after||'—'}</div>
+      <div>${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}<b>${emoji(m.event)} ${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
       <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${i+1}筆紀錄">✎</button>
       <button class="del" onclick="deleteMarker(${i}); renderLogModal();">✕</button>
     `;
@@ -2292,7 +2275,7 @@ function reportEventHTML(m, goalIndex=null){
   const period=state.multiPeriod ? periodLabel(m.period||1) : '';
   const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
   const label = `${team}${num}`;
-  return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="goalOrdinal">${ordinal}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="rscore">${m.score_after||''}</div></div>`;
+  return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="goalOrdinal">${ordinal}</div><div class="rscore">${m.score_after||''}</div></div>`;
 }
 function reportOtherEventHTML(m){
   const team=teamDisplay(m.team) || '未指定';
@@ -2303,8 +2286,8 @@ function reportOtherEventHTML(m){
   const actor=`${team}${num}`;
   return `<div class="reportEvent">
     <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
-    <div class="reportType">${escapeHtml(type)}</div>
     <div class="reportLabel" title="${escapeHtml(actor)}">${escapeHtml(actor)}</div>
+    <div class="reportType">${escapeHtml(type)}</div>
     <div class="rscore">${m.score_after||''}</div>
   </div>`;
 }
@@ -2330,10 +2313,10 @@ function buildReportDOM(){
   const others=state.markers.filter(m=>m.event!=='GOAL');
   byId('reportScorers').innerHTML=scorerStatsHTML();
   byId('reportGoals').innerHTML=goals.length
-    ? `<div class="reportTable goals"><div class="reportTableHead"><div>半場 / 時間</div><div>進球</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${goals.map((m,i)=>reportEventHTML(m,i)).join('')}</div></div>`
+    ? `<div class="reportTable goals"><div class="reportTableHead"><div>半場 / 時間</div><div>球員 / 隊伍</div><div>進球</div><div>比分</div></div><div class="reportTableBody">${goals.map((m,i)=>reportEventHTML(m,i)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記進球事件</div>';
   byId('reportOthers').innerHTML=others.length
-    ? `<div class="reportTable others"><div class="reportTableHead"><div>半場 / 時間</div><div>類型</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportOtherEventHTML(m)).join('')}</div></div>`
+    ? `<div class="reportTable others"><div class="reportTableHead"><div>半場 / 時間</div><div>球員 / 隊伍</div><div>類型</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportOtherEventHTML(m)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記其他精彩事件</div>';
 }
 
@@ -2573,16 +2556,23 @@ function makeReportCanvas(){
     }else if(line.type==='goalTableHeader'){
       ctx.fillStyle='#172435'; roundRect(ctx,pad,y-18,W-pad*2,34,10,true,false);
       ctx.fillStyle='#93c5fd'; ctx.font='800 20px -apple-system, sans-serif'; ctx.textAlign='left';
-      ctx.fillText('半場 / 時間',pad+12,y); ctx.fillText('進球',pad+245,y); ctx.fillText('球員 / 隊伍',pad+375,y);
+      ctx.fillText('半場 / 時間',pad+12,y); ctx.fillText('球員 / 隊伍',pad+270,y); ctx.fillText('進球',pad+820,y);
       ctx.textAlign='right'; ctx.fillText('比分',W-pad-12,y); ctx.textAlign='left';
       y+=42;
     }else if(line.type==='goalEvent'){
       const rowX=pad, rowY=y-19, rowH=38;
       ctx.fillStyle='#0f1720'; ctx.fillRect(rowX,rowY,W-pad*2,rowH);
-      const periodTimeX=pad+8, ordinalX=pad+245, labelX=pad+375, scoreX=W-pad-8;
+      const periodTimeX=pad+8, labelX=pad+270, ordinalX=pad+820, scoreX=W-pad-8;
       ctx.fillStyle='#facc15'; ctx.font='700 23px -apple-system, sans-serif'; ctx.textAlign='left'; ctx.fillText(line.periodTime, periodTimeX, y);
+      ctx.fillStyle='#f1f5f9'; ctx.font='600 23px -apple-system, sans-serif';
+      let goalLabel=String(line.label||'');
+      const goalLabelMax=ordinalX-labelX-18;
+      while(goalLabel.length>1 && ctx.measureText(goalLabel).width>goalLabelMax){
+        goalLabel=goalLabel.slice(0,-1);
+      }
+      if(goalLabel!==line.label) goalLabel+='…';
+      ctx.fillText(goalLabel, labelX, y);
       ctx.fillStyle='#7dd3fc'; ctx.font='700 23px -apple-system, sans-serif'; ctx.fillText(line.ordinal, ordinalX, y);
-      ctx.fillStyle='#f1f5f9'; ctx.font='600 23px -apple-system, sans-serif'; ctx.fillText(line.label, labelX, y);
       ctx.fillStyle='#cbd5e1'; ctx.font='700 25px -apple-system, sans-serif'; ctx.textAlign='right'; ctx.fillText(line.score, scoreX, y);
       ctx.strokeStyle='#263442'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pad,y+19); ctx.lineTo(W-pad,y+19); ctx.stroke();
       ctx.textAlign='left'; y+=52;
@@ -2590,14 +2580,14 @@ function makeReportCanvas(){
       ctx.fillStyle='#172435'; roundRect(ctx,pad,y-18,W-pad*2,34,10,true,false);
       ctx.fillStyle='#93c5fd'; ctx.font='800 20px -apple-system, sans-serif'; ctx.textAlign='left';
       ctx.fillText('半場 / 時間',pad+12,y);
-      ctx.fillText('類型',pad+245,y);
-      ctx.fillText('球員 / 隊伍',pad+375,y);
+      ctx.fillText('球員 / 隊伍',pad+270,y);
+      ctx.fillText('類型',pad+820,y);
       ctx.textAlign='right'; ctx.fillText('比分',W-pad-12,y); ctx.textAlign='left';
       y+=42;
     }else if(line.type==='otherEvent'){
       const rowX=pad, rowY=y-19, rowH=38;
       ctx.fillStyle='#0f1720'; ctx.fillRect(rowX,rowY,W-pad*2,rowH);
-      const periodTimeX=pad+8, typeX=pad+245, actorX=pad+375, scoreX=W-pad-8;
+      const periodTimeX=pad+8, actorX=pad+270, typeX=pad+820, scoreX=W-pad-8;
 
       ctx.fillStyle='#facc15';
       ctx.font='700 23px -apple-system, sans-serif';
@@ -2981,18 +2971,9 @@ tick();
   .logModalTop{padding:9px 12px}
   .logModalTitle{font-size:17px}
   .logModalBody{padding:6px 12px 8px}
-  .logModalBody .item{grid-template-columns:52px 56px minmax(72px,1fr) 64px 38px 32px 22px;gap:5px;padding:10px 0;font-size:14px;line-height:1.4}
+  .logModalBody .item{grid-template-columns:58px 60px minmax(0,1fr) 34px 26px;gap:6px;padding:10px 0;font-size:14px;line-height:1.45}
   .logModalBody .item b{font-size:14px}
-  .logModalBody .time{font-size:14px!important}
-  .logSeq{font-size:14px!important}
-  .logModalBody .item .logSeq,
-  .logModalBody .item .time,
-  .logModalBody .item .logPlayer,
-  .logModalBody .item .logEvent,
-  .logModalBody .item .logScore,
-  .logModalBody .item .numberTag,
-  .logModalBody .item .periodBadge{
-    font-size:14px!important;
-  }
+  .logModalBody .time{font-size:15px}
+  .logSeq{font-size:13px}
 }
 </style>
