@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.99</title>
+<title>足球場邊記錄器 v3.00</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -541,15 +541,29 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .logModalTitle{font-size:18px;font-weight:950;letter-spacing:.2px}
 .logModalCount{font-size:15px;color:#aab9c9;font-weight:800}.logModalCount span{font-size:1.15em;color:#fff;font-weight:950}
 .logModalBody{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 14px 8px}
-.logModalBody .item{grid-template-columns:64px 70px minmax(0,1fr) 40px 30px;font-size:15px;line-height:1.45;padding:12px 2px;align-items:center}
+.logModalBody .item{grid-template-columns:62px 66px minmax(86px,1fr) 74px 44px 38px 28px;gap:7px;font-size:15px;line-height:1.4;padding:12px 2px;align-items:center}
 .logModalBody .item b{font-size:15px}
-.logModalBody .time{font-size:17px;text-align:center;color:#facc15;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.3px}
+.logModalBody .item .logSeq,
+.logModalBody .item .time,
+.logModalBody .item .logPlayer,
+.logModalBody .item .logEvent,
+.logModalBody .item .logScore,
+.logModalBody .item .numberTag,
+.logModalBody .item .periodBadge{
+  font-size:15px!important;
+  line-height:1.4;
+}
+.logPlayer{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#b9c6d6;font-weight:800}
+.logPlayer .numberTag{margin-left:4px;color:#7ee787;font-weight:950}
+.logEvent{white-space:nowrap;color:#f2f6fb;font-weight:900}
+.logScore{text-align:center;color:#b8c5d6;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+.logModalBody .time{text-align:center;color:#facc15;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.2px}
 .logModalBody .log{max-height:none!important;height:auto;overflow:visible}
-.logSeq{color:#7dd3fc;font-weight:950;font-size:15px;white-space:nowrap;text-align:left}
+.logSeq{color:#7dd3fc;font-weight:950;white-space:nowrap;text-align:left}
 .logModalActions{flex:0 0 54px;padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
 .logModalActions button{width:100%;background:#475569;min-height:42px;padding:8px}
 
-.logModalBody .item{grid-template-columns:58px 62px minmax(0,1fr) 36px 28px}
+.logModalBody .item{grid-template-columns:62px 66px minmax(86px,1fr) 74px 44px 38px 28px}
 .editMarkerBtn{
   width:32px;height:32px;min-width:32px;padding:0;
   display:inline-flex;align-items:center;justify-content:center;
@@ -830,7 +844,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v2.99</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.00</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -952,7 +966,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v2.99</div>
+      <div class="aboutVersion">v3.00</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -2077,10 +2091,13 @@ function renderLogTo(container){
     row.className='item';
     const team=teamDisplay(m.team);
     const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
+    const playerText=team ? `${escapeHtml(team)}${num}` : (num || '—');
     row.innerHTML=`
       <div class="logSeq">第${i+1}筆</div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
-      <div>${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}<b>${emoji(m.event)} ${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
+      <div class="logPlayer">${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span> `:''}${playerText}</div>
+      <div class="logEvent">${emoji(m.event)} ${eventLabel(m.event)}</div>
+      <div class="logScore">${m.score_after||'—'}</div>
       <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${i+1}筆紀錄">✎</button>
       <button class="del" onclick="deleteMarker(${i}); renderLogModal();">✕</button>
     `;
@@ -2964,9 +2981,18 @@ tick();
   .logModalTop{padding:9px 12px}
   .logModalTitle{font-size:17px}
   .logModalBody{padding:6px 12px 8px}
-  .logModalBody .item{grid-template-columns:58px 60px minmax(0,1fr) 34px 26px;gap:6px;padding:10px 0;font-size:14px;line-height:1.45}
+  .logModalBody .item{grid-template-columns:52px 56px minmax(72px,1fr) 64px 38px 32px 22px;gap:5px;padding:10px 0;font-size:14px;line-height:1.4}
   .logModalBody .item b{font-size:14px}
-  .logModalBody .time{font-size:15px}
-  .logSeq{font-size:13px}
+  .logModalBody .time{font-size:14px!important}
+  .logSeq{font-size:14px!important}
+  .logModalBody .item .logSeq,
+  .logModalBody .item .time,
+  .logModalBody .item .logPlayer,
+  .logModalBody .item .logEvent,
+  .logModalBody .item .logScore,
+  .logModalBody .item .numberTag,
+  .logModalBody .item .periodBadge{
+    font-size:14px!important;
+  }
 }
 </style>
