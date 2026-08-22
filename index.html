@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.93</title>
+<title>足球場邊記錄器 v2.94</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -108,8 +108,8 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:54px;
-  padding:8px 10px;
+  min-height:58px;
+  padding:10px 12px;
   border-bottom:1px solid rgba(96,165,250,.24);
   background:linear-gradient(180deg,rgba(18,37,59,.98) 0%,rgba(13,29,47,.98) 100%);
   position:relative;
@@ -118,22 +118,18 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
   width:100%;
-  flex-wrap:nowrap;
 }
 .broadcastStage{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
-  min-width:108px;
-  min-height:36px;
-  padding:5px 16px;
+  gap:12px;
+  min-width:min(100%, 520px);
+  max-width:100%;
+  min-height:42px;
+  padding:6px 12px;
   border-radius:999px;
-  font-size:17px;
-  font-weight:950;
-  letter-spacing:.3px;
   color:#f8fbff;
   background:linear-gradient(180deg,#203247 0%,#101b28 100%);
   border:1px solid rgba(148,163,184,.34);
@@ -147,32 +143,9 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   box-shadow:0 0 0 1px rgba(148,163,184,.08),0 0 10px rgba(148,163,184,.08),inset 0 1px 0 rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.15);
 }
 .broadcastStage.live{
-  min-width:174px;
-  min-height:40px;
-  padding:5px 14px;
-  font-size:17px;
-  color:#ffffff;
   background:linear-gradient(180deg,#13283b 0%,#09131f 100%);
   border-color:rgba(34,197,94,.52);
   box-shadow:0 0 0 1px rgba(34,197,94,.14),0 0 14px rgba(34,197,94,.20),inset 0 1px 0 rgba(255,255,255,.06),0 6px 16px rgba(0,0,0,.20);
-}
-.broadcastStage.live::before{
-  content:'● LIVE';
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:88px;
-  min-height:26px;
-  padding:4px 12px;
-  border-radius:8px;
-  background:linear-gradient(180deg,#ff7b83 0%,#e11d48 100%);
-  color:#ffffff;
-  font-size:13px;
-  font-weight:1000;
-  letter-spacing:1.05px;
-  line-height:1;
-  text-shadow:0 1px 2px rgba(0,0,0,.30);
-  box-shadow:0 0 10px rgba(239,68,68,.34),inset 0 1px 0 rgba(255,255,255,.28),0 2px 6px rgba(0,0,0,.20);
 }
 .broadcastStage.live.secondHalf{
   border-color:rgba(56,189,248,.50);
@@ -190,6 +163,51 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   color:#fff5f7;
   box-shadow:0 0 0 1px rgba(251,113,133,.10),0 0 12px rgba(239,68,68,.20),inset 0 1px 0 rgba(255,255,255,.07),0 6px 14px rgba(0,0,0,.15);
 }
+.broadcastStage .liveTag{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  min-width:96px;
+  min-height:28px;
+  padding:4px 14px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#ff7b83 0%,#e11d48 100%);
+  color:#ffffff;
+  font-size:13px;
+  font-weight:1000;
+  letter-spacing:1.05px;
+  line-height:1;
+  white-space:nowrap;
+  text-shadow:0 1px 2px rgba(0,0,0,.30);
+  box-shadow:0 0 10px rgba(239,68,68,.34),inset 0 1px 0 rgba(255,255,255,.28),0 2px 6px rgba(0,0,0,.20);
+}
+.broadcastStage.live .liveTag{display:inline-flex}
+.broadcastStage .stageLabel{
+  font-size:17px;
+  font-weight:950;
+  letter-spacing:.3px;
+  white-space:nowrap;
+}
+.broadcastStage .stageTimer{
+  display:none;
+  margin-left:auto;
+  padding-left:10px;
+  font-size:28px;
+  font-weight:1000;
+  line-height:1;
+  letter-spacing:1px;
+  font-variant-numeric:tabular-nums;
+  color:#ffffff;
+  text-shadow:0 1px 2px rgba(0,0,0,.24);
+  white-space:nowrap;
+}
+.broadcastStage.live .stageTimer{display:block}
+.broadcastStage.pre .stageTimer,
+.broadcastStage.halftime .stageTimer,
+.broadcastStage.full .stageTimer{display:none}
+.broadcastStage.pre .liveTag,
+.broadcastStage.halftime .liveTag,
+.broadcastStage.full .liveTag{display:none}
 .scoreRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center;margin-top:0;padding:12px 10px 12px}
 .teamNameBox{
   width:100%;
@@ -258,24 +276,22 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .scoreText{font-size:40px;font-weight:950;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:1px}
 .scoreEdit{background:transparent;color:#94a3b8;font-size:10px;padding:3px 7px;border:0;margin-top:3px}
 .timer{
-  min-width:92px;
-  min-height:40px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:25px;
-  font-weight:1000;
-  text-align:center;
-  line-height:1;
+  display:inline;
+  min-width:auto;
+  min-height:auto;
   margin:0;
-  padding:6px 12px;
+  padding:0;
+  font-size:inherit;
+  font-weight:inherit;
+  text-align:inherit;
+  line-height:inherit;
   font-variant-numeric:tabular-nums;
-  letter-spacing:1px;
-  color:#ffffff;
-  border:1px solid rgba(96,165,250,.32);
-  border-radius:12px;
-  background:linear-gradient(180deg,#0a1624 0%,#07111c 100%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 10px rgba(0,0,0,.16);
+  letter-spacing:inherit;
+  color:inherit;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
 }
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .start{
@@ -651,7 +667,10 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 }
 
 @media (max-width:390px){
-  .broadcastStatusTime{gap:7px}
+  .broadcastStage{gap:10px;padding:6px 10px}
+  .broadcastStage .liveTag{min-width:86px;padding:4px 12px;font-size:12px}
+  .broadcastStage .stageLabel{font-size:16px}
+  .broadcastStage .stageTimer{font-size:24px}
   .broadcastStage.live{min-width:160px;padding-left:11px;padding-right:11px;font-size:16px}
   .broadcastStage.live::before{min-width:76px;padding-left:9px;padding-right:9px;font-size:12px}
   .timer{min-width:82px;font-size:22px;padding-left:8px;padding-right:8px}
@@ -758,7 +777,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v2.93</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v2.94</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -770,8 +789,11 @@ button:disabled:active{transform:none!important}
     <div class="broadcastScoreboard">
       <div class="broadcastBar">
         <div class="broadcastStatusTime">
-          <span class="broadcastStage" id="broadcastStage">賽前</span>
-          <div class="timer" id="timer">00:00</div>
+          <div class="broadcastStage pre" id="broadcastStage">
+            <span class="liveTag" id="broadcastLiveTag">● LIVE</span>
+            <span class="stageLabel" id="broadcastStageLabel">賽前</span>
+            <span class="stageTimer timer" id="timer">00:00</span>
+          </div>
         </div>
       </div>
       <div class="scoreRow">
@@ -877,7 +899,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v2.93</div>
+      <div class="aboutVersion">v2.94</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -1928,7 +1950,8 @@ function render(){
   if(recordBtn) recordBtn.disabled=state.markers.length===0;
 
   const stage=byId('broadcastStage');
-  if(stage){
+  const stageLabel=byId('broadcastStageLabel');
+  if(stage && stageLabel){
     let stageText='賽前', stageClass='pre';
     if(state.awaitingNextPeriod){
       stageText='中場';
@@ -1946,7 +1969,7 @@ function render(){
       stageText='全場';
       stageClass='full';
     }
-    stage.textContent=stageText;
+    stageLabel.textContent=stageText;
     stage.className='broadcastStage '+stageClass;
   }
   byId('status').textContent=txt;
