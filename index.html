@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.97</title>
+<title>足球場邊記錄器 v2.98</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -541,15 +541,15 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .logModalTitle{font-size:16px;font-weight:900}
 .logModalCount{font-size:12px;color:#93a4b6}
 .logModalBody{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:4px 12px 6px}
-.logModalBody .item{grid-template-columns:52px minmax(0,1fr) 66px 28px;font-size:13px;padding:9px 2px}
+.logModalBody .item{grid-template-columns:58px 62px minmax(0,1fr) 36px 28px;font-size:13px;padding:10px 2px;align-items:center}
 .logModalBody .item b{font-size:13px}
-.logModalBody .time{font-size:13px;text-align:right}
+.logModalBody .time{font-size:14px;text-align:center;color:#facc15;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
 .logModalBody .log{max-height:none!important;height:auto;overflow:visible}
-.logSeq{color:#7dd3fc;font-weight:900;font-size:12px;white-space:nowrap}
+.logSeq{color:#7dd3fc;font-weight:950;font-size:13px;white-space:nowrap;text-align:left}
 .logModalActions{flex:0 0 54px;padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
 .logModalActions button{width:100%;background:#475569;min-height:42px;padding:8px}
 
-.logModalBody .item{grid-template-columns:52px minmax(0,1fr) 64px 34px 28px}
+.logModalBody .item{grid-template-columns:58px 62px minmax(0,1fr) 36px 28px}
 .editMarkerBtn{
   width:32px;height:32px;min-width:32px;padding:0;
   display:inline-flex;align-items:center;justify-content:center;
@@ -562,11 +562,15 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 #editMarkerModal{z-index:1100}
 .editMarkerModal{
   width:min(440px,calc(100vw - 20px));
+  height:min(650px,calc(var(--vv-height,100dvh) - 24px));
+  max-height:calc(var(--vv-height,100dvh) - 24px);
   background:#f6f7fb;color:#111;border-radius:22px;
-  padding:18px;max-height:calc(var(--vv-height,100dvh) - 30px);overflow:auto
+  padding:0;overflow:hidden;display:flex;flex-direction:column
 }
+.editMarkerHead{flex:0 0 auto;padding:17px 18px 10px;background:#f6f7fb}
 .editMarkerModal h2{margin:0 0 4px;font-size:22px}
-.editMarkerHint{font-size:12px;color:#68707a;margin-bottom:14px}
+.editMarkerHint{font-size:12px;color:#68707a;margin-bottom:0}
+.editMarkerBody{flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 18px 14px}
 .editSection{margin-top:14px}
 .editSectionLabel{font-size:12px;font-weight:900;color:#56606d;margin-bottom:7px}
 .editEventGrid,.editTeamGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -580,10 +584,12 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 }
 .editNumberWrap{position:relative}
 .editNumberWrap input{
-  width:100%;background:#fff;color:#111;border:1px solid #b7c0cb;
-  border-radius:12px;font-size:21px;font-weight:850;text-align:center;
-  padding:12px 44px 12px 12px
+  width:100%;background:#fff;color:#111;border:2px solid #60a5fa;
+  border-radius:14px;font-size:24px;font-weight:950;text-align:center;
+  padding:13px 50px 13px 12px;outline:none;
+  box-shadow:0 0 0 3px rgba(37,99,235,.08)
 }
+.editNumberWrap input:focus{border-color:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,.16)}
 .editNumberUnit{
   position:absolute;right:13px;top:50%;transform:translateY(-50%);
   font-size:12px;font-weight:850;color:#75808d;pointer-events:none
@@ -592,9 +598,9 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   margin-top:12px;padding:9px 11px;border-radius:11px;
   background:#edf1f5;color:#66717d;font-size:12px;text-align:center
 }
-.editMarkerActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.editMarkerActions{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 18px calc(12px + env(safe-area-inset-bottom));border-top:1px solid #d7dde5;background:rgba(246,247,251,.98);box-shadow:0 -8px 20px rgba(0,0,0,.05)}
 .editMarkerCancel{background:#6b7280}
-.editMarkerSave{background:#1f6feb}
+.editMarkerSave{background:#1f6feb}.editMarkerActions button{min-height:48px;font-size:15px}
 
 .reportModal{
   width:min(560px,calc(100vw - 14px));
@@ -824,7 +830,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v2.97</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v2.98</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -946,7 +952,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v2.97</div>
+      <div class="aboutVersion">v2.98</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -1075,8 +1081,11 @@ button:disabled:active{transform:none!important}
 <!-- Edit marker modal -->
 <div class="modalBack" id="editMarkerModal">
   <div class="modal editMarkerModal" role="dialog" aria-modal="true" aria-labelledby="editMarkerTitle">
-    <h2 id="editMarkerTitle">✎ 編輯事件紀錄</h2>
-    <div class="editMarkerHint">只修改事件內容，原本標記時間會保留不變。</div>
+    <div class="editMarkerHead">
+      <h2 id="editMarkerTitle">✎ 編輯事件紀錄</h2>
+      <div class="editMarkerHint">只修改事件內容，原本標記時間會保留不變。</div>
+    </div>
+    <div class="editMarkerBody">
 
     <div class="editSection">
       <div class="editSectionLabel">事件類型</div>
@@ -1099,12 +1108,13 @@ button:disabled:active{transform:none!important}
     <div class="editSection" id="editNumberSection">
       <div class="editSectionLabel">球員背號（選填）</div>
       <div class="editNumberWrap">
-        <input id="editMarkerNumber" type="number" min="1" max="99" step="1" inputmode="numeric" placeholder="可留空">
+        <input id="editMarkerNumber" type="number" min="1" max="99" step="1" inputmode="numeric" enterkeyhint="done" placeholder="可留空" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur();}">
         <span class="editNumberUnit">1–99</span>
       </div>
     </div>
 
     <div class="editMarkerTime">標記時間：<b id="editMarkerTime">00:00</b>（不可修改）</div>
+    </div>
 
     <div class="editMarkerActions">
       <button type="button" class="editMarkerCancel" onclick="closeEditMarker()">取消</button>
@@ -1951,6 +1961,12 @@ function openEditMarker(index){
 
   syncVisualViewport();
   byId('editMarkerModal').classList.add('open');
+  const editBody=byId('editMarkerModal').querySelector('.editMarkerBody');
+  if(editBody) editBody.scrollTop=0;
+  const numInput=byId('editMarkerNumber');
+  if(numInput){
+    numInput.onfocus=()=>setTimeout(()=>numInput.scrollIntoView({block:'center',behavior:'smooth'}),120);
+  }
 }
 
 function closeEditMarker(){
@@ -2063,8 +2079,8 @@ function renderLogTo(container){
     const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
     row.innerHTML=`
       <div class="logSeq">第${i+1}筆</div>
-      <div>${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}<b>${emoji(m.event)} ${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
+      <div>${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}<b>${emoji(m.event)} ${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
       <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${i+1}筆紀錄">✎</button>
       <button class="del" onclick="deleteMarker(${i}); renderLogModal();">✕</button>
     `;
@@ -2948,7 +2964,7 @@ tick();
   .logModalTop{padding:9px 12px}
   .logModalTitle{font-size:15px}
   .logModalBody{padding:3px 10px 5px}
-  .logModalBody .item{grid-template-columns:48px minmax(0,1fr) 58px 32px 24px;gap:5px;padding:8px 0;font-size:12px}
+  .logModalBody .item{grid-template-columns:54px 54px minmax(0,1fr) 32px 24px;gap:5px;padding:9px 0;font-size:12px}
   .logModalBody .item b{font-size:12px}
   .logModalBody .time{font-size:12px}
   .logSeq{font-size:11px}
