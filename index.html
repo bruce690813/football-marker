@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.94</title>
+<title>足球場邊記錄器 v2.97</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -549,6 +549,53 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .logModalActions{flex:0 0 54px;padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
 .logModalActions button{width:100%;background:#475569;min-height:42px;padding:8px}
 
+.logModalBody .item{grid-template-columns:52px minmax(0,1fr) 64px 34px 28px}
+.editMarkerBtn{
+  width:32px;height:32px;min-width:32px;padding:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:9px;background:#244e73;color:#dff3ff;
+  border:1px solid rgba(125,211,252,.28);
+  font-size:16px;font-weight:900;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)
+}
+.editMarkerBtn:active{transform:scale(.96)}
+#editMarkerModal{z-index:1100}
+.editMarkerModal{
+  width:min(440px,calc(100vw - 20px));
+  background:#f6f7fb;color:#111;border-radius:22px;
+  padding:18px;max-height:calc(var(--vv-height,100dvh) - 30px);overflow:auto
+}
+.editMarkerModal h2{margin:0 0 4px;font-size:22px}
+.editMarkerHint{font-size:12px;color:#68707a;margin-bottom:14px}
+.editSection{margin-top:14px}
+.editSectionLabel{font-size:12px;font-weight:900;color:#56606d;margin-bottom:7px}
+.editEventGrid,.editTeamGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.editEventGrid button,.editTeamGrid button{
+  min-height:48px;background:#e5e9ef;color:#1d2733;
+  border:1px solid #c3cad3;font-size:15px
+}
+.editEventGrid button.active,.editTeamGrid button.active{
+  background:#1f6feb;color:#fff;border-color:#1f6feb;
+  box-shadow:0 4px 12px rgba(31,111,235,.22)
+}
+.editNumberWrap{position:relative}
+.editNumberWrap input{
+  width:100%;background:#fff;color:#111;border:1px solid #b7c0cb;
+  border-radius:12px;font-size:21px;font-weight:850;text-align:center;
+  padding:12px 44px 12px 12px
+}
+.editNumberUnit{
+  position:absolute;right:13px;top:50%;transform:translateY(-50%);
+  font-size:12px;font-weight:850;color:#75808d;pointer-events:none
+}
+.editMarkerTime{
+  margin-top:12px;padding:9px 11px;border-radius:11px;
+  background:#edf1f5;color:#66717d;font-size:12px;text-align:center
+}
+.editMarkerActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.editMarkerCancel{background:#6b7280}
+.editMarkerSave{background:#1f6feb}
+
 .reportModal{
   width:min(560px,calc(100vw - 14px));
   height:min(780px,calc(var(--vv-height,100dvh) - 20px));
@@ -777,7 +824,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v2.94</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v2.97</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -899,7 +946,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v2.94</div>
+      <div class="aboutVersion">v2.97</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -1025,6 +1072,47 @@ button:disabled:active{transform:none!important}
   </div>
 </div>
 
+<!-- Edit marker modal -->
+<div class="modalBack" id="editMarkerModal">
+  <div class="modal editMarkerModal" role="dialog" aria-modal="true" aria-labelledby="editMarkerTitle">
+    <h2 id="editMarkerTitle">✎ 編輯事件紀錄</h2>
+    <div class="editMarkerHint">只修改事件內容，原本標記時間會保留不變。</div>
+
+    <div class="editSection">
+      <div class="editSectionLabel">事件類型</div>
+      <div class="editEventGrid">
+        <button type="button" id="editEventGOAL" onclick="setEditMarkerEvent('GOAL')">⚽ 進球</button>
+        <button type="button" id="editEventSAVE" onclick="setEditMarkerEvent('SAVE')">🧤 撲救</button>
+        <button type="button" id="editEventSHOT" onclick="setEditMarkerEvent('SHOT')">🥅 射門</button>
+        <button type="button" id="editEventGREAT_PLAY" onclick="setEditMarkerEvent('GREAT_PLAY')">🙌 精彩配合</button>
+      </div>
+    </div>
+
+    <div class="editSection">
+      <div class="editSectionLabel">球隊</div>
+      <div class="editTeamGrid">
+        <button type="button" id="editTeamOUR" onclick="setEditMarkerTeam('OUR')">我方</button>
+        <button type="button" id="editTeamOPP" onclick="setEditMarkerTeam('OPP')">對手</button>
+      </div>
+    </div>
+
+    <div class="editSection" id="editNumberSection">
+      <div class="editSectionLabel">球員背號（選填）</div>
+      <div class="editNumberWrap">
+        <input id="editMarkerNumber" type="number" min="1" max="99" step="1" inputmode="numeric" placeholder="可留空">
+        <span class="editNumberUnit">1–99</span>
+      </div>
+    </div>
+
+    <div class="editMarkerTime">標記時間：<b id="editMarkerTime">00:00</b>（不可修改）</div>
+
+    <div class="editMarkerActions">
+      <button type="button" class="editMarkerCancel" onclick="closeEditMarker()">取消</button>
+      <button type="button" class="editMarkerSave" onclick="saveEditMarker()">儲存修改</button>
+    </div>
+  </div>
+</div>
+
 <!-- Report modal -->
 <div class="modalBack" id="reportModal">
   <div class="modal reportModal">
@@ -1080,7 +1168,9 @@ button:disabled:active{transform:none!important}
 const KEY='football_marker_v218';
 const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const LAST_VENUE_KEY='football_marker_last_venue';
+const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
+let editingMarkerIndex=null, editingMarkerEvent=null, editingMarkerTeam='OUR';
 let pendingGoalTime=null, pendingGoalTeam=null;
 let pendingNumberEvent=null, pendingNumberTime=null, pendingNumberTeam=null;
 let pendingFinishEnd=null, pendingFinishElapsed=null;
@@ -1321,17 +1411,37 @@ function renderTimeBox(){
   byId('fullEnd').textContent=fmtDateTime(state.endEpoch);
   renderDiff(byId('diffText'));
 }
+function regulationPeriodCount(){
+  // regulationMinutes 代表「每一段 / 每半場」的規定分鐘數。
+  // 單段比賽 = 1 段；確認有上下半場後 = 2 段。
+  return state.multiPeriod ? 2 : 1;
+}
+function regulationTotalMinutes(){
+  if(!state.regulationMinutes) return 0;
+  return Number(state.regulationMinutes) * regulationPeriodCount();
+}
+function regulationTargetSeconds(){
+  return regulationTotalMinutes() * 60;
+}
+function regulationDisplayText(){
+  if(!state.regulationMinutes) return '';
+  if(state.multiPeriod){
+    return `每半場 ${state.regulationMinutes} 分鐘（全場 ${regulationTotalMinutes()} 分鐘）`;
+  }
+  return `${state.regulationMinutes} 分鐘`;
+}
+
 function renderDiff(el){
   el.className='diff';
   if(!state.regulationMinutes){
     el.textContent='未設定規定時間';
     return;
   }
-  const target=state.regulationMinutes*60;
-  const actual=state.finished ? state.finalElapsed : elapsed();
+  const target=regulationTargetSeconds();
+  const actual=state.finished ? state.finalElapsed : totalMatchElapsed();
   const diff=Math.round(actual-target);
   if(!state.finished){
-    el.textContent=`規定 ${state.regulationMinutes} 分鐘｜比賽結束後顯示差異`;
+    el.textContent=`規定 ${regulationDisplayText()}｜比賽結束後顯示差異`;
   }else if(diff<0){
     el.textContent=`⚠ 提前 ${fmtMMSS(Math.abs(diff))}`;
     el.classList.add('early');
@@ -1384,10 +1494,35 @@ function getRegulationMinutesInput(){
   return value;
 }
 
+function getLearnedNumbers(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(LEARNED_NUMBERS_KEY)||'[]');
+    if(!Array.isArray(raw)) return [];
+    return [...new Set(raw.map(Number).filter(n=>Number.isInteger(n) && n>=1 && n<=99))].sort((a,b)=>a-b);
+  }catch(e){
+    return [];
+  }
+}
+
+function rememberPlayerNumber(number){
+  const n=Number(number);
+  if(!Number.isInteger(n) || n<1 || n>99) return;
+  if(COMMON_NUMBERS.includes(n)) return;
+  const learned=getLearnedNumbers();
+  if(learned.includes(n)) return;
+  learned.push(n);
+  learned.sort((a,b)=>a-b);
+  localStorage.setItem(LEARNED_NUMBERS_KEY,JSON.stringify(learned));
+}
+
+function allCommonNumbers(){
+  return [...new Set([...COMMON_NUMBERS,...getLearnedNumbers()])].sort((a,b)=>a-b);
+}
+
 function buildNumberGrid(){
   const grid=byId('numberGrid');
   grid.innerHTML='';
-  COMMON_NUMBERS.forEach(n=>{
+  allCommonNumbers().forEach(n=>{
     const btn=document.createElement('button');
     btn.className='numBtn';
     btn.textContent=n;
@@ -1634,10 +1769,10 @@ function openNumberSelection(event, team, sec){
   const label=eventLabel(event);
   if(event==='GOAL'){
     byId('numberTitle').textContent=isOur?'選擇進球球員背號':'選擇對手進球背號';
-    byId('numberHint').textContent=isOur?'選填：可直接點常用背號，也可以略過。':'選填：可輸入對手背號，也可以略過。';
+    byId('numberHint').textContent=isOur?'選填：可直接點常用背號；其他背號輸入一次後會自動加入。':'選填：可輸入對手背號，也可以略過。';
   }else{
     byId('numberTitle').textContent=`選擇${label}球員背號`;
-    byId('numberHint').textContent='選填：可直接點常用背號，也可以略過。';
+    byId('numberHint').textContent='選填：可直接點常用背號；其他背號輸入一次後會自動加入。';
   }
 
   const cancelBtn=byId('cancelNumberBtn');
@@ -1666,6 +1801,13 @@ function showCustomNumber(){
 function saveCustomNumber(){
   const n=validateIntegerField('customNumber','球員背號',1,99,false);
   if(n===undefined) return;
+
+  // 只有我方球員的手動背號才自動學習，避免把對手背號加入自己的常用名單。
+  if(pendingNumberTeam==='OUR'){
+    rememberPlayerNumber(n);
+    buildNumberGrid();
+  }
+
   finishNumberSelection(String(n));
 }
 
@@ -1763,6 +1905,121 @@ function mark(event, team='OUR'){
   saveState();
   render();
 }
+function parseScorePair(value){
+  const m=String(value||'').match(/^(\d+)\s*:\s*(\d+)$/);
+  return m ? [Number(m[1]),Number(m[2])] : null;
+}
+
+function adjustScoreSnapshotsFrom(startIndex,dOur,dOpp){
+  if(!dOur && !dOpp) return;
+  for(let i=startIndex;i<state.markers.length;i++){
+    const pair=parseScorePair(state.markers[i].score_after);
+    if(!pair) continue;
+    state.markers[i].score_after=`${Math.max(0,pair[0]+dOur)}:${Math.max(0,pair[1]+dOpp)}`;
+  }
+}
+
+function setEditMarkerEvent(event){
+  editingMarkerEvent=event;
+  ['GOAL','SAVE','SHOT','GREAT_PLAY'].forEach(ev=>{
+    byId('editEvent'+ev)?.classList.toggle('active',ev===event);
+  });
+  byId('editNumberSection').style.display=event==='GREAT_PLAY'?'none':'block';
+}
+
+function setEditMarkerTeam(team){
+  editingMarkerTeam=team;
+  ['OUR','OPP'].forEach(code=>{
+    byId('editTeam'+code)?.classList.toggle('active',code===team);
+  });
+}
+
+function openEditMarker(index){
+  const marker=state.markers[index];
+  if(!marker) return;
+  editingMarkerIndex=index;
+  editingMarkerEvent=marker.event;
+  editingMarkerTeam=marker.team||'OUR';
+
+  byId('editTeamOUR').textContent=state.ourTeam||'我方';
+  byId('editTeamOPP').textContent=state.oppTeam||'對手';
+  byId('editMarkerNumber').value=marker.player_number||'';
+  byId('editMarkerTime').textContent=fmtMMSS(marker.seconds);
+
+  setEditMarkerEvent(editingMarkerEvent);
+  setEditMarkerTeam(editingMarkerTeam);
+
+  syncVisualViewport();
+  byId('editMarkerModal').classList.add('open');
+}
+
+function closeEditMarker(){
+  byId('editMarkerModal').classList.remove('open');
+  editingMarkerIndex=null;
+  editingMarkerEvent=null;
+  editingMarkerTeam='OUR';
+}
+
+function saveEditMarker(){
+  if(editingMarkerIndex===null) return;
+  const marker=state.markers[editingMarkerIndex];
+  if(!marker || !editingMarkerEvent) return;
+
+  let playerNumber='';
+  if(editingMarkerEvent!=='GREAT_PLAY'){
+    const raw=String(byId('editMarkerNumber').value||'').trim();
+    if(raw){
+      const n=Number(raw);
+      if(!Number.isInteger(n) || n<1 || n>99){
+        alert('球員背號請輸入 1～99 的整數，或留空');
+        return;
+      }
+      playerNumber=String(n);
+    }
+  }
+
+  // 依「舊事件 → 新事件」計算對比分的淨影響。
+  let dOur=0,dOpp=0;
+  if(marker.event==='GOAL'){
+    if(marker.team==='OUR') dOur-=1;
+    if(marker.team==='OPP') dOpp-=1;
+  }
+  if(editingMarkerEvent==='GOAL'){
+    if(editingMarkerTeam==='OUR') dOur+=1;
+    if(editingMarkerTeam==='OPP') dOpp+=1;
+  }
+
+  const nextOur=state.ourScore+dOur;
+  const nextOpp=state.oppScore+dOpp;
+  if(nextOur<0 || nextOpp<0){
+    alert('目前比分與事件紀錄不一致，無法自動調整。請先確認比分。');
+    return;
+  }
+  if(nextOur>99 || nextOpp>99){
+    alert('修改後比分會超過 99，請先確認比分。');
+    return;
+  }
+
+  marker.event=editingMarkerEvent;
+  marker.team=editingMarkerTeam;
+  marker.player_number=editingMarkerEvent==='GREAT_PLAY'?'':playerNumber;
+
+  // 時間 seconds / time / recorded_at 完全保留。
+  if(marker.team==='OUR' && marker.player_number){
+    rememberPlayerNumber(marker.player_number);
+    buildNumberGrid();
+  }
+
+  state.ourScore=nextOur;
+  state.oppScore=nextOpp;
+  adjustScoreSnapshotsFrom(editingMarkerIndex,dOur,dOpp);
+
+  saveState();
+  render();
+  renderLogModal();
+  closeEditMarker();
+}
+
 function deleteMarker(i){
   const m=state.markers[i];
   state.markers.splice(i,1);
@@ -1808,6 +2065,7 @@ function renderLogTo(container){
       <div class="logSeq">第${i+1}筆</div>
       <div>${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}<b>${emoji(m.event)} ${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
+      <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${i+1}筆紀錄">✎</button>
       <button class="del" onclick="deleteMarker(${i}); renderLogModal();">✕</button>
     `;
     container.appendChild(row);
@@ -2094,11 +2352,11 @@ function reportLines(){
     });
   }
   if(state.regulationMinutes){
-    const diff=Math.round((state.finished?state.finalElapsed:elapsed()) - state.regulationMinutes*60);
+    const diff=Math.round((state.finished?state.finalElapsed:totalMatchElapsed()) - regulationTargetSeconds());
     if(state.finished){
-      lines.push({type:'meta', text:`規定時間：${state.regulationMinutes} 分鐘｜${diff<0?'提前':'超過'} ${fmtMMSS(Math.abs(diff))}`});
+      lines.push({type:'meta', text:`規定時間：${regulationDisplayText()}｜${diff<0?'提前':'超過'} ${fmtMMSS(Math.abs(diff))}`});
     }else{
-      lines.push({type:'meta', text:`規定時間：${state.regulationMinutes} 分鐘`});
+      lines.push({type:'meta', text:`規定時間：${regulationDisplayText()}`});
     }
   }
   lines.push({type:'section', text:'球員進球統計'});
@@ -2452,8 +2710,8 @@ function reportHTMLText(){
   }).join('') : '<li>尚未標記其他精彩事件</li>';
   let diff='';
   if(state.regulationMinutes && state.finished){
-    const d=Math.round(state.finalElapsed-state.regulationMinutes*60);
-    diff=`<p><b>規定時間：</b>${state.regulationMinutes} 分鐘　<b>${d<0?'提前':'超過'}：</b>${fmtMMSS(Math.abs(d))}</p>`;
+    const d=Math.round(state.finalElapsed-regulationTargetSeconds());
+    diff=`<p><b>規定時間：</b>${escapeHtml(regulationDisplayText())}　<b>${d<0?'提前':'超過'}：</b>${fmtMMSS(Math.abs(d))}</p>`;
   }
   return `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>足球比賽摘要</title><style>
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;background:#0f1720;color:#f8fafc;margin:0;padding:24px}
@@ -2480,7 +2738,7 @@ function csvEscape(v){
 }
 function diffSecondsExport(){
   if(!state.regulationMinutes || !state.finished) return '';
-  return Math.round(state.finalElapsed-state.regulationMinutes*60);
+  return Math.round(state.finalElapsed-regulationTargetSeconds());
 }
 function csvText(){
   saveState();
@@ -2690,7 +2948,7 @@ tick();
   .logModalTop{padding:9px 12px}
   .logModalTitle{font-size:15px}
   .logModalBody{padding:3px 10px 5px}
-  .logModalBody .item{grid-template-columns:48px minmax(0,1fr) 62px 24px;gap:5px;padding:8px 0;font-size:12px}
+  .logModalBody .item{grid-template-columns:48px minmax(0,1fr) 58px 32px 24px;gap:5px;padding:8px 0;font-size:12px}
   .logModalBody .item b{font-size:12px}
   .logModalBody .time{font-size:12px}
   .logSeq{font-size:11px}
