@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.01</title>
+<title>足球場邊記錄器 v3.04</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -144,12 +144,12 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 }
 .broadcastStage.live{
   background:linear-gradient(180deg,#13283b 0%,#09131f 100%);
-  border-color:rgba(34,197,94,.52);
-  box-shadow:0 0 0 1px rgba(34,197,94,.14),0 0 14px rgba(34,197,94,.20),inset 0 1px 0 rgba(255,255,255,.06),0 6px 16px rgba(0,0,0,.20);
+  border-color:rgba(34,197,94,.40);
+  box-shadow:0 0 0 1px rgba(34,197,94,.08),0 0 5px rgba(34,197,94,.08),inset 0 1px 0 rgba(255,255,255,.06),0 6px 16px rgba(0,0,0,.20);
 }
 .broadcastStage.live.secondHalf{
-  border-color:rgba(56,189,248,.50);
-  box-shadow:0 0 0 1px rgba(56,189,248,.14),0 0 14px rgba(56,189,248,.20),inset 0 1px 0 rgba(255,255,255,.06),0 6px 16px rgba(0,0,0,.20);
+  border-color:rgba(56,189,248,.48);
+  box-shadow:0 0 0 1px rgba(56,189,248,.10),0 0 6px rgba(56,189,248,.10),inset 0 1px 0 rgba(255,255,255,.06),0 6px 16px rgba(0,0,0,.20);
 }
 .broadcastStage.halftime{
   background:linear-gradient(180deg,#5a4312 0%,#34260b 100%);
@@ -171,15 +171,16 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   min-height:28px;
   padding:4px 14px;
   border-radius:10px;
-  background:linear-gradient(180deg,#ff7b83 0%,#e11d48 100%);
+  background:linear-gradient(180deg,#ff5b68 0%,#ff3347 52%,#d91f32 100%);
+  border:1px solid rgba(255,118,130,.72);
   color:#ffffff;
   font-size:13px;
   font-weight:1000;
   letter-spacing:1.05px;
   line-height:1;
   white-space:nowrap;
-  text-shadow:0 1px 2px rgba(0,0,0,.30);
-  box-shadow:0 0 10px rgba(239,68,68,.34),inset 0 1px 0 rgba(255,255,255,.28),0 2px 6px rgba(0,0,0,.20);
+  text-shadow:0 1px 2px rgba(0,0,0,.32);
+  box-shadow:0 0 12px rgba(239,45,66,.40),inset 0 1px 0 rgba(255,255,255,.24),0 3px 8px rgba(90,8,18,.30);
 }
 .broadcastStage.live .liveTag{display:inline-flex}
 .broadcastStage .stageLabel{
@@ -275,6 +276,12 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 }
 .scoreText{font-size:40px;font-weight:950;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:1px}
 .scoreEdit{background:transparent;color:#94a3b8;font-size:10px;padding:3px 7px;border:0;margin-top:3px}
+.scoreEdit:disabled{
+  color:#586576;
+  opacity:.48;
+  cursor:not-allowed;
+  filter:grayscale(1);
+}
 .timer{
   display:inline;
   min-width:auto;
@@ -670,8 +677,8 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .reportTable{border:1px solid #314155;border-radius:12px;overflow:hidden;background:#0f1720;box-shadow:0 4px 12px rgba(0,0,0,.10),inset 0 0 0 1px rgba(255,255,255,.02)}
 .reportTableHead{gap:6px;padding:8px 9px;background:linear-gradient(180deg,#1b2d45 0%,#172435 100%);color:#bfdbfe;font-size:10px;font-weight:950;letter-spacing:.45px;border-bottom:1px solid #334155}
 .reportTableHead div:last-child{text-align:right}
-.reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{display:grid;grid-template-columns:108px minmax(0,1fr) 52px 44px;gap:6px}
-.reportTable.others .reportTableHead,.reportTable.others .reportEvent{display:grid;grid-template-columns:108px minmax(0,1fr) 66px 44px;gap:6px}
+.reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{display:grid;grid-template-columns:108px 52px minmax(0,1fr) 44px;gap:6px}
+.reportTable.others .reportTableHead,.reportTable.others .reportEvent{display:grid;grid-template-columns:108px 66px minmax(0,1fr) 44px;gap:6px}
 .reportTableBody .reportEvent:nth-child(even){background:#111c29}
 .reportTableBody .reportEvent:nth-child(odd){background:#0d1620}
 
@@ -711,8 +718,8 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   .reportSectionTitle{margin:2px 0 6px}
   .reportTableHead{padding:7px 8px;font-size:9.6px}
   .reportEvent{padding:7px 8px;font-size:10.5px}
-  .reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{grid-template-columns:96px minmax(0,1fr) 46px 40px;gap:5px}
-  .reportTable.others .reportTableHead,.reportTable.others .reportEvent{grid-template-columns:96px minmax(0,1fr) 60px 40px;gap:5px}
+  .reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{grid-template-columns:96px 46px minmax(0,1fr) 40px;gap:5px}
+  .reportTable.others .reportTableHead,.reportTable.others .reportEvent{grid-template-columns:96px 60px minmax(0,1fr) 40px;gap:5px}
   .reportPeriodTime,.reportType,.goalOrdinal{font-size:9.4px}
   .reportLabel{font-size:10.2px}
   .reportActions{padding:9px 9px 11px;gap:6px}
@@ -830,7 +837,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.01</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.04</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -856,7 +863,7 @@ button:disabled:active{transform:none!important}
         </div>
         <div class="scoreMid">
           <div class="scoreText"><span id="ourScore">0</span> : <span id="oppScore">0</span></div>
-          <button class="scoreEdit" onclick="openScoreModal()">✎ 修正比分</button>
+          <button class="scoreEdit" id="scoreEditBtn" onclick="openScoreModal()" aria-label="修正比分">✎ 修正比分</button>
         </div>
         <div class="teamNameBox" id="oppTeamBox" onclick="editTeamName('oppTeam')">
           <div class="teamNameDisplay empty" id="oppTeamDisplay">對手</div>
@@ -952,7 +959,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.01</div>
+      <div class="aboutVersion">v3.04</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -2049,6 +2056,10 @@ function deleteMarker(i){
 function toggleLog(){ byId('logWrap').classList.toggle('open'); }
 
 function openScoreModal(){
+  // 賽前比分固定為 0:0，不允許提前修改。
+  if(!state.started && !state.awaitingNextPeriod && !state.finished){
+    return;
+  }
   byId('editOur').value=state.ourScore;
   byId('editOpp').value=state.oppScore;
   byId('scoreOurName').textContent=state.ourTeam||'我方';
@@ -2223,6 +2234,14 @@ function render(){
   const recordBtn=byId('recordBtn');
   if(recordBtn) recordBtn.disabled=state.markers.length===0;
 
+  // 賽前比分固定為 0:0；開始比賽後、中場與全場結束後才允許修正。
+  const scoreEditBtn=byId('scoreEditBtn');
+  if(scoreEditBtn){
+    const canEditScore=state.started || state.awaitingNextPeriod || state.finished;
+    scoreEditBtn.disabled=!canEditScore;
+    scoreEditBtn.setAttribute('aria-disabled', String(!canEditScore));
+  }
+
   const stage=byId('broadcastStage');
   const stageLabel=byId('broadcastStageLabel');
   if(stage && stageLabel){
@@ -2275,7 +2294,7 @@ function reportEventHTML(m, goalIndex=null){
   const period=state.multiPeriod ? periodLabel(m.period||1) : '';
   const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
   const label = `${team}${num}`;
-  return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="goalOrdinal">${ordinal}</div><div class="rscore">${m.score_after||''}</div></div>`;
+  return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="goalOrdinal">${ordinal}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="rscore">${m.score_after||''}</div></div>`;
 }
 function reportOtherEventHTML(m){
   const team=teamDisplay(m.team) || '未指定';
@@ -2286,8 +2305,8 @@ function reportOtherEventHTML(m){
   const actor=`${team}${num}`;
   return `<div class="reportEvent">
     <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
-    <div class="reportLabel" title="${escapeHtml(actor)}">${escapeHtml(actor)}</div>
     <div class="reportType">${escapeHtml(type)}</div>
+    <div class="reportLabel" title="${escapeHtml(actor)}">${escapeHtml(actor)}</div>
     <div class="rscore">${m.score_after||''}</div>
   </div>`;
 }
@@ -2313,10 +2332,10 @@ function buildReportDOM(){
   const others=state.markers.filter(m=>m.event!=='GOAL');
   byId('reportScorers').innerHTML=scorerStatsHTML();
   byId('reportGoals').innerHTML=goals.length
-    ? `<div class="reportTable goals"><div class="reportTableHead"><div>半場 / 時間</div><div>球員 / 隊伍</div><div>進球</div><div>比分</div></div><div class="reportTableBody">${goals.map((m,i)=>reportEventHTML(m,i)).join('')}</div></div>`
+    ? `<div class="reportTable goals"><div class="reportTableHead"><div>半場 / 時間</div><div>進球</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${goals.map((m,i)=>reportEventHTML(m,i)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記進球事件</div>';
   byId('reportOthers').innerHTML=others.length
-    ? `<div class="reportTable others"><div class="reportTableHead"><div>半場 / 時間</div><div>球員 / 隊伍</div><div>類型</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportOtherEventHTML(m)).join('')}</div></div>`
+    ? `<div class="reportTable others"><div class="reportTableHead"><div>半場 / 時間</div><div>類型</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportOtherEventHTML(m)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記其他精彩事件</div>';
 }
 
@@ -2556,23 +2575,16 @@ function makeReportCanvas(){
     }else if(line.type==='goalTableHeader'){
       ctx.fillStyle='#172435'; roundRect(ctx,pad,y-18,W-pad*2,34,10,true,false);
       ctx.fillStyle='#93c5fd'; ctx.font='800 20px -apple-system, sans-serif'; ctx.textAlign='left';
-      ctx.fillText('半場 / 時間',pad+12,y); ctx.fillText('球員 / 隊伍',pad+270,y); ctx.fillText('進球',pad+820,y);
+      ctx.fillText('半場 / 時間',pad+12,y); ctx.fillText('進球',pad+245,y); ctx.fillText('球員 / 隊伍',pad+375,y);
       ctx.textAlign='right'; ctx.fillText('比分',W-pad-12,y); ctx.textAlign='left';
       y+=42;
     }else if(line.type==='goalEvent'){
       const rowX=pad, rowY=y-19, rowH=38;
       ctx.fillStyle='#0f1720'; ctx.fillRect(rowX,rowY,W-pad*2,rowH);
-      const periodTimeX=pad+8, labelX=pad+270, ordinalX=pad+820, scoreX=W-pad-8;
+      const periodTimeX=pad+8, ordinalX=pad+245, labelX=pad+375, scoreX=W-pad-8;
       ctx.fillStyle='#facc15'; ctx.font='700 23px -apple-system, sans-serif'; ctx.textAlign='left'; ctx.fillText(line.periodTime, periodTimeX, y);
-      ctx.fillStyle='#f1f5f9'; ctx.font='600 23px -apple-system, sans-serif';
-      let goalLabel=String(line.label||'');
-      const goalLabelMax=ordinalX-labelX-18;
-      while(goalLabel.length>1 && ctx.measureText(goalLabel).width>goalLabelMax){
-        goalLabel=goalLabel.slice(0,-1);
-      }
-      if(goalLabel!==line.label) goalLabel+='…';
-      ctx.fillText(goalLabel, labelX, y);
       ctx.fillStyle='#7dd3fc'; ctx.font='700 23px -apple-system, sans-serif'; ctx.fillText(line.ordinal, ordinalX, y);
+      ctx.fillStyle='#f1f5f9'; ctx.font='600 23px -apple-system, sans-serif'; ctx.fillText(line.label, labelX, y);
       ctx.fillStyle='#cbd5e1'; ctx.font='700 25px -apple-system, sans-serif'; ctx.textAlign='right'; ctx.fillText(line.score, scoreX, y);
       ctx.strokeStyle='#263442'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pad,y+19); ctx.lineTo(W-pad,y+19); ctx.stroke();
       ctx.textAlign='left'; y+=52;
@@ -2580,14 +2592,14 @@ function makeReportCanvas(){
       ctx.fillStyle='#172435'; roundRect(ctx,pad,y-18,W-pad*2,34,10,true,false);
       ctx.fillStyle='#93c5fd'; ctx.font='800 20px -apple-system, sans-serif'; ctx.textAlign='left';
       ctx.fillText('半場 / 時間',pad+12,y);
-      ctx.fillText('球員 / 隊伍',pad+270,y);
-      ctx.fillText('類型',pad+820,y);
+      ctx.fillText('類型',pad+245,y);
+      ctx.fillText('球員 / 隊伍',pad+375,y);
       ctx.textAlign='right'; ctx.fillText('比分',W-pad-12,y); ctx.textAlign='left';
       y+=42;
     }else if(line.type==='otherEvent'){
       const rowX=pad, rowY=y-19, rowH=38;
       ctx.fillStyle='#0f1720'; ctx.fillRect(rowX,rowY,W-pad*2,rowH);
-      const periodTimeX=pad+8, actorX=pad+270, typeX=pad+820, scoreX=W-pad-8;
+      const periodTimeX=pad+8, typeX=pad+245, actorX=pad+375, scoreX=W-pad-8;
 
       ctx.fillStyle='#facc15';
       ctx.font='700 23px -apple-system, sans-serif';
