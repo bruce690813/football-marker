@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v2.98</title>
+<title>足球場邊記錄器 v2.99</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -538,14 +538,14 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 
 .logModal{width:min(580px,calc(100vw - 10px));height:calc(var(--vv-height,100dvh) - 12px);max-height:calc(var(--vv-height,100dvh) - 12px);padding:0;background:#0f1720;color:#fff;overflow:hidden;display:flex;flex-direction:column;border:1px solid #273244;box-shadow:0 18px 42px rgba(0,0,0,.45)}
 .logModalTop{padding:10px 14px;border-bottom:1px solid #2b3744;background:linear-gradient(180deg,#101826 0%,#0f1720 100%);display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
-.logModalTitle{font-size:16px;font-weight:900}
-.logModalCount{font-size:12px;color:#93a4b6}
-.logModalBody{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:4px 12px 6px}
-.logModalBody .item{grid-template-columns:58px 62px minmax(0,1fr) 36px 28px;font-size:13px;padding:10px 2px;align-items:center}
-.logModalBody .item b{font-size:13px}
-.logModalBody .time{font-size:14px;text-align:center;color:#facc15;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+.logModalTitle{font-size:18px;font-weight:950;letter-spacing:.2px}
+.logModalCount{font-size:15px;color:#aab9c9;font-weight:800}.logModalCount span{font-size:1.15em;color:#fff;font-weight:950}
+.logModalBody{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 14px 8px}
+.logModalBody .item{grid-template-columns:64px 70px minmax(0,1fr) 40px 30px;font-size:15px;line-height:1.45;padding:12px 2px;align-items:center}
+.logModalBody .item b{font-size:15px}
+.logModalBody .time{font-size:17px;text-align:center;color:#facc15;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.3px}
 .logModalBody .log{max-height:none!important;height:auto;overflow:visible}
-.logSeq{color:#7dd3fc;font-weight:950;font-size:13px;white-space:nowrap;text-align:left}
+.logSeq{color:#7dd3fc;font-weight:950;font-size:15px;white-space:nowrap;text-align:left}
 .logModalActions{flex:0 0 54px;padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
 .logModalActions button{width:100%;background:#475569;min-height:42px;padding:8px}
 
@@ -830,7 +830,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v2.98</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v2.99</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -952,7 +952,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v2.98</div>
+      <div class="aboutVersion">v2.99</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -2962,11 +2962,11 @@ tick();
 @media (max-width:430px){
   .logModal{width:calc(100vw - 8px);height:calc(var(--vv-height,100dvh) - 8px);max-height:calc(var(--vv-height,100dvh) - 8px);border-radius:18px}
   .logModalTop{padding:9px 12px}
-  .logModalTitle{font-size:15px}
-  .logModalBody{padding:3px 10px 5px}
-  .logModalBody .item{grid-template-columns:54px 54px minmax(0,1fr) 32px 24px;gap:5px;padding:9px 0;font-size:12px}
-  .logModalBody .item b{font-size:12px}
-  .logModalBody .time{font-size:12px}
-  .logSeq{font-size:11px}
+  .logModalTitle{font-size:17px}
+  .logModalBody{padding:6px 12px 8px}
+  .logModalBody .item{grid-template-columns:58px 60px minmax(0,1fr) 34px 26px;gap:6px;padding:10px 0;font-size:14px;line-height:1.45}
+  .logModalBody .item b{font-size:14px}
+  .logModalBody .time{font-size:15px}
+  .logSeq{font-size:13px}
 }
 </style>
