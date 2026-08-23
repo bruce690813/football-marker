@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.04</title>
+<title>足球場邊記錄器 v3.07</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -414,6 +414,11 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 
 .toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.toolGrid.twoCols{grid-template-columns:1fr 1fr}.toolGrid.finalTools{grid-template-columns:1fr 1fr 1fr}
 .toolGrid button{font-size:13px;padding:8px 6px;min-height:42px;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.toolGrid.finalTools button{
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:.1px;
+}
 .reportBtn{background:#0f766e}.pngBtn{background:#7c3aed}
 .recordFullBtn{
   width:100%;
@@ -837,7 +842,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.04</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.07</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -942,9 +947,9 @@ button:disabled:active{transform:none!important}
 
 <div class="card finalToolsCard">
     <div class="toolGrid finalTools">
-      <button id="reportBtn" class="reportBtn" onclick="openReport()">📋 摘要</button>
-      <button id="saveImageBtn" class="pngBtn" onclick="saveReportImage()">🖼 儲存圖片</button>
-      <button id="shareCsvBtn" class="share" onclick="shareCSV()">📹 分享 CSV</button>
+      <button id="reportBtn" class="reportBtn" onclick="openReport()" aria-label="查看比賽摘要">📋 摘要</button>
+      <button id="saveImageBtn" class="pngBtn" onclick="saveReportImage()" aria-label="儲存比賽摘要圖片">🖼 儲存圖片</button>
+      <button id="shareCsvBtn" class="share" onclick="shareCSV()" aria-label="匯出 CSV 檔案">📄 匯出 CSV</button>
     </div>
     
   </div>
@@ -959,7 +964,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.04</div>
+      <div class="aboutVersion">v3.07</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -2695,11 +2700,14 @@ async function shareImageFile(mode='share'){
   if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
     try{
       // 必須在按鈕點擊後直接呼叫 navigator.share()
-      await navigator.share({
+      const shareData={
         title:'足球比賽摘要',
-        text: mode==='save' ? '請選擇「儲存影像 / 儲存到照片」' : '足球比賽摘要',
         files:[file]
-      });
+      };
+      // 儲存圖片模式不再附帶教學提示文字，避免訊息 App / 分享面板出現
+      //「請選擇儲存影像 / 儲存到照片」等額外文字。
+      if(mode!=='save') shareData.text='足球比賽摘要';
+      await navigator.share(shareData);
       return;
     }catch(e){
       if(e && e.name==='AbortError') return;
