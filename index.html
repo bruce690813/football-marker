@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.08</title>
+<title>足球場邊記錄器 v3.09</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -409,6 +409,63 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 }
 .event small{
   margin-top:4px;
+}
+.cardEventBtn{
+  width:100%;
+  min-height:44px;
+  margin:0;
+  padding:8px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  border-radius:13px;
+  background:linear-gradient(180deg,#273142 0%,#1b2432 100%);
+  border:1px solid rgba(250,204,21,.30);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 12px rgba(0,0,0,.16);
+  color:#fff;
+  font-size:17px;
+  font-weight:900;
+}
+.cardEventBtn .cardSwatches{
+  display:inline-flex;
+  gap:4px;
+  font-size:18px;
+  line-height:1;
+}
+.cardEventBtn .cardSub{
+  font-size:11px;
+  font-weight:800;
+  color:#aeb9c8;
+  letter-spacing:.2px;
+}
+.cardEventBtn:disabled{
+  background:#2a3038;
+  border-color:#333b46;
+  color:#68717c;
+  box-shadow:none;
+}
+.cardEventBtn:disabled .cardSwatches,
+.cardEventBtn:disabled .cardSub{opacity:.45}
+
+.cardTypeGrid,.cardTeamGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.cardTypeGrid button,.cardTeamGrid button{
+  min-height:74px;
+  font-size:18px;
+  font-weight:950;
+}
+.yellowCardChoice{
+  background:linear-gradient(180deg,#facc15 0%,#eab308 100%);
+  color:#211800;
+}
+.redCardChoice{
+  background:linear-gradient(180deg,#ef4444 0%,#c62828 100%);
+  color:#fff;
 }
 
 
@@ -875,7 +932,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.08</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.09</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -975,6 +1032,14 @@ button:disabled:active{transform:none!important}
   </div>
 
   <div class="card">
+    <button id="cardBtn" class="cardEventBtn" onclick="openCardModal()" aria-label="新增黃牌或紅牌紀錄">
+      <span class="cardSwatches" aria-hidden="true"><span>🟨</span><span>🟥</span></span>
+      <span>牌卡</span>
+      <span class="cardSub">黃牌 / 紅牌</span>
+    </button>
+  </div>
+
+  <div class="card">
     <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">紀錄</span></span><span class="recordMeta"><span class="recordMetaPrefix">共</span><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
   </div>
 
@@ -997,7 +1062,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.08</div>
+      <div class="aboutVersion">v3.09</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -1010,7 +1075,7 @@ button:disabled:active{transform:none!important}
       <div class="aboutCards">
         <div class="aboutCard">
           <div class="aboutCardTitle">🎬 快速剪輯</div>
-          <div class="aboutCardText">進球、撲救、射門與精彩配合，當下按一下就能記下時間點；賽後不用重看整場影片，也能快速剪出重點。</div>
+          <div class="aboutCardText">進球、撲救、射門、精彩配合與牌卡，當下按一下就能記下時間點；賽後不用重看整場影片，也能快速剪出重點。</div>
         </div>
         <div class="aboutCard">
           <div class="aboutCardTitle">📊 留下比賽故事</div>
@@ -1096,6 +1161,31 @@ button:disabled:active{transform:none!important}
   </div>
 </div>
 
+<!-- Card event modal -->
+<div class="modalBack" id="cardModal">
+  <div class="modal">
+    <h2>🟨🟥 牌卡紀錄</h2>
+    <p>先選擇牌卡類型，再指定是哪一隊、哪一位球員。</p>
+    <div class="cardTypeGrid">
+      <button class="yellowCardChoice" type="button" onclick="chooseCardType('YELLOW_CARD')">🟨 黃牌</button>
+      <button class="redCardChoice" type="button" onclick="chooseCardType('RED_CARD')">🟥 紅牌</button>
+    </div>
+    <button class="cancel" type="button" onclick="cancelCard()">取消</button>
+  </div>
+</div>
+
+<div class="modalBack" id="cardTeamModal">
+  <div class="modal">
+    <h2 id="cardTeamTitle">選擇球隊</h2>
+    <p>選擇拿到牌卡的球員所屬球隊。</p>
+    <div class="cardTeamGrid">
+      <button class="our" type="button" onclick="chooseCardTeam('OUR')"><span id="cardOurName">我方</span></button>
+      <button class="opp" type="button" onclick="chooseCardTeam('OPP')"><span id="cardOppName">對手</span></button>
+    </div>
+    <button class="cancel" type="button" onclick="cancelCard()">取消</button>
+  </div>
+</div>
+
 <!-- Number modal -->
 <div class="modalBack" id="numberModal">
   <div class="modal">
@@ -1177,6 +1267,8 @@ button:disabled:active{transform:none!important}
         <button type="button" id="editEventSAVE" onclick="setEditMarkerEvent('SAVE')">🧤 撲救</button>
         <button type="button" id="editEventSHOT" onclick="setEditMarkerEvent('SHOT')">🥅 射門</button>
         <button type="button" id="editEventGREAT_PLAY" onclick="setEditMarkerEvent('GREAT_PLAY')">🙌 精彩配合</button>
+        <button type="button" id="editEventYELLOW_CARD" onclick="setEditMarkerEvent('YELLOW_CARD')">🟨 黃牌</button>
+        <button type="button" id="editEventRED_CARD" onclick="setEditMarkerEvent('RED_CARD')">🟥 紅牌</button>
       </div>
     </div>
 
@@ -1270,6 +1362,7 @@ const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
 let editingMarkerIndex=null, editingMarkerEvent=null, editingMarkerTeam='OUR';
 let pendingGoalTime=null, pendingGoalTeam=null;
+let pendingCardTime=null, pendingCardEvent=null;
 let pendingNumberEvent=null, pendingNumberTime=null, pendingNumberTeam=null;
 let pendingFinishEnd=null, pendingFinishElapsed=null;
 let timeExpanded=false;
@@ -1447,10 +1540,10 @@ function fmtDateTime(epoch){
   return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+' '+fmtClock(epoch);
 }
 function emoji(ev){
-  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', GREAT_PLAY:'🙌'}[ev] || '•';
+  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', GREAT_PLAY:'🙌', YELLOW_CARD:'🟨', RED_CARD:'🟥'}[ev] || '•';
 }
 function eventLabel(ev){
-  return {GOAL:'進球', SAVE:'撲救', SHOT:'射門', GREAT_PLAY:'精彩配合'}[ev] || ev;
+  return {GOAL:'進球', SAVE:'撲救', SHOT:'射門', GREAT_PLAY:'精彩配合', YELLOW_CARD:'黃牌', RED_CARD:'紅牌'}[ev] || ev;
 }
 function teamDisplay(code){
   if(code==='OUR') return state.ourTeam || '我方';
@@ -2040,6 +2133,39 @@ function cancelGoal(){
   pendingGoalTime=null; pendingGoalTeam=null;
   byId('goalModal').classList.remove('open');
 }
+function openCardModal(){
+  if(!state.started){ alert('請先按「開始比賽」'); return; }
+  if(state.finished){ alert('本場比賽已結束'); return; }
+  if(state.awaitingNextPeriod || state.penalty?.active){ return; }
+  pendingCardTime=elapsed();
+  pendingCardEvent=null;
+  byId('cardModal').classList.add('open');
+}
+function chooseCardType(event){
+  if(!['YELLOW_CARD','RED_CARD'].includes(event)) return;
+  pendingCardEvent=event;
+  byId('cardModal').classList.remove('open');
+  byId('cardOurName').textContent=state.ourTeam||'我方';
+  byId('cardOppName').textContent=state.oppTeam||'對手';
+  byId('cardTeamTitle').textContent=event==='YELLOW_CARD'?'🟨 黃牌｜選擇球隊':'🟥 紅牌｜選擇球隊';
+  byId('cardTeamModal').classList.add('open');
+}
+function chooseCardTeam(team){
+  if(!pendingCardEvent || pendingCardTime===null) return;
+  const event=pendingCardEvent;
+  const sec=pendingCardTime;
+  byId('cardTeamModal').classList.remove('open');
+  pendingCardEvent=null;
+  pendingCardTime=null;
+  openNumberSelection(event, team, sec);
+}
+function cancelCard(){
+  pendingCardEvent=null;
+  pendingCardTime=null;
+  byId('cardModal').classList.remove('open');
+  byId('cardTeamModal').classList.remove('open');
+}
+
 function openNumberSelection(event, team, sec){
   pendingNumberEvent=event;
   pendingNumberTeam=team;
@@ -2056,6 +2182,9 @@ function openNumberSelection(event, team, sec){
   if(event==='GOAL'){
     byId('numberTitle').textContent=isOur?'選擇進球球員背號':'選擇對手進球背號';
     byId('numberHint').textContent=isOur?'選填：可直接點常用背號；其他背號輸入一次後會自動加入。':'選填：可輸入對手背號，也可以略過。';
+  }else if(event==='YELLOW_CARD' || event==='RED_CARD'){
+    byId('numberTitle').textContent=`${event==='YELLOW_CARD'?'🟨':'🟥'} 選擇${label}球員背號`;
+    byId('numberHint').textContent=isOur?'選填：指定是哪一位球員拿牌；可直接點常用背號，也可以略過。':'選填：輸入對手拿牌球員背號，也可以略過。';
   }else{
     byId('numberTitle').textContent=`選擇${label}球員背號`;
     byId('numberHint').textContent='選填：可直接點常用背號；其他背號輸入一次後會自動加入。';
@@ -2207,7 +2336,7 @@ function adjustScoreSnapshotsFrom(startIndex,dOur,dOpp){
 
 function setEditMarkerEvent(event){
   editingMarkerEvent=event;
-  ['GOAL','SAVE','SHOT','GREAT_PLAY'].forEach(ev=>{
+  ['GOAL','SAVE','SHOT','GREAT_PLAY','YELLOW_CARD','RED_CARD'].forEach(ev=>{
     byId('editEvent'+ev)?.classList.toggle('active',ev===event);
   });
   byId('editNumberSection').style.display=event==='GREAT_PLAY'?'none':'block';
@@ -2505,7 +2634,7 @@ function render(){
 
   // 比賽事件按鈕只在「比賽進行中」啟用。
   const eventEnabled=state.started && !state.finished && !state.awaitingNextPeriod;
-  ['goalBtn','saveBtn','shotBtn','greatPlayBtn'].forEach(id=>{
+  ['goalBtn','saveBtn','shotBtn','greatPlayBtn','cardBtn'].forEach(id=>{
     const btn=byId(id);
     if(btn) btn.disabled=!eventEnabled;
   });
