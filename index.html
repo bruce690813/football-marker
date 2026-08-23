@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.07</title>
+<title>足球場邊記錄器 v3.08</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -761,6 +761,39 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 }
 
 .finishDecisionBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.finishDecisionBtns.three{grid-template-columns:repeat(3,1fr)}
+.finishExtra{background:#2563eb}.finishPenalty{background:#7c3aed}
+.extraTimeInputWrap{margin-top:12px}
+.extraTimeInputWrap label{display:block;color:#555;font-size:13px;font-weight:850;margin-bottom:6px}
+.extraTimeInputWrap input{width:100%;background:#fff;color:#111;text-align:center;font-size:25px;font-weight:950;border:2px solid #60a5fa;border-radius:14px;padding:12px}
+.extraTimeActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.extraTimeConfirm{background:#2563eb}.extraTimeCancel{background:#737b87}
+.penaltyModal{width:min(520px,calc(100vw - 12px));height:min(760px,calc(var(--vv-height,100dvh) - 16px));max-height:calc(var(--vv-height,100dvh) - 16px);padding:0;overflow:hidden;display:flex;flex-direction:column;background:#f6f7fb}
+.penaltyHead{padding:15px 15px 10px;border-bottom:1px solid #d9dee6;flex:0 0 auto}
+.penaltyHead h2{margin:0;font-size:23px}.penaltyHint{margin-top:5px;color:#68707a;font-size:12px;line-height:1.45}
+.penaltyScore{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:10px;font-size:13px;font-weight:850;color:#5c6672}
+.penaltyScore strong{font-size:30px;color:#111;font-variant-numeric:tabular-nums}
+.penaltyBody{flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:10px 12px}
+.penaltyTableHead,.penaltyRound{display:grid;grid-template-columns:34px 1fr 1fr;gap:7px;align-items:stretch}
+.penaltyTableHead{font-size:12px;font-weight:900;color:#66717e;text-align:center;padding:0 2px 6px}
+.penaltyRound{margin-bottom:8px}
+.penaltyRoundNo{display:flex;align-items:center;justify-content:center;font-weight:950;color:#64748b;font-size:14px}
+.penaltyKickCard{border:1px solid #cfd6df;border-radius:13px;background:#fff;padding:7px;display:grid;grid-template-columns:52px 1fr;gap:6px;align-items:center}
+.penaltyKickCard input{width:100%;min-width:0;border:1px solid #cbd5e1;border-radius:9px;background:#f8fafc;color:#111;padding:9px 4px;font-size:17px;font-weight:900;text-align:center}
+.penaltyResultBtn{min-height:40px;padding:7px 5px;border-radius:9px;font-size:13px;font-weight:950;background:#94a3b8}
+.penaltyResultBtn.goal{background:#16a34a}.penaltyResultBtn.miss{background:#dc2626}.penaltyResultBtn.pending{background:#64748b}
+.penaltyAdd{width:100%;margin-top:5px;background:#334155;min-height:42px}
+.penaltyActions{flex:0 0 auto;padding:9px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid #d9dee6;background:#f6f7fb;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.penaltyClose{background:#64748b}.penaltyFinish{background:#7c3aed}
+.broadcastStage.penalty{background:linear-gradient(180deg,#3a1c62 0%,#1d1033 100%);border-color:rgba(168,85,247,.52);box-shadow:0 0 0 1px rgba(168,85,247,.10),0 0 6px rgba(168,85,247,.10),inset 0 1px 0 rgba(255,255,255,.06),0 6px 16px rgba(0,0,0,.20)}
+.broadcastStage.penalty .liveTag,.broadcastStage.penalty .stageTimer{display:none}
+.penaltySummary{border:1px solid #3b2b53;border-radius:12px;background:#171225;padding:5px 10px;margin-bottom:14px}
+.penaltySummaryTop{display:flex;justify-content:space-between;align-items:center;padding:7px 0 9px;font-size:13px;font-weight:950;color:#e9d5ff}
+.penaltySummaryScore{font-size:20px;color:#fff}
+.penaltySummaryRow{display:grid;grid-template-columns:34px 1fr 1fr;gap:7px;padding:6px 0;border-top:1px solid #342942;font-size:11px;align-items:center}
+.penaltySummaryKick{text-align:center;color:#d8dce4}.penaltySummaryKick .ok{color:#86efac;font-weight:900}.penaltySummaryKick .no{color:#fca5a5;font-weight:900}
+@media(max-width:390px){.finishDecisionBtns.three{grid-template-columns:1fr}.penaltyKickCard{grid-template-columns:45px 1fr}.penaltyResultBtn{font-size:12px}}
+
 .finishWhole{background:#d64545}
 .finishHalf{background:#1f6feb}
 .periodBadge{display:inline-flex;align-items:center;justify-content:center;padding:3px 8px;border-radius:999px;background:#1e293b;color:#7dd3fc;font-size:10px;font-weight:900;margin-right:5px;white-space:nowrap}
@@ -842,7 +875,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.07</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.08</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -964,7 +997,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.07</div>
+      <div class="aboutVersion">v3.08</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -1005,11 +1038,49 @@ button:disabled:active{transform:none!important}
   <div class="modal">
     <h2 id="finishDecisionTitle">本段比賽已結束</h2>
     <p id="finishDecisionInfo">請選擇這是全場結束，或還有下半場。</p>
-    <div class="finishDecisionBtns">
-      <button class="finishWhole" onclick="confirmFinishFull()">全場結束</button>
+    <div class="finishDecisionBtns" id="finishDecisionBtns">
+      <button class="finishWhole" id="finishWholeBtn" onclick="confirmFinishFull()">全場結束</button>
       <button class="finishHalf" id="finishHalfBtn" onclick="confirmFinishHalf()">還有下半場</button>
+      <button class="finishExtra" id="finishExtraBtn" onclick="openExtraTimeSetup()" style="display:none">延長賽</button>
+      <button class="finishPenalty" id="finishPenaltyBtn" onclick="beginPenaltyShootout()" style="display:none">PK 點球</button>
     </div>
     <button class="cancel" onclick="cancelFinishDecision()">取消</button>
+  </div>
+</div>
+
+<!-- Extra time setup modal -->
+<div class="modalBack" id="extraTimeModal">
+  <div class="modal">
+    <h2>⏱ 設定延長賽時間</h2>
+    <p>輸入本場延長賽要進行多久。延長賽會以獨立比賽段落計時。</p>
+    <div class="extraTimeInputWrap">
+      <label for="extraTimeMinutes">延長賽時間（分鐘）</label>
+      <input id="extraTimeMinutes" type="number" inputmode="numeric" min="1" max="45" placeholder="例如 10">
+    </div>
+    <div class="extraTimeActions">
+      <button class="extraTimeCancel" onclick="closeExtraTimeSetup()">返回</button>
+      <button class="extraTimeConfirm" onclick="confirmExtraTime()">確認延長賽</button>
+    </div>
+  </div>
+</div>
+
+<!-- Penalty shootout modal -->
+<div class="modalBack" id="penaltyModal">
+  <div class="modal penaltyModal">
+    <div class="penaltyHead">
+      <h2>⚽ PK 點球大戰</h2>
+      <div class="penaltyHint">預設雙方各 5 點。背號可留白；點一下結果按鈕可切換「待定 → 進球 → 未進」。若仍平手，可再新增一輪。</div>
+      <div class="penaltyScore"><span id="penaltyOurName">我方</span><strong id="penaltyScoreText">0 : 0</strong><span id="penaltyOppName">對手</span></div>
+    </div>
+    <div class="penaltyBody">
+      <div class="penaltyTableHead"><div>輪</div><div id="penaltyOurHead">我方</div><div id="penaltyOppHead">對手</div></div>
+      <div id="penaltyRounds"></div>
+      <button class="penaltyAdd" type="button" onclick="addPenaltyRound()">＋ 加一輪</button>
+    </div>
+    <div class="penaltyActions">
+      <button class="penaltyClose" type="button" onclick="closePenaltyModal()">暫時關閉</button>
+      <button class="penaltyFinish" type="button" onclick="finishPenaltyShootout()">完成 PK</button>
+    </div>
   </div>
 </div>
 
@@ -1163,8 +1234,13 @@ button:disabled:active{transform:none!important}
       </div>
 
       <div id="reportPeriodsWrap" style="display:none">
-        <div class="reportSectionTitle">上下半場</div>
+        <div class="reportSectionTitle">比賽段落</div>
         <div class="periodSummary" id="reportPeriods"></div>
+      </div>
+
+      <div id="reportPenaltyWrap" style="display:none">
+        <div class="reportSectionTitle">PK 點球大戰</div>
+        <div class="penaltySummary" id="reportPenalty"></div>
       </div>
 
       <div class="reportSectionTitle">球員進球統計</div>
@@ -1210,7 +1286,11 @@ let state={
   multiPeriod:false,
   periodStartOurScore:0,
   periodStartOppScore:0,
-  periods:[]
+  periods:[],
+  nextPeriodType:null,
+  extraTime:false,
+  extraTimeMinutes:null,
+  penalty:null
 };
 
 function byId(id){ return document.getElementById(id); }
@@ -1317,6 +1397,14 @@ function loadState(){
   if(typeof state.multiPeriod!=='boolean') state.multiPeriod=false;
   if(typeof state.periodStartOurScore!=='number') state.periodStartOurScore=0;
   if(typeof state.periodStartOppScore!=='number') state.periodStartOppScore=0;
+  if(typeof state.extraTime!=='boolean') state.extraTime=false;
+  if(state.extraTimeMinutes!=null) state.extraTimeMinutes=Number(state.extraTimeMinutes)||null;
+  if(!('nextPeriodType' in state)) state.nextPeriodType=null;
+  if(!('penalty' in state)) state.penalty=null;
+  if(state.penalty){
+    if(!Array.isArray(state.penalty.our)) state.penalty.our=[];
+    if(!Array.isArray(state.penalty.opp)) state.penalty.opp=[];
+  }
   const rememberedOurTeam=localStorage.getItem(LAST_OUR_TEAM_KEY)||'';
   const rememberedVenue=localStorage.getItem(LAST_VENUE_KEY)||'';
 
@@ -1371,7 +1459,7 @@ function teamDisplay(code){
 }
 function periodLabel(n){
   if(!state.multiPeriod) return '全場';
-  return Number(n)===1 ? '上半場' : Number(n)===2 ? '下半場' : `第${n}段`;
+  return Number(n)===1 ? '上半場' : Number(n)===2 ? '下半場' : Number(n)===3 ? '延長賽' : `第${n}段`;
 }
 function totalMatchElapsed(){
   if(state.finished) return Number(state.finalElapsed)||0;
@@ -1434,13 +1522,13 @@ function renderTimeBox(){
   renderDiff(byId('diffText'));
 }
 function regulationPeriodCount(){
-  // regulationMinutes 代表「每一段 / 每半場」的規定分鐘數。
-  // 單段比賽 = 1 段；確認有上下半場後 = 2 段。
+  // regulationMinutes 代表正規比賽每一段 / 每半場的規定分鐘數。
   return state.multiPeriod ? 2 : 1;
 }
 function regulationTotalMinutes(){
-  if(!state.regulationMinutes) return 0;
-  return Number(state.regulationMinutes) * regulationPeriodCount();
+  if(!state.regulationMinutes) return state.extraTimeMinutes ? Number(state.extraTimeMinutes) : 0;
+  const normal=Number(state.regulationMinutes) * regulationPeriodCount();
+  return normal + (state.extraTime ? (Number(state.extraTimeMinutes)||0) : 0);
 }
 function regulationTargetSeconds(){
   return regulationTotalMinutes() * 60;
@@ -1448,7 +1536,9 @@ function regulationTargetSeconds(){
 function regulationDisplayText(){
   if(!state.regulationMinutes) return '';
   if(state.multiPeriod){
-    return `每半場 ${state.regulationMinutes} 分鐘（全場 ${regulationTotalMinutes()} 分鐘）`;
+    const normal=Number(state.regulationMinutes)*2;
+    if(state.extraTime && state.extraTimeMinutes) return `每半場 ${state.regulationMinutes} 分鐘（正規 ${normal}＋延長 ${state.extraTimeMinutes}＝${regulationTotalMinutes()} 分鐘）`;
+    return `每半場 ${state.regulationMinutes} 分鐘（全場 ${normal} 分鐘）`;
   }
   return `${state.regulationMinutes} 分鐘`;
 }
@@ -1612,8 +1702,9 @@ function startMatch(){
   rememberVenueIfEligible(state.venue);
 
   if(state.awaitingNextPeriod){
-    state.currentPeriod=2;
+    state.currentPeriod=state.nextPeriodType==='EXTRA_TIME' ? 3 : 2;
     state.awaitingNextPeriod=false;
+    state.nextPeriodType=null;
   }else if(!state.periods.length){
     state.currentPeriod=1;
   }
@@ -1629,8 +1720,13 @@ function startMatch(){
 }
 
 function finishMatch(){
+  if(state.penalty?.active){
+    openPenaltyModal();
+    return;
+  }
   if(!state.started){
-    alert(state.awaitingNextPeriod ? '請先開始下半場' : '比賽尚未開始');
+    const waitText=state.nextPeriodType==='EXTRA_TIME' ? '請先開始延長賽' : (state.awaitingNextPeriod ? '請先開始下半場' : '比賽尚未開始');
+    alert(waitText);
     return;
   }
   if(state.finished) return;
@@ -1638,9 +1734,19 @@ function finishMatch(){
   pendingFinishEnd=Date.now();
   pendingFinishElapsed=elapsed();
 
-  byId('finishDecisionTitle').textContent=state.currentPeriod===1 ? '本段比賽已結束' : '下半場已結束';
-  byId('finishDecisionInfo').textContent=`目前比分 ${state.ourScore}:${state.oppScore}｜本段時間 ${fmtMMSS(pendingFinishElapsed)}`;
-  byId('finishHalfBtn').style.display=state.currentPeriod===1 ? '' : 'none';
+  const tied=state.ourScore===state.oppScore;
+  const title=state.currentPeriod===1 ? '本段比賽已結束' : state.currentPeriod===2 ? '下半場已結束' : '延長賽已結束';
+  byId('finishDecisionTitle').textContent=title;
+  byId('finishDecisionInfo').textContent=`目前比分 ${state.ourScore}:${state.oppScore}｜本段時間 ${fmtMMSS(pendingFinishElapsed)}${tied && state.currentPeriod>=2 ? '｜目前平手' : ''}`;
+
+  const halfBtn=byId('finishHalfBtn');
+  const extraBtn=byId('finishExtraBtn');
+  const pkBtn=byId('finishPenaltyBtn');
+  const btns=byId('finishDecisionBtns');
+  halfBtn.style.display=state.currentPeriod===1 ? '' : 'none';
+  extraBtn.style.display=(state.currentPeriod===2 && tied) ? '' : 'none';
+  pkBtn.style.display=(state.currentPeriod>=2 && tied) ? '' : 'none';
+  btns.classList.toggle('three', state.currentPeriod===2 && tied);
   byId('finishDecisionModal').classList.add('open');
 }
 
@@ -1677,6 +1783,7 @@ function confirmFinishHalf(){
   state.started=false;
   state.finished=false;
   state.awaitingNextPeriod=true;
+  state.nextPeriodType='SECOND_HALF';
   pendingFinishEnd=null;
   pendingFinishElapsed=null;
   byId('finishDecisionModal').classList.remove('open');
@@ -1684,10 +1791,166 @@ function confirmFinishHalf(){
   render();
 }
 
+function openExtraTimeSetup(){
+  if(state.currentPeriod!==2 || pendingFinishEnd===null) return;
+  byId('extraTimeMinutes').value=state.extraTimeMinutes || '';
+  byId('extraTimeModal').classList.add('open');
+}
+function closeExtraTimeSetup(){
+  byId('extraTimeModal').classList.remove('open');
+}
+function confirmExtraTime(){
+  const minutes=validateIntegerField('extraTimeMinutes','延長賽時間',1,45,false);
+  if(minutes===undefined) return;
+  if(pendingFinishEnd===null || state.currentPeriod!==2) return;
+  state.multiPeriod=true;
+  state.extraTime=true;
+  state.extraTimeMinutes=minutes;
+  archiveCurrentPeriod('下半場');
+  state.endEpoch=pendingFinishEnd;
+  state.finalElapsed=0;
+  state.started=false;
+  state.finished=false;
+  state.awaitingNextPeriod=true;
+  state.nextPeriodType='EXTRA_TIME';
+  pendingFinishEnd=null;
+  pendingFinishElapsed=null;
+  byId('extraTimeModal').classList.remove('open');
+  byId('finishDecisionModal').classList.remove('open');
+  saveState();
+  render();
+}
+function emptyPenaltyKick(){ return {number:'',result:null}; }
+function ensurePenaltyState(){
+  if(!state.penalty) state.penalty={active:true,completed:false,startEpoch:Date.now(),endEpoch:null,our:[],opp:[]};
+  while(state.penalty.our.length<5) state.penalty.our.push(emptyPenaltyKick());
+  while(state.penalty.opp.length<5) state.penalty.opp.push(emptyPenaltyKick());
+}
+function penaltyGoals(side){
+  if(!state.penalty) return 0;
+  return (state.penalty[side]||[]).filter(k=>k.result==='GOAL').length;
+}
+function penaltyResultLabel(result){ return result==='GOAL'?'✓ 進球':result==='MISS'?'× 未進':'○ 待定'; }
+function beginPenaltyShootout(){
+  if(pendingFinishEnd!==null){
+    const label=state.currentPeriod===2?'下半場':state.currentPeriod===3?'延長賽':'全場';
+    archiveCurrentPeriod(label);
+    state.endEpoch=pendingFinishEnd;
+    state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
+  }
+  state.started=false;
+  state.finished=false;
+  state.awaitingNextPeriod=false;
+  state.nextPeriodType=null;
+  state.penalty={active:true,completed:false,startEpoch:Date.now(),endEpoch:null,our:[],opp:[]};
+  ensurePenaltyState();
+  pendingFinishEnd=null;
+  pendingFinishElapsed=null;
+  byId('finishDecisionModal').classList.remove('open');
+  saveState();
+  render();
+  openPenaltyModal();
+}
+function openPenaltyModal(){
+  ensurePenaltyState();
+  syncVisualViewport();
+  renderPenaltyModal();
+  byId('penaltyModal').classList.add('open');
+}
+function closePenaltyModal(){
+  savePenaltyInputs();
+  byId('penaltyModal').classList.remove('open');
+  saveState();
+  render();
+}
+function savePenaltyInputs(){
+  if(!state.penalty) return;
+  ['our','opp'].forEach(side=>{
+    state.penalty[side].forEach((kick,i)=>{
+      const el=byId(`pk_${side}_${i}`);
+      if(!el) return;
+      const raw=String(el.value||'').trim();
+      if(raw===''){ kick.number=''; return; }
+      const n=Number(raw);
+      kick.number=(Number.isInteger(n)&&n>=1&&n<=99)?String(n):'';
+      if(side==='our' && kick.number) rememberPlayerNumber(kick.number);
+    });
+  });
+}
+function togglePenaltyResult(side,index){
+  savePenaltyInputs();
+  const kick=state.penalty?.[side]?.[index];
+  if(!kick) return;
+  kick.result=kick.result===null?'GOAL':kick.result==='GOAL'?'MISS':null;
+  saveState();
+  renderPenaltyModal();
+}
+function addPenaltyRound(){
+  savePenaltyInputs();
+  ensurePenaltyState();
+  state.penalty.our.push(emptyPenaltyKick());
+  state.penalty.opp.push(emptyPenaltyKick());
+  saveState();
+  renderPenaltyModal();
+  setTimeout(()=>{ const body=byId('penaltyModal').querySelector('.penaltyBody'); if(body) body.scrollTop=body.scrollHeight; },0);
+}
+function renderPenaltyModal(){
+  ensurePenaltyState();
+  const ourName=state.ourTeam||'我方', oppName=state.oppTeam||'對手';
+  byId('penaltyOurName').textContent=ourName;
+  byId('penaltyOppName').textContent=oppName;
+  byId('penaltyOurHead').textContent=ourName;
+  byId('penaltyOppHead').textContent=oppName;
+  byId('penaltyScoreText').textContent=`${penaltyGoals('our')} : ${penaltyGoals('opp')}`;
+  const count=Math.max(state.penalty.our.length,state.penalty.opp.length);
+  let html='';
+  for(let i=0;i<count;i++){
+    const ok=state.penalty.our[i]||emptyPenaltyKick(), op=state.penalty.opp[i]||emptyPenaltyKick();
+    const card=(side,kick)=>`<div class="penaltyKickCard"><input id="pk_${side}_${i}" type="number" inputmode="numeric" min="1" max="99" placeholder="#" value="${escapeHtml(kick.number||'')}" aria-label="${side==='our'?ourName:oppName} 第${i+1}點背號"><button type="button" class="penaltyResultBtn ${kick.result==='GOAL'?'goal':kick.result==='MISS'?'miss':'pending'}" onclick="togglePenaltyResult('${side}',${i})">${penaltyResultLabel(kick.result)}</button></div>`;
+    html+=`<div class="penaltyRound"><div class="penaltyRoundNo">${i+1}</div>${card('our',ok)}${card('opp',op)}</div>`;
+  }
+  byId('penaltyRounds').innerHTML=html;
+}
+function finishPenaltyShootout(){
+  savePenaltyInputs();
+  ensurePenaltyState();
+  const ourTaken=state.penalty.our.filter(k=>k.result).length;
+  const oppTaken=state.penalty.opp.filter(k=>k.result).length;
+  const our=penaltyGoals('our'), opp=penaltyGoals('opp');
+  if(!ourTaken || !oppTaken){ alert('請至少記錄雙方各一次 PK 結果'); return; }
+  if(our===opp){
+    const allSet=state.penalty.our.every(k=>k.result) && state.penalty.opp.every(k=>k.result);
+    alert(allSet ? '目前 PK 仍然平手，請按「＋ 加一輪」繼續記錄。' : '目前 PK 仍然平手，請繼續記錄尚未完成的點球。');
+    return;
+  }
+  state.penalty.active=false;
+  state.penalty.completed=true;
+  state.penalty.endEpoch=Date.now();
+  state.finished=true;
+  state.started=false;
+  state.endEpoch=state.penalty.endEpoch;
+  state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
+  byId('penaltyModal').classList.remove('open');
+  saveState();
+  render();
+}
+function penaltySummaryHTML(){
+  if(!state.penalty) return '';
+  const count=Math.max(state.penalty.our.length,state.penalty.opp.length);
+  let rows='';
+  for(let i=0;i<count;i++){
+    const a=state.penalty.our[i]||emptyPenaltyKick(), b=state.penalty.opp[i]||emptyPenaltyKick();
+    if(!a.result && !b.result && !a.number && !b.number) continue;
+    const one=(kick)=>`<span class="${kick.result==='GOAL'?'ok':kick.result==='MISS'?'no':''}">${kick.number?'#'+escapeHtml(kick.number)+' ':''}${kick.result==='GOAL'?'✓':kick.result==='MISS'?'×':'—'}</span>`;
+    rows+=`<div class="penaltySummaryRow"><div>${i+1}</div><div class="penaltySummaryKick">${one(a)}</div><div class="penaltySummaryKick">${one(b)}</div></div>`;
+  }
+  return `<div class="penaltySummaryTop"><span>${escapeHtml(state.ourTeam||'我方')} vs ${escapeHtml(state.oppTeam||'對手')}</span><span class="penaltySummaryScore">PK ${penaltyGoals('our')} : ${penaltyGoals('opp')}</span></div>${rows}`;
+}
+
 function confirmFinishFull(){
   if(pendingFinishEnd===null) return;
 
-  const label=state.multiPeriod ? (state.currentPeriod===1?'上半場':'下半場') : '全場';
+  const label=state.multiPeriod ? (state.currentPeriod===1?'上半場':state.currentPeriod===2?'下半場':'延長賽') : '全場';
   archiveCurrentPeriod(label);
 
   state.endEpoch=pendingFinishEnd;
@@ -1724,7 +1987,8 @@ function newMatch(){
     started:false, finished:false, startEpoch:null, endEpoch:null, finalElapsed:0,
     regulationMinutes:null, ourScore:0, oppScore:0, markers:[],
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
-    periodStartOurScore:0, periodStartOppScore:0, periods:[]
+    periodStartOurScore:0, periodStartOppScore:0, periods:[],
+    nextPeriodType:null, extraTime:false, extraTimeMinutes:null, penalty:null
   };
 
   byId('ourTeam').value=rememberedOurTeam;
@@ -2181,35 +2445,46 @@ function render(){
   byId('oppScore').textContent=state.oppScore;
   byId('count').textContent=state.markers.length;
   let txt='尚未開始', cls='idleStatus', cardCls='idleState';
-  if(state.awaitingNextPeriod){
-    const firstHalf=state.periods.find(p=>Number(p.number)===1);
-    const firstHalfDuration=firstHalf ? (Number(firstHalf.duration)||0) : 0;
-    txt=`上半場結束｜${fmtMMSS(firstHalfDuration)}｜目前 ${state.ourScore}:${state.oppScore}`;
+  if(state.penalty?.active){
+    txt=`PK 點球進行中｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`;
+    cls='liveStatus'; cardCls='liveState';
+  }else if(state.awaitingNextPeriod){
+    if(state.nextPeriodType==='EXTRA_TIME'){
+      txt=`下半場結束｜目前 ${state.ourScore}:${state.oppScore}｜等待延長賽`;
+    }else{
+      const firstHalf=state.periods.find(p=>Number(p.number)===1);
+      const firstHalfDuration=firstHalf ? (Number(firstHalf.duration)||0) : 0;
+      txt=`上半場結束｜${fmtMMSS(firstHalfDuration)}｜目前 ${state.ourScore}:${state.oppScore}`;
+    }
     cls='idleStatus';
     cardCls='idleState';
   }else if(state.started && !state.finished){
-    txt=state.multiPeriod && state.currentPeriod===2 ? '下半場進行中' : '比賽進行中';
+    txt=state.currentPeriod===3 ? '延長賽進行中' : (state.multiPeriod && state.currentPeriod===2 ? '下半場進行中' : '比賽進行中');
     cls='liveStatus';
     cardCls='liveState';
   }
   if(state.finished){
-    txt=`比賽已結束｜${fmtMMSS(state.finalElapsed)}｜${state.ourScore}:${state.oppScore}`;
+    const pk=state.penalty?.completed ? `｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}` : '';
+    txt=`比賽已結束｜${fmtMMSS(state.finalElapsed)}｜${state.ourScore}:${state.oppScore}${pk}`;
     cls='finished';
     cardCls='finishedState';
   }
   const startBtn=byId('startBtn');
   const finishBtn=byId('finishBtn');
 
-  startBtn.textContent=state.awaitingNextPeriod?'▶ 開始下半場':'▶ 開始比賽';
-  finishBtn.textContent=state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 比賽結束';
+  startBtn.textContent=state.awaitingNextPeriod ? (state.nextPeriodType==='EXTRA_TIME'?'▶ 開始延長賽':'▶ 開始下半場') : '▶ 開始比賽';
+  finishBtn.textContent=state.penalty?.active ? '⚽ 記錄 PK' : state.currentPeriod===3 && state.started ? '■ 結束延長賽' : (state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 比賽結束');
 
   // 按鈕依比賽狀態啟用 / 禁用，避免現場誤觸。
   if(state.finished){
     // 全場結束：兩顆都鎖定，只能建立新比賽。
     startBtn.disabled=true;
     finishBtn.disabled=true;
+  }else if(state.penalty?.active){
+    startBtn.disabled=true;
+    finishBtn.disabled=false;
   }else if(state.awaitingNextPeriod){
-    // 中場：只能開始下半場。
+    // 中場 / 延長賽前：只能開始下一段。
     startBtn.disabled=false;
     finishBtn.disabled=true;
   }else if(state.started){
@@ -2242,7 +2517,7 @@ function render(){
   // 賽前比分固定為 0:0；開始比賽後、中場與全場結束後才允許修正。
   const scoreEditBtn=byId('scoreEditBtn');
   if(scoreEditBtn){
-    const canEditScore=state.started || state.awaitingNextPeriod || state.finished;
+    const canEditScore=state.started || state.awaitingNextPeriod || state.penalty?.active || state.finished;
     scoreEditBtn.disabled=!canEditScore;
     scoreEditBtn.setAttribute('aria-disabled', String(!canEditScore));
   }
@@ -2251,15 +2526,20 @@ function render(){
   const stageLabel=byId('broadcastStageLabel');
   if(stage && stageLabel){
     let stageText='賽前', stageClass='pre';
-    if(state.awaitingNextPeriod){
-      stageText='中場';
+    if(state.penalty?.active){
+      stageText='PK 點球';
+      stageClass='penalty';
+    }else if(state.awaitingNextPeriod){
+      stageText=state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':'中場';
       stageClass='halftime';
     }else if(state.started && !state.finished){
-      if(state.multiPeriod && state.currentPeriod===2){
+      if(state.currentPeriod===3){
+        stageText='延長賽';
+        stageClass='live secondHalf';
+      }else if(state.multiPeriod && state.currentPeriod===2){
         stageText='下半場';
         stageClass='live secondHalf';
       }else{
-        // 開賽當下無法知道這場是否還有下半場，因此第一段一律顯示「比賽中」。
         stageText='比賽中';
         stageClass='live';
       }
@@ -2329,9 +2609,12 @@ function buildReportDOM(){
   const periodsHtml=completedPeriodSummaryHTML();
   periodsWrap.style.display=state.multiPeriod?'':'none';
   byId('reportPeriods').innerHTML=periodsHtml;
+  const penaltyWrap=byId('reportPenaltyWrap');
+  penaltyWrap.style.display=state.penalty ? '' : 'none';
+  byId('reportPenalty').innerHTML=state.penalty ? penaltySummaryHTML() : '';
   const badge=byId('reportStatusBadge');
   badge.className='reportStatusBadge ' + (state.finished ? 'finished' : (state.started ? 'running' : 'idle'));
-  badge.textContent=state.finished ? '比賽結束' : (state.started ? (state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?'上半場結束':'尚未開始'));
+  badge.textContent=state.finished ? (state.penalty?.completed?`比賽結束｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:'比賽結束') : (state.penalty?.active?`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:(state.started ? (state.currentPeriod===3?'延長賽':state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?(state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':'上半場結束'):'尚未開始')));
   renderDiff(byId('reportDiff'));
   const goals=state.markers.filter(m=>m.event==='GOAL');
   const others=state.markers.filter(m=>m.event!=='GOAL');
@@ -2390,6 +2673,9 @@ function reportLines(){
       const psOpp=Math.max(0,(p.endOppScore??0)-(p.startOppScore??0));
       lines.push({type:'meta', text:`${p.label||periodLabel(p.number)}：${psOur}:${psOpp}｜${fmtMMSS(p.duration||0)}`});
     });
+  }
+  if(state.penalty){
+    lines.push({type:'meta', text:`PK 點球：${penaltyGoals('our')} : ${penaltyGoals('opp')}`});
   }
   if(state.regulationMinutes){
     const diff=Math.round((state.finished?state.finalElapsed:totalMatchElapsed()) - regulationTargetSeconds());
@@ -2763,6 +3049,7 @@ h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams
 .meta{color:#aeb9c5;text-align:center;margin-top:10px}h2{font-size:16px;color:#38bdf8}ul{list-style:none;padding:0;margin:0}li{padding:10px 0;border-bottom:1px solid #334155}li span{display:inline-block;width:90px;color:#facc15}.note{font-size:12px;color:#64748b;text-align:center}
 </style></head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">📍 ${escapeHtml(state.venue||'未填場地')}　⏱ ${fmtMMSS(totalMatchElapsed())}</div></div>
+${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p></div>`:''}
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtDateTime(matchStartEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtDateTime(matchEndEpoch()))}</p><p><b>實際比賽時間：</b>${fmtMMSS(totalMatchElapsed())}</p>${diff}</div>
 <div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
@@ -2818,6 +3105,24 @@ function csvText(){
         m.recorded_at
       ]);
     });
+  }
+  if(state.penalty){
+    const count=Math.max(state.penalty.our.length,state.penalty.opp.length);
+    for(let i=0;i<count;i++){
+      ['our','opp'].forEach(side=>{
+        const k=state.penalty[side]?.[i];
+        if(!k || (!k.result && !k.number)) return;
+        rows.push([
+          state.ourTeam,state.oppTeam,state.venue,
+          matchStartEpoch()?fmtDateTime(matchStartEpoch()):'',
+          matchEndEpoch()?fmtDateTime(matchEndEpoch()):'',
+          Math.round(state.finished?state.finalElapsed:totalMatchElapsed()),
+          state.regulationMinutes||'',diffSecondsExport(),state.ourScore,state.oppScore,
+          'PK','PK 點球',`第${i+1}點`,'',k.result==='GOAL'?'PENALTY_GOAL':k.result==='MISS'?'PENALTY_MISS':'PENALTY_PENDING',
+          side==='our'?'OUR':'OPP',k.number||'',`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`,state.penalty.endEpoch||state.penalty.startEpoch||''
+        ]);
+      });
+    }
   }
   return '\ufeff'+rows.map(r=>r.map(csvEscape).join(',')).join('\n');
 }
