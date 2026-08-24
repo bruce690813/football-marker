@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.11</title>
+<title>足球場邊記錄器 v3.12</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -203,6 +203,17 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   white-space:nowrap;
 }
 .broadcastStage.live .stageTimer{display:block}
+.broadcastStage.live{position:relative}
+.broadcastStage.live .stageLabel{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  margin:0;
+  text-align:center;
+  pointer-events:none;
+}
+.broadcastStage.live .liveTag{margin-right:auto}
+.broadcastStage.live .stageTimer{margin-left:auto}
 .broadcastStage.pre .stageTimer,
 .broadcastStage.halftime .stageTimer,
 .broadcastStage.full .stageTimer{display:none}
@@ -420,9 +431,9 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   justify-content:center;
   gap:10px;
   border-radius:13px;
-  background:linear-gradient(180deg,#273142 0%,#1b2432 100%);
-  border:1px solid rgba(250,204,21,.30);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 12px rgba(0,0,0,.16);
+  background:linear-gradient(180deg,#31527f 0%,#243b60 100%);
+  border:1px solid rgba(96,165,250,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 5px 14px rgba(16,40,75,.30);
   color:#fff;
   font-size:20px;
   font-weight:900;
@@ -871,8 +882,11 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .penaltySummary{border:1px solid #3b2b53;border-radius:12px;background:#171225;padding:5px 10px;margin-bottom:14px}
 .penaltySummaryTop{display:flex;justify-content:space-between;align-items:center;padding:7px 0 9px;font-size:13px;font-weight:950;color:#e9d5ff}
 .penaltySummaryScore{font-size:20px;color:#fff}
-.penaltySummaryRow{display:grid;grid-template-columns:34px 1fr 1fr;gap:7px;padding:6px 0;border-top:1px solid #342942;font-size:11px;align-items:center}
+.penaltySummaryHead,.penaltySummaryRow{display:grid;grid-template-columns:34px 1fr 1fr;gap:7px;align-items:center}
+.penaltySummaryHead{padding:6px 0;color:#a78bfa;font-size:10px;font-weight:900;text-align:center;border-top:1px solid #342942}
+.penaltySummaryRow{padding:6px 0;border-top:1px solid #342942;font-size:11px}
 .penaltySummaryKick{text-align:center;color:#d8dce4}.penaltySummaryKick .ok{color:#86efac;font-weight:900}.penaltySummaryKick .no{color:#fca5a5;font-weight:900}
+.penaltySummaryKick .pkNumber{color:#ffffff;font-weight:950;margin-right:4px}
 @media(max-width:390px){.finishDecisionBtns.three{grid-template-columns:1fr}.penaltyKickCard{grid-template-columns:45px 1fr}.penaltyResultBtn{font-size:12px}}
 
 .finishWhole{background:#d64545}
@@ -956,7 +970,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.11</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.12</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1084,7 +1098,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.11</div>
+      <div class="aboutVersion">v3.12</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -2006,16 +2020,50 @@ function closePenaltyModal(){
   saveState();
   render();
 }
+function sanitizePenaltyNumberInput(el){
+  if(!el) return;
+  el.value=String(el.value||'').replace(/\D/g,'').slice(0,2);
+}
+function commitPenaltyNumber(side,index,el){
+  if(!state.penalty?.[side]?.[index] || !el) return true;
+  sanitizePenaltyNumberInput(el);
+  const raw=String(el.value||'').trim();
+  if(raw===''){
+    state.penalty[side][index].number='';
+    saveState();
+    return true;
+  }
+  const n=Number(raw);
+  if(!Number.isInteger(n) || n<1 || n>99){
+    alert('球員背號請輸入 1～99 的整數，或留空');
+    el.value='';
+    state.penalty[side][index].number='';
+    saveState();
+    return false;
+  }
+  el.value=String(n);
+  state.penalty[side][index].number=String(n);
+  if(side==='our') rememberPlayerNumber(n);
+  saveState();
+  return true;
+}
 function savePenaltyInputs(){
   if(!state.penalty) return;
   ['our','opp'].forEach(side=>{
     state.penalty[side].forEach((kick,i)=>{
       const el=byId(`pk_${side}_${i}`);
       if(!el) return;
+      sanitizePenaltyNumberInput(el);
       const raw=String(el.value||'').trim();
       if(raw===''){ kick.number=''; return; }
       const n=Number(raw);
-      kick.number=(Number.isInteger(n)&&n>=1&&n<=99)?String(n):'';
+      if(!Number.isInteger(n)||n<1||n>99){
+        kick.number='';
+        el.value='';
+        return;
+      }
+      kick.number=String(n);
+      el.value=String(n);
       if(side==='our' && kick.number) rememberPlayerNumber(kick.number);
     });
   });
@@ -2049,7 +2097,7 @@ function renderPenaltyModal(){
   let html='';
   for(let i=0;i<count;i++){
     const ok=state.penalty.our[i]||emptyPenaltyKick(), op=state.penalty.opp[i]||emptyPenaltyKick();
-    const card=(side,kick)=>`<div class="penaltyKickCard"><input id="pk_${side}_${i}" type="number" inputmode="numeric" min="1" max="99" placeholder="#" value="${escapeHtml(kick.number||'')}" aria-label="${side==='our'?ourName:oppName} 第${i+1}點背號"><button type="button" class="penaltyResultBtn ${kick.result==='GOAL'?'goal':kick.result==='MISS'?'miss':'pending'}" onclick="togglePenaltyResult('${side}',${i})">${penaltyResultLabel(kick.result)}</button></div>`;
+    const card=(side,kick)=>`<div class="penaltyKickCard"><input id="pk_${side}_${i}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="#" value="${escapeHtml(kick.number||'')}" oninput="sanitizePenaltyNumberInput(this)" onblur="commitPenaltyNumber('${side}',${i},this)" aria-label="${side==='our'?ourName:oppName} 第${i+1}點背號"><button type="button" class="penaltyResultBtn ${kick.result==='GOAL'?'goal':kick.result==='MISS'?'miss':'pending'}" onclick="togglePenaltyResult('${side}',${i})">${penaltyResultLabel(kick.result)}</button></div>`;
     html+=`<div class="penaltyRound"><div class="penaltyRoundNo">${i+1}</div>${card('our',ok)}${card('opp',op)}</div>`;
   }
   byId('penaltyRounds').innerHTML=html;
@@ -2084,10 +2132,16 @@ function penaltySummaryHTML(){
   for(let i=0;i<count;i++){
     const a=state.penalty.our[i]||emptyPenaltyKick(), b=state.penalty.opp[i]||emptyPenaltyKick();
     if(!a.result && !b.result && !a.number && !b.number) continue;
-    const one=(kick)=>`<span class="${kick.result==='GOAL'?'ok':kick.result==='MISS'?'no':''}">${kick.number?'#'+escapeHtml(kick.number)+' ':''}${kick.result==='GOAL'?'✓':kick.result==='MISS'?'×':'—'}</span>`;
+    const one=(kick)=>{
+      const result=kick.result==='GOAL'?'✓':kick.result==='MISS'?'×':'—';
+      const cls=kick.result==='GOAL'?'ok':kick.result==='MISS'?'no':'';
+      const num=kick.number?`<span class="pkNumber">#${escapeHtml(kick.number)}</span>`:'<span class="pkNumber">—</span>';
+      return `<span class="${cls}">${num}${result}</span>`;
+    };
     rows+=`<div class="penaltySummaryRow"><div>${i+1}</div><div class="penaltySummaryKick">${one(a)}</div><div class="penaltySummaryKick">${one(b)}</div></div>`;
   }
-  return `<div class="penaltySummaryTop"><span>${escapeHtml(state.ourTeam||'我方')} vs ${escapeHtml(state.oppTeam||'對手')}</span><span class="penaltySummaryScore">PK ${penaltyGoals('our')} : ${penaltyGoals('opp')}</span></div>${rows}`;
+  const head=`<div class="penaltySummaryHead"><div>輪</div><div>${escapeHtml(state.ourTeam||'我方')} 背號</div><div>${escapeHtml(state.oppTeam||'對手')} 背號</div></div>`;
+  return `<div class="penaltySummaryTop"><span>${escapeHtml(state.ourTeam||'我方')} vs ${escapeHtml(state.oppTeam||'對手')}</span><span class="penaltySummaryScore">PK ${penaltyGoals('our')} : ${penaltyGoals('opp')}</span></div>${head}${rows}`;
 }
 
 function confirmFinishFull(){
@@ -2863,7 +2917,20 @@ function reportLines(){
     });
   }
   if(state.penalty){
-    lines.push({type:'meta', text:`PK 點球：${penaltyGoals('our')} : ${penaltyGoals('opp')}`});
+    lines.push({type:'section', text:'PK 點球大戰'});
+    lines.push({type:'meta', text:`PK 比分：${penaltyGoals('our')} : ${penaltyGoals('opp')}`});
+    const pkCount=Math.max(state.penalty.our.length,state.penalty.opp.length);
+    for(let i=0;i<pkCount;i++){
+      const a=state.penalty.our[i]||emptyPenaltyKick();
+      const b=state.penalty.opp[i]||emptyPenaltyKick();
+      if(!a.result && !b.result && !a.number && !b.number) continue;
+      const pkText=(k)=>{
+        const num=k.number?`#${k.number}`:'無背號';
+        const result=k.result==='GOAL'?'進球':k.result==='MISS'?'未進':'待定';
+        return `${num} ${result}`;
+      };
+      lines.push({type:'event', text:`第${i+1}輪｜${state.ourTeam||'我方'} ${pkText(a)}｜${state.oppTeam||'對手'} ${pkText(b)}`});
+    }
   }
   if(state.regulationMinutes){
     const diff=Math.round((state.finished?state.finalElapsed:totalMatchElapsed()) - regulationTargetSeconds());
@@ -3237,7 +3304,7 @@ h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams
 .meta{color:#aeb9c5;text-align:center;margin-top:10px}h2{font-size:16px;color:#38bdf8}ul{list-style:none;padding:0;margin:0}li{padding:10px 0;border-bottom:1px solid #334155}li span{display:inline-block;width:90px;color:#facc15}.note{font-size:12px;color:#64748b;text-align:center}
 </style></head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">📍 ${escapeHtml(state.venue||'未填場地')}　⏱ ${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</div></div>
-${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p></div>`:''}
+${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}${totalMatchElapsed()>=3600?`　<span class="note">總計 ${fmtMMSS(totalMatchElapsed())}</span>`:''}</p>${diff}</div>
 <div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
