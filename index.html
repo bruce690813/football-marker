@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.17</title>
+<title>足球場邊記錄器 v3.18</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -152,6 +152,54 @@ h1{font-size:18px;margin:0}
 }
 .keeperSaveBtn{background:#238636}
 .keeperClearBtn{background:#475569}
+.assistPlayerGrid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+  margin:12px 0 10px;
+}
+.assistPlayerGrid button{
+  min-height:46px;
+  padding:6px 4px;
+  background:#eaf0f7;
+  border:1px solid #c7d2e0;
+  color:#172033;
+  font-size:17px;
+  font-weight:950;
+}
+.assistCustomRow{
+  display:none;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  margin-top:8px;
+}
+.assistCustomRow.open{display:grid}
+.assistCustomRow input{
+  min-width:0;
+  width:100%;
+  border:1px solid #cbd5e1;
+  border-radius:12px;
+  padding:11px 12px;
+  font-size:17px;
+  font-weight:900;
+}
+.assistActions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.assistOther{background:#475569}
+.assistSkip{background:#64748b}
+.assistGoalInfo{
+  margin-top:8px;
+  padding:9px 11px;
+  border-radius:12px;
+  background:#eaf2fb;
+  color:#334155;
+  font-size:12px;
+  font-weight:850;
+}
 
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
@@ -1039,7 +1087,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.17</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.18</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1170,7 +1218,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.17</div>
+      <div class="aboutVersion">v3.18</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -1311,6 +1359,32 @@ button:disabled:active{transform:none!important}
   </div>
 </div>
 
+<!-- Assist modal -->
+<div class="modalBack" id="assistModal">
+  <div class="modal">
+    <h2>🎯 是否有助攻？</h2>
+    <p>助攻球員背號為選填，可直接略過。</p>
+    <div class="assistGoalInfo" id="assistGoalInfo">本球進球者：未指定</div>
+    <div id="assistOurArea">
+      <div class="assistPlayerGrid" id="assistPlayerGrid"></div>
+      <div class="assistActions">
+        <button class="assistOther" type="button" onclick="showAssistCustom()">其他背號</button>
+        <button class="assistSkip" type="button" onclick="skipAssist()">略過助攻</button>
+      </div>
+    </div>
+    <div id="assistOppArea" style="display:none">
+      <div class="assistActions">
+        <button class="assistOther" type="button" onclick="showAssistCustom()">輸入對手背號</button>
+        <button class="assistSkip" type="button" onclick="skipAssist()">略過助攻</button>
+      </div>
+    </div>
+    <div class="assistCustomRow" id="assistCustomRow">
+      <input id="assistCustomNumber" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="助攻背號 1–99">
+      <button type="button" onclick="saveAssistCustom()">確定</button>
+    </div>
+  </div>
+</div>
+
 <!-- Number modal -->
 <div class="modalBack" id="numberModal">
   <div class="modal">
@@ -1413,6 +1487,14 @@ button:disabled:active{transform:none!important}
       </div>
     </div>
 
+    <div class="editSection" id="editAssistSection" style="display:none">
+      <div class="editSectionLabel">助攻球員背號（選填）</div>
+      <div class="editNumberWrap">
+        <input id="editAssistNumber" type="number" min="1" max="99" step="1" inputmode="numeric" enterkeyhint="done" placeholder="可留空" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur();}">
+        <span class="editNumberUnit">1–99</span>
+      </div>
+    </div>
+
     <div class="editMarkerTime">標記時間：<b id="editMarkerTime">00:00</b>（不可修改）</div>
     </div>
 
@@ -1488,6 +1570,7 @@ const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
 let editingMarkerIndex=null, editingMarkerEvent=null, editingMarkerTeam='OUR';
 let pendingGoalTime=null, pendingGoalTeam=null;
+let pendingAssistMarkerIndex=null;
 let pendingCardTime=null, pendingCardEvent=null;
 let pendingNumberEvent=null, pendingNumberTime=null, pendingNumberTeam=null;
 let pendingFinishEnd=null, pendingFinishElapsed=null;
@@ -1622,6 +1705,15 @@ function loadState(){
   if(!('nextPeriodType' in state)) state.nextPeriodType=null;
   if(!('penalty' in state)) state.penalty=null;
   if(!('goalkeeperNumber' in state)) state.goalkeeperNumber='';
+  if(Array.isArray(state.markers)){
+    state.markers.forEach(m=>{
+      if(!('assist_number' in m)) m.assist_number='';
+      if(m.assist_number!==''){
+        const a=Number(m.assist_number);
+        m.assist_number=(Number.isInteger(a)&&a>=1&&a<=99)?String(a):'';
+      }
+    });
+  }
   if(state.goalkeeperNumber!==''){
     const gk=Number(state.goalkeeperNumber);
     state.goalkeeperNumber=(Number.isInteger(gk) && gk>=1 && gk<=99) ? String(gk) : '';
@@ -2422,6 +2514,87 @@ function cancelCard(){
   byId('cardTeamModal').classList.remove('open');
 }
 
+function buildAssistGrid(){
+  const grid=byId('assistPlayerGrid');
+  if(!grid) return;
+  grid.innerHTML='';
+  allCommonNumbers().forEach(n=>{
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.textContent=n;
+    btn.onclick=()=>saveAssistNumber(String(n));
+    grid.appendChild(btn);
+  });
+}
+function openAssistModal(markerIndex){
+  const marker=state.markers[markerIndex];
+  if(!marker || marker.event!=='GOAL') return;
+  pendingAssistMarkerIndex=markerIndex;
+
+  const team=teamDisplay(marker.team)||'未指定';
+  const scorer=marker.player_number ? `#${marker.player_number}` : '未填背號';
+  byId('assistGoalInfo').textContent=`本球進球者：${team} ${scorer}`;
+
+  const isOur=marker.team==='OUR';
+  byId('assistOurArea').style.display=isOur?'block':'none';
+  byId('assistOppArea').style.display=isOur?'none':'block';
+  byId('assistCustomRow').classList.remove('open');
+  byId('assistCustomNumber').value='';
+  if(isOur) buildAssistGrid();
+
+  byId('assistModal').classList.add('open');
+}
+function showAssistCustom(){
+  byId('assistCustomRow').classList.add('open');
+  setTimeout(()=>byId('assistCustomNumber').focus(),50);
+}
+function validateAssistNumber(marker, raw){
+  const value=String(raw||'').trim();
+  if(value==='') return '';
+  const n=Number(value);
+  if(!Number.isInteger(n) || n<1 || n>99){
+    alert('助攻球員背號請輸入 1～99 的整數，或略過助攻');
+    return null;
+  }
+  if(marker?.player_number && String(marker.player_number)===String(n)){
+    alert('助攻球員不能與進球球員為同一背號');
+    return null;
+  }
+  return String(n);
+}
+function saveAssistNumber(number){
+  if(pendingAssistMarkerIndex===null) return;
+  const marker=state.markers[pendingAssistMarkerIndex];
+  if(!marker || marker.event!=='GOAL') return;
+  const valid=validateAssistNumber(marker,number);
+  if(valid===null) return;
+
+  marker.assist_number=valid;
+  if(marker.team==='OUR' && valid){
+    rememberPlayerNumber(valid);
+    buildNumberGrid();
+  }
+  saveState();
+  render();
+  pendingAssistMarkerIndex=null;
+  byId('assistModal').classList.remove('open');
+}
+function saveAssistCustom(){
+  const el=byId('assistCustomNumber');
+  if(!el) return;
+  el.value=String(el.value||'').replace(/\D/g,'').slice(0,2);
+  saveAssistNumber(el.value);
+}
+function skipAssist(){
+  if(pendingAssistMarkerIndex!==null){
+    const marker=state.markers[pendingAssistMarkerIndex];
+    if(marker && marker.event==='GOAL' && !('assist_number' in marker)) marker.assist_number='';
+  }
+  pendingAssistMarkerIndex=null;
+  byId('assistModal').classList.remove('open');
+  saveState();
+}
+
 function openNumberSelection(event, team, sec){
   pendingNumberEvent=event;
   pendingNumberTeam=team;
@@ -2559,11 +2732,13 @@ function finishGoal(playerNumber){
     period_label:state.multiPeriod ? periodLabel(state.currentPeriod||1) : '',
     team:pendingGoalTeam,
     player_number:playerNumber,
+    assist_number:'',
     seconds:pendingGoalTime,
     time:fmtMMSS(pendingGoalTime),
     score_after:`${state.ourScore}:${state.oppScore}`,
     recorded_at:new Date().toISOString()
   });
+  const goalMarkerIndex=state.markers.length-1;
 
   pendingGoalTime=null;
   pendingGoalTeam=null;
@@ -2571,6 +2746,9 @@ function finishGoal(playerNumber){
   byId('numberModal').classList.remove('open');
   saveState();
   render();
+
+  // 進球先完成，再詢問助攻；略過不影響進球紀錄。
+  setTimeout(()=>openAssistModal(goalMarkerIndex),80);
 }
 
 function mark(event, team='OUR'){
@@ -2610,6 +2788,7 @@ function setEditMarkerEvent(event){
     byId('editEvent'+ev)?.classList.toggle('active',ev===event);
   });
   byId('editNumberSection').style.display=event==='GREAT_PLAY'?'none':'block';
+  byId('editAssistSection').style.display=event==='GOAL'?'block':'none';
 }
 
 function setEditMarkerTeam(team){
@@ -2629,6 +2808,7 @@ function openEditMarker(index){
   byId('editTeamOUR').textContent=state.ourTeam||'我方';
   byId('editTeamOPP').textContent=state.oppTeam||'對手';
   byId('editMarkerNumber').value=marker.player_number||'';
+  byId('editAssistNumber').value=marker.assist_number||'';
   byId('editMarkerTime').textContent=fmtMMSS(marker.seconds);
 
   setEditMarkerEvent(editingMarkerEvent);
@@ -2669,6 +2849,23 @@ function saveEditMarker(){
     }
   }
 
+  let assistNumber='';
+  if(editingMarkerEvent==='GOAL'){
+    const rawAssist=String(byId('editAssistNumber').value||'').trim();
+    if(rawAssist){
+      const a=Number(rawAssist);
+      if(!Number.isInteger(a) || a<1 || a>99){
+        alert('助攻球員背號請輸入 1～99 的整數，或留空');
+        return;
+      }
+      assistNumber=String(a);
+      if(playerNumber && assistNumber===playerNumber){
+        alert('助攻球員不能與進球球員為同一背號');
+        return;
+      }
+    }
+  }
+
   // 依「舊事件 → 新事件」計算對比分的淨影響。
   let dOur=0,dOpp=0;
   if(marker.event==='GOAL'){
@@ -2694,10 +2891,15 @@ function saveEditMarker(){
   marker.event=editingMarkerEvent;
   marker.team=editingMarkerTeam;
   marker.player_number=editingMarkerEvent==='GREAT_PLAY'?'':playerNumber;
+  marker.assist_number=editingMarkerEvent==='GOAL'?assistNumber:'';
 
   // 時間 seconds / time / recorded_at 完全保留。
   if(marker.team==='OUR' && marker.player_number){
     rememberPlayerNumber(marker.player_number);
+    buildNumberGrid();
+  }
+  if(marker.team==='OUR' && marker.assist_number){
+    rememberPlayerNumber(marker.assist_number);
     buildNumberGrid();
   }
 
@@ -2756,10 +2958,11 @@ function renderLogTo(container){
     row.className='item';
     const team=teamDisplay(m.team);
     const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
+    const assist=(m.event==='GOAL' && m.assist_number)?`<span class="numberTag" style="color:#fbbf24">助攻 #${m.assist_number}</span>`:'';
     row.innerHTML=`
       <div class="logSeq">第${i+1}筆</div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
-      <div>${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}<b>${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
+      <div>${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}<b>${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}${assist}<span class="scoreSnap">${m.score_after||''}</span></div>
       <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${i+1}筆紀錄">✎</button>
       <button class="del" onclick="deleteMarker(${i}); renderLogModal();">✕</button>
     `;
@@ -2987,7 +3190,8 @@ function reportEventHTML(m, goalIndex=null){
   const ordinal=(m.event==='GOAL' && goalIndex!==null) ? `G${goalIndex+1}` : eventLabel(m.event);
   const period=state.multiPeriod ? periodLabel(m.period||1) : '';
   const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
-  const label = `${team}${num}`;
+  const assist=m.assist_number ? `｜助攻 #${m.assist_number}` : '';
+  const label = `${team}${num}${assist}`;
   return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="goalOrdinal">${ordinal}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="rscore">${m.score_after||''}</div></div>`;
 }
 function reportOtherEventHTML(m){
@@ -3132,7 +3336,7 @@ function reportLines(){
       type:'goalEvent',
       periodTime:period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds),
       ordinal:`G${i+1}`,
-      label:`${team}${num}`,
+      label:`${team}${num}${m.assist_number?`｜助攻 #${m.assist_number}`:''}`,
       score:m.score_after||''
     });
   });
@@ -3462,7 +3666,8 @@ function reportHTMLText(){
   const goalHtml=goals.length ? goals.map((m,i)=>{
     const team=teamDisplay(m.team);
     const num=m.player_number?` #${m.player_number}`:'';
-    return `<li><span>${fmtMMSS(m.seconds)}</span> 第${i+1}球　⚽ 進球 · ${escapeHtml(team+num)} <b>${escapeHtml(m.score_after||'')}</b></li>`;
+    const assist=m.assist_number?`　助攻 #${escapeHtml(m.assist_number)}`:'';
+    return `<li><span>${fmtMMSS(m.seconds)}</span> 第${i+1}球　⚽ 進球 · ${escapeHtml(team+num)}${assist} <b>${escapeHtml(m.score_after||'')}</b></li>`;
   }).join('') : '<li>尚未標記進球事件</li>';
   const otherHtml=others.length ? others.map(m=>{
     const team=teamDisplay(m.team);
@@ -3503,7 +3708,7 @@ function diffSecondsExport(){
 }
 function csvText(){
   saveState();
-  const rows=[['our_team','opponent_team','venue','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','score_after','recorded_at']];
+  const rows=[['our_team','opponent_team','venue','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','assist_number','score_after','recorded_at']];
   if(state.markers.length===0){
     rows.push([
       state.ourTeam, state.oppTeam, state.venue,
@@ -3513,7 +3718,7 @@ function csvText(){
       state.regulationMinutes||'',
       diffSecondsExport(),
       state.ourScore, state.oppScore,
-      '', '', '', '', '', '', '', '', ''
+      '', '', '', '', '', '', '', '', '', ''
     ]);
   }else{
     state.markers.forEach(m=>{
@@ -3532,6 +3737,7 @@ function csvText(){
         m.event,
         m.team||'',
         m.player_number||'',
+        m.assist_number||'',
         m.score_after||'',
         m.recorded_at
       ]);
@@ -3550,7 +3756,7 @@ function csvText(){
           Math.round(state.finished?state.finalElapsed:totalMatchElapsed()),
           state.regulationMinutes||'',diffSecondsExport(),state.ourScore,state.oppScore,
           'PK','PK 點球',`第${i+1}點`,'',k.result==='GOAL'?'PENALTY_GOAL':k.result==='MISS'?'PENALTY_MISS':'PENALTY_PENDING',
-          side==='our'?'OUR':'OPP',k.number||'',`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`,state.penalty.endEpoch||state.penalty.startEpoch||''
+          side==='our'?'OUR':'OPP',k.number||'','',`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`,state.penalty.endEpoch||state.penalty.startEpoch||''
         ]);
       });
     }
@@ -3681,6 +3887,15 @@ byId('keeperCustomNumber')?.addEventListener('keydown',e=>{
   if(e.key==='Enter'){
     e.preventDefault();
     saveKeeperCustom();
+  }
+});
+byId('assistCustomNumber')?.addEventListener('input',e=>{
+  e.target.value=String(e.target.value||'').replace(/\D/g,'').slice(0,2);
+});
+byId('assistCustomNumber')?.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    saveAssistCustom();
   }
 });
 
