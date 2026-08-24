@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.12</title>
+<title>足球場邊記錄器 v3.14</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -88,6 +88,96 @@ h1{font-size:18px;margin:0}
   width:100%;font-size:14px;padding:7px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
 #venue{min-width:0}
+.keeperQuickRow{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:7px;
+}
+.keeperQuickBtn{
+  flex:0 1 auto;
+  min-width:0;
+  min-height:36px;
+  padding:7px 12px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  background:linear-gradient(180deg,#173958 0%,#10283f 100%);
+  border:1px solid rgba(56,189,248,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 9px rgba(0,0,0,.16);
+  color:#eaf7ff;
+  font-size:13px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.keeperQuickBtn.set{
+  border-color:rgba(34,197,94,.58);
+  background:linear-gradient(180deg,#164a3a 0%,#103126 100%);
+}
+.keeperQuickBtn:active{transform:scale(.98)}
+.keeperQuickHint{
+  min-width:0;
+  color:#8ea1b7;
+  font-size:10.5px;
+  font-weight:750;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.keeperModalTitle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.keeperGrid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+  margin:12px 0 10px;
+}
+.keeperNumBtn{
+  min-height:48px;
+  padding:6px 4px;
+  background:#eaf0f7;
+  border:1px solid #c7d2e0;
+  color:#172033;
+  font-size:18px;
+  font-weight:950;
+}
+.keeperNumBtn.active{
+  background:#dcfce7;
+  border:2px solid #22c55e;
+  color:#14532d;
+}
+.keeperCustomRow{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  margin-top:8px;
+}
+.keeperCustomRow input{
+  min-width:0;
+  width:100%;
+  border:1px solid #cbd5e1;
+  border-radius:12px;
+  padding:11px 12px;
+  font-size:17px;
+  font-weight:900;
+}
+.keeperSaveBtn{background:#238636}
+.keeperClearBtn{background:#475569}
+.event .keeperAutoHint{
+  display:none;
+  margin-top:4px;
+  font-size:10px;
+  font-weight:850;
+  line-height:1;
+  color:rgba(255,255,255,.84);
+}
+.event .keeperAutoHint.show{display:block}
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
 .new{
@@ -423,21 +513,21 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 }
 .cardEventBtn{
   width:100%;
-  min-height:44px;
+  min-height:36px;
   margin:0;
-  padding:8px 12px;
+  padding:6px 10px;
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
-  border-radius:13px;
+  gap:8px;
+  border-radius:11px;
   background:linear-gradient(180deg,#31527f 0%,#243b60 100%);
-  border:1px solid rgba(96,165,250,.55);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 5px 14px rgba(16,40,75,.30);
+  border:1px solid rgba(96,165,250,.48);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 3px 9px rgba(16,40,75,.22);
   color:#fff;
-  font-size:20px;
+  font-size:17px;
   font-weight:900;
-  letter-spacing:.2px;
+  letter-spacing:.15px;
 }
 .cardEventBtn .cardLabel{
   display:inline-flex;
@@ -449,8 +539,8 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .cardEventBtn .cardIcons{
   display:inline-flex;
   align-items:center;
-  gap:4px;
-  font-size:19px;
+  gap:3px;
+  font-size:16px;
   line-height:1;
 }
 .cardEventBtn:disabled{
@@ -460,6 +550,10 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   box-shadow:none;
 }
 .cardEventBtn:disabled .cardLabel{opacity:.45}
+.cardEventWrap{
+  padding:5px 7px;
+  margin-bottom:4px;
+}
 
 .cardTypeGrid,.cardTeamGrid{
   display:grid;
@@ -970,13 +1064,19 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.12</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.14</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
     <div class="matchMetaRow">
       <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
       <button class="new" onclick="newMatch()">＋ 新比賽</button>
+    </div>
+    <div class="keeperQuickRow">
+      <button id="keeperQuickBtn" class="keeperQuickBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
+        <span aria-hidden="true">🧤</span><span id="keeperQuickText">設定守門員</span>
+      </button>
+      <div class="keeperQuickHint" id="keeperQuickHint">設定後，撲救可一鍵記錄</div>
     </div>
 
     <div class="broadcastScoreboard">
@@ -1063,13 +1163,13 @@ button:disabled:active{transform:none!important}
   <div class="card">
     <div class="events">
       <button id="goalBtn" class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
-      <button id="saveBtn" class="event save" onclick="openPlayerEvent('SAVE')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span></button>
+      <button id="saveBtn" class="event save" onclick="openPlayerEvent('SAVE')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span><small class="keeperAutoHint" id="saveKeeperHint"></small></button>
       <button id="shotBtn" class="event shot" onclick="openPlayerEvent('SHOT')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span></button>
       <button id="greatPlayBtn" class="event play" onclick="mark('GREAT_PLAY','OUR')"><span class="eventTop"><span class="eventIcon">🙌</span> 精彩配合</span></button>
     </div>
   </div>
 
-  <div class="card">
+  <div class="card cardEventWrap">
     <button id="cardBtn" class="cardEventBtn" onclick="openCardModal()" aria-label="新增黃牌或紅牌紀錄">
       <span class="cardLabel"><span class="cardIcons" aria-hidden="true"><span>🟨</span><span>🟥</span></span><span>黃牌 / 紅牌</span></span>
     </button>
@@ -1098,7 +1198,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.12</div>
+      <div class="aboutVersion">v3.14</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -1219,6 +1319,23 @@ button:disabled:active{transform:none!important}
       <button class="opp" type="button" onclick="chooseCardTeam('OPP')"><span id="cardOppName">對手</span></button>
     </div>
     <button class="cancel" type="button" onclick="cancelCard()">取消</button>
+  </div>
+</div>
+
+<!-- Keeper modal -->
+<div class="modalBack" id="keeperModal">
+  <div class="modal">
+    <h2 class="keeperModalTitle">🧤 設定守門員背號</h2>
+    <p>設定後，按「撲救」會直接套用目前守門員背號。比賽中可隨時更換。</p>
+    <div class="keeperGrid" id="keeperGrid"></div>
+    <div class="keeperCustomRow">
+      <input id="keeperCustomNumber" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="其他背號 1–99" aria-label="守門員背號">
+      <button class="keeperSaveBtn" type="button" onclick="saveKeeperCustom()">儲存</button>
+    </div>
+    <div class="numberActions">
+      <button class="keeperClearBtn" type="button" onclick="clearKeeperNumber()">清除設定</button>
+      <button class="cancel" type="button" onclick="closeKeeperModal()">取消</button>
+    </div>
   </div>
 </div>
 
@@ -1420,7 +1537,8 @@ let state={
   nextPeriodType:null,
   extraTime:false,
   extraTimeMinutes:null,
-  penalty:null
+  penalty:null,
+  goalkeeperNumber:''
 };
 
 function byId(id){ return document.getElementById(id); }
@@ -1531,6 +1649,11 @@ function loadState(){
   if(state.extraTimeMinutes!=null) state.extraTimeMinutes=Number(state.extraTimeMinutes)||null;
   if(!('nextPeriodType' in state)) state.nextPeriodType=null;
   if(!('penalty' in state)) state.penalty=null;
+  if(!('goalkeeperNumber' in state)) state.goalkeeperNumber='';
+  if(state.goalkeeperNumber!==''){
+    const gk=Number(state.goalkeeperNumber);
+    state.goalkeeperNumber=(Number.isInteger(gk) && gk>=1 && gk<=99) ? String(gk) : '';
+  }
   if(state.penalty){
     if(!Array.isArray(state.penalty.our)) state.penalty.our=[];
     if(!Array.isArray(state.penalty.opp)) state.penalty.opp=[];
@@ -1786,6 +1909,62 @@ function rememberPlayerNumber(number){
 
 function allCommonNumbers(){
   return [...new Set([...COMMON_NUMBERS,...getLearnedNumbers()])].sort((a,b)=>a-b);
+}
+
+function buildKeeperGrid(){
+  const grid=byId('keeperGrid');
+  if(!grid) return;
+  grid.innerHTML='';
+  allCommonNumbers().forEach(n=>{
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='keeperNumBtn'+(String(state.goalkeeperNumber||'')===String(n)?' active':'');
+    btn.textContent=n;
+    btn.onclick=()=>setKeeperNumber(n);
+    grid.appendChild(btn);
+  });
+}
+function openKeeperModal(){
+  buildKeeperGrid();
+  const input=byId('keeperCustomNumber');
+  if(input) input.value=state.goalkeeperNumber||'';
+  byId('keeperModal').classList.add('open');
+}
+function closeKeeperModal(){
+  byId('keeperModal').classList.remove('open');
+}
+function setKeeperNumber(number){
+  const n=Number(number);
+  if(!Number.isInteger(n) || n<1 || n>99){
+    alert('守門員背號請輸入 1～99 的整數');
+    return;
+  }
+  state.goalkeeperNumber=String(n);
+  rememberPlayerNumber(n);
+  buildNumberGrid();
+  buildKeeperGrid();
+  saveState();
+  render();
+  closeKeeperModal();
+}
+function saveKeeperCustom(){
+  const el=byId('keeperCustomNumber');
+  if(!el) return;
+  el.value=String(el.value||'').replace(/\D/g,'').slice(0,2);
+  const raw=el.value.trim();
+  const n=Number(raw);
+  if(!Number.isInteger(n) || n<1 || n>99){
+    alert('守門員背號請輸入 1～99 的整數');
+    el.focus();
+    return;
+  }
+  setKeeperNumber(n);
+}
+function clearKeeperNumber(){
+  state.goalkeeperNumber='';
+  saveState();
+  render();
+  closeKeeperModal();
 }
 
 function buildNumberGrid(){
@@ -2185,7 +2364,8 @@ function newMatch(){
     regulationMinutes:null, ourScore:0, oppScore:0, markers:[],
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
     periodStartOurScore:0, periodStartOppScore:0, periods:[],
-    nextPeriodType:null, extraTime:false, extraTimeMinutes:null, penalty:null
+    nextPeriodType:null, extraTime:false, extraTimeMinutes:null, penalty:null,
+    goalkeeperNumber:''
   };
 
   byId('ourTeam').value=rememberedOurTeam;
@@ -2309,6 +2489,20 @@ function chooseGoalTeam(team){
 function openPlayerEvent(event){
   if(!state.started){ alert('請先按「開始比賽」'); return; }
   if(state.finished){ alert('本場比賽已結束'); return; }
+
+  // 撲救是高頻事件：若已設定目前守門員，直接完成紀錄，不再重複詢問背號。
+  if(event==='SAVE' && state.goalkeeperNumber){
+    const gk=Number(state.goalkeeperNumber);
+    if(Number.isInteger(gk) && gk>=1 && gk<=99){
+      pendingNumberEvent='SAVE';
+      pendingNumberTeam='OUR';
+      pendingNumberTime=elapsed();
+      finishNumberSelection(String(gk));
+      return;
+    }
+  }
+
+  // 未設定守門員時，完整保留原本選背號流程。
   openNumberSelection(event, 'OUR', elapsed());
 }
 
@@ -2677,6 +2871,24 @@ function render(){
   byId('ourScore').textContent=state.ourScore;
   byId('oppScore').textContent=state.oppScore;
   byId('count').textContent=state.markers.length;
+
+  const keeperNumber=String(state.goalkeeperNumber||'');
+  const keeperBtn=byId('keeperQuickBtn');
+  const keeperText=byId('keeperQuickText');
+  const keeperHint=byId('keeperQuickHint');
+  const saveKeeperHint=byId('saveKeeperHint');
+  if(keeperBtn && keeperText){
+    keeperBtn.classList.toggle('set',!!keeperNumber);
+    keeperText.textContent=keeperNumber ? `守門員 #${keeperNumber}・更換` : '設定守門員';
+  }
+  if(keeperHint){
+    keeperHint.textContent=keeperNumber ? `撲救將自動記錄 #${keeperNumber}` : '設定後，撲救可一鍵記錄';
+  }
+  if(saveKeeperHint){
+    saveKeeperHint.textContent=keeperNumber ? `自動使用 #${keeperNumber}` : '';
+    saveKeeperHint.classList.toggle('show',!!keeperNumber);
+  }
+
   let txt='尚未開始', cls='idleStatus', cardCls='idleState';
   if(state.penalty?.active){
     txt=`PK 點球進行中｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`;
@@ -3496,6 +3708,15 @@ byId('oppTeam').addEventListener('blur', ()=>{
 byId('venue').addEventListener('blur', ()=>{
   if(byId('venue').value.trim()){
     validateTextField('venue','場地',false,15);
+  }
+});
+byId('keeperCustomNumber')?.addEventListener('input',e=>{
+  e.target.value=String(e.target.value||'').replace(/\D/g,'').slice(0,2);
+});
+byId('keeperCustomNumber')?.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    saveKeeperCustom();
   }
 });
 
