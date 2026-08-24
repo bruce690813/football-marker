@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.16</title>
+<title>足球場邊記錄器 v3.17</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -88,39 +88,28 @@ h1{font-size:18px;margin:0}
   width:100%;font-size:14px;padding:7px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
 #venue{min-width:0}
-.keeperQuickRow{display:contents}
 .keeperQuickBtn{
-  min-width:72px;
-  min-height:36px;
-  padding:7px 10px;
-  border-radius:999px;
+  min-width:78px;
+  min-height:38px;
+  padding:7px 12px;
+  border-radius:14px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:7px;
-  background:linear-gradient(180deg,#173958 0%,#10283f 100%);
-  border:1px solid rgba(56,189,248,.42);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 9px rgba(0,0,0,.16);
-  color:#eaf7ff;
-  font-size:13px;
-  font-weight:900;
+  background:linear-gradient(180deg,#24486f 0%,#193453 100%);
+  border:1px solid rgba(96,165,250,.48);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 3px 9px rgba(0,0,0,.16);
+  color:#f2f7ff;
+  font-size:14px;
+  font-weight:950;
   white-space:nowrap;
 }
 .keeperQuickBtn.set{
-  border-color:rgba(34,197,94,.58);
-  background:linear-gradient(180deg,#164a3a 0%,#103126 100%);
+  border-color:rgba(34,197,94,.62);
+  background:linear-gradient(180deg,#17603f 0%,#11452f 100%);
 }
 .keeperQuickBtn:active{transform:scale(.98)}
-.keeperQuickHint{
-  min-width:0;
-  color:#8ea1b7;
-  font-size:10.5px;
-  font-weight:750;
-  line-height:1.25;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
 .keeperModalTitle{
   display:flex;
   align-items:center;
@@ -163,59 +152,7 @@ h1{font-size:18px;margin:0}
 }
 .keeperSaveBtn{background:#238636}
 .keeperClearBtn{background:#475569}
-.assistGrid{
-  display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:8px;
-  margin:12px 0 10px;
-}
-.assistNumBtn{
-  min-height:48px;
-  padding:6px 4px;
-  background:#eaf0f7;
-  border:1px solid #c7d2e0;
-  color:#172033;
-  font-size:18px;
-  font-weight:950;
-}
-.assistNumBtn:disabled{
-  opacity:.35;
-  background:#e5e7eb;
-}
-.assistCustomRow{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) auto;
-  gap:8px;
-  margin-top:8px;
-}
-.assistCustomRow input{
-  width:100%;
-  min-width:0;
-  border:1px solid #cbd5e1;
-  border-radius:12px;
-  padding:11px 12px;
-  font-size:17px;
-  font-weight:900;
-}
-.assistSaveBtn{background:#2563eb}
-.assistSkipBtn{background:#64748b}
-.assistNote{
-  margin-top:8px;
-  color:#64748b;
-  font-size:11px;
-  line-height:1.4;
-}
-.editAssistSection{display:none}
-.editAssistSection.show{display:block}
-.event .keeperAutoHint{
-  display:none;
-  margin-top:4px;
-  font-size:10px;
-  font-weight:850;
-  line-height:1;
-  color:rgba(255,255,255,.84);
-}
-.event .keeperAutoHint.show{display:block}
+
 button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:800;color:#fff}
 .new,.secondary{background:var(--gray)}
 .new{
@@ -755,15 +692,15 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .logModalTitle{font-size:18px;font-weight:950;letter-spacing:.2px}
 .logModalCount{font-size:15px;color:#aab9c9;font-weight:800}.logModalCount span{font-size:1.15em;color:#fff;font-weight:950}
 .logModalBody{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 14px 8px}
-.logModalBody .item{grid-template-columns:64px 70px minmax(0,1fr) 40px 30px;font-size:15px;line-height:1.45;padding:12px 2px;align-items:center}
+.logModalBody .item{grid-template-columns:52px 58px minmax(0,1fr) 40px 28px;font-size:15px;line-height:1.45;padding:12px 0;align-items:center;column-gap:6px}
 .logModalBody .item b{font-size:15px}
-.logModalBody .time{font-size:17px;text-align:center;color:#facc15;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.3px}
+.logModalBody .time{font-size:17px;text-align:left;color:#facc15;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.15px}
 .logModalBody .log{max-height:none!important;height:auto;overflow:visible}
-.logSeq{color:#7dd3fc;font-weight:950;font-size:15px;white-space:nowrap;text-align:left}
+.logSeq{color:#7dd3fc;font-weight:950;font-size:14px;white-space:nowrap;text-align:left}
 .logModalActions{flex:0 0 54px;padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
 .logModalActions button{width:100%;background:#475569;min-height:42px;padding:8px}
 
-.logModalBody .item{grid-template-columns:58px 62px minmax(0,1fr) 36px 28px}
+.logModalBody .item{grid-template-columns:52px 58px minmax(0,1fr) 36px 26px}
 .editMarkerBtn{
   width:32px;height:32px;min-width:32px;padding:0;
   display:inline-flex;align-items:center;justify-content:center;
@@ -1102,7 +1039,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.16</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.17</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1198,7 +1135,7 @@ button:disabled:active{transform:none!important}
   <div class="card">
     <div class="events">
       <button id="goalBtn" class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
-      <button id="saveBtn" class="event save" onclick="openPlayerEvent('SAVE')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span><small class="keeperAutoHint" id="saveKeeperHint"></small></button>
+      <button id="saveBtn" class="event save" onclick="openPlayerEvent('SAVE')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span></button>
       <button id="shotBtn" class="event shot" onclick="openPlayerEvent('SHOT')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span></button>
       <button id="greatPlayBtn" class="event play" onclick="mark('GREAT_PLAY','OUR')"><span class="eventTop"><span class="eventIcon">🙌</span> 精彩配合</span></button>
     </div>
@@ -1233,7 +1170,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.16</div>
+      <div class="aboutVersion">v3.17</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -1338,8 +1275,8 @@ button:disabled:active{transform:none!important}
     <h2>🟨🟥 牌卡紀錄</h2>
     <p>先選擇牌卡類型，再指定是哪一隊、哪一位球員。</p>
     <div class="cardTypeGrid">
-      <button class="yellowCardChoice" type="button" onclick="chooseCardType('YELLOW_CARD')">黃牌</button>
-      <button class="redCardChoice" type="button" onclick="chooseCardType('RED_CARD')">紅牌</button>
+      <button class="yellowCardChoice" type="button" onclick="chooseCardType('YELLOW_CARD')">🟨 黃牌</button>
+      <button class="redCardChoice" type="button" onclick="chooseCardType('RED_CARD')">🟥 紅牌</button>
     </div>
     <button class="cancel" type="button" onclick="cancelCard()">取消</button>
   </div>
@@ -1397,23 +1334,6 @@ button:disabled:active{transform:none!important}
       <button onclick="saveCustomNumber()">確定</button>
     </div>
     <button class="cancel" id="cancelNumberBtn" onclick="cancelNumber()">取消這筆事件</button>
-  </div>
-</div>
-
-<!-- Assist modal -->
-<div class="modalBack" id="assistModal">
-  <div class="modal">
-    <h2>🅰️ 助攻球員（選填）</h2>
-    <p>這顆進球是否有助攻？可選擇球員背號，也可以直接略過。</p>
-    <div class="assistGrid" id="assistGrid"></div>
-    <div class="assistCustomRow">
-      <input id="assistCustomNumber" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="其他背號 1–99" aria-label="助攻球員背號">
-      <button class="assistSaveBtn" type="button" onclick="saveAssistCustom()">儲存</button>
-    </div>
-    <div class="assistNote" id="assistNote"></div>
-    <div class="numberActions">
-      <button class="assistSkipBtn" type="button" onclick="skipAssist()">無助攻 / 略過</button>
-    </div>
   </div>
 </div>
 
@@ -1493,14 +1413,6 @@ button:disabled:active{transform:none!important}
       </div>
     </div>
 
-    <div class="editSection editAssistSection" id="editAssistSection">
-      <div class="editSectionLabel">助攻球員背號（選填）</div>
-      <div class="editNumberWrap">
-        <input id="editAssistNumber" type="number" min="1" max="99" step="1" inputmode="numeric" enterkeyhint="done" placeholder="無助攻可留空">
-        <span class="editNumberUnit">1–99</span>
-      </div>
-    </div>
-
     <div class="editMarkerTime">標記時間：<b id="editMarkerTime">00:00</b>（不可修改）</div>
     </div>
 
@@ -1549,7 +1461,7 @@ button:disabled:active{transform:none!important}
         <div class="penaltySummary" id="reportPenalty"></div>
       </div>
 
-      <div class="reportSectionTitle">球員進球 / 助攻統計</div>
+      <div class="reportSectionTitle">球員進球統計</div>
       <div class="scorerStats" id="reportScorers"></div>
 
       <div class="reportSectionTitle">進球紀錄</div>
@@ -1576,7 +1488,6 @@ const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
 let editingMarkerIndex=null, editingMarkerEvent=null, editingMarkerTeam='OUR';
 let pendingGoalTime=null, pendingGoalTeam=null;
-let pendingAssistMarkerIndex=null;
 let pendingCardTime=null, pendingCardEvent=null;
 let pendingNumberEvent=null, pendingNumberTime=null, pendingNumberTeam=null;
 let pendingFinishEnd=null, pendingFinishElapsed=null;
@@ -1835,25 +1746,10 @@ function scorerStats(){
     .map(([name,goals])=>({name,goals}))
     .sort((a,b)=>b.goals-a.goals || a.name.localeCompare(b.name,'zh-Hant'));
 }
-function assistStats(){
-  const counts=new Map();
-  state.markers.filter(m=>m.event==='GOAL' && m.team==='OUR' && m.assist_player_number).forEach(m=>{
-    const key=`${teamDisplay(m.team)}#${m.assist_player_number}`;
-    counts.set(key,(counts.get(key)||0)+1);
-  });
-  return counts;
-}
 function scorerStatsHTML(){
-  const goalStats=scorerStats();
-  const assists=assistStats();
-  const names=new Set([...goalStats.map(s=>s.name),...assists.keys()]);
-  if(!names.size) return '<div class="reportEmpty">尚無可統計的球員背號進球 / 助攻資料</div>';
-  const goalsMap=new Map(goalStats.map(s=>[s.name,s.goals]));
-  return [...names].sort((a,b)=>a.localeCompare(b,'zh-Hant')).map(name=>{
-    const goals=goalsMap.get(name)||0;
-    const ast=assists.get(name)||0;
-    return `<div class="scorerRow"><div class="scorerName">${escapeHtml(name)} ${goals?`<span class="scorerBalls">${'⚽'.repeat(goals)}</span>`:''}${ast?` <span class="scorerBalls">🅰️${ast}</span>`:''}</div></div>`;
-  }).join('');
+  const stats=scorerStats();
+  if(!stats.length) return '<div class="reportEmpty">尚無可統計的球員背號進球資料</div>';
+  return stats.map(s=>`<div class="scorerRow"><div class="scorerName">${escapeHtml(s.name)} <span class="scorerBalls">${'⚽'.repeat(s.goals)}</span></div></div>`).join('');
 }
 
 function tick(){
@@ -2526,78 +2422,6 @@ function cancelCard(){
   byId('cardTeamModal').classList.remove('open');
 }
 
-function buildAssistGrid(){
-  const grid=byId('assistGrid');
-  if(!grid) return;
-  grid.innerHTML='';
-  const marker=(pendingAssistMarkerIndex!==null)?state.markers[pendingAssistMarkerIndex]:null;
-  const scorer=String(marker?.player_number||'');
-  allCommonNumbers().forEach(n=>{
-    const btn=document.createElement('button');
-    btn.type='button';
-    btn.className='assistNumBtn';
-    btn.textContent=n;
-    btn.disabled=!!scorer && String(n)===scorer;
-    btn.onclick=()=>saveAssistNumber(String(n));
-    grid.appendChild(btn);
-  });
-  const note=byId('assistNote');
-  if(note){
-    note.textContent=scorer ? `進球球員為 #${scorer}，助攻者不可與進球者相同。` : '助攻為選填；沒有明確助攻時可直接略過。';
-  }
-}
-function openAssistForMarker(index){
-  const marker=state.markers[index];
-  if(!marker || marker.event!=='GOAL' || marker.team!=='OUR') return;
-  pendingAssistMarkerIndex=index;
-  buildAssistGrid();
-  byId('assistCustomNumber').value='';
-  byId('assistModal').classList.add('open');
-}
-function finishAssistFlow(){
-  pendingAssistMarkerIndex=null;
-  byId('assistModal').classList.remove('open');
-  saveState();
-  render();
-}
-function saveAssistNumber(number){
-  if(pendingAssistMarkerIndex===null) return;
-  const marker=state.markers[pendingAssistMarkerIndex];
-  if(!marker) return;
-  const n=Number(number);
-  if(!Number.isInteger(n) || n<1 || n>99){
-    alert('助攻球員背號請輸入 1～99 的整數');
-    return;
-  }
-  if(marker.player_number && String(n)===String(marker.player_number)){
-    alert('助攻球員不能與進球球員使用相同背號');
-    return;
-  }
-  marker.assist_player_number=String(n);
-  rememberPlayerNumber(n);
-  buildNumberGrid();
-  finishAssistFlow();
-}
-function saveAssistCustom(){
-  const el=byId('assistCustomNumber');
-  if(!el) return;
-  el.value=String(el.value||'').replace(/\D/g,'').slice(0,2);
-  const raw=el.value.trim();
-  const n=Number(raw);
-  if(!Number.isInteger(n) || n<1 || n>99){
-    alert('助攻球員背號請輸入 1～99 的整數');
-    el.focus();
-    return;
-  }
-  saveAssistNumber(n);
-}
-function skipAssist(){
-  if(pendingAssistMarkerIndex!==null && state.markers[pendingAssistMarkerIndex]){
-    state.markers[pendingAssistMarkerIndex].assist_player_number='';
-  }
-  finishAssistFlow();
-}
-
 function openNumberSelection(event, team, sec){
   pendingNumberEvent=event;
   pendingNumberTeam=team;
@@ -2729,20 +2553,17 @@ function finishGoal(playerNumber){
     state.oppScore += 1;
   }
 
-  const goalTeam=pendingGoalTeam;
   state.markers.push({
     event:'GOAL',
     period:state.currentPeriod||1,
     period_label:state.multiPeriod ? periodLabel(state.currentPeriod||1) : '',
-    team:goalTeam,
+    team:pendingGoalTeam,
     player_number:playerNumber,
-    assist_player_number:'',
     seconds:pendingGoalTime,
     time:fmtMMSS(pendingGoalTime),
     score_after:`${state.ourScore}:${state.oppScore}`,
     recorded_at:new Date().toISOString()
   });
-  const newGoalIndex=state.markers.length-1;
 
   pendingGoalTime=null;
   pendingGoalTeam=null;
@@ -2750,11 +2571,6 @@ function finishGoal(playerNumber){
   byId('numberModal').classList.remove('open');
   saveState();
   render();
-
-  // 只有我方進球才詢問助攻；對手進球不增加操作負擔。
-  if(goalTeam==='OUR'){
-    openAssistForMarker(newGoalIndex);
-  }
 }
 
 function mark(event, team='OUR'){
@@ -2794,10 +2610,6 @@ function setEditMarkerEvent(event){
     byId('editEvent'+ev)?.classList.toggle('active',ev===event);
   });
   byId('editNumberSection').style.display=event==='GREAT_PLAY'?'none':'block';
-  const assistSection=byId('editAssistSection');
-  if(assistSection){
-    assistSection.classList.toggle('show',event==='GOAL' && editingMarkerTeam==='OUR');
-  }
 }
 
 function setEditMarkerTeam(team){
@@ -2805,10 +2617,6 @@ function setEditMarkerTeam(team){
   ['OUR','OPP'].forEach(code=>{
     byId('editTeam'+code)?.classList.toggle('active',code===team);
   });
-  const assistSection=byId('editAssistSection');
-  if(assistSection){
-    assistSection.classList.toggle('show',editingMarkerEvent==='GOAL' && team==='OUR');
-  }
 }
 
 function openEditMarker(index){
@@ -2821,7 +2629,6 @@ function openEditMarker(index){
   byId('editTeamOUR').textContent=state.ourTeam||'我方';
   byId('editTeamOPP').textContent=state.oppTeam||'對手';
   byId('editMarkerNumber').value=marker.player_number||'';
-  byId('editAssistNumber').value=marker.assist_player_number||'';
   byId('editMarkerTime').textContent=fmtMMSS(marker.seconds);
 
   setEditMarkerEvent(editingMarkerEvent);
@@ -2862,23 +2669,6 @@ function saveEditMarker(){
     }
   }
 
-  let assistNumber='';
-  if(editingMarkerEvent==='GOAL' && editingMarkerTeam==='OUR'){
-    const rawAssist=String(byId('editAssistNumber').value||'').trim();
-    if(rawAssist){
-      const a=Number(rawAssist);
-      if(!Number.isInteger(a) || a<1 || a>99){
-        alert('助攻球員背號請輸入 1～99 的整數，或留空');
-        return;
-      }
-      if(playerNumber && String(a)===String(playerNumber)){
-        alert('助攻球員不能與進球球員使用相同背號');
-        return;
-      }
-      assistNumber=String(a);
-    }
-  }
-
   // 依「舊事件 → 新事件」計算對比分的淨影響。
   let dOur=0,dOpp=0;
   if(marker.event==='GOAL'){
@@ -2904,15 +2694,10 @@ function saveEditMarker(){
   marker.event=editingMarkerEvent;
   marker.team=editingMarkerTeam;
   marker.player_number=editingMarkerEvent==='GREAT_PLAY'?'':playerNumber;
-  marker.assist_player_number=(editingMarkerEvent==='GOAL' && editingMarkerTeam==='OUR') ? assistNumber : '';
 
   // 時間 seconds / time / recorded_at 完全保留。
   if(marker.team==='OUR' && marker.player_number){
     rememberPlayerNumber(marker.player_number);
-    buildNumberGrid();
-  }
-  if(marker.team==='OUR' && marker.assist_player_number){
-    rememberPlayerNumber(marker.assist_player_number);
     buildNumberGrid();
   }
 
@@ -2974,7 +2759,7 @@ function renderLogTo(container){
     row.innerHTML=`
       <div class="logSeq">第${i+1}筆</div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
-      <div>${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}<b>${emoji(m.event)} ${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
+      <div>${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}<b>${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}<span class="scoreSnap">${m.score_after||''}</span></div>
       <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${i+1}筆紀錄">✎</button>
       <button class="del" onclick="deleteMarker(${i}); renderLogModal();">✕</button>
     `;
@@ -3062,14 +2847,10 @@ function render(){
   const keeperNumber=String(state.goalkeeperNumber||'');
   const keeperBtn=byId('keeperQuickBtn');
   const keeperText=byId('keeperQuickText');
-  const saveKeeperHint=byId('saveKeeperHint');
   if(keeperBtn && keeperText){
     keeperBtn.classList.toggle('set',!!keeperNumber);
     keeperText.textContent=keeperNumber ? `#${keeperNumber}` : 'GK';
-  }
-  if(saveKeeperHint){
-    saveKeeperHint.textContent=keeperNumber ? `自動使用 #${keeperNumber}` : '';
-    saveKeeperHint.classList.toggle('show',!!keeperNumber);
+    keeperBtn.setAttribute('aria-label', keeperNumber ? `目前守門員背號 ${keeperNumber}，點擊更換` : '設定目前守門員背號');
   }
 
   let txt='尚未開始', cls='idleStatus', cardCls='idleState';
@@ -3206,8 +2987,7 @@ function reportEventHTML(m, goalIndex=null){
   const ordinal=(m.event==='GOAL' && goalIndex!==null) ? `G${goalIndex+1}` : eventLabel(m.event);
   const period=state.multiPeriod ? periodLabel(m.period||1) : '';
   const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
-  const assist=(m.team==='OUR' && m.assist_player_number) ? ` · 助攻 #${m.assist_player_number}` : '';
-  const label = `${team}${num}${assist}`;
+  const label = `${team}${num}`;
   return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="goalOrdinal">${ordinal}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="rscore">${m.score_after||''}</div></div>`;
 }
 function reportOtherEventHTML(m){
@@ -3336,15 +3116,10 @@ function reportLines(){
       lines.push({type:'meta', text:`規定時間：${regulationDisplayText()}`});
     }
   }
-  lines.push({type:'section', text:'球員進球 / 助攻統計'});
+  lines.push({type:'section', text:'球員進球統計'});
   const stats=scorerStats();
-  const astMap=assistStats();
-  const statNames=new Set([...stats.map(s=>s.name),...astMap.keys()]);
-  if(!statNames.size) lines.push({type:'event', text:'— 尚無可統計的球員背號進球 / 助攻資料'});
-  const gMap=new Map(stats.map(s=>[s.name,s.goals]));
-  [...statNames].sort((a,b)=>a.localeCompare(b,'zh-Hant')).forEach(name=>{
-    lines.push({type:'event', text:`${name}${gMap.get(name)?` ⚽${gMap.get(name)}`:''}${astMap.get(name)?` 🅰️${astMap.get(name)}`:''}`});
-  });
+  if(!stats.length) lines.push({type:'event', text:'— 尚無可統計的球員背號進球資料'});
+  stats.forEach(s=>lines.push({type:'scorer', name:s.name, goals:s.goals}));
   lines.push({type:'section', text:'進球紀錄'});
   const goals=state.markers.filter(m=>m.event==='GOAL');
   if(!goals.length) lines.push({type:'event', text:'— 尚未標記進球事件'});
@@ -3357,7 +3132,7 @@ function reportLines(){
       type:'goalEvent',
       periodTime:period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds),
       ordinal:`G${i+1}`,
-      label:`${team}${num}${(m.team==='OUR' && m.assist_player_number)?` · 助攻 #${m.assist_player_number}`:''}`,
+      label:`${team}${num}`,
       score:m.score_after||''
     });
   });
@@ -3707,7 +3482,7 @@ h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">📍 ${escapeHtml(state.venue||'未填場地')}　⏱ ${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}${totalMatchElapsed()>=3600?`　<span class="note">總計 ${fmtMMSS(totalMatchElapsed())}</span>`:''}</p>${diff}</div>
-<div class="card"><h2>球員進球 / 助攻統計</h2><ul>${(()=>{const g=scorerStats(),a=assistStats(),gm=new Map(g.map(s=>[s.name,s.goals])),names=new Set([...gm.keys(),...a.keys()]);return names.size?[...names].sort((x,y)=>x.localeCompare(y,'zh-Hant')).map(n=>`<li>${escapeHtml(n)} ${gm.get(n)?`⚽${gm.get(n)}`:''} ${a.get(n)?`🅰️${a.get(n)}`:''}</li>`).join(''):'<li>尚無可統計的球員背號進球 / 助攻資料</li>'})()}</ul></div>
+<div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
 <div class="card"><h2>其他精彩標記事件</h2><ul>${otherHtml}</ul></div>
 
@@ -3728,7 +3503,7 @@ function diffSecondsExport(){
 }
 function csvText(){
   saveState();
-  const rows=[['our_team','opponent_team','venue','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','assist_player_number','score_after','recorded_at']];
+  const rows=[['our_team','opponent_team','venue','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','score_after','recorded_at']];
   if(state.markers.length===0){
     rows.push([
       state.ourTeam, state.oppTeam, state.venue,
@@ -3738,7 +3513,7 @@ function csvText(){
       state.regulationMinutes||'',
       diffSecondsExport(),
       state.ourScore, state.oppScore,
-      '', '', '', '', '', '', '', '', '', ''
+      '', '', '', '', '', '', '', '', ''
     ]);
   }else{
     state.markers.forEach(m=>{
@@ -3757,7 +3532,6 @@ function csvText(){
         m.event,
         m.team||'',
         m.player_number||'',
-        m.assist_player_number||'',
         m.score_after||'',
         m.recorded_at
       ]);
@@ -3776,7 +3550,7 @@ function csvText(){
           Math.round(state.finished?state.finalElapsed:totalMatchElapsed()),
           state.regulationMinutes||'',diffSecondsExport(),state.ourScore,state.oppScore,
           'PK','PK 點球',`第${i+1}點`,'',k.result==='GOAL'?'PENALTY_GOAL':k.result==='MISS'?'PENALTY_MISS':'PENALTY_PENDING',
-          side==='our'?'OUR':'OPP',k.number||'','',`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`,state.penalty.endEpoch||state.penalty.startEpoch||''
+          side==='our'?'OUR':'OPP',k.number||'',`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`,state.penalty.endEpoch||state.penalty.startEpoch||''
         ]);
       });
     }
@@ -3909,15 +3683,6 @@ byId('keeperCustomNumber')?.addEventListener('keydown',e=>{
     saveKeeperCustom();
   }
 });
-byId('assistCustomNumber')?.addEventListener('input',e=>{
-  e.target.value=String(e.target.value||'').replace(/\D/g,'').slice(0,2);
-});
-byId('assistCustomNumber')?.addEventListener('keydown',e=>{
-  if(e.key==='Enter'){
-    e.preventDefault();
-    saveAssistCustom();
-  }
-});
 
 
 
@@ -3971,7 +3736,7 @@ tick();
   .logModalTop{padding:9px 12px}
   .logModalTitle{font-size:17px}
   .logModalBody{padding:6px 12px 8px}
-  .logModalBody .item{grid-template-columns:58px 60px minmax(0,1fr) 34px 26px;gap:6px;padding:10px 0;font-size:14px;line-height:1.45}
+  .logModalBody .item{grid-template-columns:50px 56px minmax(0,1fr) 34px 24px;gap:5px;padding:10px 0;font-size:14px;line-height:1.45}
   .logModalBody .item b{font-size:14px}
   .logModalBody .time{font-size:15px}
   .logSeq{font-size:13px}
