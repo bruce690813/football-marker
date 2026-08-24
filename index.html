@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.19</title>
+<title>足球場邊記錄器 v3.20</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1087,7 +1087,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.19</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.20</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1185,7 +1185,7 @@ button:disabled:active{transform:none!important}
       <button id="goalBtn" class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
       <button id="saveBtn" class="event save" onclick="openPlayerEvent('SAVE')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span></button>
       <button id="shotBtn" class="event shot" onclick="openPlayerEvent('SHOT')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span></button>
-      <button id="greatPlayBtn" class="event play" onclick="mark('GREAT_PLAY','OUR')"><span class="eventTop"><span class="eventIcon">🙌</span> 精彩配合</span></button>
+      <button id="greatPlayBtn" class="event play" onclick="mark('GREAT_DEFENSE','OUR')"><span class="eventTop"><span class="eventIcon">🛡️</span> 精彩防守</span></button>
     </div>
   </div>
 
@@ -1218,7 +1218,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.19</div>
+      <div class="aboutVersion">v3.20</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -1231,7 +1231,7 @@ button:disabled:active{transform:none!important}
       <div class="aboutCards">
         <div class="aboutCard">
           <div class="aboutCardTitle">🎬 快速剪輯</div>
-          <div class="aboutCardText">進球、撲救、射門、精彩配合與牌卡，當下按一下就能記下時間點；賽後不用重看整場影片，也能快速剪出重點。</div>
+          <div class="aboutCardText">進球、撲救、射門、精彩防守與牌卡，當下按一下就能記下時間點；賽後不用重看整場影片，也能快速剪出重點。</div>
         </div>
         <div class="aboutCard">
           <div class="aboutCardTitle">📊 留下比賽故事</div>
@@ -1466,6 +1466,7 @@ button:disabled:active{transform:none!important}
         <button type="button" id="editEventSAVE" onclick="setEditMarkerEvent('SAVE')">🧤 撲救</button>
         <button type="button" id="editEventSHOT" onclick="setEditMarkerEvent('SHOT')">🥅 射門</button>
         <button type="button" id="editEventGREAT_PLAY" onclick="setEditMarkerEvent('GREAT_PLAY')">🙌 精彩配合</button>
+        <button type="button" id="editEventGREAT_DEFENSE" onclick="setEditMarkerEvent('GREAT_DEFENSE')">🛡️ 精彩防守</button>
         <button type="button" id="editEventYELLOW_CARD" onclick="setEditMarkerEvent('YELLOW_CARD')">🟨 黃牌</button>
         <button type="button" id="editEventRED_CARD" onclick="setEditMarkerEvent('RED_CARD')">🟥 紅牌</button>
       </div>
@@ -1791,10 +1792,10 @@ function durationReportHTML(sec){
   return `${escapeHtml(fmtDurationReadable(sec))}<span class="rawDuration">總計 ${escapeHtml(raw)}</span>`;
 }
 function emoji(ev){
-  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', GREAT_PLAY:'🙌', YELLOW_CARD:'🟨', RED_CARD:'🟥'}[ev] || '•';
+  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', GREAT_PLAY:'🙌', GREAT_DEFENSE:'🛡️', YELLOW_CARD:'🟨', RED_CARD:'🟥'}[ev] || '•';
 }
 function eventLabel(ev){
-  return {GOAL:'進球', SAVE:'撲救', SHOT:'射門', GREAT_PLAY:'精彩配合', YELLOW_CARD:'黃牌', RED_CARD:'紅牌'}[ev] || ev;
+  return {GOAL:'進球', SAVE:'撲救', SHOT:'射門', GREAT_PLAY:'精彩配合', GREAT_DEFENSE:'精彩防守', YELLOW_CARD:'黃牌', RED_CARD:'紅牌'}[ev] || ev;
 }
 function teamDisplay(code){
   if(code==='OUR') return state.ourTeam || '我方';
@@ -2784,10 +2785,10 @@ function adjustScoreSnapshotsFrom(startIndex,dOur,dOpp){
 
 function setEditMarkerEvent(event){
   editingMarkerEvent=event;
-  ['GOAL','SAVE','SHOT','GREAT_PLAY','YELLOW_CARD','RED_CARD'].forEach(ev=>{
+  ['GOAL','SAVE','SHOT','GREAT_PLAY','GREAT_DEFENSE','YELLOW_CARD','RED_CARD'].forEach(ev=>{
     byId('editEvent'+ev)?.classList.toggle('active',ev===event);
   });
-  byId('editNumberSection').style.display=event==='GREAT_PLAY'?'none':'block';
+  byId('editNumberSection').style.display=(event==='GREAT_PLAY'||event==='GREAT_DEFENSE')?'none':'block';
   byId('editAssistSection').style.display=event==='GOAL'?'block':'none';
 }
 
@@ -2837,7 +2838,7 @@ function saveEditMarker(){
   if(!marker || !editingMarkerEvent) return;
 
   let playerNumber='';
-  if(editingMarkerEvent!=='GREAT_PLAY'){
+  if(editingMarkerEvent!=='GREAT_PLAY' && editingMarkerEvent!=='GREAT_DEFENSE'){
     const raw=String(byId('editMarkerNumber').value||'').trim();
     if(raw){
       const n=Number(raw);
@@ -2890,7 +2891,7 @@ function saveEditMarker(){
 
   marker.event=editingMarkerEvent;
   marker.team=editingMarkerTeam;
-  marker.player_number=editingMarkerEvent==='GREAT_PLAY'?'':playerNumber;
+  marker.player_number=(editingMarkerEvent==='GREAT_PLAY'||editingMarkerEvent==='GREAT_DEFENSE')?'':playerNumber;
   marker.assist_number=editingMarkerEvent==='GOAL'?assistNumber:'';
 
   // 時間 seconds / time / recorded_at 完全保留。
