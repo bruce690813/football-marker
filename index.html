@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.14</title>
+<title>足球場邊記錄器 v3.15</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -78,55 +78,42 @@ h1{font-size:18px;margin:0}
 .aboutClose{width:100%;margin-top:0;min-height:46px;background:linear-gradient(180deg,#ffffff 0%,#e5edf5 100%);color:#08111c;border:1px solid rgba(255,255,255,.80);box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 10px 22px rgba(0,0,0,.24);font-size:14px;font-weight:1000;letter-spacing:.38px}
 .aboutClose:active{transform:translateY(1px)}
 @media (max-width:390px){
+  .matchMetaRow{gap:5px}
+  .keeperQuickBtn{min-width:58px;padding:7px 8px;font-size:12.5px}
+  .new{padding-left:9px;padding-right:9px}
   .aboutModal{width:min(470px,calc(100vw - 12px));height:min(calc(var(--vv-height,100dvh) - 8px),760px)}
   .aboutTop{padding:18px 50px 14px 15px}.aboutDismiss{top:12px;right:12px;width:36px;height:36px;min-width:36px;font-size:15px}.aboutTitle{font-size:21px}.aboutHero{font-size:17px}.aboutIntro{font-size:10.8px;line-height:1.48}.aboutPills{gap:5px;margin-top:9px}.aboutPill{font-size:9.6px;padding:4px 8px}.aboutBody{padding:10px 10px 10px}.aboutCard{padding:11px 12px 10px 13px}.aboutCardTitle{font-size:13px}.aboutCardText{font-size:10.4px;line-height:1.42}.aboutStatement{padding:12px 12px 12px}.aboutStatementLead{font-size:15.5px}.aboutStatementMain{font-size:11.3px}.aboutAudience{font-size:10.8px;line-height:1.4}.aboutClose{min-height:43px;font-size:13.5px}
 }
 .tagline{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.2px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:7px;margin-bottom:4px}
-.matchMetaRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.matchMetaRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:7px;align-items:center}
 .matchMetaRow input,.regRow input{
   width:100%;font-size:14px;padding:7px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
 #venue{min-width:0}
-.keeperQuickRow{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:7px;
-}
 .keeperQuickBtn{
-  flex:0 1 auto;
-  min-width:0;
-  min-height:36px;
-  padding:7px 12px;
-  border-radius:999px;
+  min-width:66px;
+  min-height:38px;
+  padding:7px 10px;
+  border-radius:12px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  gap:7px;
-  background:linear-gradient(180deg,#173958 0%,#10283f 100%);
-  border:1px solid rgba(56,189,248,.42);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 9px rgba(0,0,0,.16);
-  color:#eaf7ff;
+  gap:5px;
+  background:linear-gradient(180deg,#294c70 0%,#1d3652 100%);
+  border:1px solid rgba(96,165,250,.46);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 7px rgba(0,0,0,.18);
+  color:#f2f8ff;
   font-size:13px;
-  font-weight:900;
+  font-weight:950;
   white-space:nowrap;
 }
 .keeperQuickBtn.set{
   border-color:rgba(34,197,94,.58);
-  background:linear-gradient(180deg,#164a3a 0%,#103126 100%);
+  background:linear-gradient(180deg,#1f624c 0%,#164333 100%);
 }
-.keeperQuickBtn:active{transform:scale(.98)}
-.keeperQuickHint{
-  min-width:0;
-  color:#8ea1b7;
-  font-size:10.5px;
-  font-weight:750;
-  line-height:1.25;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+.keeperQuickBtn:active{transform:scale(.97)}
+.keeperQuickBtn .keeperIcon{font-size:15px;line-height:1}
 .keeperModalTitle{
   display:flex;
   align-items:center;
@@ -1064,19 +1051,16 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.14</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.15</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
     <div class="matchMetaRow">
       <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
-      <button class="new" onclick="newMatch()">＋ 新比賽</button>
-    </div>
-    <div class="keeperQuickRow">
       <button id="keeperQuickBtn" class="keeperQuickBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
-        <span aria-hidden="true">🧤</span><span id="keeperQuickText">設定守門員</span>
+        <span class="keeperIcon" aria-hidden="true">🧤</span><span id="keeperQuickText">GK</span>
       </button>
-      <div class="keeperQuickHint" id="keeperQuickHint">設定後，撲救可一鍵記錄</div>
+      <button class="new" onclick="newMatch()">＋ 新比賽</button>
     </div>
 
     <div class="broadcastScoreboard">
@@ -1198,7 +1182,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.14</div>
+      <div class="aboutVersion">v3.15</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -2875,14 +2859,11 @@ function render(){
   const keeperNumber=String(state.goalkeeperNumber||'');
   const keeperBtn=byId('keeperQuickBtn');
   const keeperText=byId('keeperQuickText');
-  const keeperHint=byId('keeperQuickHint');
   const saveKeeperHint=byId('saveKeeperHint');
   if(keeperBtn && keeperText){
     keeperBtn.classList.toggle('set',!!keeperNumber);
-    keeperText.textContent=keeperNumber ? `守門員 #${keeperNumber}・更換` : '設定守門員';
-  }
-  if(keeperHint){
-    keeperHint.textContent=keeperNumber ? `撲救將自動記錄 #${keeperNumber}` : '設定後，撲救可一鍵記錄';
+    keeperText.textContent=keeperNumber ? `#${keeperNumber}` : 'GK';
+    keeperBtn.setAttribute('aria-label',keeperNumber ? `目前守門員背號 ${keeperNumber}，點擊可更換` : '設定目前守門員背號');
   }
   if(saveKeeperHint){
     saveKeeperHint.textContent=keeperNumber ? `自動使用 #${keeperNumber}` : '';
