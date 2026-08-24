@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.21</title>
+<title>足球場邊記錄器 v3.22</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -14,7 +14,14 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
 body{min-height:100dvh}
-.wrap{max-width:720px;margin:auto;padding:5px 10px calc(92px + env(safe-area-inset-bottom));scroll-padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+.wrap{
+  max-width:720px;
+  margin:auto;
+  /* iPhone Safari 的底部工具列不一定完整包含在 safe-area-inset-bottom。
+     額外保留可捲動空間，確保最下方輸出按鈕可以滑到工具列上方。 */
+  padding:5px 10px calc(165px + env(safe-area-inset-bottom));
+  scroll-padding-bottom:calc(165px + env(safe-area-inset-bottom));
+}
 .card:last-of-type{margin-bottom:calc(8px + env(safe-area-inset-bottom))}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 h1{font-size:18px;margin:0}
@@ -686,7 +693,18 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   color:#ffffff;
   text-shadow:0 1px 2px rgba(0,0,0,.25);
 }
-.finalToolsCard{position:relative;z-index:20}
+.finalToolsCard{
+  position:relative;
+  z-index:20;
+  scroll-margin-bottom:calc(145px + env(safe-area-inset-bottom));
+}
+/* Safari / iPhone：額外的底部觸控安全區。只提供捲動空間，不固定按鈕，
+   避免與 Safari 自己的工具列互相覆蓋。 */
+.mobileBottomSafeSpacer{
+  height:calc(78px + env(safe-area-inset-bottom));
+  pointer-events:none;
+  visibility:hidden;
+}
 .finalTools button{position:relative;z-index:21;pointer-events:auto;touch-action:manipulation}
 .finalTools button:disabled{pointer-events:none}
 .share{background:#2f81f7}.export{background:#f8fafc;color:#111}
@@ -1087,7 +1105,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.21</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.22</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1218,7 +1236,7 @@ button:disabled:active{transform:none!important}
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutEyebrow">MATCHDAY TOOL</div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.21</div>
+      <div class="aboutVersion">v3.22</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
       <div class="aboutPills">
@@ -1329,6 +1347,7 @@ button:disabled:active{transform:none!important}
     <button class="cancel" type="button" onclick="cancelCard()">取消</button>
   </div>
 </div>
+<div class="mobileBottomSafeSpacer" aria-hidden="true"></div>
 
 <div class="modalBack" id="cardTeamModal">
   <div class="modal">
