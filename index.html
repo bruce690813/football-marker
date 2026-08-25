@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.38</title>
+<title>足球場邊記錄器 v3.39</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -18,8 +18,8 @@ body{
   position:relative;
   overflow-x:hidden;
   background:
-    radial-gradient(circle at 50% 0%,rgba(56,189,248,.08),transparent 20%),
-    linear-gradient(180deg,#040d16 0%,#081420 14%,#08150f 42%,#08150f 60%,#091522 100%);
+    radial-gradient(ellipse at 50% 7%,rgba(61,160,74,.34) 0%,rgba(24,96,47,.22) 27%,rgba(5,25,20,.04) 54%),
+    linear-gradient(180deg,#07170f 0%,#0a2114 22%,#0b2616 52%,#071b13 78%,#07131b 100%);
 }
 body::before{
   content:'';
@@ -27,22 +27,21 @@ body::before{
   inset:0;
   pointer-events:none;
   background:
-    linear-gradient(180deg,rgba(2,8,14,.92) 0%,rgba(5,15,24,.42) 12%,rgba(4,12,20,.08) 24%,rgba(4,12,20,.08) 74%,rgba(2,8,14,.82) 100%),
-    radial-gradient(circle at 50% 28%,rgba(74,222,128,.18),rgba(74,222,128,0) 24%),
-    radial-gradient(circle at 50% 62%,rgba(34,197,94,.16),rgba(34,197,94,0) 34%),
-    repeating-linear-gradient(90deg,rgba(89,160,86,.09) 0 92px,rgba(39,92,47,.17) 92px 184px);
-  opacity:.96;
+    linear-gradient(180deg,rgba(3,12,18,.28) 0%,rgba(3,12,18,.12) 17%,rgba(2,10,15,.06) 56%,rgba(2,8,14,.62) 100%),
+    repeating-linear-gradient(90deg,rgba(99,178,101,.11) 0 88px,rgba(30,94,50,.18) 88px 176px),
+    radial-gradient(circle at 50% 32%,rgba(82,188,94,.14),transparent 34%);
+  opacity:1;
 }
 body::after{
   content:'';
   position:fixed;
   inset:0;
   pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1800'%3E%3Crect x='40' y='210' width='920' height='1360' rx='24' fill='none' stroke='white' stroke-opacity='.28' stroke-width='4'/%3E%3Cline x1='40' y1='890' x2='960' y2='890' stroke='white' stroke-opacity='.22' stroke-width='4'/%3E%3Ccircle cx='500' cy='890' r='110' fill='none' stroke='white' stroke-opacity='.22' stroke-width='4'/%3E%3Ccircle cx='500' cy='890' r='4' fill='white' fill-opacity='.22'/%3E%3Crect x='40' y='546' width='164' height='688' fill='none' stroke='white' stroke-opacity='.18' stroke-width='4'/%3E%3Crect x='796' y='546' width='164' height='688' fill='none' stroke='white' stroke-opacity='.18' stroke-width='4'/%3E%3Crect x='40' y='676' width='76' height='428' fill='none' stroke='white' stroke-opacity='.15' stroke-width='4'/%3E%3Crect x='884' y='676' width='76' height='428' fill='none' stroke='white' stroke-opacity='.15' stroke-width='4'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1800'%3E%3Crect x='34' y='80' width='932' height='1590' rx='18' fill='none' stroke='white' stroke-opacity='.34' stroke-width='4'/%3E%3Cline x1='34' y1='875' x2='966' y2='875' stroke='white' stroke-opacity='.30' stroke-width='4'/%3E%3Ccircle cx='500' cy='875' r='112' fill='none' stroke='white' stroke-opacity='.30' stroke-width='4'/%3E%3Ccircle cx='500' cy='875' r='5' fill='white' fill-opacity='.30'/%3E%3Crect x='34' y='530' width='176' height='690' fill='none' stroke='white' stroke-opacity='.24' stroke-width='4'/%3E%3Crect x='790' y='530' width='176' height='690' fill='none' stroke='white' stroke-opacity='.24' stroke-width='4'/%3E%3Crect x='34' y='655' width='82' height='440' fill='none' stroke='white' stroke-opacity='.21' stroke-width='4'/%3E%3Crect x='884' y='655' width='82' height='440' fill='none' stroke='white' stroke-opacity='.21' stroke-width='4'/%3E%3Cpath d='M34 160 A115 115 0 0 1 149 80' fill='none' stroke='white' stroke-opacity='.18' stroke-width='4'/%3E%3Cpath d='M966 160 A115 115 0 0 0 851 80' fill='none' stroke='white' stroke-opacity='.18' stroke-width='4'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:center top;
   background-size:100% 100%;
-  opacity:.17;
+  opacity:.25;
   mix-blend-mode:screen;
 }
 .wrap{
@@ -56,8 +55,8 @@ body::after{
   scroll-padding-bottom:calc(165px + env(safe-area-inset-bottom));
 }
 .card:last-of-type{margin-bottom:calc(8px + env(safe-area-inset-bottom))}
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;padding:2px 2px 4px;position:relative}
-h1{font-size:18px;margin:0}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;padding:4px 4px 6px;position:relative;border-radius:14px;background:linear-gradient(90deg,rgba(2,12,16,.18),rgba(2,12,16,.04),rgba(2,12,16,.18));backdrop-filter:blur(1.5px)}
+h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 .sub{font-size:11px;color:var(--muted)}
 .versionInfo{display:flex;align-items:center;gap:7px;flex:0 0 auto}
 .aboutInfoBtn{
@@ -121,7 +120,7 @@ h1{font-size:18px;margin:0}
   .aboutTop{padding:16px 48px 14px 14px}.aboutDismiss{top:12px;right:12px;width:36px;height:36px;min-width:36px;font-size:15px}.aboutTitle{font-size:20px}.aboutHero{font-size:16px;letter-spacing:-.2px;white-space:nowrap}.aboutIntro{font-size:10.8px;line-height:1.48}.aboutBody{padding:9px 9px 9px}.aboutCard{padding:11px 12px 10px 13px}.aboutCardTitle{font-size:13px}.aboutCardText{font-size:10.4px;line-height:1.42}.aboutStatement{padding:12px 12px 12px}.aboutStatementLead{font-size:15.5px}.aboutStatementMain{font-size:11.3px}.aboutAudience{font-size:10.8px;line-height:1.4}.aboutClose{min-height:43px;font-size:13.5px}
 }
 .tagline{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.2px}
-.card{background:linear-gradient(180deg,rgba(13,25,39,.96) 0%,rgba(9,18,28,.98) 100%);border:1px solid rgba(86,157,111,.28);border-radius:16px;padding:7px;margin-bottom:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 10px 24px rgba(0,0,0,.16)}
+.card{background:linear-gradient(180deg,rgba(13,25,39,.94) 0%,rgba(9,18,28,.97) 100%);border:1px solid rgba(78,178,103,.30);border-radius:16px;padding:7px;margin-bottom:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 10px 24px rgba(0,0,0,.16)}
 .matchMetaRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center}
 .matchMetaRow input,.regRow input{
   width:100%;font-size:14px;padding:7px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
@@ -1143,7 +1142,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.38</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.39</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1272,7 +1271,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.38</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.39</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
