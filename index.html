@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.40</title>
+<title>足球場邊記錄器 v3.41</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1112,7 +1112,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.40</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.41</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1241,7 +1241,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.40</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.41</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -3920,16 +3920,22 @@ function advanceGuidedSetup(from){
   if(from==='opp'){
     const el=byId('oppTeam');
     const raw=String(el?.value||'').trim();
+    // 對手為選填：空白時直接視為略過，前往場地，不再鎖住焦點。
     if(!raw){
-      guidedSetupStep='opp';
-      focusMatchRequiredField('oppTeam');
-      return false;
+      saveState();
+      byId('oppTeamBox').classList.remove('editing');
+      updateTeamNameDisplays();
+      guidedSetupStep='venue';
+      setTimeout(()=>byId('venue').focus(),30);
+      return true;
     }
     const value=validateTextField('oppTeam','對手隊伍名稱',false,15);
     if(value===null){
-      guidedSetupStep='opp';
-      focusMatchRequiredField('oppTeam');
-      return false;
+      guidedSetupStep='venue';
+      byId('oppTeamBox').classList.remove('editing');
+      updateTeamNameDisplays();
+      setTimeout(()=>byId('venue').focus(),30);
+      return true;
     }
     saveState();
     byId('oppTeamBox').classList.remove('editing');
@@ -3952,20 +3958,7 @@ function advanceGuidedSetup(from){
     if(value) rememberVenueIfEligible(value);
     guidedSetupStep=null;
 
-    // 若場地已填，仍回頭檢查我方／對手是否缺漏；但不要因為場地本身空白
-    // 再把焦點鎖回場地，讓使用者可以正常關閉鍵盤。
-    const requiredBeforeVenue=[
-      {id:'ourTeam',step:'our'},
-      {id:'oppTeam',step:'opp'}
-    ];
-    for(const field of requiredBeforeVenue){
-      const el=byId(field.id);
-      if(!String(el?.value||'').trim()){
-        guidedSetupStep=field.step;
-        focusMatchRequiredField(field.id);
-        return true;
-      }
-    }
+    // 對手與場地皆為選填；完成場地後直接結束引導，不回頭強迫補對手。
     byId('venue').blur();
     return true;
   }
@@ -4043,6 +4036,10 @@ byId('oppTeam').addEventListener('blur', ()=>{
 });
 
 byId('venue').addEventListener('focus', ()=>{
+  // 使用者主動點場地，代表可略過選填的對手欄位。
+  if(!state.started) guidedSetupStep='venue';
+  byId('oppTeamBox').classList.remove('editing');
+  updateTeamNameDisplays();
   byId('venue').classList.add('guidedInput');
 });
 byId('venue').addEventListener('blur', ()=>{
@@ -4062,17 +4059,8 @@ byId('venue').addEventListener('blur', ()=>{
     rememberVenueIfEligible(value);
     saveState();
 
-    // 只有「場地真的填完」時，才回頭檢查我方／對手是否缺漏。
-    // 場地本身空白時不自動重新聚焦，避免使用者無法收起鍵盤。
-    setTimeout(()=>{
-      if(!byId('ourTeam').value.trim()){
-        guidedSetupStep='our';
-        focusMatchRequiredField('ourTeam');
-      }else if(!byId('oppTeam').value.trim()){
-        guidedSetupStep='opp';
-        focusMatchRequiredField('oppTeam');
-      }
-    },80);
+    // 場地完成後不回頭強制補對手；對手為選填。
+    guidedSetupStep=null;
   }else{
     saveState();
   }
