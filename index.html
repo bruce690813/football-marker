@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.43</title>
+<title>足球場邊記錄器 v3.44</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -95,6 +95,19 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
   width:100%;font-size:14px;padding:7px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
 #venue{min-width:0}
+.competitionRow{margin-top:6px}
+.competitionRow input{
+  width:100%;min-height:34px;padding:6px 11px;border-radius:10px;
+  border:1px solid rgba(71,96,126,.72);background:rgba(9,18,32,.82);
+  color:#eef4ff;font-size:12.5px;font-weight:760;outline:none;
+  transition:border-color .16s ease,box-shadow .16s ease,background .16s ease
+}
+.competitionRow input::placeholder{color:#74849a;font-weight:700}
+.competitionRow input:focus{
+  border-color:rgba(56,189,248,.82);
+  box-shadow:0 0 0 2px rgba(56,189,248,.16);
+  background:#0b1625
+}
 .keeperQuickBtn{
   min-width:78px;
   min-height:38px;
@@ -1112,7 +1125,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.43</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.44</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1122,6 +1135,9 @@ button:disabled:active{transform:none!important}
         <span aria-hidden="true">🧤</span><span id="keeperQuickText">GK</span>
       </button>
       <button class="new" onclick="newMatch()">＋ 新比賽</button>
+    </div>
+    <div class="competitionRow">
+      <input id="competition" placeholder="🏆 賽事名稱｜例如：新北市聯賽" maxlength="20" enterkeyhint="done" autocomplete="off" aria-label="賽事名稱">
     </div>
 
     <div class="broadcastScoreboard">
@@ -1241,7 +1257,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.43</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.44</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -1529,6 +1545,7 @@ button:disabled:active{transform:none!important}
         <div class="reportTeam" id="reportOppTeam">對手</div>
       </div>
       <div class="reportMeta">
+        <span id="reportCompetition" style="display:none">🏆 賽事</span>
         <span id="reportVenue">📍 未填場地</span>
         <span id="reportDuration">⏱ 00:00</span>
       </div>
@@ -1591,7 +1608,7 @@ let pendingFinishEnd=null, pendingFinishElapsed=null;
 let timeExpanded=false;
 
 let state={
-  ourTeam:'忠義', oppTeam:'', venue:'',
+  ourTeam:'忠義', oppTeam:'', venue:'', competition:'',
   started:false, finished:false,
   startEpoch:null, endEpoch:null, finalElapsed:0,
   regulationMinutes:null,
@@ -1716,6 +1733,9 @@ function validateMatchTextFields(){
   const v=validateTextField('venue','場地',false,15);
   if(v===null){ focusMatchRequiredField('venue'); return false; }
 
+  const competition=validateTextField('competition','賽事名稱',false,20);
+  if(competition===null){ byId('competition').focus(); return false; }
+
   return true;
 }
 
@@ -1744,6 +1764,7 @@ function saveState(){
   state.ourTeam=byId('ourTeam').value.trim();
   state.oppTeam=byId('oppTeam').value.trim();
   state.venue=byId('venue').value.trim();
+  state.competition=byId('competition').value.trim();
   localStorage.setItem(KEY, JSON.stringify(state));
   if(state.ourTeam && !/[<>\r\n]/.test(state.ourTeam)){
     localStorage.setItem(LAST_OUR_TEAM_KEY, state.ourTeam);
@@ -1769,6 +1790,7 @@ function loadState(){
   if(!('halftimeStartEpoch' in state)) state.halftimeStartEpoch=null;
   if(!('halftimeEndEpoch' in state)) state.halftimeEndEpoch=null;
   if(!('halftimeDuration' in state)) state.halftimeDuration=0;
+  if(!('competition' in state)) state.competition='';
   if(Array.isArray(state.markers)){
     state.markers.forEach(m=>{
       if(!('assist_number' in m)) m.assist_number='';
@@ -1801,6 +1823,7 @@ function loadState(){
   byId('ourTeam').value=state.ourTeam||'';
   byId('oppTeam').value=state.oppTeam||'';
   byId('venue').value=state.venue||'';
+  byId('competition').value=state.competition||'';
   syncRegulationInputsFromState();
   buildNumberGrid();
   render();
@@ -2493,6 +2516,7 @@ function newMatch(){
 
   const rememberedOurTeam=(byId('ourTeam').value.trim() || localStorage.getItem(LAST_OUR_TEAM_KEY) || '忠義').trim();
   const currentVenue=byId('venue').value.trim();
+  const currentCompetition=byId('competition').value.trim();
   const currentVenueChineseCount=(currentVenue.match(/[\u3400-\u4DBF\u4E00-\u9FFF]/g)||[]).length;
   const currentVenueEligible=
     currentVenue.length>=3 &&
@@ -2506,7 +2530,7 @@ function newMatch(){
   ).trim();
 
   state={
-    ourTeam:rememberedOurTeam, oppTeam:'', venue:rememberedVenue,
+    ourTeam:rememberedOurTeam, oppTeam:'', venue:rememberedVenue, competition:currentCompetition,
     started:false, finished:false, startEpoch:null, endEpoch:null, finalElapsed:0,
     regulationMinutes:null, ourScore:0, oppScore:0, markers:[],
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
@@ -2521,6 +2545,7 @@ function newMatch(){
   byId('ourTeamBox')?.classList.remove('editing');
   byId('oppTeamBox')?.classList.remove('editing');
   byId('venue').value=rememberedVenue;
+  byId('competition').value=currentCompetition;
   syncRegulationInputsFromState();
   timeExpanded=false;
   saveState();
@@ -3315,6 +3340,13 @@ function buildReportDOM(){
   const reportStartEpoch=matchStartEpoch();
   const reportEndEpoch=matchEndEpoch();
   const crossedDay=isCrossDay(reportStartEpoch,reportEndEpoch);
+  const reportCompetition=byId('reportCompetition');
+  if(state.competition){
+    reportCompetition.textContent=`🏆 ${state.competition}`;
+    reportCompetition.style.display='';
+  }else{
+    reportCompetition.style.display='none';
+  }
   byId('reportVenue').textContent=`📍 ${state.venue||'未填場地'}`;
   byId('reportDuration').textContent=`⏱ ${fmtDurationReadable(totalElapsed)}`;
   byId('reportStart').textContent=fmtReportBoundary(reportStartEpoch,reportStartEpoch,reportEndEpoch);
@@ -3379,6 +3411,7 @@ function reportLines(){
   const lines=[];
   lines.push({type:'title', text:'足球比賽摘要'});
   lines.push({type:'score', left:state.ourTeam||'我方', score:`${state.ourScore} : ${state.oppScore}`, right:state.oppTeam||'對手', status: state.finished ? '比賽結束' : (state.started ? (state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?'上半場結束':'尚未開始'))});
+  if(state.competition) lines.push({type:'meta', text:`賽事：${state.competition}`});
   lines.push({type:'meta', text:`場地：${state.venue||'未填場地'}`});
   const pngTotal=totalMatchElapsed();
   const pngStart=matchStartEpoch();
@@ -3784,7 +3817,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;backg
 h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;text-align:center;font-weight:800}
 .meta{color:#aeb9c5;text-align:center;margin-top:10px}h2{font-size:16px;color:#38bdf8}ul{list-style:none;padding:0;margin:0}li{padding:10px 0;border-bottom:1px solid #334155}li span{display:inline-block;width:90px;color:#facc15}.note{font-size:12px;color:#64748b;text-align:center}
 </style></head><body><div class="wrap">
-<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">📍 ${escapeHtml(state.venue||'未填場地')}　⏱ ${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</div></div>
+<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">${state.competition?`🏆 ${escapeHtml(state.competition)}　`:''}📍 ${escapeHtml(state.venue||'未填場地')}　⏱ ${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}${totalMatchElapsed()>=3600?`　<span class="note">總計 ${fmtMMSS(totalMatchElapsed())}</span>`:''}</p>${diff}</div>
 <div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
@@ -3808,10 +3841,10 @@ function diffSecondsExport(){
 }
 function csvText(){
   saveState();
-  const rows=[['our_team','opponent_team','venue','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','assist_number','score_after','recorded_at']];
+  const rows=[['our_team','opponent_team','venue','competition','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','assist_number','score_after','recorded_at']];
   if(state.markers.length===0){
     rows.push([
-      state.ourTeam, state.oppTeam, state.venue,
+      state.ourTeam, state.oppTeam, state.venue, state.competition,
       matchStartEpoch()?fmtDateTime(matchStartEpoch()):'',
       matchEndEpoch()?fmtDateTime(matchEndEpoch()):'',
       Math.round(state.finished?state.finalElapsed:totalMatchElapsed()),
@@ -3823,7 +3856,7 @@ function csvText(){
   }else{
     state.markers.forEach(m=>{
       rows.push([
-        state.ourTeam, state.oppTeam, state.venue,
+        state.ourTeam, state.oppTeam, state.venue, state.competition,
         state.startEpoch?fmtDateTime(state.startEpoch):'',
         state.endEpoch?fmtDateTime(state.endEpoch):'',
         Math.round(state.finished?state.finalElapsed:0),
@@ -3850,7 +3883,7 @@ function csvText(){
         const k=state.penalty[side]?.[i];
         if(!k || (!k.result && !k.number)) return;
         rows.push([
-          state.ourTeam,state.oppTeam,state.venue,
+          state.ourTeam,state.oppTeam,state.venue,state.competition,
           matchStartEpoch()?fmtDateTime(matchStartEpoch()):'',
           matchEndEpoch()?fmtDateTime(matchEndEpoch()):'',
           Math.round(state.finished?state.finalElapsed:totalMatchElapsed()),
@@ -3888,7 +3921,7 @@ async function shareCSV(){
     try{
       await navigator.share({
         title:'足球精彩標記 CSV',
-        text:`${state.ourTeam||'我方'} ${state.ourScore}:${state.oppScore} ${state.oppTeam||'對手'}｜${state.venue||'未填場地'}`,
+        text:`${state.ourTeam||'我方'} ${state.ourScore}:${state.oppScore} ${state.oppTeam||'對手'}${state.competition?`｜${state.competition}`:''}｜${state.venue||'未填場地'}`,
         files:[file]
       });
       return;
@@ -3905,7 +3938,7 @@ async function shareCSV(){
   byId(id).addEventListener('click',e=>e.stopPropagation());
 });
 
-['ourTeam','oppTeam','venue'].forEach(id=>{
+['ourTeam','oppTeam','venue','competition'].forEach(id=>{
   byId(id).addEventListener('input', ()=>{
     if(id==='ourTeam' && byId('ourTeam').value.trim()){
       byId('ourTeam').classList.remove('requiredError');
@@ -4059,6 +4092,25 @@ byId('oppTeam').addEventListener('blur', ()=>{
   if(value){ validateTextField('oppTeam','對手隊伍名稱',false,15); }
   byId('oppTeamBox').classList.remove('editing');
   updateTeamNameDisplays();
+});
+
+byId('competition').addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const value=validateTextField('competition','賽事名稱',false,20);
+    if(value!==null){
+      state.competition=value;
+      saveState();
+      byId('competition').blur();
+    }
+  }
+});
+byId('competition').addEventListener('blur', ()=>{
+  const value=validateTextField('competition','賽事名稱',false,20);
+  if(value!==null){
+    state.competition=value;
+    saveState();
+  }
 });
 
 byId('venue').addEventListener('focus', ()=>{
