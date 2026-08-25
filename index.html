@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.22</title>
+<title>足球場邊記錄器 v3.27</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -40,18 +40,18 @@ h1{font-size:18px;margin:0}
 .aboutInfoBtn .icon{font-size:14px;line-height:1;opacity:.96}
 .aboutInfoBtn .label{font-size:12px;font-weight:900;line-height:1}
 .aboutInfoBtn:active{transform:scale(.96)}
-.aboutModal{
-  width:min(470px,calc(100vw - 16px));
-  height:min(calc(var(--vv-height,100dvh) - 12px),780px);
-  max-height:calc(var(--vv-height,100dvh) - 12px);
+.modal.aboutModal{
+  width:min(470px,calc(100vw - 20px));
+  height:min(calc(var(--vv-height,100dvh) - 16px),780px);
+  max-height:calc(var(--vv-height,100dvh) - 16px);
   padding:0;overflow:hidden;display:flex;flex-direction:column;
-  background:#050d16;color:#fff;
+  background:#06111c;color:#fff;
   border:1px solid rgba(255,255,255,.08);border-radius:30px;
-  box-shadow:0 30px 90px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.025) inset;
+  box-shadow:0 30px 90px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.03) inset;
 }
 .aboutTop{
   position:relative;flex:0 0 auto;overflow:hidden;
-  padding:22px 58px 18px 18px;
+  padding:20px 54px 16px 16px;
   border-bottom:1px solid rgba(255,255,255,.08);
   background:radial-gradient(circle at 84% 12%,rgba(56,189,248,.14),transparent 28%),linear-gradient(145deg,#123b5b 0%,#0b1e31 38%,#07111c 100%);
 }
@@ -59,14 +59,13 @@ h1{font-size:18px;margin:0}
 .aboutTop::after{content:'';position:absolute;left:18px;right:18px;bottom:0;height:2px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(125,211,252,.62) 28%,rgba(255,255,255,.18) 50%,rgba(125,211,252,.62) 72%,rgba(255,255,255,0));opacity:.78}
 .aboutDismiss{position:absolute;top:14px;right:14px;width:40px;height:40px;min-width:40px;padding:0;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#f8fbff;font-size:16px;font-weight:900;line-height:1;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
 .aboutDismiss:active{transform:scale(.96)}
-.aboutEyebrow{font-size:10px;font-weight:950;letter-spacing:3px;color:#8ddcff;text-transform:uppercase;margin-bottom:8px}
+.aboutMetaRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.aboutEyebrow{font-size:10px;font-weight:950;letter-spacing:3px;color:#8ddcff;text-transform:uppercase;margin-bottom:0}
 .aboutTitle{font-size:25px;font-weight:1000;line-height:1.08;letter-spacing:-.6px;color:#ffffff;text-shadow:0 4px 18px rgba(0,0,0,.32)}
-.aboutVersion{display:inline-flex;margin-top:9px;padding:4px 10px;border-radius:999px;font-size:10px;color:#f8fbff;font-weight:950;background:rgba(8,19,31,.68);border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
-.aboutHero{margin-top:14px;font-size:21px;line-height:1.18;color:#fff;font-weight:1000;letter-spacing:-.32px;max-width:92%}
-.aboutIntro{margin-top:7px;font-size:11.6px;line-height:1.58;color:#d7e6f3;font-weight:720;max-width:96%}
-.aboutPills{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
-.aboutPill{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:rgba(5,13,22,.72);border:1px solid rgba(125,211,252,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.04);font-size:10.2px;font-weight:950;color:#f3fbff;letter-spacing:.32px;text-transform:uppercase}
-.aboutBody{flex:1;min-height:0;padding:12px 12px 12px;overflow:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(180deg,#06111c 0%,#040b14 100%)}
+.aboutVersion{display:inline-flex;margin-top:0;padding:4px 10px;border-radius:999px;font-size:10px;color:#f8fbff;font-weight:950;background:rgba(8,19,31,.68);border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.aboutHero{margin-top:12px;font-size:19px;line-height:1.16;color:#fff;font-weight:1000;letter-spacing:-.28px;max-width:100%;white-space:nowrap}
+.aboutIntro{margin-top:8px;font-size:11.6px;line-height:1.58;color:#d7e6f3;font-weight:720;max-width:98%}
+.aboutBody{flex:1;min-height:0;padding:10px 10px 10px;overflow:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(180deg,#06111c 0%,#040b14 100%)}
 .aboutCards{display:grid;gap:10px}
 .aboutCard{position:relative;padding:13px 14px 12px 15px;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(13,24,39,.98) 0%,rgba(8,16,28,1) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 10px 24px rgba(0,0,0,.22)}
 .aboutCard::after{content:'';position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.12),rgba(255,255,255,0))}
@@ -75,7 +74,7 @@ h1{font-size:18px;margin:0}
 .aboutCard:nth-child(3)::before{background:#f59e0b;box-shadow:0 0 12px rgba(245,158,11,.36)}
 .aboutCardTitle{font-size:14.2px;font-weight:1000;color:#ffffff;margin-bottom:5px;line-height:1.18;letter-spacing:-.15px}
 .aboutCardText{font-size:11px;line-height:1.5;color:#d6e1ec;font-weight:720}
-.aboutStatement{margin-top:11px;padding:15px 15px 15px;border-radius:20px;background:linear-gradient(135deg,#0d4560 0%,#0b3046 42%,#081923 100%);border:1px solid rgba(103,232,249,.26);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 14px 28px rgba(0,0,0,.18);text-align:left}
+.aboutStatement{margin-top:11px;padding:14px 14px 14px;border-radius:20px;background:linear-gradient(135deg,#0d4560 0%,#0b3046 42%,#081923 100%);border:1px solid rgba(103,232,249,.26);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 14px 28px rgba(0,0,0,.18);text-align:left}
 .aboutStatementLead{font-size:18px;line-height:1.12;font-weight:1000;color:#ffffff;letter-spacing:-.22px}
 .aboutStatementMain{margin-top:6px;font-size:12.2px;line-height:1.5;font-weight:840;color:#eefbff}
 .aboutStatementMain .accent{color:#67e8f9}
@@ -85,8 +84,8 @@ h1{font-size:18px;margin:0}
 .aboutClose{width:100%;margin-top:0;min-height:46px;background:linear-gradient(180deg,#ffffff 0%,#e5edf5 100%);color:#08111c;border:1px solid rgba(255,255,255,.80);box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 10px 22px rgba(0,0,0,.24);font-size:14px;font-weight:1000;letter-spacing:.38px}
 .aboutClose:active{transform:translateY(1px)}
 @media (max-width:390px){
-  .aboutModal{width:min(470px,calc(100vw - 12px));height:min(calc(var(--vv-height,100dvh) - 8px),760px)}
-  .aboutTop{padding:18px 50px 14px 15px}.aboutDismiss{top:12px;right:12px;width:36px;height:36px;min-width:36px;font-size:15px}.aboutTitle{font-size:21px}.aboutHero{font-size:17px}.aboutIntro{font-size:10.8px;line-height:1.48}.aboutPills{gap:5px;margin-top:9px}.aboutPill{font-size:9.6px;padding:4px 8px}.aboutBody{padding:10px 10px 10px}.aboutCard{padding:11px 12px 10px 13px}.aboutCardTitle{font-size:13px}.aboutCardText{font-size:10.4px;line-height:1.42}.aboutStatement{padding:12px 12px 12px}.aboutStatementLead{font-size:15.5px}.aboutStatementMain{font-size:11.3px}.aboutAudience{font-size:10.8px;line-height:1.4}.aboutClose{min-height:43px;font-size:13.5px}
+  .modal.aboutModal{width:min(470px,calc(100vw - 12px));height:min(calc(var(--vv-height,100dvh) - 10px),760px)}
+  .aboutTop{padding:16px 48px 14px 14px}.aboutDismiss{top:12px;right:12px;width:36px;height:36px;min-width:36px;font-size:15px}.aboutTitle{font-size:20px}.aboutHero{font-size:16px;letter-spacing:-.2px;white-space:nowrap}.aboutIntro{font-size:10.8px;line-height:1.48}.aboutBody{padding:9px 9px 9px}.aboutCard{padding:11px 12px 10px 13px}.aboutCardTitle{font-size:13px}.aboutCardText{font-size:10.4px;line-height:1.42}.aboutStatement{padding:12px 12px 12px}.aboutStatementLead{font-size:15.5px}.aboutStatementMain{font-size:11.3px}.aboutAudience{font-size:10.8px;line-height:1.4}.aboutClose{min-height:43px;font-size:13.5px}
 }
 .tagline{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.2px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:7px;margin-bottom:4px}
@@ -390,6 +389,10 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 }
 .teamNameBox.editing .teamNameDisplay{display:none}
 .teamNameBox.editing .teamNameEditor{display:block}
+.guidedInput{
+  outline:2px solid rgba(56,189,248,.72)!important;
+  box-shadow:0 0 0 4px rgba(56,189,248,.12)!important;
+}
 .teamNameEditor::placeholder{color:#8997a6;opacity:.8}
 #ourTeam.requiredError{
   border-bottom-color:#ff6b6b;
@@ -714,7 +717,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .item{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px}
 .time{color:#facc15;font-variant-numeric:tabular-nums}
 .del{background:transparent;color:#ff7b72;padding:2px 4px;font-size:13px}
-.numberTag{color:#7ee787;font-weight:800;margin-left:5px}.scoreSnap{color:#9caac0;font-size:11px;margin-left:5px}
+.numberTag{color:#7ee787;font-weight:800;margin-left:5px}.scoreSnap{color:#7f8da3;font-size:13px;margin-left:auto;padding-left:18px;flex:0 0 auto;text-align:right;white-space:nowrap}
 .note{text-align:center;color:var(--muted);font-size:10px;margin-top:6px}
 
 .modalBack{
@@ -758,15 +761,17 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .logModalTitle{font-size:18px;font-weight:950;letter-spacing:.2px}
 .logModalCount{font-size:15px;color:#aab9c9;font-weight:800}.logModalCount span{font-size:1.15em;color:#fff;font-weight:950}
 .logModalBody{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 14px 8px}
-.logModalBody .item{grid-template-columns:52px 58px minmax(0,1fr) 40px 28px;font-size:15px;line-height:1.45;padding:12px 0;align-items:center;column-gap:6px}
-.logModalBody .item b{font-size:15px}
-.logModalBody .time{font-size:17px;text-align:left;color:#facc15;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.15px}
+.logModalBody .item{grid-template-columns:46px 72px minmax(0,1fr) 40px 28px;font-size:16px;line-height:1.5;padding:12px 0;align-items:center;column-gap:4px}
+.logModalBody .item b{font-size:16px}
+.logModalBody .time{font-size:18px;text-align:left;color:#facc15;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.15px}
 .logModalBody .log{max-height:none!important;height:auto;overflow:visible}
-.logSeq{color:#7dd3fc;font-weight:950;font-size:14px;white-space:nowrap;text-align:left}
+.logSeq{color:#7dd3fc;font-weight:950;font-size:14px;white-space:nowrap;text-align:left;letter-spacing:-.2px}
+.logDetailLine{display:flex;align-items:center;gap:4px;min-width:0}
+.logMainText{min-width:0;display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
 .logModalActions{flex:0 0 54px;padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
 .logModalActions button{width:100%;background:#475569;min-height:42px;padding:8px}
 
-.logModalBody .item{grid-template-columns:52px 58px minmax(0,1fr) 36px 26px}
+.logModalBody .item{grid-template-columns:46px 72px minmax(0,1fr) 36px 26px}
 .editMarkerBtn{
   width:32px;height:32px;min-width:32px;padding:0;
   display:inline-flex;align-items:center;justify-content:center;
@@ -1105,7 +1110,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.22</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.27</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1234,30 +1239,24 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutEyebrow">MATCHDAY TOOL</div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.27</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
-      <div class="aboutVersion">v3.22</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
-      <div class="aboutPills">
-        <span class="aboutPill">⚡ Instant Tag</span>
-        <span class="aboutPill">🎞 Match Recap</span>
-        <span class="aboutPill">🧾 Story Archive</span>
-      </div>
     </div>
     <div class="aboutBody">
       <div class="aboutCards">
         <div class="aboutCard">
-          <div class="aboutCardTitle">🎬 快速剪輯</div>
-          <div class="aboutCardText">進球、撲救、射門、防守與牌卡，當下按一下就能記下時間點；賽後不用重看整場影片，也能快速剪出重點。</div>
+          <div class="aboutCardTitle">🎬 一鍵標記重點</div>
+          <div class="aboutCardText">比賽當下快速記下進球、撲救、射門、防守與牌卡，重要片段不漏接。</div>
         </div>
         <div class="aboutCard">
-          <div class="aboutCardTitle">📊 留下比賽故事</div>
-          <div class="aboutCardText">比分、球員與事件同步記錄，賽後一鍵整理成摘要，讓比賽回顧、分享與留存一次完成。</div>
+          <div class="aboutCardTitle">📊 自動整理摘要</div>
+          <div class="aboutCardText">比分、球員與事件同步整合，賽後能更快回顧、分享，也方便後續剪輯。</div>
         </div>
         <div class="aboutCard">
-          <div class="aboutCardTitle">⏱ 比賽時間，有跡可循</div>
-          <div class="aboutCardText">保留開始、結束與比賽時間，讓賽事回顧、家長溝通與後續確認，都有清楚又可靠的依據。</div>
+          <div class="aboutCardTitle">⏱ 保留完整時間軸</div>
+          <div class="aboutCardText">開始、結束與比賽時間清楚留下，讓每一場比賽都有可追溯的紀錄依據。</div>
         </div>
       </div>
       <div class="aboutStatement">
@@ -2464,10 +2463,15 @@ function newMatch(){
   saveState();
   render();
 
-  // 新比賽建立後不自動聚焦任何輸入欄位，避免 iPhone 顯示藍色選取框。
-  if(document.activeElement && typeof document.activeElement.blur==='function'){
-    document.activeElement.blur();
-  }
+  // 新比賽輸入引導：我方 → 對手 → 場地。
+  // 直接聚焦我方隊名，讓 iPhone 鍵盤「下一步」可以一路完成基本資料。
+  setTimeout(()=>{
+    editTeamName('ourTeam');
+    const input=byId('ourTeam');
+    if(input){
+      try{ input.select(); }catch(e){}
+    }
+  },80);
 }
 
 function saveRegulation(){
@@ -2986,7 +2990,7 @@ function renderLogTo(container){
     row.innerHTML=`
       <div class="logSeq">第${i+1}筆</div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
-      <div>${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}<b>${eventLabel(m.event)}</b> ${team?'<span style="color:#91a0b6">· '+team+'</span>':''}${num}${assist}<span class="scoreSnap">${m.score_after||''}</span></div>
+      <div class="logDetailLine"><span class="logMainText">${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}${team||m.player_number?`${team?'<span style="color:#91a0b6">'+team+'</span>':''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${eventLabel(m.event)}</b>${assist}</span><span class="scoreSnap">${m.score_after||''}</span></div>
       <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${i+1}筆紀錄">✎</button>
       <button class="del" onclick="deleteMarker(${i}); renderLogModal();">✕</button>
     `;
@@ -3878,12 +3882,15 @@ byId('venue').addEventListener('keydown', e=>{
 
 byId('ourTeam').addEventListener('focus', ()=>{
   byId('ourTeamBox').classList.add('editing');
+  byId('ourTeam').classList.add('guidedInput');
 });
 byId('oppTeam').addEventListener('focus', ()=>{
   byId('oppTeamBox').classList.add('editing');
+  byId('oppTeam').classList.add('guidedInput');
 });
 
 byId('ourTeam').addEventListener('blur', ()=>{
+  byId('ourTeam').classList.remove('guidedInput');
   const value=byId('ourTeam').value.trim();
   if(value){
     validateTextField('ourTeam','我方隊伍名稱',true,15);
@@ -3892,6 +3899,7 @@ byId('ourTeam').addEventListener('blur', ()=>{
   updateTeamNameDisplays();
 });
 byId('oppTeam').addEventListener('blur', ()=>{
+  byId('oppTeam').classList.remove('guidedInput');
   const value=byId('oppTeam').value.trim();
   if(value){
     validateTextField('oppTeam','對手隊伍名稱',false,15);
@@ -3899,7 +3907,11 @@ byId('oppTeam').addEventListener('blur', ()=>{
   byId('oppTeamBox').classList.remove('editing');
   updateTeamNameDisplays();
 });
+byId('venue').addEventListener('focus', ()=>{
+  byId('venue').classList.add('guidedInput');
+});
 byId('venue').addEventListener('blur', ()=>{
+  byId('venue').classList.remove('guidedInput');
   if(byId('venue').value.trim()){
     validateTextField('venue','場地',false,15);
   }
@@ -3975,9 +3987,9 @@ tick();
   .logModalTop{padding:9px 12px}
   .logModalTitle{font-size:17px}
   .logModalBody{padding:6px 12px 8px}
-  .logModalBody .item{grid-template-columns:50px 56px minmax(0,1fr) 34px 24px;gap:5px;padding:10px 0;font-size:14px;line-height:1.45}
-  .logModalBody .item b{font-size:14px}
-  .logModalBody .time{font-size:15px}
+  .logModalBody .item{grid-template-columns:44px 68px minmax(0,1fr) 34px 24px;gap:4px;padding:10px 0;font-size:15px;line-height:1.48}
+  .logModalBody .item b{font-size:15px}
+  .logModalBody .time{font-size:16px}
   .logSeq{font-size:13px}
 }
 </style>
