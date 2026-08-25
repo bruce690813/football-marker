@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.45</title>
+<title>足球場邊記錄器 v3.46</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -94,16 +94,17 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 .matchMetaRow input,.regRow input{
   width:100%;font-size:14px;padding:7px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
-#venue{min-width:0}
-.competitionRow{margin-top:6px}
-.competitionRow input{
+#competition{min-width:0;font-size:15px;font-weight:800}
+#competition::placeholder{font-size:13.5px;font-weight:700;color:#74849a}
+.venueRow{margin-top:6px}
+.venueRow input{
   width:100%;min-height:34px;padding:6px 11px;border-radius:10px;
   border:1px solid rgba(71,96,126,.72);background:rgba(9,18,32,.82);
-  color:#eef4ff;font-size:16px;font-weight:800;text-align:left;outline:none;
+  color:#e5edf7;font-size:14px;font-weight:700;text-align:left;outline:none;
   transition:border-color .16s ease,box-shadow .16s ease,background .16s ease
 }
-.competitionRow input::placeholder{color:#74849a;font-size:14px;font-weight:700;text-align:left}
-.competitionRow input:focus{
+.venueRow input::placeholder{color:#74849a;font-size:13.5px;font-weight:700;text-align:left}
+.venueRow input:focus{
   border-color:rgba(56,189,248,.82);
   box-shadow:0 0 0 2px rgba(56,189,248,.16);
   background:#0b1625
@@ -1125,19 +1126,19 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.45</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.46</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
     <div class="matchMetaRow">
-      <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
+      <input id="competition" placeholder="🏆 賽事名稱" maxlength="20" enterkeyhint="done" autocomplete="off" aria-label="賽事名稱">
       <button id="keeperQuickBtn" class="keeperQuickBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
         <span aria-hidden="true">🧤</span><span id="keeperQuickText">GK</span>
       </button>
       <button class="new" onclick="newMatch()">＋ 新比賽</button>
     </div>
-    <div class="competitionRow">
-      <input id="competition" placeholder="🏆 賽事名稱｜例如：新北市聯賽" maxlength="20" enterkeyhint="done" autocomplete="off" aria-label="賽事名稱">
+    <div class="venueRow">
+      <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
     </div>
 
     <div class="broadcastScoreboard">
@@ -1257,7 +1258,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.45</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.46</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
