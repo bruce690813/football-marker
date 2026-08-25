@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.29</title>
+<title>足球場邊記錄器 v3.30</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1110,7 +1110,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.29</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.30</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1239,7 +1239,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.29</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.30</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
@@ -1665,13 +1665,15 @@ function validateIntegerField(id, label, min, max, allowBlank=false){
 }
 
 function validateMatchTextFields(){
+  // 開始比賽前，我方、對手、場地皆為必填。
+  // 依序檢查，若缺漏就直接聚焦到對應欄位。
   const our=validateTextField('ourTeam','我方隊伍名稱',true,15);
   if(our===null) return false;
 
-  const opp=validateTextField('oppTeam','對手隊伍名稱',false,15);
+  const opp=validateTextField('oppTeam','對手隊伍名稱',true,15);
   if(opp===null) return false;
 
-  const v=validateTextField('venue','場地',false,15);
+  const v=validateTextField('venue','場地',true,15);
   if(v===null) return false;
 
   return true;
@@ -2109,7 +2111,7 @@ function startMatch(){
     byId('ourTeam').focus();
     return;
   }
-  if(!validateTeamNameValue(oppName,'對手隊伍名稱',false)){
+  if(!validateTeamNameValue(oppName,'對手隊伍名稱',true)){
     byId('oppTeam').classList.add('inputError');
     byId('oppTeam').focus();
     return;
