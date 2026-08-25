@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.41</title>
+<title>足球場邊記錄器 v3.43</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -19,10 +19,9 @@ body{min-height:100dvh}
   z-index:1;
   max-width:720px;
   margin:auto;
-  /* iPhone Safari 的底部工具列不一定完整包含在 safe-area-inset-bottom。
-     額外保留可捲動空間，確保最下方輸出按鈕可以滑到工具列上方。 */
-  padding:5px 10px calc(165px + env(safe-area-inset-bottom));
-  scroll-padding-bottom:calc(165px + env(safe-area-inset-bottom));
+  /* iPhone Safari：只保留必要的 Safe Area，不再用大量固定空白拉長整頁。 */
+  padding:5px 10px calc(28px + env(safe-area-inset-bottom));
+  scroll-padding-bottom:calc(72px + env(safe-area-inset-bottom));
 }
 .card:last-of-type{margin-bottom:calc(8px + env(safe-area-inset-bottom))}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
@@ -273,11 +272,20 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   box-shadow:0 0 0 1px rgba(56,189,248,.10),0 0 6px rgba(56,189,248,.10),inset 0 1px 0 rgba(255,255,255,.06),0 6px 16px rgba(0,0,0,.20);
 }
 .broadcastStage.halftime{
-  background:linear-gradient(180deg,#5a4312 0%,#34260b 100%);
-  border-color:rgba(245,158,11,.44);
-  color:#fff8e5;
-  box-shadow:0 0 0 1px rgba(245,158,11,.10),0 0 12px rgba(245,158,11,.18),inset 0 1px 0 rgba(255,255,255,.07),0 6px 14px rgba(0,0,0,.15);
+  background:linear-gradient(180deg,#13283b 0%,#09131f 100%);
+  border-color:rgba(56,189,248,.52);
+  color:#f5fbff;
+  box-shadow:0 0 0 1px rgba(56,189,248,.10),0 0 7px rgba(56,189,248,.11),inset 0 1px 0 rgba(255,255,255,.06),0 6px 16px rgba(0,0,0,.20);
 }
+.broadcastStage.halftime .stageTimer{
+  display:block;
+  margin-left:0;
+  padding-left:0;
+  font-size:24px;
+  color:#dff6ff;
+}
+.broadcastStage.halftime .stageLabel{color:#ffffff}
+
 .broadcastStage.full{
   background:linear-gradient(180deg,#522029 0%,#321015 100%);
   border-color:rgba(251,113,133,.44);
@@ -336,7 +344,6 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .broadcastStage.live .liveTag{margin-right:auto}
 .broadcastStage.live .stageTimer{margin-left:auto}
 .broadcastStage.pre .stageTimer,
-.broadcastStage.halftime .stageTimer,
 .broadcastStage.full .stageTimer{display:none}
 .broadcastStage.pre .liveTag,
 .broadcastStage.halftime .liveTag,
@@ -701,14 +708,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .finalToolsCard{
   position:relative;
   z-index:20;
-  scroll-margin-bottom:calc(145px + env(safe-area-inset-bottom));
-}
-/* Safari / iPhone：額外的底部觸控安全區。只提供捲動空間，不固定按鈕，
-   避免與 Safari 自己的工具列互相覆蓋。 */
-.mobileBottomSafeSpacer{
-  height:calc(78px + env(safe-area-inset-bottom));
-  pointer-events:none;
-  visibility:hidden;
+  scroll-margin-bottom:calc(72px + env(safe-area-inset-bottom));
 }
 .finalTools button{position:relative;z-index:21;pointer-events:auto;touch-action:manipulation}
 .finalTools button:disabled{pointer-events:none}
@@ -1112,7 +1112,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.41</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.43</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1241,7 +1241,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.41</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.43</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -1341,8 +1341,6 @@ button:disabled:active{transform:none!important}
     <button class="cancel" type="button" onclick="cancelCard()">取消</button>
   </div>
 </div>
-<div class="mobileBottomSafeSpacer" aria-hidden="true"></div>
-
 <div class="modalBack" id="cardTeamModal">
   <div class="modal">
     <h2 id="cardTeamTitle">選擇球隊</h2>
@@ -1609,7 +1607,10 @@ let state={
   extraTime:false,
   extraTimeMinutes:null,
   penalty:null,
-  goalkeeperNumber:''
+  goalkeeperNumber:'',
+  halftimeStartEpoch:null,
+  halftimeEndEpoch:null,
+  halftimeDuration:0
 };
 
 function byId(id){ return document.getElementById(id); }
@@ -1765,6 +1766,9 @@ function loadState(){
   if(!('nextPeriodType' in state)) state.nextPeriodType=null;
   if(!('penalty' in state)) state.penalty=null;
   if(!('goalkeeperNumber' in state)) state.goalkeeperNumber='';
+  if(!('halftimeStartEpoch' in state)) state.halftimeStartEpoch=null;
+  if(!('halftimeEndEpoch' in state)) state.halftimeEndEpoch=null;
+  if(!('halftimeDuration' in state)) state.halftimeDuration=0;
   if(Array.isArray(state.markers)){
     state.markers.forEach(m=>{
       if(!('assist_number' in m)) m.assist_number='';
@@ -1870,6 +1874,11 @@ function totalMatchElapsed(){
   const completed=(state.periods||[]).reduce((sum,p)=>sum+(Number(p.duration)||0),0);
   return completed + ((state.started && state.startEpoch) ? elapsed() : 0);
 }
+function halftimeElapsed(){
+  if(!state.halftimeStartEpoch) return Number(state.halftimeDuration)||0;
+  const end=state.halftimeEndEpoch || Date.now();
+  return Math.max(0,(end-state.halftimeStartEpoch)/1000);
+}
 function matchStartEpoch(){
   if(state.periods?.length) return state.periods[0].startEpoch || state.startEpoch;
   return state.startEpoch;
@@ -1880,11 +1889,16 @@ function matchEndEpoch(){
 }
 function completedPeriodSummaryHTML(){
   if(!state.multiPeriod || !state.periods?.length) return '';
-  return state.periods.map(p=>{
+  const rows=[];
+  state.periods.forEach(p=>{
     const our=Math.max(0,(p.endOurScore??0)-(p.startOurScore??0));
     const opp=Math.max(0,(p.endOppScore??0)-(p.startOppScore??0));
-    return `<div class="periodSummaryRow"><div class="pname">${escapeHtml(p.label||periodLabel(p.number))}</div><div class="ptime">${fmtMMSS(p.duration||0)}</div><div class="pscore">${our}:${opp}</div></div>`;
-  }).join('');
+    rows.push(`<div class="periodSummaryRow"><div class="pname">${escapeHtml(p.label||periodLabel(p.number))}</div><div class="ptime">${fmtMMSS(p.duration||0)}</div><div class="pscore">${our}:${opp}</div></div>`);
+    if(Number(p.number)===1 && state.halftimeStartEpoch){
+      rows.push(`<div class="periodSummaryRow"><div class="pname">中場休息</div><div class="ptime">${fmtMMSS(halftimeElapsed())}</div><div class="pscore">—</div></div>`);
+    }
+  });
+  return rows.join('');
 }
 
 function scorerStats(){
@@ -1905,9 +1919,11 @@ function scorerStatsHTML(){
 }
 
 function tick(){
-  const sec=state.awaitingNextPeriod ? 0 : elapsed();
-  byId('timer').textContent=fmtMMSS(sec);
-  byId('fullDuration').textContent=fmtMMSS(sec);
+  const isHalftime=state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF';
+  const timerSec=isHalftime ? halftimeElapsed() : (state.awaitingNextPeriod ? 0 : elapsed());
+  const matchSec=state.awaitingNextPeriod ? 0 : elapsed();
+  byId('timer').textContent=fmtMMSS(timerSec);
+  byId('fullDuration').textContent=fmtMMSS(matchSec);
   requestAnimationFrame(tick);
 }
 
@@ -2162,6 +2178,10 @@ function startMatch(){
   rememberVenueIfEligible(state.venue);
 
   if(state.awaitingNextPeriod){
+    if(state.nextPeriodType==='SECOND_HALF' && state.halftimeStartEpoch){
+      state.halftimeEndEpoch=Date.now();
+      state.halftimeDuration=Math.max(0,(state.halftimeEndEpoch-state.halftimeStartEpoch)/1000);
+    }
     state.currentPeriod=state.nextPeriodType==='EXTRA_TIME' ? 3 : 2;
     state.awaitingNextPeriod=false;
     state.nextPeriodType=null;
@@ -2244,6 +2264,9 @@ function confirmFinishHalf(){
   state.finished=false;
   state.awaitingNextPeriod=true;
   state.nextPeriodType='SECOND_HALF';
+  state.halftimeStartEpoch=pendingFinishEnd || Date.now();
+  state.halftimeEndEpoch=null;
+  state.halftimeDuration=0;
   pendingFinishEnd=null;
   pendingFinishElapsed=null;
   byId('finishDecisionModal').classList.remove('open');
@@ -2489,7 +2512,7 @@ function newMatch(){
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
     periodStartOurScore:0, periodStartOppScore:0, periods:[],
     nextPeriodType:null, extraTime:false, extraTimeMinutes:null, penalty:null,
-    goalkeeperNumber:''
+    goalkeeperNumber:'', halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0
   };
 
   byId('ourTeam').value=rememberedOurTeam;
@@ -3141,7 +3164,7 @@ function render(){
     }else{
       const firstHalf=state.periods.find(p=>Number(p.number)===1);
       const firstHalfDuration=firstHalf ? (Number(firstHalf.duration)||0) : 0;
-      txt=`上半場結束｜${fmtMMSS(firstHalfDuration)}｜目前 ${state.ourScore}:${state.oppScore}`;
+      txt=`上半場結束｜中場休息 ${fmtMMSS(halftimeElapsed())}｜目前 ${state.ourScore}:${state.oppScore}`;
     }
     cls='idleStatus';
     cardCls='idleState';
@@ -3307,7 +3330,7 @@ function buildReportDOM(){
   byId('reportPenalty').innerHTML=state.penalty ? penaltySummaryHTML() : '';
   const badge=byId('reportStatusBadge');
   badge.className='reportStatusBadge ' + (state.finished ? 'finished' : (state.started ? 'running' : 'idle'));
-  badge.textContent=state.finished ? (state.penalty?.completed?`比賽結束｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:'比賽結束') : (state.penalty?.active?`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:(state.started ? (state.currentPeriod===3?'延長賽':state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?(state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':'上半場結束'):'尚未開始')));
+  badge.textContent=state.finished ? (state.penalty?.completed?`比賽結束｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:'比賽結束') : (state.penalty?.active?`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:(state.started ? (state.currentPeriod===3?'延長賽':state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?(state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':`中場 ${fmtMMSS(halftimeElapsed())}`):'尚未開始')));
   renderDiff(byId('reportDiff'));
   const goals=state.markers.filter(m=>m.event==='GOAL');
   const others=state.markers.filter(m=>m.event!=='GOAL');
@@ -3369,6 +3392,9 @@ function reportLines(){
       const psOur=Math.max(0,(p.endOurScore??0)-(p.startOurScore??0));
       const psOpp=Math.max(0,(p.endOppScore??0)-(p.startOppScore??0));
       lines.push({type:'meta', text:`${p.label||periodLabel(p.number)}：${psOur}:${psOpp}｜${fmtMMSS(p.duration||0)}`});
+      if(Number(p.number)===1 && state.halftimeStartEpoch){
+        lines.push({type:'meta', text:`中場休息：${fmtMMSS(halftimeElapsed())}`});
+      }
     });
   }
   if(state.penalty){
