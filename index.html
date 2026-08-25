@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.32</title>
+<title>足球場邊記錄器 v3.38</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -13,8 +13,41 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
-body{min-height:100dvh}
+body{
+  min-height:100dvh;
+  position:relative;
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(56,189,248,.08),transparent 20%),
+    linear-gradient(180deg,#040d16 0%,#081420 14%,#08150f 42%,#08150f 60%,#091522 100%);
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(2,8,14,.92) 0%,rgba(5,15,24,.42) 12%,rgba(4,12,20,.08) 24%,rgba(4,12,20,.08) 74%,rgba(2,8,14,.82) 100%),
+    radial-gradient(circle at 50% 28%,rgba(74,222,128,.18),rgba(74,222,128,0) 24%),
+    radial-gradient(circle at 50% 62%,rgba(34,197,94,.16),rgba(34,197,94,0) 34%),
+    repeating-linear-gradient(90deg,rgba(89,160,86,.09) 0 92px,rgba(39,92,47,.17) 92px 184px);
+  opacity:.96;
+}
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1800'%3E%3Crect x='40' y='210' width='920' height='1360' rx='24' fill='none' stroke='white' stroke-opacity='.28' stroke-width='4'/%3E%3Cline x1='40' y1='890' x2='960' y2='890' stroke='white' stroke-opacity='.22' stroke-width='4'/%3E%3Ccircle cx='500' cy='890' r='110' fill='none' stroke='white' stroke-opacity='.22' stroke-width='4'/%3E%3Ccircle cx='500' cy='890' r='4' fill='white' fill-opacity='.22'/%3E%3Crect x='40' y='546' width='164' height='688' fill='none' stroke='white' stroke-opacity='.18' stroke-width='4'/%3E%3Crect x='796' y='546' width='164' height='688' fill='none' stroke='white' stroke-opacity='.18' stroke-width='4'/%3E%3Crect x='40' y='676' width='76' height='428' fill='none' stroke='white' stroke-opacity='.15' stroke-width='4'/%3E%3Crect x='884' y='676' width='76' height='428' fill='none' stroke='white' stroke-opacity='.15' stroke-width='4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center top;
+  background-size:100% 100%;
+  opacity:.17;
+  mix-blend-mode:screen;
+}
 .wrap{
+  position:relative;
+  z-index:1;
   max-width:720px;
   margin:auto;
   /* iPhone Safari 的底部工具列不一定完整包含在 safe-area-inset-bottom。
@@ -23,7 +56,7 @@ body{min-height:100dvh}
   scroll-padding-bottom:calc(165px + env(safe-area-inset-bottom));
 }
 .card:last-of-type{margin-bottom:calc(8px + env(safe-area-inset-bottom))}
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;padding:2px 2px 4px;position:relative}
 h1{font-size:18px;margin:0}
 .sub{font-size:11px;color:var(--muted)}
 .versionInfo{display:flex;align-items:center;gap:7px;flex:0 0 auto}
@@ -53,7 +86,7 @@ h1{font-size:18px;margin:0}
   position:relative;flex:0 0 auto;overflow:hidden;
   padding:20px 54px 16px 16px;
   border-bottom:1px solid rgba(255,255,255,.08);
-  background:radial-gradient(circle at 84% 12%,rgba(56,189,248,.14),transparent 28%),linear-gradient(145deg,#123b5b 0%,#0b1e31 38%,#07111c 100%);
+  background:radial-gradient(circle at 84% 12%,rgba(56,189,248,.12),transparent 28%),radial-gradient(circle at 18% 10%,rgba(34,197,94,.12),transparent 26%),linear-gradient(145deg,#123b5b 0%,#0f2b2f 34%,#07111c 100%);
 }
 .aboutTop::before{content:'';position:absolute;inset:auto -12% 22px auto;width:220px;height:220px;border-radius:999px;background:radial-gradient(circle,rgba(56,189,248,.18),rgba(56,189,248,0) 68%);filter:blur(6px);pointer-events:none}
 .aboutTop::after{content:'';position:absolute;left:18px;right:18px;bottom:0;height:2px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(125,211,252,.62) 28%,rgba(255,255,255,.18) 50%,rgba(125,211,252,.62) 72%,rgba(255,255,255,0));opacity:.78}
@@ -88,7 +121,7 @@ h1{font-size:18px;margin:0}
   .aboutTop{padding:16px 48px 14px 14px}.aboutDismiss{top:12px;right:12px;width:36px;height:36px;min-width:36px;font-size:15px}.aboutTitle{font-size:20px}.aboutHero{font-size:16px;letter-spacing:-.2px;white-space:nowrap}.aboutIntro{font-size:10.8px;line-height:1.48}.aboutBody{padding:9px 9px 9px}.aboutCard{padding:11px 12px 10px 13px}.aboutCardTitle{font-size:13px}.aboutCardText{font-size:10.4px;line-height:1.42}.aboutStatement{padding:12px 12px 12px}.aboutStatementLead{font-size:15.5px}.aboutStatementMain{font-size:11.3px}.aboutAudience{font-size:10.8px;line-height:1.4}.aboutClose{min-height:43px;font-size:13.5px}
 }
 .tagline{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.2px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:7px;margin-bottom:4px}
+.card{background:linear-gradient(180deg,rgba(13,25,39,.96) 0%,rgba(9,18,28,.98) 100%);border:1px solid rgba(86,157,111,.28);border-radius:16px;padding:7px;margin-bottom:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 10px 24px rgba(0,0,0,.16)}
 .matchMetaRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center}
 .matchMetaRow input,.regRow input{
   width:100%;font-size:14px;padding:7px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
@@ -717,7 +750,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .item{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px}
 .time{color:#facc15;font-variant-numeric:tabular-nums}
 .del{background:transparent;color:#ff7b72;padding:2px 4px;font-size:13px}
-.numberTag{color:#7ee787;font-weight:800;margin-left:5px}.scoreSnap{color:#7f8da3;font-size:13px;margin-left:auto;padding-left:18px;flex:0 0 auto;text-align:right;white-space:nowrap}
+.numberTag{color:#7ee787;font-weight:800;margin-left:5px}.scoreSnap{color:#6f8196;font-size:15px;font-weight:800;text-align:right;white-space:nowrap;justify-self:end;min-width:42px;padding-right:4px}
 .note{text-align:center;color:var(--muted);font-size:10px;margin-top:6px}
 
 .modalBack{
@@ -761,7 +794,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .logModalTitle{font-size:18px;font-weight:950;letter-spacing:.2px}
 .logModalCount{font-size:15px;color:#aab9c9;font-weight:800}.logModalCount span{font-size:1.15em;color:#fff;font-weight:950}
 .logModalBody{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 14px 8px}
-.logModalBody .item{grid-template-columns:46px 72px minmax(0,1fr) 40px 28px;font-size:16px;line-height:1.5;padding:12px 0;align-items:center;column-gap:4px}
+.logModalBody .item{grid-template-columns:46px 72px minmax(0,1fr) 52px 36px 26px;font-size:16px;line-height:1.5;padding:12px 0;align-items:center;column-gap:6px}
 .logModalBody .item b{font-size:16px}
 .logModalBody .time{font-size:18px;text-align:left;color:#facc15;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.15px}
 .logModalBody .log{max-height:none!important;height:auto;overflow:visible}
@@ -771,7 +804,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .logModalActions{flex:0 0 54px;padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));border-top:1px solid #2b3744;background:#0f1720}
 .logModalActions button{width:100%;background:#475569;min-height:42px;padding:8px}
 
-.logModalBody .item{grid-template-columns:46px 72px minmax(0,1fr) 36px 26px}
+.logModalBody .item{grid-template-columns:46px 72px minmax(0,1fr) 52px 36px 26px}
 .editMarkerBtn{
   width:32px;height:32px;min-width:32px;padding:0;
   display:inline-flex;align-items:center;justify-content:center;
@@ -898,24 +931,24 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   letter-spacing:.3px;
 }
 .crossDayBadge.show{display:block}
-.reportEvent{gap:6px;padding:8px 9px;border-bottom:1px solid #25303b;font-size:11px;align-items:center;background:#0f1720}
+.reportEvent{gap:6px;padding:9px 9px;border-bottom:1px solid #25303b;font-size:12.5px;align-items:center;background:#0f1720}
 .reportEvent:last-child{border-bottom:0}
-.reportEvent .rtime{color:#facc15;font-variant-numeric:tabular-nums;font-weight:800}
-.reportEvent .rscore{color:#f1f5f9;text-align:right;font-variant-numeric:tabular-nums;font-weight:900}
+.reportEvent .rtime{color:#facc15;font-variant-numeric:tabular-nums;font-weight:900;font-size:12.5px}
+.reportEvent .rscore{color:#f1f5f9;text-align:right;font-variant-numeric:tabular-nums;font-weight:900;font-size:12.5px}
 .reportEmpty{color:#8997a6;font-size:12px;padding:10px 12px}
 .scorerStats{border:1px solid #2b3744;border-radius:12px;background:#111b26;padding:4px 10px 6px;margin-bottom:14px}
 .scorerRow{display:block;padding:8px 0;border-bottom:1px solid #25303b;font-size:13px}
 .scorerRow:last-child{border-bottom:0}
 .scorerName{font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .scorerBalls{letter-spacing:2px;font-size:15px;white-space:nowrap}
-.goalOrdinal{display:inline-block;color:#7dd3fc;font-size:10px;font-weight:950;white-space:nowrap;letter-spacing:.3px}
-.reportLabel{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-weight:700}
+.goalOrdinal{display:inline-block;color:#7dd3fc;font-size:11.5px;font-weight:950;white-space:nowrap;letter-spacing:.25px}
+.reportLabel{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.2px;font-weight:800}
 .reportGoalLine{display:contents}
 .reportTable{border:1px solid #314155;border-radius:12px;overflow:hidden;background:#0f1720;box-shadow:0 4px 12px rgba(0,0,0,.10),inset 0 0 0 1px rgba(255,255,255,.02)}
-.reportTableHead{gap:6px;padding:8px 9px;background:linear-gradient(180deg,#1b2d45 0%,#172435 100%);color:#bfdbfe;font-size:10px;font-weight:950;letter-spacing:.45px;border-bottom:1px solid #334155}
+.reportTableHead{gap:6px;padding:9px 9px;background:linear-gradient(180deg,#1b2d45 0%,#172435 100%);color:#bfdbfe;font-size:11px;font-weight:950;letter-spacing:.35px;border-bottom:1px solid #334155}
 .reportTableHead div:last-child{text-align:right}
 .reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{display:grid;grid-template-columns:108px 52px minmax(0,1fr) 44px;gap:6px}
-.reportTable.others .reportTableHead,.reportTable.others .reportEvent{display:grid;grid-template-columns:108px 66px minmax(0,1fr) 44px;gap:6px}
+.reportTable.others .reportTableHead,.reportTable.others .reportEvent{display:grid;grid-template-columns:108px minmax(0,1fr) 66px 44px;gap:6px}
 .reportTableBody .reportEvent:nth-child(even){background:#111c29}
 .reportTableBody .reportEvent:nth-child(odd){background:#0d1620}
 
@@ -953,12 +986,12 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   .reportScore{font-size:46px}
   .reportBody{padding:8px 10px 6px}
   .reportSectionTitle{margin:2px 0 6px}
-  .reportTableHead{padding:7px 8px;font-size:9.6px}
-  .reportEvent{padding:7px 8px;font-size:10.5px}
+  .reportTableHead{padding:8px 8px;font-size:10.5px}
+  .reportEvent{padding:8px 8px;font-size:11.5px}
   .reportTable.goals .reportTableHead,.reportTable.goals .reportEvent{grid-template-columns:96px 46px minmax(0,1fr) 40px;gap:5px}
-  .reportTable.others .reportTableHead,.reportTable.others .reportEvent{grid-template-columns:96px 60px minmax(0,1fr) 40px;gap:5px}
-  .reportPeriodTime,.reportType,.goalOrdinal{font-size:9.4px}
-  .reportLabel{font-size:10.2px}
+  .reportTable.others .reportTableHead,.reportTable.others .reportEvent{grid-template-columns:96px minmax(0,1fr) 58px 40px;gap:5px}
+  .reportPeriodTime,.reportType,.goalOrdinal{font-size:10.4px}
+  .reportLabel{font-size:11.2px}
   .reportActions{padding:9px 9px 11px;gap:6px}
   .reportActions button{font-size:11.5px;padding:11px 4px}
 }
@@ -1110,7 +1143,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.32</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.38</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1239,10 +1272,10 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.32</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.38</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
-      <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
+      <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
     </div>
     <div class="aboutBody">
       <div class="aboutCards">
@@ -1259,11 +1292,6 @@ button:disabled:active{transform:none!important}
           <div class="aboutCardText">開始、結束與比賽時間清楚留下，讓每一場比賽都有可追溯的紀錄依據。</div>
         </div>
       </div>
-      <div class="aboutStatement">
-        <div class="aboutStatementLead">不只是計分，而是更完整的場邊比賽工作流。</div>
-        <div class="aboutStatementMain">把<span class="accent">現場看球</span>、<span class="accent">賽後剪輯</span>、<span class="accent">比賽留存</span>，整合成更俐落、更有節奏感的場邊作業流程。</div>
-      </div>
-      <div class="aboutAudience"><strong>為教練、家長與球隊打造</strong>的足球場邊記錄工具。</div>
       <div class="aboutFooter">
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始使用這個工具</button>
       </div>
@@ -1718,7 +1746,8 @@ function validateMatchTextFields(){
   for(const field of requiredFields){
     const el=byId(field.id);
     if(!String(el?.value||'').trim()){
-      alert(`請先輸入${field.label}`);
+      // 缺少賽前基本資料時不要使用阻擋式 alert。
+      // 直接把對應欄位切成可編輯狀態並聚焦，讓使用者立刻輸入。
       focusMatchRequiredField(field.id);
       return false;
     }
@@ -3003,6 +3032,10 @@ function saveEditMarker(){
 
 function deleteMarker(i){
   const m=state.markers[i];
+  const label=m?eventLabel(m.event):'事件';
+  const ok=window.confirm(`確定要刪除第${i+1}筆「${label}」紀錄嗎？
+刪除後無法復原。`);
+  if(!ok) return;
   state.markers.splice(i,1);
   if(m && m.event==='GOAL'){
     if(m.team==='OUR') state.ourScore=Math.max(0, state.ourScore-1);
@@ -3010,6 +3043,7 @@ function deleteMarker(i){
   }
   saveState();
   render();
+  renderLogModal();
 }
 function toggleLog(){ byId('logWrap').classList.toggle('open'); }
 
@@ -3050,9 +3084,10 @@ function renderLogTo(container){
     row.innerHTML=`
       <div class="logSeq">第${i+1}筆</div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
-      <div class="logDetailLine"><span class="logMainText">${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}${team||m.player_number?`${team?'<span style="color:#91a0b6">'+team+'</span>':''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${eventLabel(m.event)}</b>${assist}</span><span class="scoreSnap">${m.score_after||''}</span></div>
+      <div class="logDetailLine"><span class="logMainText">${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}${team||m.player_number?`${team?'<span style="color:#91a0b6">'+team+'</span>':''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${eventLabel(m.event)}</b>${assist}</span></div>
+      <div class="scoreSnap">${m.score_after||''}</div>
       <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${i+1}筆紀錄">✎</button>
-      <button class="del" onclick="deleteMarker(${i}); renderLogModal();">✕</button>
+      <button class="del" onclick="deleteMarker(${i})" aria-label="刪除第${i+1}筆紀錄">✕</button>
     `;
     container.appendChild(row);
   });
@@ -3291,8 +3326,8 @@ function reportOtherEventHTML(m){
   const actor=`${team}${num}`;
   return `<div class="reportEvent">
     <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
-    <div class="reportType">${escapeHtml(type)}</div>
     <div class="reportLabel" title="${escapeHtml(actor)}">${escapeHtml(actor)}</div>
+    <div class="reportType">${escapeHtml(type)}</div>
     <div class="rscore">${m.score_after||''}</div>
   </div>`;
 }
@@ -3329,7 +3364,7 @@ function buildReportDOM(){
     ? `<div class="reportTable goals"><div class="reportTableHead"><div>半場 / 時間</div><div>進球</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${goals.map((m,i)=>reportEventHTML(m,i)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記進球事件</div>';
   byId('reportOthers').innerHTML=others.length
-    ? `<div class="reportTable others"><div class="reportTableHead"><div>半場 / 時間</div><div>類型</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportOtherEventHTML(m)).join('')}</div></div>`
+    ? `<div class="reportTable others"><div class="reportTableHead"><div>半場 / 時間</div><div>球員 / 隊伍</div><div>類型</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportOtherEventHTML(m)).join('')}</div></div>`
     : '<div class="reportEmpty">尚未標記其他精彩事件</div>';
 }
 
@@ -3606,34 +3641,33 @@ function makeReportCanvas(){
       ctx.fillStyle='#172435'; roundRect(ctx,pad,y-18,W-pad*2,34,10,true,false);
       ctx.fillStyle='#93c5fd'; ctx.font='800 20px -apple-system, sans-serif'; ctx.textAlign='left';
       ctx.fillText('半場 / 時間',pad+12,y);
-      ctx.fillText('類型',pad+245,y);
-      ctx.fillText('球員 / 隊伍',pad+375,y);
+      ctx.fillText('球員 / 隊伍',pad+245,y);
+      ctx.fillText('類型',pad+575,y);
       ctx.textAlign='right'; ctx.fillText('比分',W-pad-12,y); ctx.textAlign='left';
       y+=42;
     }else if(line.type==='otherEvent'){
       const rowX=pad, rowY=y-19, rowH=38;
       ctx.fillStyle='#0f1720'; ctx.fillRect(rowX,rowY,W-pad*2,rowH);
-      const periodTimeX=pad+8, typeX=pad+245, actorX=pad+375, scoreX=W-pad-8;
+      const periodTimeX=pad+8, actorX=pad+245, typeX=pad+575, scoreX=W-pad-8;
 
       ctx.fillStyle='#facc15';
       ctx.font='700 23px -apple-system, sans-serif';
       ctx.textAlign='left';
       ctx.fillText(line.periodTime, periodTimeX, y);
 
-      ctx.fillStyle='#7dd3fc';
-      ctx.font='700 23px -apple-system, Apple Color Emoji, sans-serif';
-      ctx.fillText(line.typeLabel, typeX, y);
-
       ctx.fillStyle='#f1f5f9';
-      ctx.font='600 23px -apple-system, sans-serif';
-      // actor 欄不再重複事件名稱，因此能保留更多空間給完整隊名與背號
+      ctx.font='700 24px -apple-system, sans-serif';
       let actor=String(line.actor||'');
-      const actorMax=W-pad-90-actorX;
+      const actorMax=typeX-actorX-22;
       while(actor.length>1 && ctx.measureText(actor).width>actorMax){
         actor=actor.slice(0,-1);
       }
       if(actor!==line.actor) actor+='…';
       ctx.fillText(actor, actorX, y);
+
+      ctx.fillStyle='#7dd3fc';
+      ctx.font='700 23px -apple-system, Apple Color Emoji, sans-serif';
+      ctx.fillText(line.typeLabel, typeX, y);
 
       ctx.fillStyle='#cbd5e1';
       ctx.font='700 25px -apple-system, sans-serif';
@@ -3910,10 +3944,17 @@ function advanceGuidedSetup(from){
   if(guidedSetupStep!==from) return false;
 
   if(from==='our'){
-    const value=validateTextField('ourTeam','我方隊伍名稱',true,15);
+    const el=byId('ourTeam');
+    const raw=String(el?.value||'').trim();
+    if(!raw){
+      guidedSetupStep='our';
+      focusMatchRequiredField('ourTeam');
+      return false;
+    }
+    const value=validateTextField('ourTeam','我方隊伍名稱',false,15);
     if(value===null){
       guidedSetupStep='our';
-      setTimeout(()=>editTeamName('ourTeam'),30);
+      focusMatchRequiredField('ourTeam');
       return false;
     }
     saveState();
@@ -3925,10 +3966,17 @@ function advanceGuidedSetup(from){
   }
 
   if(from==='opp'){
-    const value=validateTextField('oppTeam','對手隊伍名稱',true,15);
+    const el=byId('oppTeam');
+    const raw=String(el?.value||'').trim();
+    if(!raw){
+      guidedSetupStep='opp';
+      focusMatchRequiredField('oppTeam');
+      return false;
+    }
+    const value=validateTextField('oppTeam','對手隊伍名稱',false,15);
     if(value===null){
       guidedSetupStep='opp';
-      setTimeout(()=>editTeamName('oppTeam'),30);
+      focusMatchRequiredField('oppTeam');
       return false;
     }
     saveState();
@@ -3940,18 +3988,32 @@ function advanceGuidedSetup(from){
   }
 
   if(from==='venue'){
-    const value=validateTextField('venue','場地',true,15);
+    // 場地在「開始比賽」時仍會做必填檢查，但使用者只是按完成／收起鍵盤時
+    // 不應被強迫一定要先輸入場地。
+    const value=validateTextField('venue','場地',false,15);
     if(value===null){
       guidedSetupStep='venue';
       setTimeout(()=>byId('venue').focus(),30);
       return false;
     }
     saveState();
-    rememberVenueIfEligible(byId('venue').value.trim());
+    if(value) rememberVenueIfEligible(value);
     guidedSetupStep=null;
-    // 即使使用者先填場地，也要回頭檢查我方／對手是否仍有缺漏。
-    // 例如：我方已有、對手空白、場地剛填完 → 自動回到對手。
-    if(focusFirstMissingPreMatchField()) return true;
+
+    // 若場地已填，仍回頭檢查我方／對手是否缺漏；但不要因為場地本身空白
+    // 再把焦點鎖回場地，讓使用者可以正常關閉鍵盤。
+    const requiredBeforeVenue=[
+      {id:'ourTeam',step:'our'},
+      {id:'oppTeam',step:'opp'}
+    ];
+    for(const field of requiredBeforeVenue){
+      const el=byId(field.id);
+      if(!String(el?.value||'').trim()){
+        guidedSetupStep=field.step;
+        focusMatchRequiredField(field.id);
+        return true;
+      }
+    }
     byId('venue').blur();
     return true;
   }
@@ -3979,11 +4041,10 @@ byId('venue').addEventListener('keydown', e=>{
     e.preventDefault();
     if(guidedSetupStep==='venue') advanceGuidedSetup('venue');
     else{
-      const value=validateTextField('venue','場地',true,15);
+      const value=validateTextField('venue','場地',false,15);
       if(value===null) return;
       saveState();
-      rememberVenueIfEligible(byId('venue').value.trim());
-      if(focusFirstMissingPreMatchField()) return;
+      if(value) rememberVenueIfEligible(value);
       byId('venue').blur();
     }
   }
@@ -4002,7 +4063,10 @@ byId('ourTeam').addEventListener('blur', ()=>{
   byId('ourTeam').classList.remove('guidedInput');
   // iPhone ✓「完成」主要會走這裡。
   if(guidedSetupStep==='our'){
-    setTimeout(()=>advanceGuidedSetup('our'),0);
+    // iOS 可能在切換 editing 狀態時短暫觸發 blur；延後檢查並保持非阻擋式聚焦。
+    setTimeout(()=>{
+      if(guidedSetupStep==='our') advanceGuidedSetup('our');
+    },40);
     return;
   }
   const value=byId('ourTeam').value.trim();
@@ -4014,7 +4078,10 @@ byId('ourTeam').addEventListener('blur', ()=>{
 byId('oppTeam').addEventListener('blur', ()=>{
   byId('oppTeam').classList.remove('guidedInput');
   if(guidedSetupStep==='opp'){
-    setTimeout(()=>advanceGuidedSetup('opp'),0);
+    // 不使用 alert；若仍空白，advanceGuidedSetup 會重新打開並聚焦對手輸入框。
+    setTimeout(()=>{
+      if(guidedSetupStep==='opp') advanceGuidedSetup('opp');
+    },40);
     return;
   }
   const value=byId('oppTeam').value.trim();
@@ -4029,20 +4096,33 @@ byId('venue').addEventListener('focus', ()=>{
 byId('venue').addEventListener('blur', ()=>{
   byId('venue').classList.remove('guidedInput');
   if(guidedSetupStep==='venue'){
-    // 延遲判斷，兼容 iOS 完成鍵；advance 會把 step 清空後再 blur，避免迴圈。
+    // iPhone 的 ✓ 完成常以 blur 結束輸入；允許場地空白直接關閉鍵盤。
     setTimeout(()=>{
       if(guidedSetupStep==='venue') advanceGuidedSetup('venue');
     },0);
     return;
   }
-  if(byId('venue').value.trim()){
-    const value=validateTextField('venue','場地',true,15);
+
+  const raw=byId('venue').value.trim();
+  if(raw){
+    const value=validateTextField('venue','場地',false,15);
     if(value===null) return;
-    rememberVenueIfEligible(byId('venue').value.trim());
+    rememberVenueIfEligible(value);
     saveState();
-    // 場地完成後重新檢查整組賽前必填資料。
-    // 使用 setTimeout 避免與 iOS 鍵盤 blur 動畫互相搶焦點。
-    setTimeout(()=>focusFirstMissingPreMatchField(),80);
+
+    // 只有「場地真的填完」時，才回頭檢查我方／對手是否缺漏。
+    // 場地本身空白時不自動重新聚焦，避免使用者無法收起鍵盤。
+    setTimeout(()=>{
+      if(!byId('ourTeam').value.trim()){
+        guidedSetupStep='our';
+        focusMatchRequiredField('ourTeam');
+      }else if(!byId('oppTeam').value.trim()){
+        guidedSetupStep='opp';
+        focusMatchRequiredField('oppTeam');
+      }
+    },80);
+  }else{
+    saveState();
   }
 });
 
@@ -4117,7 +4197,7 @@ tick();
   .logModalTop{padding:9px 12px}
   .logModalTitle{font-size:17px}
   .logModalBody{padding:6px 12px 8px}
-  .logModalBody .item{grid-template-columns:44px 68px minmax(0,1fr) 34px 24px;gap:4px;padding:10px 0;font-size:15px;line-height:1.48}
+  .logModalBody .item{grid-template-columns:44px 68px minmax(0,1fr) 48px 34px 24px;gap:6px;padding:10px 0;font-size:15px;line-height:1.48}
   .logModalBody .item b{font-size:15px}
   .logModalBody .time{font-size:16px}
   .logSeq{font-size:13px}
