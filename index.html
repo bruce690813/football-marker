@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.31</title>
+<title>足球場邊記錄器 v3.32</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1110,7 +1110,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.31</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.32</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1239,7 +1239,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.31</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.32</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊工具。從即時標記到賽後回顧，把每一場比賽的重要片段完整串起來。</div>
@@ -1687,6 +1687,24 @@ function focusMatchRequiredField(id){
     el.focus();
     try{ el.select(); }catch(e){}
   },30);
+}
+
+function focusFirstMissingPreMatchField(){
+  if(state.started) return false;
+  const fields=[
+    {id:'ourTeam',step:'our'},
+    {id:'oppTeam',step:'opp'},
+    {id:'venue',step:'venue'}
+  ];
+  for(const field of fields){
+    const el=byId(field.id);
+    if(!String(el?.value||'').trim()){
+      guidedSetupStep=field.step;
+      focusMatchRequiredField(field.id);
+      return true;
+    }
+  }
+  return false;
 }
 
 function validateMatchTextFields(){
@@ -3907,7 +3925,7 @@ function advanceGuidedSetup(from){
   }
 
   if(from==='opp'){
-    const value=validateTextField('oppTeam','對手隊伍名稱',false,15);
+    const value=validateTextField('oppTeam','對手隊伍名稱',true,15);
     if(value===null){
       guidedSetupStep='opp';
       setTimeout(()=>editTeamName('oppTeam'),30);
@@ -3922,7 +3940,7 @@ function advanceGuidedSetup(from){
   }
 
   if(from==='venue'){
-    const value=validateTextField('venue','場地',false,15);
+    const value=validateTextField('venue','場地',true,15);
     if(value===null){
       guidedSetupStep='venue';
       setTimeout(()=>byId('venue').focus(),30);
@@ -3931,6 +3949,9 @@ function advanceGuidedSetup(from){
     saveState();
     rememberVenueIfEligible(byId('venue').value.trim());
     guidedSetupStep=null;
+    // 即使使用者先填場地，也要回頭檢查我方／對手是否仍有缺漏。
+    // 例如：我方已有、對手空白、場地剛填完 → 自動回到對手。
+    if(focusFirstMissingPreMatchField()) return true;
     byId('venue').blur();
     return true;
   }
@@ -3958,10 +3979,11 @@ byId('venue').addEventListener('keydown', e=>{
     e.preventDefault();
     if(guidedSetupStep==='venue') advanceGuidedSetup('venue');
     else{
-      const value=validateTextField('venue','場地',false,15);
+      const value=validateTextField('venue','場地',true,15);
       if(value===null) return;
       saveState();
       rememberVenueIfEligible(byId('venue').value.trim());
+      if(focusFirstMissingPreMatchField()) return;
       byId('venue').blur();
     }
   }
@@ -4014,8 +4036,13 @@ byId('venue').addEventListener('blur', ()=>{
     return;
   }
   if(byId('venue').value.trim()){
-    validateTextField('venue','場地',false,15);
+    const value=validateTextField('venue','場地',true,15);
+    if(value===null) return;
     rememberVenueIfEligible(byId('venue').value.trim());
+    saveState();
+    // 場地完成後重新檢查整組賽前必填資料。
+    // 使用 setTimeout 避免與 iOS 鍵盤 blur 動畫互相搶焦點。
+    setTimeout(()=>focusFirstMissingPreMatchField(),80);
   }
 });
 
