@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.46</title>
+<title>足球場邊記錄器 v3.52</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -20,10 +20,10 @@ body{min-height:100dvh}
   max-width:720px;
   margin:auto;
   /* iPhone Safari：只保留必要的 Safe Area，不再用大量固定空白拉長整頁。 */
-  padding:5px 10px calc(28px + env(safe-area-inset-bottom));
-  scroll-padding-bottom:calc(72px + env(safe-area-inset-bottom));
+  padding:5px 10px calc(84px + env(safe-area-inset-bottom));
+  scroll-padding-bottom:calc(92px + env(safe-area-inset-bottom));
 }
-.card:last-of-type{margin-bottom:calc(8px + env(safe-area-inset-bottom))}
+.card:last-of-type{margin-bottom:4px}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 .sub{font-size:11px;color:var(--muted)}
@@ -96,7 +96,13 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 }
 #competition{min-width:0;font-size:15px;font-weight:800}
 #competition::placeholder{font-size:13.5px;font-weight:700;color:#74849a}
-.venueRow{margin-top:6px}
+.venueRow{
+  margin-top:6px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center
+}
 .venueRow input{
   width:100%;min-height:34px;padding:6px 11px;border-radius:10px;
   border:1px solid rgba(71,96,126,.72);background:rgba(9,18,32,.82);
@@ -108,6 +114,88 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
   border-color:rgba(56,189,248,.82);
   box-shadow:0 0 0 2px rgba(56,189,248,.16);
   background:#0b1625
+}
+.rosterQuickBtn{
+  min-width:88px;
+  min-height:34px;
+  padding:6px 10px;
+  border-radius:11px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  background:linear-gradient(180deg,#213d5c 0%,#172e49 100%);
+  border:1px solid rgba(96,165,250,.44);
+  color:#eff6ff;
+  font-size:13px;
+  font-weight:950;
+  white-space:nowrap;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 3px 8px rgba(0,0,0,.14)
+}
+.rosterQuickBtn.set{
+  border-color:rgba(56,189,248,.62);
+  background:linear-gradient(180deg,#155277 0%,#123c5b 100%)
+}
+.rosterQuickBtn:active{transform:scale(.98)}
+.rosterModalHead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rosterCountBadge{
+  flex:0 0 auto;
+  padding:5px 9px;border-radius:999px;
+  background:#dbeafe;color:#17436c;
+  font-size:12px;font-weight:950
+}
+.rosterGrid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+  margin:12px 0
+}
+.rosterChip{
+  position:relative;
+  min-height:48px;
+  border-radius:13px;
+  background:#eef4fb;
+  border:1px solid #c7d5e5;
+  color:#18243a;
+  font-size:16px;
+  font-weight:1000;
+  padding:7px 22px 7px 8px
+}
+.rosterChip::after{
+  content:'×';
+  position:absolute;
+  right:7px;top:50%;transform:translateY(-52%);
+  font-size:16px;color:#ef4444;font-weight:1000
+}
+.rosterEmpty{
+  padding:18px 12px;
+  border:1px dashed #cbd5e1;
+  border-radius:14px;
+  color:#64748b;
+  text-align:center;
+  font-size:13px;
+  font-weight:800
+}
+.rosterInputRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px}
+.rosterInputRow input{
+  min-width:0;
+  font-size:16px;
+  min-height:46px;
+  border-radius:12px;
+  border:1px solid #cbd5e1;
+  background:#fff;color:#111827;
+  padding:8px 10px;
+  outline:none
+}
+.rosterInputRow input:focus{border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.16)}
+.rosterAddBtn{min-width:82px;background:#2563eb;color:#fff}
+.rosterFooterActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.rosterPreviousBtn{background:#e8eef7;color:#22324a}
+.rosterClearBtn{background:#fee2e2;color:#991b1b}
+@media(max-width:390px){
+  .venueRow{gap:6px}
+  .rosterQuickBtn{min-width:82px;padding:6px 8px;font-size:12.5px}
+  .rosterGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
 }
 .keeperQuickBtn{
   min-width:78px;
@@ -432,6 +520,24 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.018)
 }
 .scoreText{font-size:40px;font-weight:950;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:1px}
+.pkMainScore{
+  display:none;
+  margin:5px auto 1px;
+  width:max-content;
+  max-width:100%;
+  padding:3px 9px;
+  border-radius:999px;
+  background:linear-gradient(180deg,rgba(109,40,217,.28) 0%,rgba(76,29,149,.22) 100%);
+  border:1px solid rgba(167,139,250,.48);
+  color:#ddd6fe;
+  font-size:12px;
+  font-weight:950;
+  line-height:1.25;
+  letter-spacing:.3px;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.pkMainScore.show{display:block}
 .scoreEdit{background:transparent;color:#94a3b8;font-size:10px;padding:3px 7px;border:0;margin-top:3px}
 .scoreEdit:disabled{
   color:#586576;
@@ -631,6 +737,22 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   color:#fff;
 }
 
+/* 牌卡選隊採中性色，避免黃牌/紅牌語意與球隊按鈕顏色混淆 */
+.cardTeamChoice{
+  background:linear-gradient(180deg,#334a66 0%,#26384e 100%);
+  color:#fff;
+  border:1px solid rgba(125,164,207,.46);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 4px 10px rgba(0,0,0,.16);
+}
+.cardTeamChoice.oppNeutral{
+  background:linear-gradient(180deg,#43536a 0%,#344357 100%);
+  border-color:rgba(148,163,184,.48);
+}
+.cardTeamChoice:active{
+  transform:scale(.985);
+  filter:brightness(1.08);
+}
+
 
 .toolGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.toolGrid.twoCols{grid-template-columns:1fr 1fr}.toolGrid.finalTools{grid-template-columns:1fr 1fr 1fr}
 .toolGrid button{font-size:13px;padding:8px 6px;min-height:42px;touch-action:manipulation;-webkit-user-select:none;user-select:none}
@@ -720,12 +842,48 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   text-shadow:0 1px 2px rgba(0,0,0,.25);
 }
 .finalToolsCard{
-  position:relative;
-  z-index:20;
-  scroll-margin-bottom:calc(72px + env(safe-area-inset-bottom));
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:calc(max(env(safe-area-inset-bottom),var(--browser-bottom-gap,0px)) + 8px);
+  width:min(700px,calc(100vw - 20px));
+  z-index:80;
+  margin:0;
+  padding:7px;
+  border-radius:18px;
+  background:rgba(11,18,32,.88);
+  border:1px solid rgba(91,125,166,.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 12px 34px rgba(0,0,0,.42);
+  -webkit-backdrop-filter:blur(14px) saturate(125%);
+  backdrop-filter:blur(14px) saturate(125%);
 }
-.finalTools button{position:relative;z-index:21;pointer-events:auto;touch-action:manipulation}
+.finalTools{
+  gap:7px;
+}
+.finalTools button{
+  position:relative;
+  z-index:81;
+  pointer-events:auto;
+  touch-action:manipulation;
+  min-height:44px;
+}
 .finalTools button:disabled{pointer-events:none}
+body.keyboardOpen .finalToolsCard{display:none}
+@media (max-width:390px){
+  .finalToolsCard{
+    width:calc(100vw - 16px);
+    padding:6px;
+    bottom:calc(max(env(safe-area-inset-bottom),var(--browser-bottom-gap,0px)) + 6px);
+  }
+  .toolGrid.finalTools{gap:5px}
+  .toolGrid.finalTools button{
+    min-height:42px;
+    padding:7px 4px;
+    font-size:13px;
+  }
+}
 .share{background:#2f81f7}.export{background:#f8fafc;color:#111}
 
 .logWrap{display:none!important}
@@ -997,6 +1155,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   .scoreRow{margin-top:0;padding:8px 7px 4px}
   .teamNameDisplay{font-size:24px}.teamNameEditor{font-size:21px}.teamNameBox{min-height:58px}
   .scoreText{font-size:36px}
+  .pkMainScore{font-size:11px;padding:3px 8px;margin-top:4px}
   .scoreEdit{padding-top:2px;padding-bottom:2px}
   .timer{font-size:23px;padding:6px 10px;min-width:86px}
   .timeSummary{margin:4px 0 5px}
@@ -1035,15 +1194,66 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
 .penaltyClose{background:#64748b}.penaltyFinish{background:#7c3aed}
 .broadcastStage.penalty{background:linear-gradient(180deg,#3a1c62 0%,#1d1033 100%);border-color:rgba(168,85,247,.52);box-shadow:0 0 0 1px rgba(168,85,247,.10),0 0 6px rgba(168,85,247,.10),inset 0 1px 0 rgba(255,255,255,.06),0 6px 16px rgba(0,0,0,.20)}
 .broadcastStage.penalty .liveTag,.broadcastStage.penalty .stageTimer{display:none}
-.penaltySummary{border:1px solid #3b2b53;border-radius:12px;background:#171225;padding:5px 10px;margin-bottom:14px}
-.penaltySummaryTop{display:flex;justify-content:space-between;align-items:center;padding:7px 0 9px;font-size:13px;font-weight:950;color:#e9d5ff}
-.penaltySummaryScore{font-size:20px;color:#fff}
-.penaltySummaryHead,.penaltySummaryRow{display:grid;grid-template-columns:34px 1fr 1fr;gap:7px;align-items:center}
-.penaltySummaryHead{padding:6px 0;color:#a78bfa;font-size:10px;font-weight:900;text-align:center;border-top:1px solid #342942}
-.penaltySummaryRow{padding:6px 0;border-top:1px solid #342942;font-size:11px}
-.penaltySummaryKick{text-align:center;color:#d8dce4}.penaltySummaryKick .ok{color:#86efac;font-weight:900}.penaltySummaryKick .no{color:#fca5a5;font-weight:900}
-.penaltySummaryKick .pkNumber{color:#ffffff;font-weight:950;margin-right:4px}
-@media(max-width:390px){.finishDecisionBtns.three{grid-template-columns:1fr}.penaltyKickCard{grid-template-columns:45px 1fr}.penaltyResultBtn{font-size:12px}}
+.penaltySummary{
+  border:1px solid #4a3566;
+  border-radius:13px;
+  background:linear-gradient(180deg,#1c142b 0%,#171225 100%);
+  padding:8px 11px 9px;
+  margin-bottom:14px
+}
+.penaltySummaryTop{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:7px 0 10px;font-size:14px;font-weight:950;color:#e9d5ff
+}
+.penaltySummaryScore{
+  display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;
+  padding:5px 9px;border-radius:11px;
+  background:linear-gradient(180deg,rgba(124,58,237,.28) 0%,rgba(91,33,182,.20) 100%);
+  border:1px solid rgba(167,139,250,.48);color:#fff;line-height:1
+}
+.penaltySummaryScore .pkLabel{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:3px 6px;border-radius:7px;background:rgba(167,139,250,.18);
+  color:#c4b5fd;font-size:11px;font-weight:1000;letter-spacing:.5px
+}
+.penaltySummaryScore .pkValue{
+  font-size:25px;font-weight:1000;font-variant-numeric:tabular-nums;letter-spacing:.6px
+}
+.penaltySummaryHead,.penaltySummaryRow{
+  display:grid;grid-template-columns:42px minmax(0,1fr) minmax(0,1fr);
+  gap:8px;align-items:center
+}
+.penaltySummaryHead{
+  padding:7px 0;color:#b8a4f8;font-size:11.5px;font-weight:950;
+  text-align:center;border-top:1px solid #3b304b
+}
+.penaltySummaryHead > div:first-child,
+.penaltySummaryRow > div:first-child{
+  display:flex;align-items:center;justify-content:center;text-align:center
+}
+.penaltySummaryRow{
+  min-height:38px;padding:7px 0;border-top:1px solid #342942;font-size:12.5px
+}
+.penaltySummaryKick{text-align:center;color:#e2e8f0;line-height:1.35}
+.penaltySummaryKick .ok{color:#86efac;font-size:14px;font-weight:1000}
+.penaltySummaryKick .no{color:#fca5a5;font-size:14px;font-weight:1000}
+.penaltySummaryKick .pkNumber{color:#ffffff;font-size:12.5px;font-weight:1000;margin-right:5px}
+.penaltySummaryRoundNo{
+  font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:950;color:#f1f5f9
+}
+@media(max-width:390px){
+  .finishDecisionBtns.three{grid-template-columns:1fr}
+  .penaltyKickCard{grid-template-columns:45px 1fr}
+  .penaltyResultBtn{font-size:12px}
+  .penaltySummary{padding:7px 9px 8px}
+  .penaltySummaryTop{font-size:13px;gap:8px}
+  .penaltySummaryScore{padding:4px 7px;gap:5px}
+  .penaltySummaryScore .pkLabel{font-size:10px;padding:3px 5px}
+  .penaltySummaryScore .pkValue{font-size:23px}
+  .penaltySummaryHead,.penaltySummaryRow{grid-template-columns:38px minmax(0,1fr) minmax(0,1fr);gap:6px}
+  .penaltySummaryHead{font-size:11px}
+  .penaltySummaryRow{font-size:12px}
+}
 
 .finishWhole{background:#d64545}
 .finishHalf{background:#1f6feb}
@@ -1126,7 +1336,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.46</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.52</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1139,6 +1349,9 @@ button:disabled:active{transform:none!important}
     </div>
     <div class="venueRow">
       <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
+      <button id="rosterQuickBtn" class="rosterQuickBtn" type="button" onclick="openRosterModal()" aria-label="設定本場球員名單">
+        <span aria-hidden="true">👥</span><span id="rosterQuickText">0人</span>
+      </button>
     </div>
 
     <div class="broadcastScoreboard">
@@ -1158,6 +1371,7 @@ button:disabled:active{transform:none!important}
         </div>
         <div class="scoreMid">
           <div class="scoreText"><span id="ourScore">0</span> : <span id="oppScore">0</span></div>
+          <div class="pkMainScore" id="pkMainScore" aria-live="polite"></div>
           <button class="scoreEdit" id="scoreEditBtn" onclick="openScoreModal()" aria-label="修正比分">✎ 修正比分</button>
         </div>
         <div class="teamNameBox" id="oppTeamBox" onclick="editTeamName('oppTeam')">
@@ -1258,7 +1472,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.46</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.52</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -1363,8 +1577,8 @@ button:disabled:active{transform:none!important}
     <h2 id="cardTeamTitle">選擇球隊</h2>
     <p>選擇拿到牌卡的球員所屬球隊。</p>
     <div class="cardTeamGrid">
-      <button class="our" type="button" onclick="chooseCardTeam('OUR')"><span id="cardOurName">我方</span></button>
-      <button class="opp" type="button" onclick="chooseCardTeam('OPP')"><span id="cardOppName">對手</span></button>
+      <button class="cardTeamChoice" type="button" onclick="chooseCardTeam('OUR')"><span id="cardOurName">我方</span></button>
+      <button class="cardTeamChoice oppNeutral" type="button" onclick="chooseCardTeam('OPP')"><span id="cardOppName">對手</span></button>
     </div>
     <button class="cancel" type="button" onclick="cancelCard()">取消</button>
   </div>
@@ -1384,6 +1598,30 @@ button:disabled:active{transform:none!important}
       <button class="keeperClearBtn" type="button" onclick="clearKeeperNumber()">清除設定</button>
       <button class="cancel" type="button" onclick="closeKeeperModal()">取消</button>
     </div>
+  </div>
+</div>
+
+<!-- Match roster modal -->
+<div class="modalBack" id="rosterModal">
+  <div class="modal">
+    <div class="rosterModalHead">
+      <h2 style="margin:0">👥 本場球員名單</h2>
+      <span class="rosterCountBadge" id="rosterCountBadge">0 人</span>
+    </div>
+    <p>首頁只顯示名單人數。設定後，進球、射門、防守、牌卡、助攻與 GK 選號會優先顯示本場背號。</p>
+
+    <div id="rosterGrid" class="rosterGrid"></div>
+    <div id="rosterEmpty" class="rosterEmpty">尚未設定本場球員名單</div>
+
+    <div class="rosterInputRow">
+      <input id="rosterInput" type="text" inputmode="numeric" placeholder="輸入背號，例如 7,10,22,30,36" aria-label="新增球員背號">
+      <button class="rosterAddBtn" type="button" onclick="addRosterNumbers()">＋ 新增</button>
+    </div>
+    <div class="rosterFooterActions">
+      <button class="rosterPreviousBtn" id="rosterPreviousBtn" type="button" onclick="applyPreviousRoster()">套用上場名單</button>
+      <button class="rosterClearBtn" type="button" onclick="clearRoster()">清空名單</button>
+    </div>
+    <button class="cancel" type="button" onclick="closeRosterModal()">完成</button>
   </div>
 </div>
 
@@ -1548,6 +1786,7 @@ button:disabled:active{transform:none!important}
       <div class="reportMeta">
         <span id="reportCompetition" style="display:none">🏆 賽事</span>
         <span id="reportVenue">📍 未填場地</span>
+        <span id="reportRoster" style="display:none">👥 本場名單</span>
         <span id="reportDuration">⏱ 00:00</span>
       </div>
       <div class="reportStatusBadge idle" id="reportStatusBadge">尚未開始</div>
@@ -1599,6 +1838,7 @@ const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const LAST_VENUE_KEY='football_marker_last_venue';
 let guidedSetupStep=null; // 'our' -> 'opp' -> 'venue' during New Match guided input
 const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
+const LAST_ROSTER_KEY='football_marker_last_roster_v1';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
 let editingMarkerIndex=null, editingMarkerEvent=null, editingMarkerTeam='OUR';
 let pendingGoalTime=null, pendingGoalTeam=null;
@@ -1626,6 +1866,7 @@ let state={
   extraTimeMinutes:null,
   penalty:null,
   goalkeeperNumber:'',
+  rosterNumbers:[],
   halftimeStartEpoch:null,
   halftimeEndEpoch:null,
   halftimeDuration:0
@@ -1788,6 +2029,8 @@ function loadState(){
   if(!('nextPeriodType' in state)) state.nextPeriodType=null;
   if(!('penalty' in state)) state.penalty=null;
   if(!('goalkeeperNumber' in state)) state.goalkeeperNumber='';
+  if(!Array.isArray(state.rosterNumbers)) state.rosterNumbers=[];
+  state.rosterNumbers=[...new Set(state.rosterNumbers.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=99))].sort((a,b)=>a-b);
   if(!('halftimeStartEpoch' in state)) state.halftimeStartEpoch=null;
   if(!('halftimeEndEpoch' in state)) state.halftimeEndEpoch=null;
   if(!('halftimeDuration' in state)) state.halftimeDuration=0;
@@ -2075,11 +2318,154 @@ function allCommonNumbers(){
   return [...new Set([...COMMON_NUMBERS,...getLearnedNumbers()])].sort((a,b)=>a-b);
 }
 
+
+function currentRosterNumbers(){
+  if(!Array.isArray(state.rosterNumbers)) state.rosterNumbers=[];
+  return [...new Set(state.rosterNumbers.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=99))].sort((a,b)=>a-b);
+}
+
+function preferredOurNumbers(){
+  const roster=currentRosterNumbers();
+  return roster.length ? roster : allCommonNumbers();
+}
+
+function getPreviousRoster(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(LAST_ROSTER_KEY)||'[]');
+    if(!Array.isArray(raw)) return [];
+    return [...new Set(raw.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=99))].sort((a,b)=>a-b);
+  }catch(e){
+    return [];
+  }
+}
+
+function rememberCurrentRosterAsPrevious(){
+  const roster=currentRosterNumbers();
+  if(roster.length) localStorage.setItem(LAST_ROSTER_KEY,JSON.stringify(roster));
+}
+
+function renderRosterModal(){
+  const roster=currentRosterNumbers();
+  const grid=byId('rosterGrid');
+  const empty=byId('rosterEmpty');
+  const badge=byId('rosterCountBadge');
+  const previousBtn=byId('rosterPreviousBtn');
+
+  if(badge) badge.textContent=`${roster.length} 人`;
+  if(empty) empty.style.display=roster.length?'none':'block';
+
+  if(grid){
+    grid.innerHTML='';
+    roster.forEach(n=>{
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.className='rosterChip';
+      btn.textContent=`#${n}`;
+      btn.setAttribute('aria-label',`移除背號 ${n}`);
+      btn.onclick=()=>removeRosterNumber(n);
+      grid.appendChild(btn);
+    });
+  }
+
+  if(previousBtn){
+    const prev=getPreviousRoster();
+    previousBtn.disabled=!prev.length;
+    previousBtn.textContent=prev.length?`套用上場名單（${prev.length}人）`:'沒有上場名單';
+  }
+}
+
+function openRosterModal(){
+  renderRosterModal();
+  const input=byId('rosterInput');
+  if(input) input.value='';
+  byId('rosterModal').classList.add('open');
+}
+
+function closeRosterModal(){
+  rememberCurrentRosterAsPrevious();
+  saveState();
+  render();
+  byId('rosterModal').classList.remove('open');
+}
+
+function parseRosterNumbers(raw){
+  const matches=String(raw||'').match(/\d{1,3}/g)||[];
+  const values=[];
+  let invalid=false;
+  matches.forEach(token=>{
+    const n=Number(token);
+    if(Number.isInteger(n)&&n>=1&&n<=99) values.push(n);
+    else invalid=true;
+  });
+  return {values:[...new Set(values)],invalid};
+}
+
+function addRosterNumbers(){
+  const input=byId('rosterInput');
+  if(!input) return;
+  const {values,invalid}=parseRosterNumbers(input.value);
+
+  if(!values.length){
+    alert('請輸入 1～99 的球員背號，例如：7,10,22,30,36');
+    input.focus();
+    return;
+  }
+
+  if(invalid){
+    alert('球員背號限 1～99，超出範圍的背號不會加入。');
+  }
+
+  const merged=[...new Set([...currentRosterNumbers(),...values])].sort((a,b)=>a-b);
+  state.rosterNumbers=merged;
+  values.forEach(rememberPlayerNumber);
+
+  input.value='';
+  rememberCurrentRosterAsPrevious();
+  buildNumberGrid();
+  buildKeeperGrid();
+  saveState();
+  renderRosterModal();
+  render();
+}
+
+function removeRosterNumber(number){
+  const n=Number(number);
+  state.rosterNumbers=currentRosterNumbers().filter(v=>v!==n);
+  rememberCurrentRosterAsPrevious();
+  buildNumberGrid();
+  buildKeeperGrid();
+  saveState();
+  renderRosterModal();
+  render();
+}
+
+function clearRoster(){
+  if(currentRosterNumbers().length && !confirm('確定要清空本場球員名單嗎？')) return;
+  state.rosterNumbers=[];
+  buildNumberGrid();
+  buildKeeperGrid();
+  saveState();
+  renderRosterModal();
+  render();
+}
+
+function applyPreviousRoster(){
+  const prev=getPreviousRoster();
+  if(!prev.length) return;
+  state.rosterNumbers=prev;
+  prev.forEach(rememberPlayerNumber);
+  buildNumberGrid();
+  buildKeeperGrid();
+  saveState();
+  renderRosterModal();
+  render();
+}
+
 function buildKeeperGrid(){
   const grid=byId('keeperGrid');
   if(!grid) return;
   grid.innerHTML='';
-  allCommonNumbers().forEach(n=>{
+  preferredOurNumbers().forEach(n=>{
     const btn=document.createElement('button');
     btn.type='button';
     btn.className='keeperNumBtn'+(String(state.goalkeeperNumber||'')===String(n)?' active':'');
@@ -2134,7 +2520,7 @@ function clearKeeperNumber(){
 function buildNumberGrid(){
   const grid=byId('numberGrid');
   grid.innerHTML='';
-  allCommonNumbers().forEach(n=>{
+  preferredOurNumbers().forEach(n=>{
     const btn=document.createElement('button');
     btn.className='numBtn';
     btn.textContent=n;
@@ -2488,10 +2874,10 @@ function penaltySummaryHTML(){
       const num=kick.number?`<span class="pkNumber">#${escapeHtml(kick.number)}</span>`:'<span class="pkNumber">—</span>';
       return `<span class="${cls}">${num}${result}</span>`;
     };
-    rows+=`<div class="penaltySummaryRow"><div>${i+1}</div><div class="penaltySummaryKick">${one(a)}</div><div class="penaltySummaryKick">${one(b)}</div></div>`;
+    rows+=`<div class="penaltySummaryRow"><div class="penaltySummaryRoundNo">${i+1}</div><div class="penaltySummaryKick">${one(a)}</div><div class="penaltySummaryKick">${one(b)}</div></div>`;
   }
   const head=`<div class="penaltySummaryHead"><div>輪</div><div>${escapeHtml(state.ourTeam||'我方')} 背號</div><div>${escapeHtml(state.oppTeam||'對手')} 背號</div></div>`;
-  return `<div class="penaltySummaryTop"><span>${escapeHtml(state.ourTeam||'我方')} vs ${escapeHtml(state.oppTeam||'對手')}</span><span class="penaltySummaryScore">PK ${penaltyGoals('our')} : ${penaltyGoals('opp')}</span></div>${head}${rows}`;
+  return `<div class="penaltySummaryTop"><span>${escapeHtml(state.ourTeam||'我方')} vs ${escapeHtml(state.oppTeam||'對手')}</span><span class="penaltySummaryScore"><span class="pkLabel">PK</span><span class="pkValue">${penaltyGoals('our')} : ${penaltyGoals('opp')}</span></span></div>${head}${rows}`;
 }
 
 function confirmFinishFull(){
@@ -2515,6 +2901,7 @@ function confirmFinishFull(){
 function newMatch(){
   if((state.started || state.markers.length) && !confirm('建立新比賽會清空目前資料，確定嗎？')) return;
 
+  rememberCurrentRosterAsPrevious();
   const rememberedOurTeam=(byId('ourTeam').value.trim() || localStorage.getItem(LAST_OUR_TEAM_KEY) || '忠義').trim();
   const currentVenue=byId('venue').value.trim();
   const currentCompetition=byId('competition').value.trim();
@@ -2537,7 +2924,7 @@ function newMatch(){
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
     periodStartOurScore:0, periodStartOppScore:0, periods:[],
     nextPeriodType:null, extraTime:false, extraTimeMinutes:null, penalty:null,
-    goalkeeperNumber:'', halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0
+    goalkeeperNumber:'', rosterNumbers:[], halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0
   };
 
   byId('ourTeam').value=rememberedOurTeam;
@@ -2633,7 +3020,7 @@ function buildAssistGrid(){
   const grid=byId('assistPlayerGrid');
   if(!grid) return;
   grid.innerHTML='';
-  allCommonNumbers().forEach(n=>{
+  preferredOurNumbers().forEach(n=>{
     const btn=document.createElement('button');
     btn.type='button';
     btn.textContent=n;
@@ -2725,16 +3112,16 @@ function openNumberSelection(event, team, sec){
   const label=eventLabel(event);
   if(event==='GOAL'){
     byId('numberTitle').textContent=isOur?'選擇進球球員背號':'選擇對手進球背號';
-    byId('numberHint').textContent=isOur?'選填：可直接點常用背號；其他背號輸入一次後會自動加入。':'選填：可輸入對手背號，也可以略過。';
+    byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：優先顯示本場球員名單；也可輸入其他背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。'):'選填：可輸入對手背號，也可以略過。';
   }else if(event==='YELLOW_CARD' || event==='RED_CARD'){
     byId('numberTitle').textContent=`${event==='YELLOW_CARD'?'🟨':'🟥'} 選擇${label}球員背號`;
-    byId('numberHint').textContent=isOur?'選填：指定是哪一位球員拿牌；可直接點常用背號，也可以略過。':'選填：輸入對手拿牌球員背號，也可以略過。';
+    byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：指定拿牌球員；優先顯示本場名單，也可以略過。':'選填：指定是哪一位球員拿牌；可直接點常用背號，也可以略過。'):'選填：輸入對手拿牌球員背號，也可以略過。';
   }else if(event==='DEFENSE'){
     byId('numberTitle').textContent='🛡️ 選擇防守球員背號';
     byId('numberHint').textContent='選填：可指定完成這次防守的球員；團隊防守可直接略過。';
   }else{
     byId('numberTitle').textContent=`選擇${label}球員背號`;
-    byId('numberHint').textContent='選填：可直接點常用背號；其他背號輸入一次後會自動加入。';
+    byId('numberHint').textContent=currentRosterNumbers().length?'選填：優先顯示本場球員名單；團隊事件也可以略過背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。';
   }
 
   const cancelBtn=byId('cancelNumberBtn');
@@ -3169,7 +3556,29 @@ function render(){
   updateTeamNameDisplays();
   byId('ourScore').textContent=state.ourScore;
   byId('oppScore').textContent=state.oppScore;
+
+  const pkMainScore=byId('pkMainScore');
+  if(pkMainScore){
+    const showPk=!!(state.penalty && (state.penalty.active || state.penalty.completed));
+    if(showPk){
+      pkMainScore.textContent=`PK ${penaltyGoals('our')} : ${penaltyGoals('opp')}`;
+      pkMainScore.classList.add('show');
+    }else{
+      pkMainScore.textContent='';
+      pkMainScore.classList.remove('show');
+    }
+  }
+
   byId('count').textContent=state.markers.length;
+
+  const roster=currentRosterNumbers();
+  const rosterBtn=byId('rosterQuickBtn');
+  const rosterText=byId('rosterQuickText');
+  if(rosterBtn && rosterText){
+    rosterBtn.classList.toggle('set',roster.length>0);
+    rosterText.textContent=`${roster.length}人`;
+    rosterBtn.setAttribute('aria-label',roster.length?`本場球員名單共 ${roster.length} 人，點擊查看或編輯`:'設定本場球員名單');
+  }
 
   const keeperNumber=String(state.goalkeeperNumber||'');
   const keeperBtn=byId('keeperQuickBtn');
@@ -3280,7 +3689,7 @@ function render(){
         stageClass='live';
       }
     }else if(state.finished){
-      stageText='全場';
+      stageText=state.penalty?.completed ? `全場・PK ${penaltyGoals('our')}:${penaltyGoals('opp')}` : '全場';
       stageClass='full';
     }
     stageLabel.textContent=stageText;
@@ -3349,6 +3758,14 @@ function buildReportDOM(){
     reportCompetition.style.display='none';
   }
   byId('reportVenue').textContent=`📍 ${state.venue||'未填場地'}`;
+  const reportRoster=byId('reportRoster');
+  const rosterForReport=currentRosterNumbers();
+  if(reportRoster && rosterForReport.length){
+    reportRoster.textContent=`👥 ${rosterForReport.map(n=>'#'+n).join(' ')}`;
+    reportRoster.style.display='';
+  }else if(reportRoster){
+    reportRoster.style.display='none';
+  }
   byId('reportDuration').textContent=`⏱ ${fmtDurationReadable(totalElapsed)}`;
   byId('reportStart').textContent=fmtReportBoundary(reportStartEpoch,reportStartEpoch,reportEndEpoch);
   byId('reportEnd').textContent=fmtReportBoundary(reportEndEpoch,reportStartEpoch,reportEndEpoch);
@@ -3381,9 +3798,21 @@ function syncVisualViewport(){
   if(vv){
     document.documentElement.style.setProperty('--vv-top', `${vv.offsetTop}px`);
     document.documentElement.style.setProperty('--vv-height', `${vv.height}px`);
+
+    // iPhone Safari 的底部工具列高度會隨展開／收合改變。
+    // 用 visual viewport 與 layout viewport 的差值動態保留底部距離，
+    // 讓賽後三顆輸出按鈕永遠停在可點擊區域。
+    const bottomGap=Math.max(0, window.innerHeight-(vv.offsetTop+vv.height));
+    document.documentElement.style.setProperty('--browser-bottom-gap', `${bottomGap}px`);
+
+    // 鍵盤開啟時不要讓浮動輸出列停在鍵盤上方干擾輸入。
+    const keyboardOpen=vv.height < window.innerHeight*0.72;
+    document.body.classList.toggle('keyboardOpen', keyboardOpen);
   }else{
     document.documentElement.style.setProperty('--vv-top', '0px');
     document.documentElement.style.setProperty('--vv-height', `${window.innerHeight}px`);
+    document.documentElement.style.setProperty('--browser-bottom-gap', '0px');
+    document.body.classList.remove('keyboardOpen');
   }
 }
 if(window.visualViewport){
@@ -3414,6 +3843,8 @@ function reportLines(){
   lines.push({type:'score', left:state.ourTeam||'我方', score:`${state.ourScore} : ${state.oppScore}`, right:state.oppTeam||'對手', status: state.finished ? '比賽結束' : (state.started ? (state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?'上半場結束':'尚未開始'))});
   if(state.competition) lines.push({type:'meta', text:`賽事：${state.competition}`});
   lines.push({type:'meta', text:`場地：${state.venue||'未填場地'}`});
+  const pngRoster=currentRosterNumbers();
+  if(pngRoster.length) lines.push({type:'meta', text:`本場名單：${pngRoster.map(n=>'#'+n).join(' ')}`});
   const pngTotal=totalMatchElapsed();
   const pngStart=matchStartEpoch();
   const pngEnd=matchEndEpoch();
@@ -3842,10 +4273,10 @@ function diffSecondsExport(){
 }
 function csvText(){
   saveState();
-  const rows=[['our_team','opponent_team','venue','competition','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','assist_number','score_after','recorded_at']];
+  const rows=[['our_team','opponent_team','venue','competition','roster_numbers','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','assist_number','score_after','recorded_at']];
   if(state.markers.length===0){
     rows.push([
-      state.ourTeam, state.oppTeam, state.venue, state.competition,
+      state.ourTeam, state.oppTeam, state.venue, state.competition, currentRosterNumbers().join('|'),
       matchStartEpoch()?fmtDateTime(matchStartEpoch()):'',
       matchEndEpoch()?fmtDateTime(matchEndEpoch()):'',
       Math.round(state.finished?state.finalElapsed:totalMatchElapsed()),
@@ -3857,7 +4288,7 @@ function csvText(){
   }else{
     state.markers.forEach(m=>{
       rows.push([
-        state.ourTeam, state.oppTeam, state.venue, state.competition,
+        state.ourTeam, state.oppTeam, state.venue, state.competition, currentRosterNumbers().join('|'),
         state.startEpoch?fmtDateTime(state.startEpoch):'',
         state.endEpoch?fmtDateTime(state.endEpoch):'',
         Math.round(state.finished?state.finalElapsed:0),
@@ -3884,7 +4315,7 @@ function csvText(){
         const k=state.penalty[side]?.[i];
         if(!k || (!k.result && !k.number)) return;
         rows.push([
-          state.ourTeam,state.oppTeam,state.venue,state.competition,
+          state.ourTeam,state.oppTeam,state.venue,state.competition,currentRosterNumbers().join('|'),
           matchStartEpoch()?fmtDateTime(matchStartEpoch()):'',
           matchEndEpoch()?fmtDateTime(matchEndEpoch()):'',
           Math.round(state.finished?state.finalElapsed:totalMatchElapsed()),
@@ -4093,6 +4524,13 @@ byId('oppTeam').addEventListener('blur', ()=>{
   if(value){ validateTextField('oppTeam','對手隊伍名稱',false,15); }
   byId('oppTeamBox').classList.remove('editing');
   updateTeamNameDisplays();
+});
+
+byId('rosterInput')?.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    addRosterNumbers();
+  }
 });
 
 byId('competition').addEventListener('keydown', e=>{
