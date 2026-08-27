@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.53</title>
+<title>足球場邊記錄器 v3.55</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1321,7 +1321,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.53</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.55</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1457,7 +1457,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.53</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.55</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -1593,7 +1593,7 @@ button:disabled:active{transform:none!important}
       <h2 style="margin:0">👥 本場球員名單</h2>
       <span class="rosterCountBadge" id="rosterCountBadge">0 人</span>
     </div>
-    <p>首頁只顯示名單人數。可直接點選常用背號加入本場名單；其他背號仍可手動輸入。</p>
+    <p>首頁只顯示名單人數。可直接點選常用背號加入本場名單；其他背號可一次新增 1 個。</p>
 
     <div class="rosterPickerLabel">快速點選背號</div>
     <div id="rosterPresetGrid" class="rosterPresetGrid"></div>
@@ -1603,7 +1603,7 @@ button:disabled:active{transform:none!important}
     <div id="rosterEmpty" class="rosterEmpty">尚未設定本場球員名單</div>
 
     <div class="rosterInputRow">
-      <input id="rosterInput" type="text" inputmode="numeric" placeholder="其他背號，例如 8,12,23" aria-label="新增球員背號">
+      <input id="rosterInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="其他背號 1–99" aria-label="新增單一球員背號">
       <button class="rosterAddBtn" type="button" onclick="addRosterNumbers()">＋ 新增</button>
     </div>
     <div class="rosterFooterActions">
@@ -2394,44 +2394,47 @@ function closeRosterModal(){
   byId('rosterModal').classList.remove('open');
 }
 
-function parseRosterNumbers(raw){
-  const matches=String(raw||'').match(/\d{1,3}/g)||[];
-  const values=[];
-  let invalid=false;
-  matches.forEach(token=>{
-    const n=Number(token);
-    if(Number.isInteger(n)&&n>=1&&n<=99) values.push(n);
-    else invalid=true;
-  });
-  return {values:[...new Set(values)],invalid};
+function parseRosterNumber(raw){
+  const value=String(raw||'').trim();
+  if(!/^\d{1,2}$/.test(value)) return null;
+  const n=Number(value);
+  return (Number.isInteger(n)&&n>=1&&n<=99) ? n : null;
 }
 
 function addRosterNumbers(){
   const input=byId('rosterInput');
   if(!input) return;
-  const {values,invalid}=parseRosterNumbers(input.value);
 
-  if(!values.length){
-    alert('請輸入 1～99 的球員背號，例如：7,10,22,30,36');
+  const number=parseRosterNumber(input.value);
+  if(number===null){
+    alert('請輸入 1～99 的單一球員背號。');
+    input.value='';
     input.focus();
     return;
   }
 
-  if(invalid){
-    alert('球員背號限 1～99，超出範圍的背號不會加入。');
+  const roster=currentRosterNumbers();
+  if(!roster.includes(number)){
+    state.rosterNumbers=[...roster,number].sort((a,b)=>a-b);
+    rememberPlayerNumber(number);
+    rememberCurrentRosterAsPrevious();
+    buildNumberGrid();
+    buildKeeperGrid();
+    saveState();
+    renderRosterModal();
+    render();
   }
 
-  const merged=[...new Set([...currentRosterNumbers(),...values])].sort((a,b)=>a-b);
-  state.rosterNumbers=merged;
-  values.forEach(rememberPlayerNumber);
-
+  // 一次新增一個背號；加入後清空欄位並維持數字鍵盤，
+  // 下一位球員可直接繼續輸入，不需要逗號或分隔符號。
   input.value='';
-  rememberCurrentRosterAsPrevious();
-  buildNumberGrid();
-  buildKeeperGrid();
-  saveState();
-  renderRosterModal();
-  render();
+  setTimeout(()=>{
+    const nextInput=byId('rosterInput');
+    if(nextInput){
+      nextInput.focus({preventScroll:true});
+      nextInput.setSelectionRange?.(0,0);
+    }
+  },0);
 }
 
 function toggleRosterNumber(number){
@@ -3055,6 +3058,14 @@ function buildAssistGrid(){
 function openAssistModal(markerIndex){
   const marker=state.markers[markerIndex];
   if(!marker || marker.event!=='GOAL') return;
+
+  // 對手進球不再要求助攻資訊。
+  // 場邊較難即時辨識對手助攻者，直接完成進球紀錄可減少操作負擔。
+  if(marker.team!=='OUR'){
+    pendingAssistMarkerIndex=null;
+    return;
+  }
+
   pendingAssistMarkerIndex=markerIndex;
 
   const team=teamDisplay(marker.team)||'未指定';
@@ -3136,7 +3147,7 @@ function openNumberSelection(event, team, sec){
   const label=eventLabel(event);
   if(event==='GOAL'){
     byId('numberTitle').textContent=isOur?'選擇進球球員背號':'選擇對手進球背號';
-    byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：優先顯示本場球員名單；也可輸入其他背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。'):'選填：可輸入對手背號，也可以略過。';
+    byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：優先顯示本場球員名單；也可輸入其他背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。'):'選填：記錄對手進球球員背號；若看不清楚可直接略過。';
   }else if(event==='YELLOW_CARD' || event==='RED_CARD'){
     byId('numberTitle').textContent=`${event==='YELLOW_CARD'?'🟨':'🟥'} 選擇${label}球員背號`;
     byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：指定拿牌球員；優先顯示本場名單，也可以略過。':'選填：指定是哪一位球員拿牌；可直接點常用背號，也可以略過。'):'選填：輸入對手拿牌球員背號，也可以略過。';
@@ -3276,8 +3287,10 @@ function finishGoal(playerNumber){
   saveState();
   render();
 
-  // 進球先完成，再詢問助攻；略過不影響進球紀錄。
-  setTimeout(()=>openAssistModal(goalMarkerIndex),80);
+  // 我方進球才詢問助攻；對手進球在進球者背號（選填）完成後直接結束流程。
+  if(state.markers[goalMarkerIndex]?.team==='OUR'){
+    setTimeout(()=>openAssistModal(goalMarkerIndex),80);
+  }
 }
 
 function mark(event, team='OUR'){
@@ -4550,6 +4563,10 @@ byId('oppTeam').addEventListener('blur', ()=>{
   updateTeamNameDisplays();
 });
 
+byId('rosterInput')?.addEventListener('input', e=>{
+  const cleaned=String(e.target.value||'').replace(/\D/g,'').slice(0,2);
+  if(e.target.value!==cleaned) e.target.value=cleaned;
+});
 byId('rosterInput')?.addEventListener('keydown', e=>{
   if(e.key==='Enter'){
     e.preventDefault();
