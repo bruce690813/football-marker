@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.55</title>
+<title>足球場邊記錄器 v3.59</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -19,8 +19,12 @@ body{min-height:100dvh}
   z-index:1;
   max-width:720px;
   margin:auto;
-  /* iPhone Safari：只保留必要的 Safe Area，不再用大量固定空白拉長整頁。 */
-  padding:5px 10px calc(84px + env(safe-area-inset-bottom));
+  /* 比賽進行中不為賽後工具列預留空間，避免紀錄按鈕被推擠。 */
+  padding:5px 10px calc(12px + env(safe-area-inset-bottom));
+  scroll-padding-bottom:calc(20px + env(safe-area-inset-bottom));
+}
+body.finalOutputVisible .wrap{
+  padding-bottom:calc(84px + env(safe-area-inset-bottom));
   scroll-padding-bottom:calc(92px + env(safe-area-inset-bottom));
 }
 .card:last-of-type{margin-bottom:4px}
@@ -90,7 +94,12 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 }
 .tagline{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.2px}
 .card{background:linear-gradient(180deg,rgba(13,25,39,.94) 0%,rgba(9,18,28,.97) 100%);border:1px solid rgba(78,178,103,.30);border-radius:16px;padding:7px;margin-bottom:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 10px 24px rgba(0,0,0,.16)}
-.matchMetaRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center}
+.matchMetaRow{
+  display:grid;
+  grid-template-columns:minmax(0,56fr) minmax(78px,20fr) minmax(96px,24fr);
+  gap:8px;
+  align-items:center
+}
 .matchMetaRow input,.regRow input{
   width:100%;font-size:14px;padding:7px 11px;border-radius:11px;border:1px solid var(--line);background:#0b1220;color:#fff
 }
@@ -100,7 +109,7 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
   margin-top:6px;
   display:grid;
   /* 場地不再比賽事名稱寬很多；右側名單區加寬，讓兩列主欄位視覺比例更一致 */
-  grid-template-columns:minmax(0,56%) minmax(0,44%);
+  grid-template-columns:minmax(0,56fr) minmax(0,44fr);
   gap:8px;
   align-items:center
 }
@@ -225,7 +234,8 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 .rosterPreviousBtn{background:#e8eef7;color:#22324a}
 .rosterClearBtn{background:#fee2e2;color:#991b1b}
 @media(max-width:390px){
-  .venueRow{grid-template-columns:minmax(0,56%) minmax(0,44%);gap:6px}
+  .matchMetaRow{grid-template-columns:minmax(0,56fr) minmax(72px,20fr) minmax(90px,24fr);gap:6px}
+  .venueRow{grid-template-columns:minmax(0,56fr) minmax(0,44fr);gap:6px}
   .rosterQuickBtn{min-width:0;width:100%;padding:6px 8px;font-size:12.5px}
   .rosterPresetGrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
   .rosterGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
@@ -252,6 +262,22 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
   background:linear-gradient(180deg,#17603f 0%,#11452f 100%);
 }
 .keeperQuickBtn:active{transform:scale(.98)}
+.keeperQuickBtn.locked,
+.rosterQuickBtn.locked{
+  opacity:.62;
+  filter:saturate(.55);
+  cursor:default;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.keeperQuickBtn.locked:active,
+.rosterQuickBtn.locked:active{transform:none}
+.keeperQuickBtn.locked::after,
+.rosterQuickBtn.locked::after{
+  content:'🔒';
+  margin-left:2px;
+  font-size:10px;
+  opacity:.78;
+}
 .keeperModalTitle{
   display:flex;
   align-items:center;
@@ -874,7 +900,146 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   color:#ffffff;
   text-shadow:0 1px 2px rgba(0,0,0,.25);
 }
+
+/* Match State UI：當下不需要的操作直接收起，而不是只做灰階。 */
+.stateManaged{
+  max-height:320px;
+  opacity:1;
+  transform:translateY(0);
+  overflow:hidden;
+  transition:
+    max-height .18s ease,
+    opacity .16s ease,
+    transform .18s ease,
+    margin .18s ease,
+    padding .18s ease,
+    border-width .18s ease;
+}
+.stateManaged.stateHidden{
+  max-height:0!important;
+  opacity:0;
+  transform:translateY(-6px);
+  margin-top:0!important;
+  margin-bottom:0!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+  border-top-width:0!important;
+  border-bottom-width:0!important;
+  pointer-events:none;
+  visibility:hidden;
+}
+#recordSection.stateManaged{max-height:110px}
+
+/* 全場後進入結果模式：比分成為畫面主角，操作區退場。 */
+body.resultMode .matchCard.finishedState{
+  box-shadow:
+    inset 0 4px 0 rgba(255,123,114,.94),
+    0 0 26px rgba(214,69,69,.24);
+}
+body.resultMode .scoreText{
+  text-shadow:0 2px 12px rgba(255,255,255,.08);
+}
+body.resultMode #recordSection .recordFullBtn{
+  border-color:rgba(125,190,255,.62);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 7px 18px rgba(37,99,235,.18);
+}
+
+/* 全場後：極簡本場結果摘要卡 */
+.quickResultCard{
+  display:block;
+  max-height:150px;
+  padding:10px 12px;
+  border-radius:20px;
+  background:
+    linear-gradient(180deg,rgba(18,31,49,.98) 0%,rgba(11,22,36,.98) 100%);
+  border:1px solid rgba(96,165,250,.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 8px 22px rgba(0,0,0,.20);
+}
+.quickResultTop{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+  gap:10px;
+}
+.quickResultTeam{
+  min-width:0;
+  font-size:16px;
+  font-weight:900;
+  color:#eaf2ff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.quickResultTeam.our{text-align:right}
+.quickResultTeam.opp{text-align:left;color:#cbd5e1}
+.quickResultScoreWrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  white-space:nowrap;
+}
+.quickResultScore{
+  font-size:27px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.5px;
+  color:#fff;
+  font-variant-numeric:tabular-nums;
+}
+.quickResultPk{
+  display:none;
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid rgba(167,139,250,.55);
+  background:rgba(91,33,182,.25);
+  color:#ddd6fe;
+  font-size:11px;
+  line-height:1.2;
+  font-weight:950;
+  font-variant-numeric:tabular-nums;
+}
+.quickResultPk.show{display:inline-flex}
+.quickResultStats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:5px;
+  margin-top:9px;
+  padding-top:8px;
+  border-top:1px solid rgba(148,163,184,.18);
+}
+.quickResultStat{
+  text-align:center;
+  min-width:0;
+  font-size:11px;
+  color:#94a3b8;
+  white-space:nowrap;
+}
+.quickResultStat strong{
+  margin-left:3px;
+  color:#f8fafc;
+  font-size:14px;
+  font-weight:950;
+  font-variant-numeric:tabular-nums;
+}
+@media(max-width:390px){
+  .quickResultCard{padding:9px 9px}
+  .quickResultTeam{font-size:14px}
+  .quickResultScore{font-size:24px}
+  .quickResultPk{font-size:10px;padding:3px 6px}
+  .quickResultStats{gap:2px}
+  .quickResultStat{font-size:10px}
+  .quickResultStat strong{font-size:13px;margin-left:2px}
+}
+
+/* 賽前刻意留白，讓注意力集中在基本資料與「開始比賽」。 */
+body.matchStatePre .matchCard{margin-bottom:8px}
+body.matchStatePre .wrap{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+
 .finalToolsCard{
+  display:none;
   position:fixed;
   left:50%;
   transform:translateX(-50%);
@@ -892,6 +1057,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   -webkit-backdrop-filter:blur(14px) saturate(125%);
   backdrop-filter:blur(14px) saturate(125%);
 }
+body.finalOutputVisible .finalToolsCard{display:block}
 .finalTools{
   gap:7px;
 }
@@ -1321,7 +1487,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.55</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.59</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1421,7 +1587,25 @@ button:disabled:active{transform:none!important}
     <div class="status" id="status">尚未開始</div>
   </div>
 
-  <div class="card">
+
+  <div class="card quickResultCard stateManaged stateHidden" id="quickResultSection" aria-hidden="true">
+    <div class="quickResultTop">
+      <div class="quickResultTeam our" id="quickResultOur">我方</div>
+      <div class="quickResultScoreWrap">
+        <div class="quickResultScore"><span id="quickResultOurScore">0</span> : <span id="quickResultOppScore">0</span></div>
+        <div class="quickResultPk" id="quickResultPk">PK 0 : 0</div>
+      </div>
+      <div class="quickResultTeam opp" id="quickResultOpp">對手</div>
+    </div>
+    <div class="quickResultStats" aria-label="本場標記事件統計">
+      <div class="quickResultStat">進球<strong id="quickResultGoal">0</strong></div>
+      <div class="quickResultStat">射門<strong id="quickResultShot">0</strong></div>
+      <div class="quickResultStat">撲救<strong id="quickResultSave">0</strong></div>
+      <div class="quickResultStat">防守<strong id="quickResultDefense">0</strong></div>
+    </div>
+  </div>
+
+  <div class="card stateManaged" id="eventSection">
     <div class="events">
       <button id="goalBtn" class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
       <button id="saveBtn" class="event save" onclick="openPlayerEvent('SAVE')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span></button>
@@ -1430,13 +1614,13 @@ button:disabled:active{transform:none!important}
     </div>
   </div>
 
-  <div class="card cardEventWrap">
+  <div class="card cardEventWrap stateManaged" id="disciplineSection">
     <button id="cardBtn" class="cardEventBtn" onclick="openCardModal()" aria-label="新增黃牌或紅牌紀錄">
       <span class="cardLabel"><span class="cardIcons" aria-hidden="true"><span>🟨</span><span>🟥</span></span><span>黃牌 / 紅牌</span></span>
     </button>
   </div>
 
-  <div class="card">
+  <div class="card stateManaged" id="recordSection">
     <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">紀錄</span></span><span class="recordMeta"><span class="recordMetaPrefix">共</span><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
   </div>
 
@@ -1457,7 +1641,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.55</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.59</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -2381,6 +2565,10 @@ function renderRosterModal(){
 }
 
 function openRosterModal(){
+  if(state.finished){
+    alert('本場比賽已結束，球員名單已鎖定。');
+    return;
+  }
   renderRosterModal();
   const input=byId('rosterInput');
   if(input) input.value='';
@@ -2402,6 +2590,7 @@ function parseRosterNumber(raw){
 }
 
 function addRosterNumbers(){
+  if(state.finished) return;
   const input=byId('rosterInput');
   if(!input) return;
 
@@ -2456,6 +2645,7 @@ function toggleRosterNumber(number){
 }
 
 function removeRosterNumber(number){
+  if(state.finished) return;
   const n=Number(number);
   state.rosterNumbers=currentRosterNumbers().filter(v=>v!==n);
   rememberCurrentRosterAsPrevious();
@@ -2467,6 +2657,7 @@ function removeRosterNumber(number){
 }
 
 function clearRoster(){
+  if(state.finished) return;
   if(currentRosterNumbers().length && !confirm('確定要清空本場球員名單嗎？')) return;
   state.rosterNumbers=[];
   buildNumberGrid();
@@ -2477,6 +2668,7 @@ function clearRoster(){
 }
 
 function applyPreviousRoster(){
+  if(state.finished) return;
   const prev=getPreviousRoster();
   if(!prev.length) return;
   state.rosterNumbers=prev;
@@ -2502,6 +2694,10 @@ function buildKeeperGrid(){
   });
 }
 function openKeeperModal(){
+  if(state.finished){
+    alert('本場比賽已結束，守門員背號已鎖定。');
+    return;
+  }
   buildKeeperGrid();
   const input=byId('keeperCustomNumber');
   if(input) input.value=state.goalkeeperNumber||'';
@@ -2511,6 +2707,7 @@ function closeKeeperModal(){
   byId('keeperModal').classList.remove('open');
 }
 function setKeeperNumber(number){
+  if(state.finished) return;
   const n=Number(number);
   if(!Number.isInteger(n) || n<1 || n>99){
     alert('守門員背號請輸入 1～99 的整數');
@@ -2525,6 +2722,7 @@ function setKeeperNumber(number){
   closeKeeperModal();
 }
 function saveKeeperCustom(){
+  if(state.finished) return;
   const el=byId('keeperCustomNumber');
   if(!el) return;
   el.value=String(el.value||'').replace(/\D/g,'').slice(0,2);
@@ -3589,6 +3787,68 @@ function finishTeamNameEdit(id){
   updateTeamNameDisplays();
 }
 
+function setStateSectionVisible(id, visible){
+  const el=byId(id);
+  if(!el) return;
+  el.classList.toggle('stateHidden', !visible);
+  el.setAttribute('aria-hidden', String(!visible));
+}
+
+
+function renderQuickResult(){
+  const section=byId('quickResultSection');
+  if(!section) return;
+
+  const ourName=(state.ourTeam||'').trim() || '我方';
+  const oppName=(state.opponentTeam||'').trim() || '對手';
+
+  byId('quickResultOur').textContent=ourName;
+  byId('quickResultOpp').textContent=oppName;
+  byId('quickResultOurScore').textContent=state.ourScore;
+  byId('quickResultOppScore').textContent=state.oppScore;
+
+  const pk=byId('quickResultPk');
+  if(pk){
+    if(state.penalty?.completed){
+      pk.textContent=`PK ${penaltyGoals('our')} : ${penaltyGoals('opp')}`;
+      pk.classList.add('show');
+    }else{
+      pk.textContent='';
+      pk.classList.remove('show');
+    }
+  }
+
+  const countEvent=event=>state.markers.filter(m=>m.event===event).length;
+  byId('quickResultGoal').textContent=countEvent('GOAL');
+  byId('quickResultShot').textContent=countEvent('SHOT');
+  byId('quickResultSave').textContent=countEvent('SAVE');
+  byId('quickResultDefense').textContent=
+    state.markers.filter(m=>m.event==='DEFENSE' || m.event==='GREAT_DEFENSE').length;
+}
+
+function renderMatchStateUI(){
+  const isFinished=!!state.finished;
+  const isPenalty=!!state.penalty?.active;
+  const isBreak=!!state.awaitingNextPeriod;
+  const isLive=!!state.started && !isFinished && !isBreak && !isPenalty;
+  const isPre=!state.started && !isBreak && !isFinished && !isPenalty;
+
+  // 一般比賽 / 下半場 / 延長賽進行中：顯示所有現場標記事件。
+  setStateSectionVisible('eventSection', isLive);
+  setStateSectionVisible('disciplineSection', isLive);
+
+  // 紀錄在比賽進行、中場、PK、全場後都具有回顧價值；賽前沒有紀錄則不顯示。
+  setStateSectionVisible('recordSection', !isPre);
+
+  // 極簡結果卡只屬於全場後的 Result Mode。
+  setStateSectionVisible('quickResultSection', isFinished);
+
+  document.body.classList.toggle('matchStatePre', isPre);
+  document.body.classList.toggle('matchStateLive', isLive);
+  document.body.classList.toggle('matchStateBreak', isBreak || isPenalty);
+  document.body.classList.toggle('resultMode', isFinished);
+}
+
 function render(){
   updateTeamNameDisplays();
   byId('ourScore').textContent=state.ourScore;
@@ -3607,14 +3867,22 @@ function render(){
   }
 
   byId('count').textContent=state.markers.length;
+  renderMatchStateUI();
+  renderQuickResult();
 
   const roster=currentRosterNumbers();
   const rosterBtn=byId('rosterQuickBtn');
   const rosterText=byId('rosterQuickText');
   if(rosterBtn && rosterText){
     rosterBtn.classList.toggle('set',roster.length>0);
+    rosterBtn.classList.toggle('locked',!!state.finished);
     rosterText.textContent=`${roster.length}人`;
-    rosterBtn.setAttribute('aria-label',roster.length?`本場球員名單共 ${roster.length} 人，點擊查看或編輯`:'設定本場球員名單');
+    rosterBtn.setAttribute(
+      'aria-label',
+      state.finished
+        ? `本場球員名單共 ${roster.length} 人，比賽已結束並鎖定`
+        : (roster.length?`本場球員名單共 ${roster.length} 人，點擊查看或編輯`:'設定本場球員名單')
+    );
   }
 
   const keeperNumber=String(state.goalkeeperNumber||'');
@@ -3622,8 +3890,14 @@ function render(){
   const keeperText=byId('keeperQuickText');
   if(keeperBtn && keeperText){
     keeperBtn.classList.toggle('set',!!keeperNumber);
+    keeperBtn.classList.toggle('locked',!!state.finished);
     keeperText.textContent=keeperNumber ? `#${keeperNumber}` : 'GK';
-    keeperBtn.setAttribute('aria-label', keeperNumber ? `目前守門員背號 ${keeperNumber}，點擊更換` : '設定目前守門員背號');
+    keeperBtn.setAttribute(
+      'aria-label',
+      state.finished
+        ? (keeperNumber?`本場守門員背號 ${keeperNumber}，比賽已結束並鎖定`:'本場未設定守門員，比賽已結束並鎖定')
+        : (keeperNumber ? `目前守門員背號 ${keeperNumber}，點擊更換` : '設定目前守門員背號')
+    );
   }
 
   let txt='尚未開始', cls='idleStatus', cardCls='idleState';
@@ -3679,7 +3953,9 @@ function render(){
     finishBtn.disabled=true;
   }
 
-  // 賽後輸出功能只在「全場結束」後啟用。
+  // Match State UI：賽後輸出只屬於「結果模式」。
+  // 賽前 / 比賽中 / 中場 / PK 進行中都不佔用畫面。
+  document.body.classList.toggle('finalOutputVisible', !!state.finished);
   ['reportBtn','saveImageBtn','shareCsvBtn'].forEach(id=>{
     const btn=byId(id);
     if(btn) btn.disabled=!state.finished;
