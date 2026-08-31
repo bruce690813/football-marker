@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.62</title>
+<title>足球場邊記錄器 v3.63</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -297,19 +297,20 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 .keeperQuickBtn:active{transform:scale(.98)}
 .keeperQuickBtn.locked,
 .rosterQuickBtn.locked{
-  opacity:.62;
-  filter:saturate(.55);
+  opacity:.66;
+  filter:saturate(.48) brightness(.92);
   cursor:default;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  border-color:rgba(148,163,184,.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    inset 0 0 0 999px rgba(15,23,42,.08);
 }
 .keeperQuickBtn.locked:active,
 .rosterQuickBtn.locked:active{transform:none}
 .keeperQuickBtn.locked::after,
 .rosterQuickBtn.locked::after{
-  content:'🔒';
-  margin-left:2px;
-  font-size:10px;
-  opacity:.78;
+  content:'';
+  display:none;
 }
 .keeperModalTitle{
   display:flex;
@@ -980,91 +981,53 @@ body.resultMode #recordSection .recordFullBtn{
 /* 全場後：極簡本場結果摘要卡 */
 .quickResultCard{
   display:block;
-  max-height:150px;
-  padding:10px 12px;
+  padding:10px 12px 11px;
   border-radius:20px;
   background:
     linear-gradient(180deg,rgba(18,31,49,.98) 0%,rgba(11,22,36,.98) 100%);
-  border:1px solid rgba(96,165,250,.34);
+  border:1px solid rgba(96,165,250,.30);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.05),
-    0 8px 22px rgba(0,0,0,.20);
+    0 8px 22px rgba(0,0,0,.18);
 }
-.quickResultTop{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
-  align-items:center;
-  gap:10px;
-}
-.quickResultTeam{
-  min-width:0;
-  font-size:16px;
+.quickResultTitle{
+  font-size:13px;
   font-weight:900;
-  color:#eaf2ff;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  color:#cbd5e1;
+  letter-spacing:.2px;
+  margin-bottom:8px;
 }
-.quickResultTeam.our{text-align:right}
-.quickResultTeam.opp{text-align:left;color:#cbd5e1}
-.quickResultScoreWrap{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  white-space:nowrap;
-}
-.quickResultScore{
-  font-size:27px;
-  line-height:1;
-  font-weight:950;
-  letter-spacing:.5px;
-  color:#fff;
-  font-variant-numeric:tabular-nums;
-}
-.quickResultPk{
-  display:none;
-  padding:3px 8px;
-  border-radius:999px;
-  border:1px solid rgba(167,139,250,.55);
-  background:rgba(91,33,182,.25);
-  color:#ddd6fe;
-  font-size:11px;
-  line-height:1.2;
-  font-weight:950;
-  font-variant-numeric:tabular-nums;
-}
-.quickResultPk.show{display:inline-flex}
 .quickResultStats{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:5px;
-  margin-top:9px;
-  padding-top:8px;
-  border-top:1px solid rgba(148,163,184,.18);
 }
 .quickResultStat{
   text-align:center;
   min-width:0;
+  padding:7px 4px 6px;
+  border-radius:12px;
+  background:rgba(15,23,42,.42);
+  border:1px solid rgba(148,163,184,.12);
   font-size:11px;
   color:#94a3b8;
   white-space:nowrap;
 }
 .quickResultStat strong{
-  margin-left:3px;
+  display:block;
+  margin-top:2px;
   color:#f8fafc;
-  font-size:14px;
+  font-size:17px;
+  line-height:1.1;
   font-weight:950;
   font-variant-numeric:tabular-nums;
 }
 @media(max-width:390px){
-  .quickResultCard{padding:9px 9px}
-  .quickResultTeam{font-size:14px}
-  .quickResultScore{font-size:24px}
-  .quickResultPk{font-size:10px;padding:3px 6px}
-  .quickResultStats{gap:2px}
-  .quickResultStat{font-size:10px}
-  .quickResultStat strong{font-size:13px;margin-left:2px}
+  .quickResultCard{padding:9px 9px 10px}
+  .quickResultTitle{font-size:12px;margin-bottom:7px}
+  .quickResultStats{gap:4px}
+  .quickResultStat{font-size:10px;padding:6px 2px}
+  .quickResultStat strong{font-size:16px}
 }
 
 /* 賽前刻意留白，讓注意力集中在基本資料與「開始比賽」。 */
@@ -1520,7 +1483,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.62</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.63</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1624,14 +1587,7 @@ button:disabled:active{transform:none!important}
 
 
   <div class="card quickResultCard stateManaged stateHidden" id="quickResultSection" aria-hidden="true">
-    <div class="quickResultTop">
-      <div class="quickResultTeam our" id="quickResultOur">我方</div>
-      <div class="quickResultScoreWrap">
-        <div class="quickResultScore"><span id="quickResultOurScore">0</span> : <span id="quickResultOppScore">0</span></div>
-        <div class="quickResultPk" id="quickResultPk">PK 0 : 0</div>
-      </div>
-      <div class="quickResultTeam opp" id="quickResultOpp">對手</div>
-    </div>
+    <div class="quickResultTitle">本場標記事件</div>
     <div class="quickResultStats" aria-label="本場標記事件統計">
       <div class="quickResultStat">進球<strong id="quickResultGoal">0</strong></div>
       <div class="quickResultStat">射門<strong id="quickResultShot">0</strong></div>
@@ -1676,7 +1632,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.62</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.63</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -3833,25 +3789,6 @@ function setStateSectionVisible(id, visible){
 function renderQuickResult(){
   const section=byId('quickResultSection');
   if(!section) return;
-
-  const ourName=(state.ourTeam||'').trim() || '我方';
-  const oppName=(state.opponentTeam||'').trim() || '對手';
-
-  byId('quickResultOur').textContent=ourName;
-  byId('quickResultOpp').textContent=oppName;
-  byId('quickResultOurScore').textContent=state.ourScore;
-  byId('quickResultOppScore').textContent=state.oppScore;
-
-  const pk=byId('quickResultPk');
-  if(pk){
-    if(state.penalty?.completed){
-      pk.textContent=`PK ${penaltyGoals('our')} : ${penaltyGoals('opp')}`;
-      pk.classList.add('show');
-    }else{
-      pk.textContent='';
-      pk.classList.remove('show');
-    }
-  }
 
   const countEvent=event=>state.markers.filter(m=>m.event===event).length;
   byId('quickResultGoal').textContent=countEvent('GOAL');
