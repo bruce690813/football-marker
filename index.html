@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.63</title>
+<title>足球場邊記錄器 v3.65</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1208,7 +1208,44 @@ body.keyboardOpen .finalToolsCard{display:none}
 }
 .reportTop{padding:16px 16px 12px;border-bottom:1px solid #2b3744;background:linear-gradient(180deg,#101826 0%,#0f1720 100%);flex:0 0 auto}
 .reportTitle{font-size:13px;color:#93a4b6;letter-spacing:.3px}
-.reportScoreRow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-top:10px;padding:14px 16px;border:1px solid #314155;border-radius:16px;background:linear-gradient(180deg,#132033 0%,#0c1420 100%);box-shadow:inset 0 0 0 1px rgba(59,130,246,.08)}
+.reportScoreRow{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+  padding:14px 16px;
+  border:1px solid #314155;
+  border-radius:16px;
+  background:linear-gradient(180deg,#132033 0%,#0c1420 100%);
+  box-shadow:inset 0 0 0 1px rgba(59,130,246,.08)
+}
+.reportScoreRow.finished{
+  margin-top:18px;
+  border:2px solid #ff4d57;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,77,87,.12),
+    0 0 18px rgba(255,77,87,.10);
+}
+.reportScoreRow.finished::before{
+  content:'比賽結束';
+  position:absolute;
+  top:-13px;
+  left:50%;
+  transform:translateX(-50%);
+  min-width:88px;
+  padding:4px 14px;
+  border-radius:999px;
+  background:#ff4d57;
+  color:#fff;
+  text-align:center;
+  font-size:11px;
+  line-height:1.15;
+  font-weight:950;
+  letter-spacing:.35px;
+  box-shadow:0 3px 10px rgba(239,68,68,.22);
+}
 .reportTeam{
   text-align:center;
   font-size:26px;
@@ -1475,6 +1512,16 @@ button:disabled:active{transform:none!important}
   white-space:nowrap;
 }
 
+
+/* v3.65 規定時間提醒 */
+.broadcastStage.regulationSoon{border-color:rgba(245,158,11,.92)!important;box-shadow:0 0 18px rgba(245,158,11,.20)!important}
+.broadcastStage.regulationSoon .stageTimer{color:#fbbf24!important}
+.broadcastStage.regulationCritical{border-color:rgba(249,115,22,.96)!important;box-shadow:0 0 20px rgba(249,115,22,.24)!important}
+.broadcastStage.regulationCritical .stageTimer{color:#fb923c!important}
+.broadcastStage.regulationReached{border-color:rgba(239,68,68,.96)!important;box-shadow:0 0 20px rgba(239,68,68,.22)!important}
+.broadcastStage.regulationReached .stageTimer{color:#f87171!important}
+.regulationHint{display:none;margin-top:5px;text-align:center;font-size:11px;font-weight:850}
+.regulationHint.show{display:block}.regulationHint.soon{color:#fbbf24}.regulationHint.critical{color:#fb923c}.regulationHint.reached{color:#f87171}
 </style>
 </head>
 <body>
@@ -1483,7 +1530,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.63</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.65</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1511,6 +1558,7 @@ button:disabled:active{transform:none!important}
             <span class="stageLabel" id="broadcastStageLabel">賽前</span>
             <span class="stageTimer timer" id="timer">00:00</span>
           </div>
+<div class="regulationHint" id="regulationHint"></div>
         </div>
       </div>
       <div class="scoreRow">
@@ -1632,7 +1680,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.63</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.65</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -1942,7 +1990,7 @@ button:disabled:active{transform:none!important}
   <div class="modal reportModal">
     <div class="reportTop">
       <div class="reportTitle">⚽ 比賽摘要｜本場標記事件</div>
-      <div class="reportScoreRow">
+      <div class="reportScoreRow" id="reportScoreRow">
         <div class="reportTeam" id="reportOurTeam">我方</div>
         <div class="reportScore" id="reportScore">0 : 0</div>
         <div class="reportTeam" id="reportOppTeam">對手</div>
@@ -3821,6 +3869,40 @@ function renderMatchStateUI(){
   document.body.classList.toggle('resultMode', isFinished);
 }
 
+
+function renderRegulationTimeAlert(){
+  const stage=byId('broadcastStage'), hint=byId('regulationHint');
+  if(!stage||!hint) return;
+  stage.classList.remove('regulationSoon','regulationCritical','regulationReached');
+  hint.className='regulationHint'; hint.textContent='';
+  if(!state.started||state.finished||state.awaitingNextPeriod) return;
+  const mins=Number(state.regulationMinutes||0);
+  if(!mins) return;
+
+  let sec=0;
+  try{
+    if(typeof elapsed==='function') sec=Math.floor(Number(elapsed())||0);
+    else if(typeof currentPeriodElapsed==='function') sec=Math.floor(Number(currentPeriodElapsed())||0);
+  }catch(e){}
+  const diff=Math.round(mins*60)-sec;
+  if(diff>60) return;
+
+  hint.classList.add('show');
+  if(diff>30){
+    stage.classList.add('regulationSoon'); hint.classList.add('soon');
+    hint.textContent=`距規定時間 ${fmtMMSS(diff)}`;
+  }else if(diff>0){
+    stage.classList.add('regulationCritical'); hint.classList.add('critical');
+    hint.textContent=`距規定時間 ${fmtMMSS(diff)}`;
+  }else if(diff===0){
+    stage.classList.add('regulationReached'); hint.classList.add('reached');
+    hint.textContent='規定時間到';
+  }else{
+    stage.classList.add('regulationReached'); hint.classList.add('reached');
+    hint.textContent=`超時 +${fmtMMSS(Math.abs(diff))}`;
+  }
+}
+
 function render(){
   updateTeamNameDisplays();
   byId('ourScore').textContent=state.ourScore;
@@ -3840,6 +3922,7 @@ function render(){
 
   byId('count').textContent=state.markers.length;
   renderMatchStateUI();
+  renderRegulationTimeAlert();
   renderQuickResult();
 
   const roster=currentRosterNumbers();
@@ -4063,9 +4146,13 @@ function buildReportDOM(){
   const penaltyWrap=byId('reportPenaltyWrap');
   penaltyWrap.style.display=state.penalty ? '' : 'none';
   byId('reportPenalty').innerHTML=state.penalty ? penaltySummaryHTML() : '';
+  const reportScoreRow=byId('reportScoreRow');
+  if(reportScoreRow) reportScoreRow.classList.toggle('finished', !!state.finished);
+
   const badge=byId('reportStatusBadge');
   badge.className='reportStatusBadge ' + (state.finished ? 'finished' : (state.started ? 'running' : 'idle'));
   badge.textContent=state.finished ? (state.penalty?.completed?`比賽結束｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:'比賽結束') : (state.penalty?.active?`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:(state.started ? (state.currentPeriod===3?'延長賽':state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?(state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':`中場 ${fmtMMSS(halftimeElapsed())}`):'尚未開始')));
+  badge.style.display=state.finished?'none':'inline-flex';
   renderDiff(byId('reportDiff'));
   const goals=state.markers.filter(m=>m.event==='GOAL');
   const others=state.markers.filter(m=>m.event!=='GOAL');
@@ -4987,6 +5074,8 @@ document.querySelectorAll('.finalTools button').forEach(btn=>{
 
 loadState();
 tick();
+
+setInterval(renderRegulationTimeAlert,1000);
 </script>
 </body>
 </html>
