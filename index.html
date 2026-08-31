@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.59</title>
+<title>足球場邊記錄器 v3.62</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -94,9 +94,10 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 }
 .tagline{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.2px}
 .card{background:linear-gradient(180deg,rgba(13,25,39,.94) 0%,rgba(9,18,28,.97) 100%);border:1px solid rgba(78,178,103,.30);border-radius:16px;padding:7px;margin-bottom:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 10px 24px rgba(0,0,0,.16)}
-.matchMetaRow{
+.matchMetaRow,
+.venueRow{
   display:grid;
-  grid-template-columns:minmax(0,56fr) minmax(78px,20fr) minmax(96px,24fr);
+  grid-template-columns:minmax(0,56fr) minmax(0,44fr);
   gap:8px;
   align-items:center
 }
@@ -105,16 +106,17 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 }
 #competition{min-width:0;font-size:15.5px;font-weight:850;min-height:38px}
 #competition::placeholder{font-size:13.5px;font-weight:700;color:#74849a}
-.venueRow{
-  margin-top:6px;
+.matchMetaActions{
+  min-width:0;
   display:grid;
-  /* 場地不再比賽事名稱寬很多；右側名單區加寬，讓兩列主欄位視覺比例更一致 */
-  grid-template-columns:minmax(0,56fr) minmax(0,44fr);
+  grid-template-columns:minmax(0,45fr) minmax(0,55fr);
   gap:8px;
-  align-items:center
+  align-items:center;
 }
+.matchMetaActions > button{width:100%;min-width:0}
+.venueRow{margin-top:6px}
 .venueRow input{
-  width:100%;min-height:34px;padding:6px 11px;border-radius:10px;
+  width:100%;min-height:38px;padding:7px 11px;border-radius:11px;
   border:1px solid rgba(71,96,126,.72);background:rgba(9,18,32,.82);
   color:#d7e1ee;font-size:13.5px;font-weight:700;text-align:left;outline:none;
   transition:border-color .16s ease,box-shadow .16s ease,background .16s ease
@@ -128,8 +130,8 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 .rosterQuickBtn{
   min-width:0;
   width:100%;
-  min-height:34px;
-  padding:6px 10px;
+  min-height:38px;
+  padding:7px 10px;
   border-radius:11px;
   display:inline-flex;
   align-items:center;
@@ -229,14 +231,45 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
   outline:none
 }
 .rosterInputRow input:focus{border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.16)}
-.rosterAddBtn{min-width:82px;background:#2563eb;color:#fff}
+.rosterAddBtn{
+  min-width:82px;
+  min-height:46px;
+  background:#eaf2ff;
+  color:#1d4ed8;
+  border:1px solid #93b4ee;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
+  font-weight:950
+}
+.rosterAddBtn:active{
+  background:#dbeafe;
+  transform:scale(.98)
+}
 .rosterFooterActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .rosterPreviousBtn{background:#e8eef7;color:#22324a}
 .rosterClearBtn{background:#fee2e2;color:#991b1b}
+.rosterDoneBtn{
+  width:100%;
+  min-height:46px;
+  margin-top:10px;
+  border:1px solid #1d4ed8;
+  border-radius:12px;
+  background:linear-gradient(180deg,#2f73ea 0%,#1d4ed8 100%);
+  color:#fff;
+  font-size:15px;
+  font-weight:1000;
+  letter-spacing:.4px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 5px 14px rgba(29,78,216,.22)
+}
+.rosterDoneBtn:active{
+  transform:scale(.985);
+  background:linear-gradient(180deg,#2563eb 0%,#1e40af 100%)
+}
 @media(max-width:390px){
-  .matchMetaRow{grid-template-columns:minmax(0,56fr) minmax(72px,20fr) minmax(90px,24fr);gap:6px}
-  .venueRow{grid-template-columns:minmax(0,56fr) minmax(0,44fr);gap:6px}
-  .rosterQuickBtn{min-width:0;width:100%;padding:6px 8px;font-size:12.5px}
+  .matchMetaRow,.venueRow{grid-template-columns:minmax(0,56fr) minmax(0,44fr);gap:6px}
+  .matchMetaActions{grid-template-columns:minmax(0,45fr) minmax(0,55fr);gap:6px}
+  .rosterQuickBtn{min-width:0;width:100%;padding:7px 8px;font-size:12.5px}
   .rosterPresetGrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
   .rosterGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
 }
@@ -1487,16 +1520,18 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.59</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.62</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
     <div class="matchMetaRow">
-      <input id="competition" placeholder="🏆 賽事名稱" maxlength="20" enterkeyhint="done" autocomplete="off" aria-label="賽事名稱">
-      <button id="keeperQuickBtn" class="keeperQuickBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
-        <span aria-hidden="true">🧤</span><span id="keeperQuickText">GK</span>
-      </button>
-      <button class="new" onclick="newMatch()">＋ 新比賽</button>
+      <input id="competition" placeholder="🏆 賽事名稱" maxlength="20" enterkeyhint="next" autocomplete="off" aria-label="賽事名稱">
+      <div class="matchMetaActions">
+        <button id="keeperQuickBtn" class="keeperQuickBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
+          <span aria-hidden="true">🧤</span><span id="keeperQuickText">GK</span>
+        </button>
+        <button class="new" onclick="newMatch()">＋ 新比賽</button>
+      </div>
     </div>
     <div class="venueRow">
       <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
@@ -1641,7 +1676,7 @@ button:disabled:active{transform:none!important}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.59</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.62</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -1794,7 +1829,7 @@ button:disabled:active{transform:none!important}
       <button class="rosterPreviousBtn" id="rosterPreviousBtn" type="button" onclick="applyPreviousRoster()">套用上場名單</button>
       <button class="rosterClearBtn" type="button" onclick="clearRoster()">清空名單</button>
     </div>
-    <button class="cancel" type="button" onclick="closeRosterModal()">完成</button>
+    <button class="rosterDoneBtn" type="button" onclick="closeRosterModal()">完成</button>
   </div>
 </div>
 
@@ -2009,7 +2044,7 @@ button:disabled:active{transform:none!important}
 const KEY='football_marker_v218';
 const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const LAST_VENUE_KEY='football_marker_last_venue';
-let guidedSetupStep=null; // 'our' -> 'opp' -> 'venue' during New Match guided input
+let guidedSetupStep=null; // 'our' -> 'opp' -> 'competition' -> 'venue' during pre-match guided input
 const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
 const LAST_ROSTER_KEY='football_marker_last_roster_v1';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
@@ -4693,175 +4728,233 @@ async function shareCSV(){
   });
 });
 
-// 輸入流程引導：我方 → 對手 → 場地。
-// iOS 中文鍵盤的「✓ 完成」有時不會送出 Enter，而只觸發 blur，
-// 因此同時支援 keydown + blur。guidedSetupStep 用來避免重複跳欄位。
+// 賽前輸入流程引導：我方 → 對手 → 賽事名稱 → 場地。
+// iOS 中文鍵盤的「✓ / 完成」有時只觸發 blur、不送 Enter，
+// 因此 keydown + blur 都支援；對手、賽事名稱、場地皆為選填。
+function isPreMatchGuidedSetup(){
+  return !state.started && !state.finished;
+}
+
+function focusCompetitionField(){
+  const el=byId('competition');
+  if(!el) return;
+  guidedSetupStep='competition';
+  setTimeout(()=>{
+    el.classList.add('guidedInput');
+    el.focus();
+    try{ el.setSelectionRange(el.value.length,el.value.length); }catch(e){}
+  },40);
+}
+
+function focusVenueField(){
+  const el=byId('venue');
+  if(!el) return;
+  guidedSetupStep='venue';
+  setTimeout(()=>{
+    el.classList.add('guidedInput');
+    el.focus();
+    try{ el.setSelectionRange(el.value.length,el.value.length); }catch(e){}
+  },40);
+}
+
 function advanceGuidedSetup(from){
+  if(!isPreMatchGuidedSetup()) return false;
   if(guidedSetupStep!==from) return false;
 
   if(from==='our'){
-    const el=byId('ourTeam');
-    const raw=String(el?.value||'').trim();
+    const raw=String(byId('ourTeam')?.value||'').trim();
     if(!raw){
       guidedSetupStep='our';
       focusMatchRequiredField('ourTeam');
       return false;
     }
-    const value=validateTextField('ourTeam','我方隊伍名稱',false,15);
+
+    const value=validateTextField('ourTeam','我方隊伍名稱',true,15);
     if(value===null){
       guidedSetupStep='our';
       focusMatchRequiredField('ourTeam');
       return false;
     }
+
     saveState();
     byId('ourTeamBox').classList.remove('editing');
     updateTeamNameDisplays();
+
     guidedSetupStep='opp';
-    setTimeout(()=>editTeamName('oppTeam'),30);
+    setTimeout(()=>editTeamName('oppTeam'),40);
     return true;
   }
 
   if(from==='opp'){
-    const el=byId('oppTeam');
-    const raw=String(el?.value||'').trim();
-    // 對手為選填：空白時直接視為略過，前往場地，不再鎖住焦點。
-    if(!raw){
-      saveState();
-      byId('oppTeamBox').classList.remove('editing');
-      updateTeamNameDisplays();
-      guidedSetupStep='venue';
-      setTimeout(()=>byId('venue').focus(),30);
-      return true;
-    }
+    // 對手為選填；空白也可直接進入下一欄。
     const value=validateTextField('oppTeam','對手隊伍名稱',false,15);
-    if(value===null){
-      guidedSetupStep='venue';
-      byId('oppTeamBox').classList.remove('editing');
-      updateTeamNameDisplays();
-      setTimeout(()=>byId('venue').focus(),30);
-      return true;
-    }
+    if(value===null) return false;
+
     saveState();
     byId('oppTeamBox').classList.remove('editing');
     updateTeamNameDisplays();
-    guidedSetupStep='venue';
-    setTimeout(()=>byId('venue').focus(),30);
+
+    focusCompetitionField();
+    return true;
+  }
+
+  if(from==='competition'){
+    const value=validateTextField('competition','賽事名稱',false,20);
+    if(value===null) return false;
+
+    state.competition=value;
+    saveState();
+    byId('competition').classList.remove('guidedInput');
+
+    focusVenueField();
     return true;
   }
 
   if(from==='venue'){
-    // 場地在「開始比賽」時仍會做必填檢查，但使用者只是按完成／收起鍵盤時
-    // 不應被強迫一定要先輸入場地。
     const value=validateTextField('venue','場地',false,15);
-    if(value===null){
-      guidedSetupStep='venue';
-      setTimeout(()=>byId('venue').focus(),30);
-      return false;
-    }
+    if(value===null) return false;
+
     saveState();
     if(value) rememberVenueIfEligible(value);
-    guidedSetupStep=null;
 
-    // 對手與場地皆為選填；完成場地後直接結束引導，不回頭強迫補對手。
+    guidedSetupStep=null;
+    byId('venue').classList.remove('guidedInput');
     byId('venue').blur();
     return true;
   }
+
   return false;
 }
+
+// 我方：只要在賽前進入編輯，就視為導引起點。
+// 因此即使我方原本已有記憶值，重新編輯後按 ✓ 仍會自動跳到對手。
+byId('ourTeam').addEventListener('focus', ()=>{
+  byId('ourTeamBox').classList.add('editing');
+  byId('ourTeam').classList.add('guidedInput');
+  if(isPreMatchGuidedSetup()) guidedSetupStep='our';
+});
+
+byId('oppTeam').addEventListener('focus', ()=>{
+  byId('oppTeamBox').classList.add('editing');
+  byId('oppTeam').classList.add('guidedInput');
+  if(isPreMatchGuidedSetup()) guidedSetupStep='opp';
+});
+
+byId('competition').addEventListener('focus', ()=>{
+  if(isPreMatchGuidedSetup()) guidedSetupStep='competition';
+  byId('competition').classList.add('guidedInput');
+});
+
+byId('venue').addEventListener('focus', ()=>{
+  // 使用者若主動直接點場地，就尊重使用者操作，不再被拉回對手或賽事名稱。
+  if(isPreMatchGuidedSetup()) guidedSetupStep='venue';
+  byId('oppTeamBox').classList.remove('editing');
+  updateTeamNameDisplays();
+  byId('venue').classList.add('guidedInput');
+});
 
 byId('ourTeam').addEventListener('keydown', e=>{
   if(e.key==='Enter'){
     e.preventDefault();
-    if(guidedSetupStep==='our') advanceGuidedSetup('our');
-    else finishTeamNameEdit('ourTeam');
+    if(isPreMatchGuidedSetup()){
+      guidedSetupStep='our';
+      advanceGuidedSetup('our');
+    }else{
+      finishTeamNameEdit('ourTeam');
+    }
   }
 });
 
 byId('oppTeam').addEventListener('keydown', e=>{
   if(e.key==='Enter'){
     e.preventDefault();
-    if(guidedSetupStep==='opp') advanceGuidedSetup('opp');
-    else finishTeamNameEdit('oppTeam');
-  }
-});
-
-byId('venue').addEventListener('keydown', e=>{
-  if(e.key==='Enter'){
-    e.preventDefault();
-    if(guidedSetupStep==='venue') advanceGuidedSetup('venue');
-    else{
-      const value=validateTextField('venue','場地',false,15);
-      if(value===null) return;
-      saveState();
-      if(value) rememberVenueIfEligible(value);
-      byId('venue').blur();
+    if(isPreMatchGuidedSetup()){
+      guidedSetupStep='opp';
+      advanceGuidedSetup('opp');
+    }else{
+      finishTeamNameEdit('oppTeam');
     }
-  }
-});
-
-byId('ourTeam').addEventListener('focus', ()=>{
-  byId('ourTeamBox').classList.add('editing');
-  byId('ourTeam').classList.add('guidedInput');
-});
-byId('oppTeam').addEventListener('focus', ()=>{
-  byId('oppTeamBox').classList.add('editing');
-  byId('oppTeam').classList.add('guidedInput');
-});
-
-byId('ourTeam').addEventListener('blur', ()=>{
-  byId('ourTeam').classList.remove('guidedInput');
-  // iPhone ✓「完成」主要會走這裡。
-  if(guidedSetupStep==='our'){
-    // iOS 可能在切換 editing 狀態時短暫觸發 blur；延後檢查並保持非阻擋式聚焦。
-    setTimeout(()=>{
-      if(guidedSetupStep==='our') advanceGuidedSetup('our');
-    },40);
-    return;
-  }
-  const value=byId('ourTeam').value.trim();
-  if(value){ validateTextField('ourTeam','我方隊伍名稱',true,15); }
-  byId('ourTeamBox').classList.remove('editing');
-  updateTeamNameDisplays();
-});
-
-byId('oppTeam').addEventListener('blur', ()=>{
-  byId('oppTeam').classList.remove('guidedInput');
-  if(guidedSetupStep==='opp'){
-    // 不使用 alert；若仍空白，advanceGuidedSetup 會重新打開並聚焦對手輸入框。
-    setTimeout(()=>{
-      if(guidedSetupStep==='opp') advanceGuidedSetup('opp');
-    },40);
-    return;
-  }
-  const value=byId('oppTeam').value.trim();
-  if(value){ validateTextField('oppTeam','對手隊伍名稱',false,15); }
-  byId('oppTeamBox').classList.remove('editing');
-  updateTeamNameDisplays();
-});
-
-byId('rosterInput')?.addEventListener('input', e=>{
-  const cleaned=String(e.target.value||'').replace(/\D/g,'').slice(0,2);
-  if(e.target.value!==cleaned) e.target.value=cleaned;
-});
-byId('rosterInput')?.addEventListener('keydown', e=>{
-  if(e.key==='Enter'){
-    e.preventDefault();
-    addRosterNumbers();
   }
 });
 
 byId('competition').addEventListener('keydown', e=>{
   if(e.key==='Enter'){
     e.preventDefault();
-    const value=validateTextField('competition','賽事名稱',false,20);
-    if(value!==null){
-      state.competition=value;
-      saveState();
-      byId('competition').blur();
+    if(isPreMatchGuidedSetup()){
+      guidedSetupStep='competition';
+      advanceGuidedSetup('competition');
+    }else{
+      const value=validateTextField('competition','賽事名稱',false,20);
+      if(value!==null){
+        state.competition=value;
+        saveState();
+        e.target.blur();
+      }
     }
   }
 });
+
+byId('venue').addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    if(isPreMatchGuidedSetup()){
+      guidedSetupStep='venue';
+      advanceGuidedSetup('venue');
+    }else{
+      const value=validateTextField('venue','場地',false,15);
+      if(value===null) return;
+      saveState();
+      if(value) rememberVenueIfEligible(value);
+      e.target.blur();
+    }
+  }
+});
+
+// blur 延遲檢查：
+// 若使用者是主動點到另一個欄位，新的 focus 會先更新 guidedSetupStep，
+// 舊欄位就不會再把焦點硬拉回原本流程。
+byId('ourTeam').addEventListener('blur', ()=>{
+  byId('ourTeam').classList.remove('guidedInput');
+
+  if(isPreMatchGuidedSetup() && guidedSetupStep==='our'){
+    setTimeout(()=>{
+      if(guidedSetupStep==='our') advanceGuidedSetup('our');
+    },80);
+    return;
+  }
+
+  const value=byId('ourTeam').value.trim();
+  if(value) validateTextField('ourTeam','我方隊伍名稱',true,15);
+  byId('ourTeamBox').classList.remove('editing');
+  updateTeamNameDisplays();
+});
+
+byId('oppTeam').addEventListener('blur', ()=>{
+  byId('oppTeam').classList.remove('guidedInput');
+
+  if(isPreMatchGuidedSetup() && guidedSetupStep==='opp'){
+    setTimeout(()=>{
+      if(guidedSetupStep==='opp') advanceGuidedSetup('opp');
+    },80);
+    return;
+  }
+
+  const value=byId('oppTeam').value.trim();
+  if(value) validateTextField('oppTeam','對手隊伍名稱',false,15);
+  byId('oppTeamBox').classList.remove('editing');
+  updateTeamNameDisplays();
+});
+
 byId('competition').addEventListener('blur', ()=>{
+  byId('competition').classList.remove('guidedInput');
+
+  if(isPreMatchGuidedSetup() && guidedSetupStep==='competition'){
+    setTimeout(()=>{
+      if(guidedSetupStep==='competition') advanceGuidedSetup('competition');
+    },80);
+    return;
+  }
+
   const value=validateTextField('competition','賽事名稱',false,20);
   if(value!==null){
     state.competition=value;
@@ -4869,20 +4962,13 @@ byId('competition').addEventListener('blur', ()=>{
   }
 });
 
-byId('venue').addEventListener('focus', ()=>{
-  // 使用者主動點場地，代表可略過選填的對手欄位。
-  if(!state.started) guidedSetupStep='venue';
-  byId('oppTeamBox').classList.remove('editing');
-  updateTeamNameDisplays();
-  byId('venue').classList.add('guidedInput');
-});
 byId('venue').addEventListener('blur', ()=>{
   byId('venue').classList.remove('guidedInput');
-  if(guidedSetupStep==='venue'){
-    // iPhone 的 ✓ 完成常以 blur 結束輸入；允許場地空白直接關閉鍵盤。
+
+  if(isPreMatchGuidedSetup() && guidedSetupStep==='venue'){
     setTimeout(()=>{
       if(guidedSetupStep==='venue') advanceGuidedSetup('venue');
-    },0);
+    },80);
     return;
   }
 
@@ -4891,12 +4977,19 @@ byId('venue').addEventListener('blur', ()=>{
     const value=validateTextField('venue','場地',false,15);
     if(value===null) return;
     rememberVenueIfEligible(value);
-    saveState();
+  }
+  saveState();
+});
 
-    // 場地完成後不回頭強制補對手；對手為選填。
-    guidedSetupStep=null;
-  }else{
-    saveState();
+// 球員名單背號輸入維持既有邏輯。
+byId('rosterInput')?.addEventListener('input', e=>{
+  const cleaned=String(e.target.value||'').replace(/\D/g,'').slice(0,2);
+  if(e.target.value!==cleaned) e.target.value=cleaned;
+});
+byId('rosterInput')?.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    addRosterNumbers();
   }
 });
 
