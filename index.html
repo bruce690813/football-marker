@@ -4,8 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
+
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.66</title>
+<title>足球場邊記錄器 v3.70</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1515,7 +1518,7 @@ button:disabled:active{transform:none!important}
 }
 
 
-/* v3.66 規定時間提醒 */
+/* v3.70 規定時間提醒 */
 .broadcastStage.regulationSoon{border-color:rgba(245,158,11,.92)!important;box-shadow:0 0 18px rgba(245,158,11,.20)!important}
 .broadcastStage.regulationSoon .stageTimer{color:#fbbf24!important}
 .broadcastStage.regulationCritical{border-color:rgba(249,115,22,.96)!important;box-shadow:0 0 20px rgba(249,115,22,.24)!important}
@@ -1562,6 +1565,152 @@ button:disabled:active{transform:none!important}
   padding-bottom:7px;
 }
 
+
+/* =========================
+   v3.70 Live 專注模式
+   ========================= */
+.liveMetaStrip,
+.liveQuickSetup{
+  display:none;
+}
+
+body.matchStateLive .matchMetaRow,
+body.matchStateLive .venueRow{
+  display:none;
+}
+
+body.matchStateLive .liveMetaStrip.show{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:25px;
+  margin:0 1px 5px;
+  padding:4px 10px;
+  border-radius:10px;
+  background:rgba(15,23,42,.58);
+  border:1px solid rgba(71,85,105,.30);
+  color:#91a0b6;
+  font-size:11px;
+  font-weight:780;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+body.matchStateLive .liveQuickSetup{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin:0 0 6px;
+}
+.liveQuickSetup button{
+  min-height:36px;
+  border-radius:11px;
+  font-size:13px;
+  font-weight:900;
+  border:1px solid rgba(96,165,250,.28);
+  background:linear-gradient(180deg,#183551 0%,#10263d 100%);
+  color:#eaf2ff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+.liveQuickSetup button span:first-child{margin-right:5px}
+.liveQuickSetup button:active{transform:scale(.985)}
+
+/* 比賽中時間紀錄：預設只留標題列，需要時才展開。 */
+body.matchStateLive .timeSummary:not(.open) .timeCompact{
+  display:none;
+}
+body.matchStateLive .timeSummary:not(.open) .timeHead{
+  min-height:42px;
+}
+body.matchStateLive .timeSummary:not(.open){
+  margin-top:4px;
+  margin-bottom:5px;
+}
+
+/* Live 狀態下不顯示 New Match；避免高風險誤觸。 */
+body.matchStateLive .new{
+  display:none!important;
+}
+
+/* 長隊名自動縮字，而不是固定兩行硬擠。 */
+.teamNameDisplay.longName{
+  font-size:clamp(20px,5.5vw,27px);
+  line-height:1.06;
+}
+.teamNameDisplay.veryLongName{
+  font-size:clamp(17px,4.8vw,23px);
+  line-height:1.05;
+  letter-spacing:-.35px;
+}
+
+/* =========================
+   v3.70 快速復原 Snackbar
+   ========================= */
+.undoSnackbar{
+  position:fixed;
+  left:50%;
+  bottom:calc(max(env(safe-area-inset-bottom),var(--browser-bottom-gap,0px)) + 16px);
+  transform:translate(-50%,18px);
+  width:min(640px,calc(100vw - 24px));
+  min-height:50px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 9px 8px 14px;
+  border-radius:15px;
+  background:rgba(13,24,38,.96);
+  border:1px solid rgba(96,165,250,.38);
+  box-shadow:0 14px 36px rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.06);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+  z-index:520;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .16s ease,transform .18s ease,visibility .18s;
+}
+.undoSnackbar.show{
+  opacity:1;
+  visibility:visible;
+  transform:translate(-50%,0);
+  pointer-events:auto;
+}
+.undoSnackbarText{
+  min-width:0;
+  flex:1;
+  font-size:13px;
+  font-weight:850;
+  color:#eef4ff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.undoSnackbar button{
+  flex:0 0 auto;
+  min-width:72px;
+  min-height:34px;
+  padding:0 12px;
+  border-radius:10px;
+  border:1px solid rgba(96,165,250,.44);
+  background:#1f6feb;
+  color:white;
+  font-size:13px;
+  font-weight:950;
+}
+body.finalOutputVisible .undoSnackbar{
+  bottom:calc(max(env(safe-area-inset-bottom),var(--browser-bottom-gap,0px)) + 78px);
+}
+body.keyboardOpen .undoSnackbar{display:none}
+
+@media(max-width:390px){
+  body.matchStateLive .liveMetaStrip.show{font-size:10px}
+  .liveQuickSetup button{min-height:34px;font-size:12px}
+  .undoSnackbar{width:calc(100vw - 16px);bottom:calc(max(env(safe-area-inset-bottom),var(--browser-bottom-gap,0px)) + 10px)}
+  .undoSnackbarText{font-size:12px}
+}
+
 </style>
 </head>
 <body>
@@ -1570,7 +1719,7 @@ button:disabled:active{transform:none!important}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.66</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.70</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1587,6 +1736,16 @@ button:disabled:active{transform:none!important}
       <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
       <button id="rosterQuickBtn" class="rosterQuickBtn" type="button" onclick="openRosterModal()" aria-label="設定本場球員名單">
         <span aria-hidden="true">👥</span><span id="rosterQuickText">0人</span>
+      </button>
+    </div>
+
+    <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
+    <div class="liveQuickSetup" id="liveQuickSetup">
+      <button type="button" onclick="openKeeperModal()" aria-label="比賽中快速設定守門員">
+        <span aria-hidden="true">🧤</span><span id="liveKeeperQuickText">GK</span>
+      </button>
+      <button type="button" onclick="openRosterModal()" aria-label="比賽中查看本場球員名單">
+        <span aria-hidden="true">👥</span><span id="liveRosterQuickText">0人</span>
       </button>
     </div>
 
@@ -1715,12 +1874,17 @@ button:disabled:active{transform:none!important}
 
 
 
+<div class="undoSnackbar" id="undoSnackbar" role="status" aria-live="polite">
+  <div class="undoSnackbarText" id="undoSnackbarText">已記錄事件</div>
+  <button type="button" onclick="undoLastMarker()">復原</button>
+</div>
+
 <!-- About / product value modal -->
 <div class="modalBack" id="aboutModal">
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.66</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.70</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -1983,8 +2147,6 @@ button:disabled:active{transform:none!important}
         <button type="button" id="editEventGOAL" onclick="setEditMarkerEvent('GOAL')">⚽ 進球</button>
         <button type="button" id="editEventSAVE" onclick="setEditMarkerEvent('SAVE')">🧤 撲救</button>
         <button type="button" id="editEventSHOT" onclick="setEditMarkerEvent('SHOT')">🥅 射門</button>
-        <button type="button" id="editEventGREAT_PLAY" onclick="setEditMarkerEvent('GREAT_PLAY')">🙌 精彩配合</button>
-        <button type="button" id="editEventGREAT_DEFENSE" onclick="setEditMarkerEvent('GREAT_DEFENSE')">🛡️ 精彩防守</button>
         <button type="button" id="editEventDEFENSE" onclick="setEditMarkerEvent('DEFENSE')">🛡️ 防守</button>
         <button type="button" id="editEventYELLOW_CARD" onclick="setEditMarkerEvent('YELLOW_CARD')">🟨 黃牌</button>
         <button type="button" id="editEventRED_CARD" onclick="setEditMarkerEvent('RED_CARD')">🟥 紅牌</button>
@@ -2374,10 +2536,10 @@ function durationReportHTML(sec){
   return `${escapeHtml(fmtDurationReadable(sec))}<span class="rawDuration">總計 ${escapeHtml(raw)}</span>`;
 }
 function emoji(ev){
-  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', GREAT_PLAY:'🙌', GREAT_DEFENSE:'🛡️', DEFENSE:'🛡️', YELLOW_CARD:'🟨', RED_CARD:'🟥'}[ev] || '•';
+  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', DEFENSE:'🛡️', YELLOW_CARD:'🟨', RED_CARD:'🟥'}[ev] || '•';
 }
 function eventLabel(ev){
-  return {GOAL:'進球', SAVE:'撲救', SHOT:'射門', GREAT_PLAY:'精彩配合', GREAT_DEFENSE:'精彩防守', DEFENSE:'防守', YELLOW_CARD:'黃牌', RED_CARD:'紅牌'}[ev] || ev;
+  return {GOAL:'進球', SAVE:'撲救', SHOT:'射門', DEFENSE:'防守', YELLOW_CARD:'黃牌', RED_CARD:'紅牌'}[ev] || ev;
 }
 function teamDisplay(code){
   if(code==='OUR') return state.ourTeam || '我方';
@@ -3203,6 +3365,7 @@ function confirmFinishFull(){
   render();
 }
 function newMatch(){
+  hideMarkerUndo();
   if((state.started || state.markers.length) && !confirm('建立新比賽會清空目前資料，確定嗎？')) return;
 
   rememberCurrentRosterAsPrevious();
@@ -3320,6 +3483,76 @@ function cancelCard(){
   byId('cardTeamModal').classList.remove('open');
 }
 
+
+let undoMarkerState=null;
+let undoMarkerTimer=null;
+
+function markerUndoText(marker){
+  if(!marker) return '已記錄事件';
+  const team=teamDisplay(marker.team)||'';
+  const num=marker.player_number ? ` #${marker.player_number}` : '';
+  return `✓ 已記錄　${emoji(marker.event)} ${eventLabel(marker.event)}${team?` · ${team}${num}`:''}`;
+}
+
+function showMarkerUndo(index){
+  const marker=state.markers[index];
+  const bar=byId('undoSnackbar');
+  const txt=byId('undoSnackbarText');
+  if(!marker || !bar || !txt) return;
+
+  undoMarkerState={
+    index,
+    recorded_at:marker.recorded_at||'',
+    event:marker.event
+  };
+  txt.textContent=markerUndoText(marker);
+
+  if(undoMarkerTimer) clearTimeout(undoMarkerTimer);
+  bar.classList.add('show');
+  undoMarkerTimer=setTimeout(()=>hideMarkerUndo(),3200);
+}
+
+function hideMarkerUndo(){
+  const bar=byId('undoSnackbar');
+  if(bar) bar.classList.remove('show');
+  if(undoMarkerTimer){
+    clearTimeout(undoMarkerTimer);
+    undoMarkerTimer=null;
+  }
+  setTimeout(()=>{ undoMarkerState=null; },180);
+}
+
+function undoLastMarker(){
+  if(!undoMarkerState) return;
+  const {index,recorded_at,event}=undoMarkerState;
+  const marker=state.markers[index];
+
+  if(!marker || marker.event!==event || (recorded_at && marker.recorded_at!==recorded_at)){
+    hideMarkerUndo();
+    return;
+  }
+
+  let dOur=0,dOpp=0;
+  if(marker.event==='GOAL'){
+    if(marker.team==='OUR') dOur=-1;
+    if(marker.team==='OPP') dOpp=-1;
+  }
+
+  state.markers.splice(index,1);
+  if(dOur || dOpp){
+    state.ourScore=Math.max(0,state.ourScore+dOur);
+    state.oppScore=Math.max(0,state.oppScore+dOpp);
+    adjustScoreSnapshotsFrom(index,dOur,dOpp);
+  }
+
+  pendingAssistMarkerIndex=null;
+  byId('assistModal')?.classList.remove('open');
+  saveState();
+  render();
+  if(byId('logModal')?.classList.contains('open')) renderLogModal();
+  hideMarkerUndo();
+}
+
 function buildAssistGrid(){
   const grid=byId('assistPlayerGrid');
   if(!grid) return;
@@ -3388,10 +3621,12 @@ function saveAssistNumber(number){
     rememberPlayerNumber(valid);
     buildNumberGrid();
   }
+  const completedMarkerIndex=pendingAssistMarkerIndex;
   saveState();
   render();
   pendingAssistMarkerIndex=null;
   byId('assistModal').classList.remove('open');
+  showMarkerUndo(completedMarkerIndex);
 }
 function saveAssistCustom(){
   const el=byId('assistCustomNumber');
@@ -3400,6 +3635,7 @@ function saveAssistCustom(){
   saveAssistNumber(el.value);
 }
 function skipAssist(){
+  const completedMarkerIndex=pendingAssistMarkerIndex;
   if(pendingAssistMarkerIndex!==null){
     const marker=state.markers[pendingAssistMarkerIndex];
     if(marker && marker.event==='GOAL' && !('assist_number' in marker)) marker.assist_number='';
@@ -3407,6 +3643,8 @@ function skipAssist(){
   pendingAssistMarkerIndex=null;
   byId('assistModal').classList.remove('open');
   saveState();
+  render();
+  if(completedMarkerIndex!==null) showMarkerUndo(completedMarkerIndex);
 }
 
 function openNumberSelection(event, team, sec){
@@ -3525,6 +3763,7 @@ function finishNumberSelection(playerNumber){
   byId('numberModal').classList.remove('open');
   saveState();
   render();
+  showMarkerUndo(state.markers.length-1);
 }
 
 function finishGoal(playerNumber){
@@ -3567,6 +3806,8 @@ function finishGoal(playerNumber){
   // 我方進球才詢問助攻；對手進球在進球者背號（選填）完成後直接結束流程。
   if(state.markers[goalMarkerIndex]?.team==='OUR'){
     setTimeout(()=>openAssistModal(goalMarkerIndex),80);
+  }else{
+    showMarkerUndo(goalMarkerIndex);
   }
 }
 
@@ -3586,6 +3827,7 @@ function mark(event, team='OUR'){
   });
   saveState();
   render();
+  showMarkerUndo(state.markers.length-1);
 }
 function parseScorePair(value){
   const m=String(value||'').match(/^(\d+)\s*:\s*(\d+)$/);
@@ -3603,10 +3845,10 @@ function adjustScoreSnapshotsFrom(startIndex,dOur,dOpp){
 
 function setEditMarkerEvent(event){
   editingMarkerEvent=event;
-  ['GOAL','SAVE','SHOT','GREAT_PLAY','GREAT_DEFENSE','DEFENSE','YELLOW_CARD','RED_CARD'].forEach(ev=>{
+  ['GOAL','SAVE','SHOT','DEFENSE','YELLOW_CARD','RED_CARD'].forEach(ev=>{
     byId('editEvent'+ev)?.classList.toggle('active',ev===event);
   });
-  byId('editNumberSection').style.display=(event==='GREAT_PLAY'||event==='GREAT_DEFENSE')?'none':'block';
+  byId('editNumberSection').style.display='block';
   byId('editAssistSection').style.display=event==='GOAL'?'block':'none';
 }
 
@@ -3656,7 +3898,7 @@ function saveEditMarker(){
   if(!marker || !editingMarkerEvent) return;
 
   let playerNumber='';
-  if(editingMarkerEvent!=='GREAT_PLAY' && editingMarkerEvent!=='GREAT_DEFENSE'){
+  if(true){
     const raw=String(byId('editMarkerNumber').value||'').trim();
     if(raw){
       const n=Number(raw);
@@ -3709,7 +3951,7 @@ function saveEditMarker(){
 
   marker.event=editingMarkerEvent;
   marker.team=editingMarkerTeam;
-  marker.player_number=(editingMarkerEvent==='GREAT_PLAY'||editingMarkerEvent==='GREAT_DEFENSE')?'':playerNumber;
+  marker.player_number=playerNumber;
   marker.assist_number=editingMarkerEvent==='GOAL'?assistNumber:'';
 
   // 時間 seconds / time / recorded_at 完全保留。
@@ -3733,6 +3975,7 @@ function saveEditMarker(){
 }
 
 function deleteMarker(i){
+  hideMarkerUndo();
   const m=state.markers[i];
   const label=m?eventLabel(m.event):'事件';
   const ok=window.confirm(`確定要刪除第${i+1}筆「${label}」紀錄嗎？
@@ -3829,10 +4072,14 @@ function updateTeamNameDisplays(){
   if(ourDisplay){
     ourDisplay.textContent=our || '我方';
     ourDisplay.classList.toggle('empty', !our);
+    ourDisplay.classList.toggle('longName', our.length>=6 && our.length<10);
+    ourDisplay.classList.toggle('veryLongName', our.length>=10);
   }
   if(oppDisplay){
     oppDisplay.textContent=opp || '對手';
     oppDisplay.classList.toggle('empty', !opp);
+    oppDisplay.classList.toggle('longName', opp.length>=6 && opp.length<10);
+    oppDisplay.classList.toggle('veryLongName', opp.length>=10);
   }
 }
 
@@ -3874,6 +4121,29 @@ function setStateSectionVisible(id, visible){
 }
 
 
+
+function renderLiveFocusUI(){
+  const strip=byId('liveMetaStrip');
+  const keeperText=byId('liveKeeperQuickText');
+  const rosterText=byId('liveRosterQuickText');
+  if(!strip) return;
+
+  const isLive=!!state.started && !state.finished && !state.awaitingNextPeriod && !state.penalty?.active;
+  const meta=[];
+  if(state.competition) meta.push(`🏆 ${state.competition}`);
+  if(state.venue) meta.push(`🏟️ ${state.venue}`);
+
+  strip.textContent=meta.join(' · ');
+  strip.classList.toggle('show', isLive && meta.length>0);
+
+  if(keeperText){
+    keeperText.textContent=state.goalkeeperNumber ? `#${state.goalkeeperNumber}` : 'GK';
+  }
+  if(rosterText){
+    rosterText.textContent=`${currentRosterNumbers().length}人`;
+  }
+}
+
 function renderQuickResult(){
   const section=byId('quickResultSection');
   if(!section) return;
@@ -3883,7 +4153,7 @@ function renderQuickResult(){
   byId('quickResultShot').textContent=countEvent('SHOT');
   byId('quickResultSave').textContent=countEvent('SAVE');
   byId('quickResultDefense').textContent=
-    state.markers.filter(m=>m.event==='DEFENSE' || m.event==='GREAT_DEFENSE').length;
+    state.markers.filter(m=>m.event==='DEFENSE').length;
 }
 
 function renderMatchStateUI(){
@@ -3964,6 +4234,7 @@ function render(){
   renderMatchStateUI();
   renderRegulationTimeAlert();
   renderQuickResult();
+  renderLiveFocusUI();
 
   const roster=currentRosterNumbers();
   const rosterBtn=byId('rosterQuickBtn');
@@ -5116,6 +5387,9 @@ loadState();
 tick();
 
 setInterval(renderRegulationTimeAlert,1000);
+
+
+
 </script>
 </body>
 </html>
