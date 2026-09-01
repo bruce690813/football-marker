@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.70</title>
+<title>足球場邊記錄器 v3.71</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1518,7 +1518,7 @@ button:disabled:active{transform:none!important}
 }
 
 
-/* v3.70 規定時間提醒 */
+/* v3.71 規定時間提醒 */
 .broadcastStage.regulationSoon{border-color:rgba(245,158,11,.92)!important;box-shadow:0 0 18px rgba(245,158,11,.20)!important}
 .broadcastStage.regulationSoon .stageTimer{color:#fbbf24!important}
 .broadcastStage.regulationCritical{border-color:rgba(249,115,22,.96)!important;box-shadow:0 0 20px rgba(249,115,22,.24)!important}
@@ -1567,7 +1567,7 @@ button:disabled:active{transform:none!important}
 
 
 /* =========================
-   v3.70 Live 專注模式
+   v3.71 Live 專注模式
    ========================= */
 .liveMetaStrip,
 .liveQuickSetup{
@@ -1646,7 +1646,7 @@ body.matchStateLive .new{
 }
 
 /* =========================
-   v3.70 快速復原 Snackbar
+   v3.71 快速復原 Snackbar
    ========================= */
 .undoSnackbar{
   position:fixed;
@@ -1711,6 +1711,96 @@ body.keyboardOpen .undoSnackbar{display:none}
   .undoSnackbarText{font-size:12px}
 }
 
+
+/* =========================
+   v3.71 全場結果模式 / 戶外可讀性
+   ========================= */
+
+/* 全場後開始 / 結束控制已無操作價值，直接退場。 */
+body.resultMode .matchCard .controls{
+  display:none!important;
+}
+
+/* 全場後把釋出的高度留給「本場標記事件」。 */
+body.resultMode .quickResultCard{
+  padding:12px 12px 13px;
+}
+body.resultMode .quickResultTitle{
+  font-size:15px;
+  line-height:1.2;
+  margin-bottom:9px;
+  color:#dbe7f5;
+}
+body.resultMode .quickResultStat{
+  min-height:58px;
+  padding:8px 4px 7px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  line-height:1.15;
+  font-weight:850;
+  color:#b9c7d8;
+}
+body.resultMode .quickResultStat strong{
+  margin-top:4px;
+  font-size:24px;
+  line-height:1;
+  font-weight:950;
+  color:#ffffff;
+}
+
+/* 規定時間提醒：戶外強光下仍能一眼辨識。 */
+.regulationHint{
+  min-height:30px;
+  padding:5px 14px;
+  font-size:14px;
+  line-height:1.15;
+  font-weight:950;
+  letter-spacing:.2px;
+  border-width:1.5px;
+  text-shadow:0 1px 2px rgba(0,0,0,.20);
+}
+.regulationHint.soon{
+  color:#ffd12a;
+  background:rgba(245,158,11,.16);
+  border-color:rgba(245,158,11,.48);
+}
+.regulationHint.critical{
+  color:#ff9f43;
+  background:rgba(249,115,22,.17);
+  border-color:rgba(249,115,22,.52);
+}
+.regulationHint.reached{
+  color:#ff8585;
+  background:rgba(239,68,68,.16);
+  border-color:rgba(239,68,68,.48);
+}
+.broadcastBar:has(.regulationHint.show){
+  padding-top:8px;
+  padding-bottom:8px;
+}
+
+@media(max-width:390px){
+  body.resultMode .quickResultTitle{
+    font-size:14px;
+  }
+  body.resultMode .quickResultStat{
+    min-height:54px;
+    font-size:13px;
+    padding:7px 2px 6px;
+  }
+  body.resultMode .quickResultStat strong{
+    font-size:22px;
+  }
+  .regulationHint{
+    min-height:29px;
+    padding:5px 12px;
+    font-size:13.5px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1719,7 +1809,7 @@ body.keyboardOpen .undoSnackbar{display:none}
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.70</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.71</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -1884,7 +1974,7 @@ body.keyboardOpen .undoSnackbar{display:none}
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.70</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.71</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -4299,7 +4389,7 @@ function render(){
 
   // 按鈕依比賽狀態啟用 / 禁用，避免現場誤觸。
   if(state.finished){
-    // 全場結束：兩顆都鎖定，只能建立新比賽。
+    // 全場結束：兩顆都鎖定；v3.71 由 resultMode CSS 直接隱藏。
     startBtn.disabled=true;
     finishBtn.disabled=true;
   }else if(state.penalty?.active){
