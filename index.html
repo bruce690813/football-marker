@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.85</title>
+<title>足球場邊記錄器 v3.88</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1518,7 +1518,7 @@ button:disabled:active{transform:none!important}
 }
 
 
-/* v3.85 規定時間提醒 */
+/* v3.88 規定時間提醒 */
 .broadcastStage.regulationSoon{border-color:rgba(245,158,11,.92)!important;box-shadow:0 0 18px rgba(245,158,11,.20)!important}
 .broadcastStage.regulationSoon .stageTimer{color:#fbbf24!important}
 .broadcastStage.regulationCritical{border-color:rgba(249,115,22,.96)!important;box-shadow:0 0 20px rgba(249,115,22,.24)!important}
@@ -1567,7 +1567,7 @@ button:disabled:active{transform:none!important}
 
 
 /* =========================
-   v3.85 Live 專注模式
+   v3.88 Live 專注模式
    ========================= */
 .liveMetaStrip,
 .liveQuickSetup{
@@ -1646,7 +1646,7 @@ body.matchStateLive .new{
 }
 
 /* =========================
-   v3.85 快速復原 Snackbar
+   v3.88 快速復原 Snackbar
    ========================= */
 .undoSnackbar{
   position:fixed;
@@ -1713,7 +1713,7 @@ body.keyboardOpen .undoSnackbar{display:none}
 
 
 /* =========================
-   v3.85 全場結果模式 / 戶外可讀性
+   v3.88 全場結果模式 / 戶外可讀性
    ========================= */
 
 /* 全場後開始 / 結束控制已無操作價值，直接退場。 */
@@ -1802,7 +1802,7 @@ body.resultMode .quickResultStat strong{
 }
 
 
-/* v3.85 摘要全場比分框：隊名與比分統一白色 */
+/* v3.88 摘要全場比分框：隊名與比分統一白色 */
 .reportScoreRow.finished{
   color:#ffffff;
 }
@@ -1813,7 +1813,7 @@ body.resultMode .quickResultStat strong{
 
 
 /* =========================
-   v3.85 摘要比分視覺層級精緻化
+   v3.88 摘要比分視覺層級精緻化
    ========================= */
 
 /* 比賽結束：外框降亮度，避免像警示視窗。 */
@@ -1844,7 +1844,7 @@ body.resultMode .quickResultStat strong{
 
 
 /* =========================
-   v3.85 Live 次要資訊可讀性
+   v3.88 Live 次要資訊可讀性
    ========================= */
 
 /* 賽事名稱 / 場地：放大，但仍維持為比分區的次要資訊。 */
@@ -1909,7 +1909,7 @@ body.matchStateLive #liveRosterQuickText{
 
 
 /* =========================
-   v3.85 深藍球場線稿背景
+   v3.88 深藍球場線稿背景
    ========================= */
 
 html{
@@ -2011,7 +2011,7 @@ body::after{
 
 
 /* =========================
-   v3.85 中場專注模式
+   v3.88 中場專注模式
    ========================= */
 
 /* 中場仍屬於同一場比賽：
@@ -2093,7 +2093,7 @@ body.matchStateHalftime .liveQuickSetup button{
 
 
 /* =========================
-   v3.85 等待延長賽專注模式
+   v3.88 等待延長賽專注模式
    ========================= */
 
 /* 等待延長賽仍屬於同一場比賽，不回到大型設定欄位。 */
@@ -2169,7 +2169,7 @@ body.matchStateExtraWait .new{
 
 
 /* =========================
-   v3.85 PK 球員名單快速點選
+   v3.88 PK 球員名單快速點選
    ========================= */
 
 /* 有本場名單時，我方背號欄位改成按鈕。 */
@@ -2276,7 +2276,7 @@ body.matchStateExtraWait .new{
 
 
 /* =========================
-   v3.85 全場賽事資料精簡化
+   v3.88 全場賽事資料精簡化
    ========================= */
 body.resultMode .matchMetaRow,
 body.resultMode .venueRow{
@@ -2405,7 +2405,7 @@ body.resultMode .liveMetaStrip.show{
 
 
 /* =========================
-   v3.85 Outdoor Contrast Tune
+   v3.88 Outdoor Contrast Tune
    強日照環境：提升灰階資訊可讀性
    ========================= */
 
@@ -2529,7 +2529,7 @@ body::after{
 
 
 /* =========================
-   v3.85 全場「新比賽」入口
+   v3.88 全場「新比賽」入口
    ========================= */
 
 .resultNewMatchBtn{
@@ -2573,7 +2573,7 @@ body.resultMode .finalToolsCard{
 
 
 /* =========================
-   v3.85 賽前操作收斂
+   v3.88 賽前操作收斂
    ========================= */
 
 /* 賽前：賽事名稱、場地各自滿版，不再與「新比賽」競爭。 */
@@ -2674,7 +2674,7 @@ body:not(.matchStatePre) .preResetBtn{
 
 
 /* =========================
-   v3.85 賽前 2 × 2 資訊矩陣
+   v3.88 賽前 2 × 2 資訊矩陣
    ========================= */
 
 /*
@@ -2682,7 +2682,7 @@ body:not(.matchStatePre) .preResetBtn{
   🏆 賽事名稱 | 🏟️ 場地
 
   第二列：
-  👥 名單 12人 | 🧤 守門員 #21
+  👕 名單 12人 | 🧤 守門員 #21
 */
 body.matchStatePre .matchMetaRow{
   display:grid;
@@ -2821,7 +2821,7 @@ body.matchStatePre .preQuickSetup .keeperQuickBtn{
 
 
 /* =========================
-   v3.85 賽前重設 + Outdoor Time Readability
+   v3.88 賽前重設 + Outdoor Time Readability
    ========================= */
 
 /* 「↻ 重設」屬於低頻率賽前修正動作：
@@ -2982,7 +2982,7 @@ body:not(.matchStatePre) .preResetBtn,
 
 
 /* =========================
-   v3.85 Final-page spacing fix
+   v3.88 Final-page spacing fix
    ========================= */
 
 /* 賽後固定工具列現在有兩列：
@@ -3001,7 +3001,7 @@ body.finalOutputVisible .wrap{
 
 
 /* =========================
-   v3.85 Pre-match reset action
+   v3.88 Pre-match reset action
    ========================= */
 
 /* 重設是低頻率次要操作：保留在賽前狀態列右側，
@@ -3040,7 +3040,7 @@ body.finalOutputVisible .wrap{
 
 
 /* =========================
-   v3.85 Yellow / Red card shape
+   v3.88 Yellow / Red card shape
    ========================= */
 
 /* 黃紅牌改成明顯「直向長方形」比例，避免看起來像正方形。
@@ -3100,6 +3100,366 @@ body.finalOutputVisible .wrap{
     0 1px 2px rgba(0,0,0,.22);
 }
 
+
+/* =========================
+   v3.88 Full-time output flow
+   ========================= */
+
+/* 全場輸出工具不再 fixed。
+   它本來就在 recordSection 後方，改回正常文件流後：
+   紀錄 -> 摘要/圖片/CSV -> 新比賽
+   永遠依序排列，不會互相覆蓋。 */
+body.finalOutputVisible .finalToolsCard{
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  transform:none!important;
+  width:100%!important;
+  z-index:1!important;
+  margin:8px 0 4px!important;
+}
+
+/* 不再需要為 fixed footer 預留 150px 以上的假空間。 */
+body.finalOutputVisible .wrap{
+  padding-bottom:calc(14px + env(safe-area-inset-bottom))!important;
+  scroll-padding-bottom:calc(20px + env(safe-area-inset-bottom))!important;
+}
+
+/* Safari 底部工具列出現時，正常文件流仍可自然捲到底。 */
+@media(max-width:390px){
+  body.finalOutputVisible .finalToolsCard{
+    width:100%!important;
+    margin-top:7px!important;
+  }
+
+  body.finalOutputVisible .wrap{
+    padding-bottom:calc(12px + env(safe-area-inset-bottom))!important;
+  }
+}
+
+
+/* =========================
+   v3.88 Roster modal cleanup
+   ========================= */
+
+.rosterFooterActions{
+  grid-template-columns:1fr!important;
+}
+
+.rosterClearBtn{
+  width:100%;
+}
+
+/* 已移除未必要的「套用上場名單」入口。 */
+.rosterPreviousBtn{
+  display:none!important;
+}
+
+
+/* v3.88：黃紅牌使用真正直向長方形，不依賴 emoji 方塊。 */
+.cardIcons .yellowCardShape,
+.cardIcons .redCardShape{
+  width:12px;
+  height:19px;
+  border-radius:1.5px;
+}
+
+.cardTypeGrid .yellowCardChoice,
+.cardTypeGrid .redCardChoice{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+
+.cardTypeGrid .yellowCardShape,
+.cardTypeGrid .redCardShape{
+  width:18px;
+  height:28px;
+  border-radius:2px;
+}
+
+
+/* =========================
+   v3.88 / includes v3.87
+   Pre-match 2×2 visual alignment
+   ========================= */
+
+/* 四格使用相同高度、相同左 padding、固定 icon 欄位與固定文字起點。 */
+body.matchStatePre .preMetaField,
+body.matchStatePre .preQuickSetup > button{
+  position:relative;
+  min-height:48px!important;
+  height:48px!important;
+  padding:0 11px!important;
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:32px minmax(0,1fr)!important;
+  align-items:center!important;
+  justify-content:stretch!important;
+  column-gap:9px!important;
+  text-align:left!important;
+}
+
+/* icon box 尺寸固定；emoji 只做少量 optical correction。 */
+body.matchStatePre .preMetaIcon,
+body.matchStatePre .preQuickIcon{
+  width:32px!important;
+  height:32px!important;
+  min-width:32px!important;
+  display:grid!important;
+  place-items:center!important;
+  line-height:1!important;
+  margin:0!important;
+  padding:0!important;
+  justify-self:start!important;
+}
+
+body.matchStatePre .preCompetitionIcon{font-size:24px!important;}
+body.matchStatePre .preVenueIcon{font-size:22px!important;}
+body.matchStatePre .preRosterIcon{font-size:23px!important;}
+body.matchStatePre .preKeeperIcon{font-size:23px!important;}
+
+/* 上排與下排文字統一為 18px / 900。 */
+body.matchStatePre .preMetaField input{
+  width:100%!important;
+  min-width:0!important;
+  height:46px!important;
+  min-height:46px!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:#f8fafc!important;
+  font-size:18px!important;
+  line-height:1.15!important;
+  font-weight:900!important;
+  letter-spacing:-.1px!important;
+  text-align:left!important;
+}
+
+body.matchStatePre .preMetaField input::placeholder{
+  color:#8796aa!important;
+  font-size:18px!important;
+  font-weight:900!important;
+  opacity:1!important;
+}
+
+body.matchStatePre .preQuickText{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:6px;
+  overflow:hidden;
+  white-space:nowrap;
+  font-size:18px!important;
+  line-height:1.15;
+  font-weight:900!important;
+  text-align:left;
+}
+
+body.matchStatePre .preQuickLabel,
+body.matchStatePre #rosterQuickText,
+body.matchStatePre #keeperQuickText{
+  font-size:18px!important;
+  line-height:1.15!important;
+  font-weight:900!important;
+}
+
+body.matchStatePre .preQuickLabel{
+  color:#dbe7f5!important;
+  flex:0 0 auto;
+}
+
+body.matchStatePre #rosterQuickText,
+body.matchStatePre #keeperQuickText{
+  color:#ffffff!important;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+body.matchStatePre .matchMetaRow,
+body.matchStatePre .preQuickSetup{
+  gap:8px!important;
+}
+
+body.matchStatePre .preQuickSetup{
+  margin-top:8px!important;
+}
+
+@media(max-width:390px){
+  body.matchStatePre .preMetaField,
+  body.matchStatePre .preQuickSetup > button{
+    min-height:46px!important;
+    height:46px!important;
+    grid-template-columns:30px minmax(0,1fr)!important;
+    column-gap:7px!important;
+    padding-left:9px!important;
+    padding-right:9px!important;
+  }
+
+  body.matchStatePre .preMetaIcon,
+  body.matchStatePre .preQuickIcon{
+    width:30px!important;
+    height:30px!important;
+    min-width:30px!important;
+  }
+
+  body.matchStatePre .preCompetitionIcon{font-size:22px!important;}
+  body.matchStatePre .preVenueIcon{font-size:20px!important;}
+  body.matchStatePre .preRosterIcon{font-size:21px!important;}
+  body.matchStatePre .preKeeperIcon{font-size:21px!important;}
+
+  body.matchStatePre .preMetaField input,
+  body.matchStatePre .preMetaField input::placeholder,
+  body.matchStatePre .preQuickText,
+  body.matchStatePre .preQuickLabel,
+  body.matchStatePre #rosterQuickText,
+  body.matchStatePre #keeperQuickText{
+    font-size:16px!important;
+  }
+}
+
+
+/* =========================
+   v3.88 Venue recent-picker
+   ========================= */
+
+body.matchStatePre .venueMetaField{
+  overflow:visible!important;
+  z-index:20;
+}
+
+.venueInputWrap{
+  position:relative;
+  min-width:0;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+}
+
+body.matchStatePre .venueInputWrap input{
+  padding-right:31px!important;
+}
+
+.venueDropdownBtn{
+  position:absolute;
+  right:0;
+  top:50%;
+  transform:translateY(-50%);
+  width:29px;
+  height:32px;
+  min-width:29px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:#9fb5cd;
+  font-size:18px;
+  line-height:1;
+  font-weight:950;
+  box-shadow:none;
+}
+
+.venueDropdownBtn.open,
+.venueDropdownBtn:active{
+  background:rgba(56,189,248,.10);
+  color:#d7ecff;
+}
+
+.venueMenu{
+  display:none;
+  position:absolute;
+  top:calc(100% + 6px);
+  right:0;
+  width:min(292px,calc(100vw - 38px));
+  padding:7px;
+  border:1px solid rgba(96,165,250,.38);
+  border-radius:13px;
+  background:#101b2a;
+  box-shadow:0 14px 30px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.04);
+  z-index:100;
+}
+
+.venueMenu.open{
+  display:block;
+}
+
+.venueMenuTitle{
+  padding:4px 7px 7px;
+  color:#9fb0c5;
+  font-size:11px;
+  line-height:1.2;
+  font-weight:900;
+}
+
+.venueMenuItem{
+  width:100%;
+  min-height:38px;
+  padding:8px 10px;
+  border:0;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  background:transparent;
+  color:#f1f5f9;
+  font-size:14px;
+  font-weight:900;
+  text-align:left;
+  box-shadow:none;
+}
+
+.venueMenuItem + .venueMenuItem{
+  margin-top:2px;
+}
+
+.venueMenuItem:active{
+  background:rgba(56,189,248,.13);
+}
+
+.venueMenuItem .venueName{
+  min-width:0;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.venueMenuItem .venueRecentIcon{
+  flex:0 0 auto;
+  color:#7dd3fc;
+  font-size:11px;
+}
+
+.venueMenuManual{
+  border-top:1px solid rgba(148,163,184,.16);
+  margin-top:5px!important;
+  padding-top:10px;
+  color:#a9c9ec;
+}
+
+.venueMenuEmpty{
+  padding:9px 8px 7px;
+  color:#91a0b6;
+  font-size:12px;
+  font-weight:800;
+  text-align:center;
+}
+
+@media(max-width:390px){
+  .venueMenu{
+    width:min(276px,calc(100vw - 30px));
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3108,27 +3468,33 @@ body.finalOutputVisible .wrap{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.85</span><button class="aboutInfoBtn cardEvent yellow" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.88</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
     <div class="matchMetaRow">
       <div class="preMetaField">
-        <span class="preMetaIcon" aria-hidden="true">🏆</span>
+        <span class="preMetaIcon preCompetitionIcon" aria-hidden="true">🏆</span>
         <input id="competition" placeholder="賽事名稱" maxlength="20" enterkeyhint="next" autocomplete="off" aria-label="賽事名稱">
       </div>
-      <div class="preMetaField">
-        <span class="preMetaIcon" aria-hidden="true">🏟️</span>
-        <input id="venue" placeholder="場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
+      <div class="preMetaField venueMetaField">
+        <span class="preMetaIcon preVenueIcon" aria-hidden="true">🏟️</span>
+        <div class="venueInputWrap">
+          <input id="venue" placeholder="場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地，可手動輸入或從最近場地選擇">
+          <button id="venueDropdownBtn" class="venueDropdownBtn" type="button" aria-label="選擇最近使用場地" aria-expanded="false" onclick="toggleVenueMenu(event)" onmousedown="event.preventDefault()">⌄</button>
+        </div>
+        <div id="venueMenu" class="venueMenu" role="menu" aria-label="最近使用場地"></div>
       </div>
     </div>
 
     <div class="preQuickSetup" id="preQuickSetup">
       <button id="rosterQuickBtn" class="rosterQuickBtn" type="button" onclick="openRosterModal()" aria-label="設定本場球員名單">
-        <span aria-hidden="true">👥</span><span class="preQuickLabel">名單</span><span id="rosterQuickText">0人</span>
+        <span class="preQuickIcon preRosterIcon" aria-hidden="true">👕</span>
+        <span class="preQuickText"><span class="preQuickLabel">名單</span><span id="rosterQuickText">0人</span></span>
       </button>
       <button id="keeperQuickBtn" class="keeperQuickBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
-        <span aria-hidden="true">🧤</span><span class="preQuickLabel">守門員</span><span id="keeperQuickText">未設定</span>
+        <span class="preQuickIcon preKeeperIcon" aria-hidden="true">🧤</span>
+        <span class="preQuickText"><span class="preQuickLabel">守門員</span><span id="keeperQuickText">未設定</span></span>
       </button>
     </div>
 
@@ -3140,7 +3506,7 @@ body.finalOutputVisible .wrap{
         <span aria-hidden="true">🧤</span><span id="liveKeeperQuickText">守門員 未設定</span>
       </button>
       <button type="button" onclick="openRosterModal()" aria-label="比賽中查看本場球員名單">
-        <span aria-hidden="true">👥</span><span id="liveRosterQuickText">0人</span>
+        <span aria-hidden="true">👕</span><span id="liveRosterQuickText">0人</span>
       </button>
     </div>
 
@@ -3249,12 +3615,12 @@ body.finalOutputVisible .wrap{
 
   <div class="card cardEventWrap stateManaged" id="disciplineSection">
     <button id="cardBtn" class="cardEventBtn" onclick="openCardModal()" aria-label="新增黃牌或紅牌紀錄">
-      <span class="cardLabel"><span class="cardIcons" aria-hidden="true"><span>🟨</span><span>🟥</span></span><span>黃牌 / 紅牌</span></span>
+      <span class="cardLabel"><span class="cardIcons" aria-hidden="true"><span class="yellowCardShape"></span><span class="redCardShape"></span></span><span>黃牌 / 紅牌</span></span>
     </button>
   </div>
 
   <div class="card stateManaged" id="recordSection">
-    <button id="recordBtn" class="secondary event recordFullBtn cardEvent yellow" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">紀錄</span></span><span class="recordMeta"><span class="recordMetaPrefix">共</span><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
+    <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">紀錄</span></span><span class="recordMeta"><span class="recordMetaPrefix">共</span><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
   </div>
 
 <div class="card finalToolsCard">
@@ -3300,7 +3666,7 @@ body.finalOutputVisible .wrap{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.85</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.88</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -3381,7 +3747,7 @@ body.finalOutputVisible .wrap{
 <!-- PK roster picker -->
 <div class="modalBack" id="penaltyRosterModal">
   <div class="modal penaltyRosterPicker">
-    <h2>👥 選擇 PK 球員背號</h2>
+    <h2>👕 選擇 PK 球員背號</h2>
     <div class="penaltyRosterHint" id="penaltyRosterHint">從本場球員名單點選背號。</div>
     <div class="penaltyRosterGrid" id="penaltyRosterGrid"></div>
     <div class="penaltyRosterActions">
@@ -3407,10 +3773,10 @@ body.finalOutputVisible .wrap{
 <div class="modalBack" id="cardModal">
   <div class="modal">
     <div class="cardTypeGrid" style="margin-top:0">
-      <button class="yellowCardChoice" type="button" onclick="chooseCardType('YELLOW_CARD')">黃牌</button>
-      <button class="redCardChoice cardEvent red" type="button" onclick="chooseCardType('RED_CARD')">紅牌</button>
+      <button class="yellowCardChoice" type="button" onclick="chooseCardType('YELLOW_CARD')"><span class="yellowCardShape" aria-hidden="true"></span><span>黃牌</span></button>
+      <button class="redCardChoice" type="button" onclick="chooseCardType('RED_CARD')"><span class="redCardShape" aria-hidden="true"></span><span>紅牌</span></button>
     </div>
-    <button class="cancel cardEvent yellow" type="button" onclick="cancelCard()">取消</button>
+    <button class="cancel" type="button" onclick="cancelCard()">取消</button>
   </div>
 </div>
 <div class="modalBack" id="cardTeamModal">
@@ -3446,7 +3812,7 @@ body.finalOutputVisible .wrap{
 <div class="modalBack" id="rosterModal">
   <div class="modal">
     <div class="rosterModalHead">
-      <h2 style="margin:0">👥 本場球員名單</h2>
+      <h2 style="margin:0">👕 本場球員名單</h2>
       <span class="rosterCountBadge" id="rosterCountBadge">0 人</span>
     </div>
     <p>首頁只顯示名單人數。可直接點選常用背號加入本場名單；其他背號可一次新增 1 個。</p>
@@ -3463,8 +3829,7 @@ body.finalOutputVisible .wrap{
       <button class="rosterAddBtn" type="button" onclick="addRosterNumbers()">＋ 新增</button>
     </div>
     <div class="rosterFooterActions">
-      <button class="rosterPreviousBtn" id="rosterPreviousBtn" type="button" onclick="applyPreviousRoster()">套用上場名單</button>
-      <button class="rosterClearBtn" type="button" onclick="clearRoster()">清空名單</button>
+<button class="rosterClearBtn" type="button" onclick="clearRoster()">清空名單</button>
     </div>
     <button class="rosterDoneBtn" type="button" onclick="closeRosterModal()">完成</button>
   </div>
@@ -3590,7 +3955,7 @@ body.finalOutputVisible .wrap{
       </div>
     </div>
 
-    <div class="editSection cardEvent yellow" id="editNumberSection">
+    <div class="editSection" id="editNumberSection">
       <div class="editSectionLabel">球員背號（選填）</div>
       <div class="editNumberWrap">
         <input id="editMarkerNumber" type="number" min="1" max="99" step="1" inputmode="numeric" enterkeyhint="done" placeholder="可留空" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur();}">
@@ -3629,7 +3994,7 @@ body.finalOutputVisible .wrap{
       <div class="reportMeta">
         <span id="reportCompetition" style="display:none">🏆 賽事</span>
         <span id="reportVenue">📍 未填場地</span>
-        <span id="reportRoster" style="display:none">👥 本場名單</span>
+        <span id="reportRoster" style="display:none">👕 本場名單</span>
         <span id="reportDuration">⏱ 00:00</span>
       </div>
       <div class="reportStatusBadge idle" id="reportStatusBadge">尚未開始</div>
@@ -3679,6 +4044,7 @@ body.finalOutputVisible .wrap{
 const KEY='football_marker_v218';
 const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const LAST_VENUE_KEY='football_marker_last_venue';
+const RECENT_VENUES_KEY='football_marker_recent_venues_v1';
 let guidedSetupStep=null; // 'our' -> 'opp' -> 'competition' -> 'venue' during pre-match guided input
 const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
 const LAST_ROSTER_KEY='football_marker_last_roster_v1';
@@ -3824,21 +4190,132 @@ function validateMatchTextFields(){
   return true;
 }
 
-function rememberVenueIfEligible(value){
+
+function isEligibleVenueValue(value){
   const venue=String(value||'').trim();
   const chineseCount=(venue.match(/[\u3400-\u4DBF\u4E00-\u9FFF]/g)||[]).length;
-
-  // 場地只有在：
-  // 1. 去除前後空白後長度 3～15 字
-  // 2. 至少包含 2 個中文字
-  // 3. 不含 <、>、換行
-  // 才更新「上次有效場地」。
-  if(
+  return Boolean(
     venue.length>=3 &&
     venue.length<=15 &&
     chineseCount>=2 &&
     !/[<>\r\n]/.test(venue)
-  ){
+  );
+}
+
+function getRecentVenues(){
+  let items=[];
+  try{
+    const raw=JSON.parse(localStorage.getItem(RECENT_VENUES_KEY)||'[]');
+    if(Array.isArray(raw)) items=raw;
+  }catch(e){}
+
+  const last=String(localStorage.getItem(LAST_VENUE_KEY)||'').trim();
+  if(last) items.unshift(last);
+
+  return [...new Set(
+    items
+      .map(v=>String(v||'').trim())
+      .filter(v=>isEligibleVenueValue(v))
+  )].slice(0,8);
+}
+
+function rememberRecentVenue(value){
+  const venue=String(value||'').trim();
+  if(!isEligibleVenueValue(venue)) return false;
+
+  const items=getRecentVenues().filter(v=>v!==venue);
+  items.unshift(venue);
+  localStorage.setItem(RECENT_VENUES_KEY,JSON.stringify(items.slice(0,8)));
+  return true;
+}
+
+function renderVenueMenu(){
+  const menu=byId('venueMenu');
+  if(!menu) return;
+
+  const items=getRecentVenues();
+  let html='<div class="venueMenuTitle">最近使用場地</div>';
+
+  if(items.length){
+    html+=items.map(v=>`
+      <button class="venueMenuItem" type="button" role="menuitem" data-venue="${escapeHtml(v)}">
+        <span class="venueName">${escapeHtml(v)}</span>
+        <span class="venueRecentIcon">最近</span>
+      </button>
+    `).join('');
+  }else{
+    html+='<div class="venueMenuEmpty">尚無最近使用場地</div>';
+  }
+
+  html+='<button class="venueMenuItem venueMenuManual" type="button" data-manual="1">✎ 手動輸入其他場地</button>';
+  menu.innerHTML=html;
+
+  menu.querySelectorAll('[data-venue]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      chooseRecentVenue(btn.getAttribute('data-venue')||'');
+    });
+  });
+
+  menu.querySelector('[data-manual="1"]')?.addEventListener('click',()=>{
+    closeVenueMenu();
+    const input=byId('venue');
+    if(!input) return;
+    guidedSetupStep=isPreMatchGuidedSetup()?'venue':guidedSetupStep;
+    input.classList.add('guidedInput');
+    input.focus();
+    try{ input.setSelectionRange(input.value.length,input.value.length); }catch(e){}
+  });
+}
+
+function openVenueMenu(){
+  if(state.started || state.finished) return;
+  const menu=byId('venueMenu'), btn=byId('venueDropdownBtn');
+  if(!menu || !btn) return;
+  renderVenueMenu();
+  menu.classList.add('open');
+  btn.classList.add('open');
+  btn.setAttribute('aria-expanded','true');
+}
+
+function closeVenueMenu(){
+  const menu=byId('venueMenu'), btn=byId('venueDropdownBtn');
+  menu?.classList.remove('open');
+  btn?.classList.remove('open');
+  btn?.setAttribute('aria-expanded','false');
+}
+
+function toggleVenueMenu(event){
+  event?.preventDefault();
+  event?.stopPropagation();
+  const menu=byId('venueMenu');
+  if(menu?.classList.contains('open')) closeVenueMenu();
+  else openVenueMenu();
+}
+
+function chooseRecentVenue(value){
+  const venue=String(value||'').trim();
+  if(!isEligibleVenueValue(venue)) return;
+
+  const input=byId('venue');
+  if(input) input.value=venue;
+  state.venue=venue;
+  rememberVenueIfEligible(venue);
+  rememberRecentVenue(venue);
+  saveState();
+  closeVenueMenu();
+
+  guidedSetupStep=null;
+  input?.classList.remove('guidedInput');
+  input?.blur();
+  render();
+}
+
+function rememberVenueIfEligible(value){
+  const venue=String(value||'').trim();
+
+  // 維持既有「上次有效場地」邏輯；
+  // 最近使用清單只在完成輸入 / 開始比賽 / 賽後儲存時加入，避免收進半成品。
+  if(isEligibleVenueValue(venue)){
     localStorage.setItem(LAST_VENUE_KEY, venue);
     return true;
   }
@@ -4194,7 +4671,6 @@ function renderRosterModal(){
   const grid=byId('rosterGrid');
   const empty=byId('rosterEmpty');
   const badge=byId('rosterCountBadge');
-  const previousBtn=byId('rosterPreviousBtn');
 
   if(badge) badge.textContent=`${roster.length} 人`;
   if(empty) empty.style.display=roster.length?'none':'block';
@@ -4228,11 +4704,6 @@ function renderRosterModal(){
     });
   }
 
-  if(previousBtn){
-    const prev=getPreviousRoster();
-    previousBtn.disabled=!prev.length;
-    previousBtn.textContent=prev.length?`套用上場名單（${prev.length}人）`:'沒有上場名單';
-  }
 }
 
 function openRosterModal(){
@@ -4338,18 +4809,6 @@ function clearRoster(){
   render();
 }
 
-function applyPreviousRoster(){
-  if(state.finished) return;
-  const prev=getPreviousRoster();
-  if(!prev.length) return;
-  state.rosterNumbers=prev;
-  prev.forEach(rememberPlayerNumber);
-  buildNumberGrid();
-  buildKeeperGrid();
-  saveState();
-  renderRosterModal();
-  render();
-}
 
 function buildKeeperGrid(){
   const grid=byId('keeperGrid');
@@ -4482,6 +4941,7 @@ function startMatch(){
   state.venue=byId('venue').value.trim();
   localStorage.setItem(LAST_OUR_TEAM_KEY, ourName);
   rememberVenueIfEligible(state.venue);
+  rememberRecentVenue(state.venue);
 
   if(state.awaitingNextPeriod){
     if(state.nextPeriodType==='SECOND_HALF' && state.halftimeStartEpoch){
@@ -4999,7 +5459,7 @@ function chooseCardType(event){
   byId('cardModal').classList.remove('open');
   byId('cardOurName').textContent=state.ourTeam||'我方';
   byId('cardOppName').textContent=state.oppTeam||'對手';
-  byId('cardTeamTitle').textContent=event==='YELLOW_CARD'?'<span class="yellowCardShape" aria-hidden="true"></span> 黃牌｜選擇球隊':'<span class="redCardShape" aria-hidden="true"></span> 紅牌｜選擇球隊';
+  byId('cardTeamTitle').textContent=event==='YELLOW_CARD'?'黃牌｜選擇球隊':'紅牌｜選擇球隊';
   byId('cardTeamModal').classList.add('open');
 }
 function chooseCardTeam(team){
@@ -5528,10 +5988,16 @@ function deleteMarker(i){
 function toggleLog(){ byId('logWrap').classList.toggle('open'); }
 
 function openScoreModal(){
-  // 賽前比分固定為 0:0，不允許提前修改。
-  if(!state.started && !state.awaitingNextPeriod && !state.finished){
+  const isScoreReviewBreak=
+    !!state.awaitingNextPeriod &&
+    (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME') &&
+    !state.penalty?.active;
+
+  // 只允許中場、等待延長賽、全場進入人工比分修正。
+  if(!state.finished && !isScoreReviewBreak){
     return;
   }
+
   byId('editOur').value=state.ourScore;
   byId('editOpp').value=state.oppScore;
   byId('scoreOurName').textContent=state.ourTeam||'我方';
@@ -5733,10 +6199,8 @@ function saveResultMetaEdit(){
   state.competition=comp;
   state.venue=venue;
 
-  const chinese=(venue.match(/[\u4e00-\u9fff]/g)||[]).length;
-  if(venue.length>=3 && chinese>=2){
-    localStorage.setItem('football_marker_last_venue',venue);
-  }
+  rememberVenueIfEligible(venue);
+  rememberRecentVenue(venue);
 
   saveState();
   closeResultMetaEdit();
@@ -5997,7 +6461,7 @@ function render(){
 
   // 按鈕依比賽狀態啟用 / 禁用，避免現場誤觸。
   if(state.finished){
-    // 全場結束：兩顆都鎖定；v3.85 由 resultMode CSS 直接隱藏。
+    // 全場結束：兩顆都鎖定；v3.88 由 resultMode CSS 直接隱藏。
     startBtn.disabled=true;
     finishBtn.disabled=true;
   }else if(state.penalty?.active){
@@ -6036,11 +6500,21 @@ function render(){
   const recordBtn=byId('recordBtn');
   if(recordBtn) recordBtn.disabled=state.markers.length===0;
 
-  // 賽前比分固定為 0:0；開始比賽後、中場與全場結束後才允許修正。
+  // 人工修正比分只出現在「停止比賽的核對節點」：
+  // 中場、等待延長賽、全場。
+  // 比賽進行中由「進球事件」維護比分，避免比分與事件紀錄 / CSV 不同步。
   const scoreEditBtn=byId('scoreEditBtn');
   if(scoreEditBtn){
-    const canEditScore=state.started || state.awaitingNextPeriod || state.penalty?.active || state.finished;
+    const isScoreReviewBreak=
+      !!state.awaitingNextPeriod &&
+      (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME') &&
+      !state.penalty?.active;
+
+    const canEditScore=!!state.finished || isScoreReviewBreak;
+
+    scoreEditBtn.hidden=!canEditScore;
     scoreEditBtn.disabled=!canEditScore;
+    scoreEditBtn.setAttribute('aria-hidden', String(!canEditScore));
     scoreEditBtn.setAttribute('aria-disabled', String(!canEditScore));
   }
 
@@ -6138,7 +6612,7 @@ function buildReportDOM(){
   const reportRoster=byId('reportRoster');
   const rosterForReport=currentRosterNumbers();
   if(reportRoster && rosterForReport.length){
-    reportRoster.textContent=`👥 ${rosterForReport.map(n=>'#'+n).join(' ')}`;
+    reportRoster.textContent=`👕 ${rosterForReport.map(n=>'#'+n).join(' ')}`;
     reportRoster.style.display='';
   }else if(reportRoster){
     reportRoster.style.display='none';
@@ -6848,7 +7322,10 @@ function advanceGuidedSetup(from){
     if(value===null) return false;
 
     saveState();
-    if(value) rememberVenueIfEligible(value);
+    if(value){
+      rememberVenueIfEligible(value);
+      rememberRecentVenue(value);
+    }
 
     guidedSetupStep=null;
     byId('venue').classList.remove('guidedInput');
@@ -6937,7 +7414,10 @@ byId('venue').addEventListener('keydown', e=>{
       const value=validateTextField('venue','場地',false,15);
       if(value===null) return;
       saveState();
-      if(value) rememberVenueIfEligible(value);
+      if(value){
+        rememberVenueIfEligible(value);
+        rememberRecentVenue(value);
+      }
       e.target.blur();
     }
   }
@@ -6995,6 +7475,16 @@ byId('competition').addEventListener('blur', ()=>{
   }
 });
 
+
+document.addEventListener('click',e=>{
+  const field=e.target.closest?.('.venueMetaField');
+  if(!field) closeVenueMenu();
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeVenueMenu();
+});
+
 byId('venue').addEventListener('blur', ()=>{
   byId('venue').classList.remove('guidedInput');
 
@@ -7010,8 +7500,10 @@ byId('venue').addEventListener('blur', ()=>{
     const value=validateTextField('venue','場地',false,15);
     if(value===null) return;
     rememberVenueIfEligible(value);
+    rememberRecentVenue(value);
   }
   saveState();
+  closeVenueMenu();
 });
 
 // 球員名單背號輸入維持既有邏輯。
