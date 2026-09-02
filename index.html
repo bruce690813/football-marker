@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.80</title>
+<title>足球場邊記錄器 v3.81</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1518,7 +1518,7 @@ button:disabled:active{transform:none!important}
 }
 
 
-/* v3.80 規定時間提醒 */
+/* v3.81 規定時間提醒 */
 .broadcastStage.regulationSoon{border-color:rgba(245,158,11,.92)!important;box-shadow:0 0 18px rgba(245,158,11,.20)!important}
 .broadcastStage.regulationSoon .stageTimer{color:#fbbf24!important}
 .broadcastStage.regulationCritical{border-color:rgba(249,115,22,.96)!important;box-shadow:0 0 20px rgba(249,115,22,.24)!important}
@@ -1567,7 +1567,7 @@ button:disabled:active{transform:none!important}
 
 
 /* =========================
-   v3.80 Live 專注模式
+   v3.81 Live 專注模式
    ========================= */
 .liveMetaStrip,
 .liveQuickSetup{
@@ -1646,7 +1646,7 @@ body.matchStateLive .new{
 }
 
 /* =========================
-   v3.80 快速復原 Snackbar
+   v3.81 快速復原 Snackbar
    ========================= */
 .undoSnackbar{
   position:fixed;
@@ -1713,7 +1713,7 @@ body.keyboardOpen .undoSnackbar{display:none}
 
 
 /* =========================
-   v3.80 全場結果模式 / 戶外可讀性
+   v3.81 全場結果模式 / 戶外可讀性
    ========================= */
 
 /* 全場後開始 / 結束控制已無操作價值，直接退場。 */
@@ -1802,7 +1802,7 @@ body.resultMode .quickResultStat strong{
 }
 
 
-/* v3.80 摘要全場比分框：隊名與比分統一白色 */
+/* v3.81 摘要全場比分框：隊名與比分統一白色 */
 .reportScoreRow.finished{
   color:#ffffff;
 }
@@ -1813,7 +1813,7 @@ body.resultMode .quickResultStat strong{
 
 
 /* =========================
-   v3.80 摘要比分視覺層級精緻化
+   v3.81 摘要比分視覺層級精緻化
    ========================= */
 
 /* 比賽結束：外框降亮度，避免像警示視窗。 */
@@ -1844,7 +1844,7 @@ body.resultMode .quickResultStat strong{
 
 
 /* =========================
-   v3.80 Live 次要資訊可讀性
+   v3.81 Live 次要資訊可讀性
    ========================= */
 
 /* 賽事名稱 / 場地：放大，但仍維持為比分區的次要資訊。 */
@@ -1909,7 +1909,7 @@ body.matchStateLive #liveRosterQuickText{
 
 
 /* =========================
-   v3.80 深藍球場線稿背景
+   v3.81 深藍球場線稿背景
    ========================= */
 
 html{
@@ -2011,7 +2011,7 @@ body::after{
 
 
 /* =========================
-   v3.80 中場專注模式
+   v3.81 中場專注模式
    ========================= */
 
 /* 中場仍屬於同一場比賽：
@@ -2093,7 +2093,7 @@ body.matchStateHalftime .liveQuickSetup button{
 
 
 /* =========================
-   v3.80 等待延長賽專注模式
+   v3.81 等待延長賽專注模式
    ========================= */
 
 /* 等待延長賽仍屬於同一場比賽，不回到大型設定欄位。 */
@@ -2169,7 +2169,7 @@ body.matchStateExtraWait .new{
 
 
 /* =========================
-   v3.80 PK 球員名單快速點選
+   v3.81 PK 球員名單快速點選
    ========================= */
 
 /* 有本場名單時，我方背號欄位改成按鈕。 */
@@ -2276,7 +2276,7 @@ body.matchStateExtraWait .new{
 
 
 /* =========================
-   v3.80 全場賽事資料精簡化
+   v3.81 全場賽事資料精簡化
    ========================= */
 body.resultMode .matchMetaRow,
 body.resultMode .venueRow{
@@ -2405,7 +2405,7 @@ body.resultMode .liveMetaStrip.show{
 
 
 /* =========================
-   v3.80 Outdoor Contrast Tune
+   v3.81 Outdoor Contrast Tune
    強日照環境：提升灰階資訊可讀性
    ========================= */
 
@@ -2527,6 +2527,50 @@ body::after{
   }
 }
 
+
+/* =========================
+   v3.81 全場「新比賽」入口
+   ========================= */
+
+.resultNewMatchBtn{
+  display:none;
+  width:100%;
+  min-height:48px;
+  margin-top:10px;
+  padding:10px 14px;
+  border:1px solid rgba(148,163,184,.28);
+  border-radius:13px;
+  background:linear-gradient(180deg,#334155 0%,#283548 100%);
+  color:#f1f5f9;
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:.1px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 5px 12px rgba(0,0,0,.12);
+}
+
+body.resultMode .resultNewMatchBtn{
+  display:block;
+}
+
+.resultNewMatchBtn:active{
+  transform:translateY(1px) scale(.995);
+  background:linear-gradient(180deg,#3b4b60 0%,#2e3c50 100%);
+}
+
+body.resultMode .finalToolsCard{
+  padding-bottom:12px;
+}
+
+@media(max-width:390px){
+  .resultNewMatchBtn{
+    min-height:46px;
+    margin-top:9px;
+    font-size:15px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2535,7 +2579,7 @@ body::after{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.80</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.81</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -2684,6 +2728,7 @@ body::after{
       <button id="saveImageBtn" class="pngBtn" onclick="saveReportImage()" aria-label="儲存比賽摘要圖片">🖼 儲存圖片</button>
       <button id="shareCsvBtn" class="share" onclick="shareCSV()" aria-label="匯出 CSV 檔案">📄 匯出 CSV</button>
     </div>
+    <button id="resultNewMatchBtn" class="resultNewMatchBtn" type="button" onclick="newMatch()" aria-label="建立新比賽">＋ 新比賽</button>
     
   </div>
 </div>
@@ -2720,7 +2765,7 @@ body::after{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.80</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.81</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -5321,7 +5366,7 @@ function render(){
 
   // 按鈕依比賽狀態啟用 / 禁用，避免現場誤觸。
   if(state.finished){
-    // 全場結束：兩顆都鎖定；v3.80 由 resultMode CSS 直接隱藏。
+    // 全場結束：兩顆都鎖定；v3.81 由 resultMode CSS 直接隱藏。
     startBtn.disabled=true;
     finishBtn.disabled=true;
   }else if(state.penalty?.active){
