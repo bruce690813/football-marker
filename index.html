@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.74</title>
+<title>足球場邊記錄器 v3.75</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1518,7 +1518,7 @@ button:disabled:active{transform:none!important}
 }
 
 
-/* v3.74 規定時間提醒 */
+/* v3.75 規定時間提醒 */
 .broadcastStage.regulationSoon{border-color:rgba(245,158,11,.92)!important;box-shadow:0 0 18px rgba(245,158,11,.20)!important}
 .broadcastStage.regulationSoon .stageTimer{color:#fbbf24!important}
 .broadcastStage.regulationCritical{border-color:rgba(249,115,22,.96)!important;box-shadow:0 0 20px rgba(249,115,22,.24)!important}
@@ -1567,7 +1567,7 @@ button:disabled:active{transform:none!important}
 
 
 /* =========================
-   v3.74 Live 專注模式
+   v3.75 Live 專注模式
    ========================= */
 .liveMetaStrip,
 .liveQuickSetup{
@@ -1646,7 +1646,7 @@ body.matchStateLive .new{
 }
 
 /* =========================
-   v3.74 快速復原 Snackbar
+   v3.75 快速復原 Snackbar
    ========================= */
 .undoSnackbar{
   position:fixed;
@@ -1713,7 +1713,7 @@ body.keyboardOpen .undoSnackbar{display:none}
 
 
 /* =========================
-   v3.74 全場結果模式 / 戶外可讀性
+   v3.75 全場結果模式 / 戶外可讀性
    ========================= */
 
 /* 全場後開始 / 結束控制已無操作價值，直接退場。 */
@@ -1802,7 +1802,7 @@ body.resultMode .quickResultStat strong{
 }
 
 
-/* v3.74 摘要全場比分框：隊名與比分統一白色 */
+/* v3.75 摘要全場比分框：隊名與比分統一白色 */
 .reportScoreRow.finished{
   color:#ffffff;
 }
@@ -1813,7 +1813,7 @@ body.resultMode .quickResultStat strong{
 
 
 /* =========================
-   v3.74 摘要比分視覺層級精緻化
+   v3.75 摘要比分視覺層級精緻化
    ========================= */
 
 /* 比賽結束：外框降亮度，避免像警示視窗。 */
@@ -1844,7 +1844,7 @@ body.resultMode .quickResultStat strong{
 
 
 /* =========================
-   v3.74 Live 次要資訊可讀性
+   v3.75 Live 次要資訊可讀性
    ========================= */
 
 /* 賽事名稱 / 場地：放大，但仍維持為比分區的次要資訊。 */
@@ -1907,6 +1907,108 @@ body.matchStateLive #liveRosterQuickText{
   }
 }
 
+
+/* =========================
+   v3.75 深藍球場線稿背景
+   ========================= */
+
+html{
+  background:#0b1220;
+}
+
+body{
+  position:relative;
+  isolation:isolate;
+  background:
+    linear-gradient(
+      180deg,
+      #0b1220 0%,
+      #0b1423 48%,
+      #0a1220 100%
+    );
+}
+
+/* 極淡足球場線稿：只作為品牌氛圍，不影響操作。 */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  opacity:.052;
+  background:
+    /* 半場線 */
+    linear-gradient(
+      90deg,
+      transparent calc(50% - .7px),
+      rgba(76,214,164,.95) calc(50% - .7px),
+      rgba(76,214,164,.95) calc(50% + .7px),
+      transparent calc(50% + .7px)
+    ),
+    /* 中圈 */
+    radial-gradient(
+      circle at 50% 55%,
+      transparent 0 92px,
+      rgba(76,214,164,.95) 93px 94.5px,
+      transparent 95.5px
+    ),
+    /* 中點 */
+    radial-gradient(
+      circle at 50% 55%,
+      rgba(76,214,164,.95) 0 2px,
+      transparent 2.5px
+    );
+  background-repeat:no-repeat;
+}
+
+/* 下半部再放一個淡淡的球場外框，利用原本留白增加品牌感。 */
+body::after{
+  content:"";
+  position:fixed;
+  left:5vw;
+  right:5vw;
+  bottom:6.5vh;
+  height:36vh;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.032;
+  border:1.2px solid rgba(76,214,164,.9);
+  border-radius:22px;
+  background:
+    /* 左禁區 */
+    linear-gradient(rgba(76,214,164,.9),rgba(76,214,164,.9)) left 0 top 50%/15% 1px no-repeat,
+    linear-gradient(rgba(76,214,164,.9),rgba(76,214,164,.9)) left 15% top 35%/1px 30% no-repeat,
+    /* 右禁區 */
+    linear-gradient(rgba(76,214,164,.9),rgba(76,214,164,.9)) right 0 top 50%/15% 1px no-repeat,
+    linear-gradient(rgba(76,214,164,.9),rgba(76,214,164,.9)) right 15% top 35%/1px 30% no-repeat;
+}
+
+/* 主要操作卡片維持原本實底，避免球場線穿透內容。 */
+.mainCard,
+.scoreboard,
+.timeSummary,
+.events,
+.quickResultCard,
+.logCard,
+.outputBar,
+.modalCard,
+.reportModal{
+  position:relative;
+  z-index:1;
+}
+
+@media(max-width:390px){
+  body::before{
+    opacity:.042;
+  }
+  body::after{
+    opacity:.023;
+    left:4vw;
+    right:4vw;
+    bottom:6vh;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1915,7 +2017,7 @@ body.matchStateLive #liveRosterQuickText{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.74</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.75</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -2080,7 +2182,7 @@ body.matchStateLive #liveRosterQuickText{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.74</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.75</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -4495,7 +4597,7 @@ function render(){
 
   // 按鈕依比賽狀態啟用 / 禁用，避免現場誤觸。
   if(state.finished){
-    // 全場結束：兩顆都鎖定；v3.74 由 resultMode CSS 直接隱藏。
+    // 全場結束：兩顆都鎖定；v3.75 由 resultMode CSS 直接隱藏。
     startBtn.disabled=true;
     finishBtn.disabled=true;
   }else if(state.penalty?.active){
