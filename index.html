@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v3.81</title>
+<title>足球場邊記錄器 v3.82</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1518,7 +1518,7 @@ button:disabled:active{transform:none!important}
 }
 
 
-/* v3.81 規定時間提醒 */
+/* v3.82 規定時間提醒 */
 .broadcastStage.regulationSoon{border-color:rgba(245,158,11,.92)!important;box-shadow:0 0 18px rgba(245,158,11,.20)!important}
 .broadcastStage.regulationSoon .stageTimer{color:#fbbf24!important}
 .broadcastStage.regulationCritical{border-color:rgba(249,115,22,.96)!important;box-shadow:0 0 20px rgba(249,115,22,.24)!important}
@@ -1567,7 +1567,7 @@ button:disabled:active{transform:none!important}
 
 
 /* =========================
-   v3.81 Live 專注模式
+   v3.82 Live 專注模式
    ========================= */
 .liveMetaStrip,
 .liveQuickSetup{
@@ -1646,7 +1646,7 @@ body.matchStateLive .new{
 }
 
 /* =========================
-   v3.81 快速復原 Snackbar
+   v3.82 快速復原 Snackbar
    ========================= */
 .undoSnackbar{
   position:fixed;
@@ -1713,7 +1713,7 @@ body.keyboardOpen .undoSnackbar{display:none}
 
 
 /* =========================
-   v3.81 全場結果模式 / 戶外可讀性
+   v3.82 全場結果模式 / 戶外可讀性
    ========================= */
 
 /* 全場後開始 / 結束控制已無操作價值，直接退場。 */
@@ -1802,7 +1802,7 @@ body.resultMode .quickResultStat strong{
 }
 
 
-/* v3.81 摘要全場比分框：隊名與比分統一白色 */
+/* v3.82 摘要全場比分框：隊名與比分統一白色 */
 .reportScoreRow.finished{
   color:#ffffff;
 }
@@ -1813,7 +1813,7 @@ body.resultMode .quickResultStat strong{
 
 
 /* =========================
-   v3.81 摘要比分視覺層級精緻化
+   v3.82 摘要比分視覺層級精緻化
    ========================= */
 
 /* 比賽結束：外框降亮度，避免像警示視窗。 */
@@ -1844,7 +1844,7 @@ body.resultMode .quickResultStat strong{
 
 
 /* =========================
-   v3.81 Live 次要資訊可讀性
+   v3.82 Live 次要資訊可讀性
    ========================= */
 
 /* 賽事名稱 / 場地：放大，但仍維持為比分區的次要資訊。 */
@@ -1909,7 +1909,7 @@ body.matchStateLive #liveRosterQuickText{
 
 
 /* =========================
-   v3.81 深藍球場線稿背景
+   v3.82 深藍球場線稿背景
    ========================= */
 
 html{
@@ -2011,7 +2011,7 @@ body::after{
 
 
 /* =========================
-   v3.81 中場專注模式
+   v3.82 中場專注模式
    ========================= */
 
 /* 中場仍屬於同一場比賽：
@@ -2093,7 +2093,7 @@ body.matchStateHalftime .liveQuickSetup button{
 
 
 /* =========================
-   v3.81 等待延長賽專注模式
+   v3.82 等待延長賽專注模式
    ========================= */
 
 /* 等待延長賽仍屬於同一場比賽，不回到大型設定欄位。 */
@@ -2169,7 +2169,7 @@ body.matchStateExtraWait .new{
 
 
 /* =========================
-   v3.81 PK 球員名單快速點選
+   v3.82 PK 球員名單快速點選
    ========================= */
 
 /* 有本場名單時，我方背號欄位改成按鈕。 */
@@ -2276,7 +2276,7 @@ body.matchStateExtraWait .new{
 
 
 /* =========================
-   v3.81 全場賽事資料精簡化
+   v3.82 全場賽事資料精簡化
    ========================= */
 body.resultMode .matchMetaRow,
 body.resultMode .venueRow{
@@ -2405,7 +2405,7 @@ body.resultMode .liveMetaStrip.show{
 
 
 /* =========================
-   v3.81 Outdoor Contrast Tune
+   v3.82 Outdoor Contrast Tune
    強日照環境：提升灰階資訊可讀性
    ========================= */
 
@@ -2529,7 +2529,7 @@ body::after{
 
 
 /* =========================
-   v3.81 全場「新比賽」入口
+   v3.82 全場「新比賽」入口
    ========================= */
 
 .resultNewMatchBtn{
@@ -2571,6 +2571,107 @@ body.resultMode .finalToolsCard{
   }
 }
 
+
+/* =========================
+   v3.82 賽前操作收斂
+   ========================= */
+
+/* 賽前：賽事名稱、場地各自滿版，不再與「新比賽」競爭。 */
+body.matchStatePre .matchMetaRow,
+body.matchStatePre .venueRow{
+  display:block;
+}
+
+body.matchStatePre .matchMetaRow input,
+body.matchStatePre .venueRow input{
+  width:100%;
+  box-sizing:border-box;
+}
+
+/* GK / 本場球員名單成為同一層級的兩個準備項目。 */
+.preQuickSetup{
+  display:none;
+}
+
+body.matchStatePre .preQuickSetup{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:7px;
+}
+
+body.matchStatePre .preQuickSetup > button{
+  width:100%;
+  min-width:0;
+  min-height:42px;
+  border-radius:12px;
+  font-size:14.5px;
+  font-weight:950;
+}
+
+body.matchStatePre .preQuickSetup .keeperQuickBtn{
+  border-color:rgba(96,165,250,.48);
+}
+
+body.matchStatePre .preQuickSetup .rosterQuickBtn{
+  border-color:rgba(56,189,248,.48);
+}
+
+/* 賽前不再顯示「＋新比賽」。
+   真正的「＋新比賽」只屬於全場結束後。 */
+body.matchStatePre .new{
+  display:none!important;
+}
+
+/* 重新設定是低權重的修復動作，不與「開始比賽」競爭。 */
+.preResetBtn{
+  display:none;
+  width:auto;
+  min-height:30px;
+  margin:6px auto 0;
+  padding:4px 12px;
+  border:1px solid rgba(148,163,184,.22);
+  border-radius:9px;
+  background:rgba(30,41,59,.42);
+  color:#94a3b8;
+  font-size:11.5px;
+  font-weight:800;
+  box-shadow:none;
+}
+
+body.matchStatePre .preResetBtn.show{
+  display:block;
+}
+
+.preResetBtn:active{
+  transform:scale(.98);
+  background:rgba(51,65,85,.58);
+  color:#cbd5e1;
+}
+
+/* 非賽前狀態完全不顯示這組賽前快捷操作。 */
+body:not(.matchStatePre) .preQuickSetup,
+body:not(.matchStatePre) .preResetBtn{
+  display:none!important;
+}
+
+@media(max-width:390px){
+  body.matchStatePre .preQuickSetup{
+    gap:7px;
+    margin-top:6px;
+  }
+
+  body.matchStatePre .preQuickSetup > button{
+    min-height:40px;
+    font-size:14px;
+  }
+
+  .preResetBtn{
+    margin-top:5px;
+    font-size:11px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2579,25 +2680,27 @@ body.resultMode .finalToolsCard{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v3.81</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v3.82</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
     <div class="matchMetaRow">
       <input id="competition" placeholder="🏆 賽事名稱" maxlength="20" enterkeyhint="next" autocomplete="off" aria-label="賽事名稱">
-      <div class="matchMetaActions">
-        <button id="keeperQuickBtn" class="keeperQuickBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
-          <span aria-hidden="true">🧤</span><span id="keeperQuickText">GK</span>
-        </button>
-        <button class="new" onclick="newMatch()">＋ 新比賽</button>
-      </div>
     </div>
     <div class="venueRow">
       <input id="venue" placeholder="🏟️ 場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地">
+    </div>
+
+    <div class="preQuickSetup" id="preQuickSetup">
+      <button id="keeperQuickBtn" class="keeperQuickBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
+        <span aria-hidden="true">🧤</span><span id="keeperQuickText">GK</span>
+      </button>
       <button id="rosterQuickBtn" class="rosterQuickBtn" type="button" onclick="openRosterModal()" aria-label="設定本場球員名單">
         <span aria-hidden="true">👥</span><span id="rosterQuickText">0人</span>
       </button>
     </div>
+
+    <button id="preResetBtn" class="preResetBtn" type="button" onclick="resetPreMatchSetup()">↺ 重新設定</button>
 
     <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
     <div class="liveQuickSetup" id="liveQuickSetup">
@@ -2765,7 +2868,7 @@ body.resultMode .finalToolsCard{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.81</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v3.82</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -3320,6 +3423,7 @@ function saveState(){
     localStorage.setItem(LAST_OUR_TEAM_KEY, state.ourTeam);
   }
   rememberVenueIfEligible(state.venue);
+  if(typeof renderPreResetUI==='function') renderPreResetUI();
 }
 function loadState(){
   try{
@@ -5219,6 +5323,102 @@ function renderQuickResult(){
     state.markers.filter(m=>m.event==='DEFENSE').length;
 }
 
+
+function hasMeaningfulPreMatchSetup(){
+  if(state.started || state.finished || state.awaitingNextPeriod || state.penalty?.active) return false;
+
+  const rememberedOur=String(localStorage.getItem(LAST_OUR_TEAM_KEY)||'忠義').trim();
+  const rememberedVenue=String(localStorage.getItem(LAST_VENUE_KEY)||'').trim();
+
+  const currentOur=String(byId('ourTeam')?.value||state.ourTeam||'').trim();
+  const currentOpp=String(byId('oppTeam')?.value||state.oppTeam||'').trim();
+  const currentCompetition=String(byId('competition')?.value||state.competition||'').trim();
+  const currentVenue=String(byId('venue')?.value||state.venue||'').trim();
+
+  return Boolean(
+    currentOpp ||
+    currentCompetition ||
+    String(state.goalkeeperNumber||'') ||
+    currentRosterNumbers().length ||
+    Number(state.regulationMinutes||0) ||
+    (currentOur && currentOur!==rememberedOur) ||
+    (currentVenue && currentVenue!==rememberedVenue)
+  );
+}
+
+function renderPreResetUI(){
+  const btn=byId('preResetBtn');
+  if(!btn) return;
+
+  const show=
+    !state.started &&
+    !state.finished &&
+    !state.awaitingNextPeriod &&
+    !state.penalty?.active &&
+    hasMeaningfulPreMatchSetup();
+
+  btn.classList.toggle('show',show);
+}
+
+function resetPreMatchSetup(){
+  if(state.started || state.finished || state.awaitingNextPeriod || state.penalty?.active) return;
+
+  if(!confirm('重新設定會清除本場賽前已填的對手、賽事、場地、GK、球員名單與規定時間，確定嗎？')) return;
+
+  hideMarkerUndo();
+
+  const rememberedOur=String(
+    localStorage.getItem(LAST_OUR_TEAM_KEY) ||
+    byId('ourTeam')?.value ||
+    state.ourTeam ||
+    '忠義'
+  ).trim() || '忠義';
+
+  const rememberedVenue=String(localStorage.getItem(LAST_VENUE_KEY)||'').trim();
+
+  state.ourTeam=rememberedOur;
+  state.oppTeam='';
+  state.competition='';
+  state.venue=rememberedVenue;
+  state.goalkeeperNumber='';
+  state.rosterNumbers=[];
+  state.regulationMinutes=null;
+
+  state.ourScore=0;
+  state.oppScore=0;
+  state.markers=[];
+  state.currentPeriod=1;
+  state.awaitingNextPeriod=false;
+  state.multiPeriod=false;
+  state.periodStartOurScore=0;
+  state.periodStartOppScore=0;
+  state.periods=[];
+  state.nextPeriodType=null;
+  state.extraTime=false;
+  state.extraTimeMinutes=null;
+  state.penalty=null;
+  state.halftimeStartEpoch=null;
+  state.halftimeEndEpoch=null;
+  state.halftimeDuration=0;
+
+  byId('ourTeam').value=rememberedOur;
+  byId('oppTeam').value='';
+  byId('competition').value='';
+  byId('venue').value=rememberedVenue;
+
+  byId('ourTeamBox')?.classList.remove('editing');
+  byId('oppTeamBox')?.classList.remove('editing');
+  byId('ourTeam')?.classList.remove('requiredError','inputError','guidedInput');
+  byId('oppTeam')?.classList.remove('inputError','guidedInput');
+  byId('competition')?.classList.remove('guidedInput');
+  byId('venue')?.classList.remove('guidedInput');
+
+  guidedSetupStep=null;
+  syncRegulationInputsFromState();
+  saveState();
+  render();
+}
+
 function renderMatchStateUI(){
   const isFinished=!!state.finished;
   const isPenalty=!!state.penalty?.active;
@@ -5302,6 +5502,7 @@ function render(){
   renderRegulationTimeAlert();
   renderQuickResult();
   renderLiveFocusUI();
+  renderPreResetUI();
 
   const roster=currentRosterNumbers();
   const rosterBtn=byId('rosterQuickBtn');
@@ -5366,7 +5567,7 @@ function render(){
 
   // 按鈕依比賽狀態啟用 / 禁用，避免現場誤觸。
   if(state.finished){
-    // 全場結束：兩顆都鎖定；v3.81 由 resultMode CSS 直接隱藏。
+    // 全場結束：兩顆都鎖定；v3.82 由 resultMode CSS 直接隱藏。
     startBtn.disabled=true;
     finishBtn.disabled=true;
   }else if(state.penalty?.active){
