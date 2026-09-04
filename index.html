@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.07</title>
+<title>足球場邊記錄器 v4.08</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -867,7 +867,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   touch-action:manipulation;
   background:linear-gradient(180deg,#4778aa 0%,#2d5f94 100%);
   border:1px solid rgba(125,190,255,.52);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 3px 0 0 rgba(111,205,255,.72),0 6px 16px rgba(37,99,235,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 6px 16px rgba(37,99,235,.18);
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -4225,6 +4225,34 @@ body.matchStateSecondHalf .liveMetaStrip .metaSep{
   box-shadow:none!important;
 }
 
+/* =========================
+   v4.08 Record / report polish
+   ========================= */
+
+/* 紀錄按鈕統一為單一淺藍底色；移除左側異色飾條。 */
+#recordSection .recordFullBtn{
+  background:#3f76aa!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 6px 16px rgba(37,99,235,.18)!important;
+}
+
+/* 摘要表格中的牌卡固定使用直向長方形，不再使用系統 emoji。 */
+.reportCardType{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  white-space:nowrap;
+}
+.reportCardShape{
+  display:inline-block;
+  width:9px;
+  height:14px;
+  border-radius:1px;
+  flex:0 0 9px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 1px 2px rgba(0,0,0,.22);
+}
+.reportCardShape.yellow{background:#ffd21f}
+.reportCardShape.red{background:#ef3535}
+
 .scoreText{
   display:flex;
   align-items:center;
@@ -4330,7 +4358,7 @@ body.resultMode .scoreText{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.07</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.08</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -4557,7 +4585,7 @@ body.resultMode .scoreText{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.07</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.08</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">為教練、家長與球隊打造的場邊比賽工具。從現場即時標記，到賽後摘要、剪輯與留存，把每一場比賽的重要片段完整串起來。</div>
@@ -7630,17 +7658,25 @@ function reportEventHTML(m, goalIndex=null){
   const label = `${team}${num}${assist}`;
   return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="goalOrdinal">${ordinal}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="rscore">${m.score_after||''}</div></div>`;
 }
+function reportTypeHTML(event){
+  if(event==='YELLOW_CARD'){
+    return '<span class="reportCardType"><span class="reportCardShape yellow" aria-hidden="true"></span><span>黃牌</span></span>';
+  }
+  if(event==='RED_CARD'){
+    return '<span class="reportCardType"><span class="reportCardShape red" aria-hidden="true"></span><span>紅牌</span></span>';
+  }
+  return `${emoji(event)} ${escapeHtml(eventLabel(event))}`;
+}
 function reportOtherEventHTML(m){
   const team=teamDisplay(m.team) || '未指定';
   const num=m.player_number ? ` #${m.player_number}` : '';
-  const type=`${emoji(m.event)} ${eventLabel(m.event)}`;
   const period=state.multiPeriod ? periodLabel(m.period||1) : '';
   const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
   const actor=`${team}${num}`;
   return `<div class="reportEvent">
     <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
     <div class="reportLabel" title="${escapeHtml(actor)}">${escapeHtml(actor)}</div>
-    <div class="reportType">${escapeHtml(type)}</div>
+    <div class="reportType">${reportTypeHTML(m.event)}</div>
     <div class="rscore">${m.score_after||''}</div>
   </div>`;
 }
@@ -7840,7 +7876,8 @@ function reportLines(){
     const period=state.multiPeriod ? periodLabel(m.period||1) : '';
     lines.push({
       type:'otherEvent',
-      typeLabel:`${emoji(m.event)} ${eventLabel(m.event)}`,
+      event:m.event,
+      typeLabel:eventLabel(m.event),
       periodTime:period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds),
       actor:`${team}${m.player_number ? ` #${m.player_number}` : ''}`,
       score:m.score_after||''
@@ -8035,7 +8072,17 @@ function makeReportCanvas(){
 
       ctx.fillStyle='#7dd3fc';
       ctx.font='700 23px -apple-system, Apple Color Emoji, sans-serif';
-      ctx.fillText(line.typeLabel, typeX, y);
+      if(line.event==='YELLOW_CARD' || line.event==='RED_CARD'){
+        ctx.fillStyle=line.event==='YELLOW_CARD'?'#ffd21f':'#ef3535';
+        roundRect(ctx,typeX,y-15,18,28,2,true,false);
+        ctx.strokeStyle='rgba(255,255,255,.16)';
+        ctx.lineWidth=1;
+        roundRect(ctx,typeX,y-15,18,28,2,false,true);
+        ctx.fillStyle='#7dd3fc';
+        ctx.fillText(line.typeLabel,typeX+27,y);
+      }else{
+        ctx.fillText(`${emoji(line.event)} ${line.typeLabel}`, typeX, y);
+      }
 
       ctx.fillStyle='#cbd5e1';
       ctx.font='700 25px -apple-system, sans-serif';
