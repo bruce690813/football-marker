@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.45</title>
+<title>足球場邊記錄器 v4.46</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -5422,23 +5422,23 @@ body.matchStatePre .scoreColon{
 
 
 /* =========================
-   v4.45 全場「本場事件統計」強化
-   目標：比分之外，四個事件一眼可讀
+   v4.46 全場「本場事件統計」＋賽後工具列視覺層級重整
+   目標：保留事件色辨識，但讓「資訊」與「操作」分流
    ========================= */
 
-/* 統計區外層微增亮，與紅色全場區塊之下形成第二視覺層級。 */
+/* 統計區作為第二資訊層，改成偏資訊面板感，而非操作按鈕感。 */
 .quickResultCard,
 body.resultMode .quickResultCard{
   padding:14px 14px 15px!important;
   background:
-    linear-gradient(180deg,rgba(27,51,78,.78) 0%,rgba(10,24,39,.84) 100%)!important;
-  border:1px solid rgba(166,202,243,.26)!important;
+    radial-gradient(circle at 18% 0%,rgba(76,169,255,.10),transparent 30%),
+    linear-gradient(180deg,rgba(23,43,66,.90) 0%,rgba(10,22,36,.96) 100%)!important;
+  border:1px solid rgba(166,202,243,.22)!important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.08),
     0 12px 30px rgba(0,0,0,.22)!important;
 }
 
-/* 標題提高層級，並用左側亮藍導引視線。 */
 .quickResultTitle,
 body.resultMode .quickResultTitle{
   display:flex;
@@ -5456,11 +5456,10 @@ body.resultMode .quickResultTitle{
   width:4px;
   height:18px;
   border-radius:999px;
-  background:linear-gradient(180deg,#67d4ff 0%,#2b8dff 100%);
-  box-shadow:0 0 10px rgba(58,164,255,.35);
+  background:linear-gradient(180deg,#74d9ff 0%,#2e93ff 100%);
+  box-shadow:0 0 10px rgba(58,164,255,.30);
 }
 
-/* 四格統計直接採用對應事件色彩，保持與主操作按鈕一致的肌肉記憶。 */
 .quickResultStats{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
@@ -5469,28 +5468,41 @@ body.resultMode .quickResultTitle{
 .quickResultStat,
 body.resultMode .quickResultStat{
   position:relative;
-  min-height:86px!important;
-  padding:12px 8px 10px!important;
+  min-height:88px!important;
+  padding:13px 8px 11px!important;
   display:flex!important;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:6px;
-  border-radius:16px!important;
+  gap:7px;
+  border-radius:17px!important;
   text-align:center;
   overflow:hidden;
   isolation:isolate;
   border-width:1.5px!important;
+  background:linear-gradient(180deg,rgba(16,29,46,.98) 0%,rgba(10,19,31,.98) 100%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.08),
     0 10px 20px rgba(0,0,0,.16)!important;
+}
+.quickResultStat::before{
+  content:'';
+  position:absolute;
+  left:0;right:0;top:0;
+  height:6px;
+  border-radius:16px 16px 0 0;
+  background:var(--accent,#67d4ff);
+  opacity:.98;
+  z-index:0;
 }
 .quickResultStat::after{
   content:'';
   position:absolute;
   inset:0;
   border-radius:inherit;
-  background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,rgba(255,255,255,0) 36%);
+  background:
+    radial-gradient(circle at 50% -8%,rgba(255,255,255,.10),transparent 38%),
+    linear-gradient(180deg,rgba(255,255,255,.05) 0%,rgba(255,255,255,0) 34%);
   pointer-events:none;
   z-index:0;
 }
@@ -5502,10 +5514,10 @@ body.resultMode .quickResultStat{
   gap:6px;
   font-size:14px!important;
   line-height:1.1;
-  font-weight:850;
+  font-weight:860;
   letter-spacing:.2px;
   color:#f5f9ff;
-  opacity:.96;
+  opacity:.97;
 }
 .quickResultIcon{
   font-size:17px;
@@ -5517,49 +5529,52 @@ body.resultMode .quickResultStat strong{
   position:relative;
   z-index:1;
   margin-top:0!important;
-  font-size:30px!important;
+  font-size:31px!important;
   line-height:1!important;
-  font-weight:950;
+  font-weight:960;
   color:#ffffff!important;
   font-variant-numeric:tabular-nums;
-  text-shadow:0 2px 8px rgba(0,0,0,.22);
+  text-shadow:0 2px 8px rgba(0,0,0,.24);
 }
 
-/* 對應四大事件：綠 / 黃 / 藍 / 紫 */
+/* 事件色保留，但改為資料面板語言：深色本體 + 彩色頂條/光暈。 */
 .quickResultStat.goalStat{
-  background:linear-gradient(180deg,rgba(29,125,56,.92) 0%,rgba(18,78,36,.96) 100%)!important;
-  border-color:rgba(118,233,143,.44)!important;
+  --accent:linear-gradient(90deg,#5de38e 0%,#1fb45a 100%);
+  background:linear-gradient(180deg,rgba(17,60,36,.96) 0%,rgba(9,35,21,.98) 100%)!important;
+  border-color:rgba(100,224,142,.30)!important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.09),
-    0 10px 20px rgba(24,102,47,.24),
-    0 0 0 1px rgba(51,209,91,.06)!important;
+    0 10px 20px rgba(17,88,47,.20),
+    0 0 0 1px rgba(51,209,91,.05)!important;
 }
 .quickResultStat.shotStat{
-  background:linear-gradient(180deg,rgba(208,151,22,.96) 0%,rgba(164,109,5,.96) 100%)!important;
-  border-color:rgba(255,220,118,.46)!important;
+  --accent:linear-gradient(90deg,#ffd864 0%,#f0a81a 100%);
+  background:linear-gradient(180deg,rgba(93,65,10,.96) 0%,rgba(49,34,6,.98) 100%)!important;
+  border-color:rgba(255,216,100,.30)!important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.09),
-    0 10px 20px rgba(145,97,4,.24),
-    0 0 0 1px rgba(255,201,40,.06)!important;
+    0 10px 20px rgba(116,81,8,.18),
+    0 0 0 1px rgba(255,201,40,.05)!important;
 }
 .quickResultStat.saveStat{
-  background:linear-gradient(180deg,rgba(39,123,245,.96) 0%,rgba(22,84,194,.96) 100%)!important;
-  border-color:rgba(133,187,255,.48)!important;
+  --accent:linear-gradient(90deg,#8cd2ff 0%,#3f88ff 100%);
+  background:linear-gradient(180deg,rgba(18,54,112,.96) 0%,rgba(11,30,65,.98) 100%)!important;
+  border-color:rgba(133,187,255,.32)!important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.09),
-    0 10px 20px rgba(17,73,176,.24),
-    0 0 0 1px rgba(73,155,255,.06)!important;
+    0 10px 20px rgba(17,73,176,.19),
+    0 0 0 1px rgba(73,155,255,.05)!important;
 }
 .quickResultStat.defenseStat{
-  background:linear-gradient(180deg,rgba(156,92,245,.96) 0%,rgba(120,58,211,.96) 100%)!important;
-  border-color:rgba(202,160,255,.46)!important;
+  --accent:linear-gradient(90deg,#d1a8ff 0%,#995dff 100%);
+  background:linear-gradient(180deg,rgba(74,34,116,.96) 0%,rgba(41,21,66,.98) 100%)!important;
+  border-color:rgba(202,160,255,.32)!important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.09),
-    0 10px 20px rgba(93,46,168,.24),
-    0 0 0 1px rgba(176,116,255,.06)!important;
+    0 10px 20px rgba(93,46,168,.19),
+    0 0 0 1px rgba(176,116,255,.05)!important;
 }
 
-/* 全場模式下再把字級拉開一些，但仍維持手機一屏資訊密度。 */
 body.resultMode .quickResultTitle{
   font-size:18px!important;
   margin-bottom:12px!important;
@@ -5568,10 +5583,43 @@ body.resultMode .quickResultLabel{
   font-size:14px!important;
 }
 body.resultMode .quickResultStat{
-  min-height:90px!important;
+  min-height:92px!important;
 }
 body.resultMode .quickResultStat strong{
-  font-size:32px!important;
+  font-size:33px!important;
+}
+
+/* 賽後工具列改成「主次分層」：摘要為主按鈕，其餘為次／輔助操作。 */
+.finalToolsCard{
+  background:rgba(8,14,26,.92);
+  border:1px solid rgba(94,123,163,.36);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 14px 34px rgba(0,0,0,.44);
+}
+.finalTools button{
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 16px rgba(0,0,0,.18);
+}
+.finalTools .reportBtn{
+  background:linear-gradient(180deg,#18aab1 0%,#117d88 100%);
+  border-color:rgba(114,235,241,.34);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 10px 18px rgba(12,104,112,.28);
+}
+.finalTools .pngBtn{
+  background:linear-gradient(180deg,#426ad8 0%,#304ea7 100%);
+  border-color:rgba(151,179,255,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 8px 16px rgba(41,63,133,.20);
+}
+.finalTools .share{
+  background:linear-gradient(180deg,#4b607f 0%,#36475f 100%);
+  border-color:rgba(173,190,214,.24);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 16px rgba(22,30,43,.22);
+}
+.finalTools .reportBtn:active,
+.finalTools .pngBtn:active,
+.finalTools .share:active{
+  transform:translateY(1px) scale(.99);
 }
 
 @media(max-width:390px){
@@ -5592,7 +5640,7 @@ body.resultMode .quickResultStat strong{
   }
   .quickResultStat,
   body.resultMode .quickResultStat{
-    min-height:78px!important;
+    min-height:80px!important;
     padding:10px 4px 9px!important;
     border-radius:14px!important;
     gap:5px;
@@ -5619,7 +5667,7 @@ body.resultMode .quickResultStat strong{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.45</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.46</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -5866,7 +5914,7 @@ body.resultMode .quickResultStat strong{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.45</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.46</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
