@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.48</title>
+<title>足球場邊記錄器 v4.49</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -5769,6 +5769,79 @@ body.matchStateExtraActive .liveMetaStrip .metaIcon{
   }
 }
 
+
+/* =========================
+   v4.49 賽事名稱 / 場地字級全狀態一致化
+   上半場 / 中場 / 下半場 / 等待延長賽 / 延長賽 / PK / 全場
+   ========================= */
+
+/* 所有「已開始比賽」狀態統一使用同一套資訊列文字尺寸。 */
+body.matchStateLive .liveMetaStrip.show,
+body.matchStateHalftime .liveMetaStrip.show,
+body.matchStateExtraWait .liveMetaStrip.show,
+body.matchStateBreak .liveMetaStrip.show,
+body.resultMode .liveMetaStrip.show{
+  min-height:36px!important;
+  margin-bottom:7px!important;
+  padding-top:7px!important;
+  padding-bottom:7px!important;
+  font-size:clamp(15.5px,3.95vw,16.2px)!important;
+  line-height:1.15!important;
+  font-weight:950!important;
+  letter-spacing:.08px!important;
+  color:#edf5ff!important;
+}
+
+/* 全場的文字放在 resultMetaText 中，必須同步指定，避免繼承被舊規則蓋掉。 */
+body.resultMode .liveMetaStrip .resultMetaText{
+  font-size:clamp(15.5px,3.95vw,16.2px)!important;
+  line-height:1.15!important;
+  font-weight:950!important;
+  letter-spacing:.08px!important;
+  color:#edf5ff!important;
+}
+
+/* 若資訊列使用 liveMetaText / metaIcon 結構，也保持一致。 */
+body.matchStateLive .liveMetaStrip .liveMetaText,
+body.matchStateHalftime .liveMetaStrip .liveMetaText,
+body.matchStateExtraWait .liveMetaStrip .liveMetaText,
+body.matchStateBreak .liveMetaStrip .liveMetaText{
+  font-size:clamp(15.5px,3.95vw,16.2px)!important;
+  line-height:1.15!important;
+  font-weight:950!important;
+  letter-spacing:.08px!important;
+  color:#edf5ff!important;
+}
+
+body.matchStateLive .liveMetaStrip .metaIcon,
+body.matchStateHalftime .liveMetaStrip .metaIcon,
+body.matchStateExtraWait .liveMetaStrip .metaIcon,
+body.matchStateBreak .liveMetaStrip .metaIcon{
+  font-size:1.06em!important;
+}
+
+/* 小型 iPhone：統一維持 15px，兼顧可讀性與長名稱完整度。 */
+@media(max-width:390px){
+  body.matchStateLive .liveMetaStrip.show,
+  body.matchStateHalftime .liveMetaStrip.show,
+  body.matchStateExtraWait .liveMetaStrip.show,
+  body.matchStateBreak .liveMetaStrip.show,
+  body.resultMode .liveMetaStrip.show{
+    min-height:34px!important;
+    padding-top:6px!important;
+    padding-bottom:6px!important;
+    font-size:15px!important;
+  }
+
+  body.matchStateLive .liveMetaStrip .liveMetaText,
+  body.matchStateHalftime .liveMetaStrip .liveMetaText,
+  body.matchStateExtraWait .liveMetaStrip .liveMetaText,
+  body.matchStateBreak .liveMetaStrip .liveMetaText,
+  body.resultMode .liveMetaStrip .resultMetaText{
+    font-size:15px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5777,7 +5850,7 @@ body.matchStateExtraActive .liveMetaStrip .metaIcon{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.48</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.49</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -6020,7 +6093,7 @@ body.matchStateExtraActive .liveMetaStrip .metaIcon{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.48</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.49</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
