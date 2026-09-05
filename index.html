@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.49</title>
+<title>足球場邊記錄器 v4.50</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -5842,6 +5842,125 @@ body.matchStateBreak .liveMetaStrip .metaIcon{
   }
 }
 
+
+/* =========================
+   v4.50 全場底部安全空間 +「新比賽」視覺分層
+   1. 用真正文件流 spacer，確保 iPhone Safari 可把最後一顆按鈕完整捲上來
+   2. 「事件紀錄」維持石墨藍工具列
+   3. 「＋ 新比賽」改成深色 outline CTA，和紀錄入口明確區隔
+   ========================= */
+
+/* 真實存在於文件流中的底部安全區：只在全場輸出頁出現。 */
+.fullTimeBottomSpacer{
+  display:none;
+  width:100%;
+  height:0;
+  flex:0 0 auto;
+  pointer-events:none;
+}
+body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+  display:block;
+  height:calc(118px + env(safe-area-inset-bottom));
+}
+
+/* 有真實 spacer 後，wrap 不需要再靠超大的 padding 假裝有空間。 */
+body.resultMode.finalOutputVisible .wrap{
+  padding-bottom:calc(12px + env(safe-area-inset-bottom))!important;
+  scroll-padding-bottom:calc(126px + env(safe-area-inset-bottom))!important;
+}
+
+/* 新比賽：改成「下一步 CTA」，不再和事件紀錄使用相似的灰藍實心卡片。 */
+body.resultMode .resultNewMatchBtn{
+  position:relative;
+  display:flex!important;
+  align-items:center;
+  justify-content:center;
+  min-height:50px!important;
+  margin-top:11px!important;
+  padding:11px 16px!important;
+  border-radius:15px!important;
+
+  background:
+    linear-gradient(180deg,rgba(7,23,36,.97) 0%,rgba(5,17,29,.99) 100%)!important;
+  border:1.5px solid rgba(71,207,255,.78)!important;
+  color:#f5fbff!important;
+
+  font-size:16px!important;
+  font-weight:950!important;
+  letter-spacing:.15px!important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.065),
+    0 0 0 1px rgba(34,167,230,.10),
+    0 0 16px rgba(43,184,245,.12),
+    0 7px 18px rgba(0,0,0,.22)!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.28);
+}
+
+/* 用 cyan 的「＋」做下一步提示，但不把整顆按鈕染成亮藍。 */
+body.resultMode .resultNewMatchBtn::first-letter{
+  color:#60d9ff;
+}
+body.resultMode .resultNewMatchBtn::before{
+  content:'';
+  position:absolute;
+  left:14px;
+  top:50%;
+  width:4px;
+  height:20px;
+  transform:translateY(-50%);
+  border-radius:999px;
+  background:linear-gradient(180deg,#76e2ff 0%,#2ba6ff 100%);
+  box-shadow:0 0 10px rgba(54,188,255,.36);
+}
+
+body.resultMode .resultNewMatchBtn:active{
+  transform:translateY(1px) scale(.995)!important;
+  background:
+    linear-gradient(180deg,rgba(10,34,52,.99) 0%,rgba(7,24,40,1) 100%)!important;
+  border-color:rgba(104,220,255,.92)!important;
+}
+
+/* 事件紀錄維持工具列語言，避免和下一步 CTA 互搶。 */
+body.resultMode #eventHubSection #recordSection .recordFullBtn{
+  background:
+    linear-gradient(180deg,#27384a 0%,#1b2938 100%)!important;
+  border-color:rgba(128,151,177,.28)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 5px 12px rgba(0,0,0,.16)!important;
+}
+body.resultMode #eventHubSection #recordSection .recordLabel{
+  color:#dce6f0!important;
+}
+body.resultMode #eventHubSection #recordSection .recordMeta{
+  background:linear-gradient(180deg,#172536 0%,#101b29 100%)!important;
+  border-color:rgba(126,149,175,.24)!important;
+}
+
+/* 小型 iPhone：再多留一點真實空間，處理 Safari bottom bar / compact bar 切換。 */
+@media(max-width:430px){
+  body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    height:calc(132px + env(safe-area-inset-bottom));
+  }
+  body.resultMode.finalOutputVisible .wrap{
+    padding-bottom:calc(8px + env(safe-area-inset-bottom))!important;
+    scroll-padding-bottom:calc(140px + env(safe-area-inset-bottom))!important;
+  }
+  body.resultMode .resultNewMatchBtn{
+    min-height:50px!important;
+    margin-top:10px!important;
+    font-size:15.5px!important;
+  }
+}
+
+/* iPhone 特別窄時仍確保最後按鈕可完整滑過 Safari 工具列。 */
+@media(max-width:390px){
+  body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    height:calc(140px + env(safe-area-inset-bottom));
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5850,7 +5969,7 @@ body.matchStateBreak .liveMetaStrip .metaIcon{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.49</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.50</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -6059,6 +6178,8 @@ body.matchStateBreak .liveMetaStrip .metaIcon{
     <button id="resultNewMatchBtn" class="resultNewMatchBtn" type="button" onclick="newMatch()" aria-label="建立新比賽">＋ 新比賽</button>
     
   </div>
+
+  <div class="fullTimeBottomSpacer" id="fullTimeBottomSpacer" aria-hidden="true"></div>
 </div>
 
 
@@ -6093,7 +6214,7 @@ body.matchStateBreak .liveMetaStrip .metaIcon{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.49</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.50</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
