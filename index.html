@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.22</title>
+<title>足球場邊記錄器 v4.23</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -4482,7 +4482,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.22 Dark Glass Frame refinement
+   v4.23 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4646,7 +4646,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.22 Unified event module
+   v4.23 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
 #eventHubSection.stateManaged{max-height:455px}
@@ -4743,7 +4743,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.22 iPhone Safari bottom-safe scrolling
+   v4.23 iPhone Safari bottom-safe scrolling
    比賽中／中場／等待階段，替底部瀏覽器工具列保留可捲動空間，
    避免「紀錄」按鈕被 Safari 底部列遮住。
    ========================= */
@@ -4771,6 +4771,55 @@ body.matchStateBreak .wrap{
   #eventHubSection{margin-bottom:10px!important}
 }
 
+
+
+/* =========================
+   v4.23 iPhone Safari bottom obstruction fallback
+   Safari 的 visualViewport 在部分 iOS 狀態下不會把底部工具列算進 bottomGap，
+   因此不能只依賴動態差值。加入固定安全下限，確保「紀錄」可捲到工具列上方。
+   ========================= */
+body.matchStateLive .wrap,
+body.matchStateHalftime .wrap,
+body.matchStateExtraWait .wrap,
+body.matchStateBreak .wrap{
+  padding-bottom:calc(max(132px, calc(var(--browser-bottom-gap,0px) + 34px)) + env(safe-area-inset-bottom))!important;
+  scroll-padding-bottom:calc(max(144px, calc(var(--browser-bottom-gap,0px) + 46px)) + env(safe-area-inset-bottom))!important;
+}
+
+/* 讓事件模組本身也保有可對齊到 Safari 工具列上方的捲動落點。 */
+#recordSection{
+  scroll-margin-bottom:calc(132px + env(safe-area-inset-bottom));
+}
+#eventHubSection{
+  margin-bottom:18px!important;
+}
+
+/* iPhone / iOS WebKit：再多保留一段實際文件流空間。
+   這個 pseudo spacer 不依賴 visualViewport，因此底部工具列展開時也有效。 */
+@supports (-webkit-touch-callout:none){
+  body.matchStateLive .wrap::after,
+  body.matchStateHalftime .wrap::after,
+  body.matchStateExtraWait .wrap::after,
+  body.matchStateBreak .wrap::after{
+    content:"";
+    display:block;
+    width:100%;
+    height:118px;
+    pointer-events:none;
+  }
+}
+
+@media(max-width:430px){
+  body.matchStateLive .wrap,
+  body.matchStateHalftime .wrap,
+  body.matchStateExtraWait .wrap,
+  body.matchStateBreak .wrap{
+    padding-bottom:calc(max(140px, calc(var(--browser-bottom-gap,0px) + 38px)) + env(safe-area-inset-bottom))!important;
+    scroll-padding-bottom:calc(max(152px, calc(var(--browser-bottom-gap,0px) + 50px)) + env(safe-area-inset-bottom))!important;
+  }
+  #recordSection{scroll-margin-bottom:calc(140px + env(safe-area-inset-bottom))}
+}
+
 </style>
 </head>
 <body>
@@ -4779,7 +4828,7 @@ body.matchStateBreak .wrap{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.22</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.23</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -5012,7 +5061,7 @@ body.matchStateBreak .wrap{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.22</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.23</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
