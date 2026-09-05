@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.11</title>
+<title>足球場邊記錄器 v4.12</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -4443,7 +4443,7 @@ body.resultMode .scoreText{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.11</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.12</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -4670,16 +4670,17 @@ body.resultMode .scoreText{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.11</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.12</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
         <span class="aboutIntroLine">為教練、家長與球隊打造的場邊比賽工具。</span>
-        <span class="aboutIntroLine">從現場即時標記，到賽後摘要、剪輯與留存，</span>
-        <span class="aboutIntroLine">把每一場比賽的重要片段完整串起來。</span>
+        <span class="aboutIntroLine">從現場即時標記，到賽後摘要與剪輯，</span>
+        <span class="aboutIntroLine">完整留下每一場比賽的重要片段。</span>
       </div>
     </div>
     <div class="aboutBody">
+      <div class="aboutScroll">
       <div class="aboutCards">
         <div class="aboutCard">
           <div class="aboutCardTitle">🎬 一鍵標記重點</div>
@@ -4698,6 +4699,7 @@ body.resultMode .scoreText{
         <div class="aboutStatementLead">記錄每一場精彩</div>
         <div class="aboutStatementMain">為孩子的足球時光留下回憶</div>
         <div class="aboutStatementSwoosh" aria-hidden="true"></div>
+      </div>
       </div>
       <div class="aboutFooter">
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始使用這個工具</button>
@@ -8826,5 +8828,183 @@ setInterval(renderRegulationTimeAlert,1000);
   .logModalBody .item b{font-size:15px}
   .logModalBody .time{font-size:16px}
   .logSeq{font-size:13px}
+}
+
+
+/* =========================
+   v4.12 About modal UI/UX refinement
+   - CTA always visible
+   - tighter reading rhythm
+   - unified cyan accents
+   - memory panel behaves like a brand signature
+   ========================= */
+.modal.aboutModal{
+  height:min(calc(var(--vv-height,100dvh) - 16px),780px);
+}
+.aboutTop{
+  padding:18px 52px 14px 16px;
+}
+.aboutDismiss{
+  top:13px;right:13px;
+  width:36px;height:36px;min-width:36px;
+  background:rgba(255,255,255,.055);
+  border-color:rgba(255,255,255,.10);
+  color:rgba(248,251,255,.88);
+  font-size:15px;
+}
+.aboutMetaRow{margin-bottom:7px}
+.aboutTitle{font-size:24px}
+.aboutHero{
+  margin-top:10px;
+  font-size:18.5px;
+  line-height:1.18;
+  letter-spacing:-.22px;
+}
+.aboutIntro{
+  margin-top:7px;
+  max-width:96%;
+  font-size:10.9px!important;
+  line-height:1.48!important;
+  font-weight:720!important;
+  color:#bfcddd;
+}
+.aboutIntroLine{display:block}
+
+/* Body is a fixed flex region: only aboutScroll scrolls; CTA never leaves viewport. */
+.aboutBody{
+  flex:1;min-height:0;
+  display:flex;flex-direction:column;
+  padding:0;
+  overflow:hidden;
+  background:linear-gradient(180deg,#06111c 0%,#040b14 100%);
+}
+.aboutScroll{
+  flex:1;min-height:0;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  padding:9px 10px 7px;
+  scroll-padding-bottom:10px;
+}
+.aboutCards{gap:8px}
+.aboutCard{
+  padding:10px 13px 9px 14px;
+  border-radius:17px;
+  border-color:rgba(255,255,255,.07);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 7px 18px rgba(0,0,0,.17);
+}
+.aboutCard::before{
+  top:10px;bottom:10px;width:3px;
+  background:#38bdf8;
+  box-shadow:0 0 10px rgba(56,189,248,.30);
+}
+.aboutCard:nth-child(2)::before{
+  background:#4cc9f0;
+  box-shadow:0 0 10px rgba(76,201,240,.25);
+}
+.aboutCard:nth-child(3)::before{
+  background:#67d5ff;
+  box-shadow:0 0 10px rgba(103,213,255,.23);
+}
+.aboutCardTitle{
+  font-size:17.5px!important;
+  line-height:1.18!important;
+  margin-bottom:3px!important;
+  font-weight:950!important;
+}
+.aboutCardText{
+  font-size:10.7px!important;
+  line-height:1.42!important;
+  font-weight:720!important;
+  color:#c8d4e0;
+}
+
+/* Brand signature: less like a fourth feature card, more like an editorial closing note. */
+.aboutStatement{
+  margin-top:9px;
+  min-height:94px;
+  padding:12px 18px 11px;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 78% 76%,rgba(73,167,255,.10),transparent 28%),
+    linear-gradient(145deg,rgba(10,41,66,.76) 0%,rgba(7,29,49,.72) 52%,rgba(6,22,37,.72) 100%);
+  border:1px solid rgba(91,177,228,.13);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 8px 20px rgba(0,0,0,.12);
+}
+.aboutStatement::before{opacity:.58}
+.aboutStatement::after{
+  right:23px;bottom:11px;
+  font-size:28px;
+  opacity:.92;
+}
+.aboutStatementLead{
+  font-size:15.5px!important;
+  margin-left:17%;
+  line-height:1.28!important;
+}
+.aboutStatementMain{
+  max-width:72%;
+  margin-left:4%;
+  margin-top:4px;
+  font-size:12.8px!important;
+  line-height:1.38!important;
+}
+.aboutStatementSwoosh{
+  left:18%;right:31%;bottom:7px;height:21px;
+  opacity:.75;
+}
+
+/* Dedicated CTA zone stays fully visible above the iPhone safe area. */
+.aboutFooter{
+  position:relative;
+  flex:0 0 auto;
+  margin:0;
+  padding:8px 10px calc(9px + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(255,255,255,.055);
+  background:linear-gradient(180deg,rgba(4,11,20,.76) 0%,#040b14 28%,#040b14 100%);
+  box-shadow:0 -12px 24px rgba(4,11,20,.24);
+}
+.aboutClose{
+  min-height:44px;
+  border-radius:15px;
+  font-size:13.8px;
+}
+
+@media(max-width:390px){
+  .modal.aboutModal{
+    width:min(470px,calc(100vw - 12px));
+    height:calc(var(--vv-height,100dvh) - 10px);
+    max-height:calc(var(--vv-height,100dvh) - 10px);
+  }
+  .aboutTop{padding:14px 44px 11px 13px}
+  .aboutDismiss{top:10px;right:10px;width:32px;height:32px;min-width:32px;font-size:14px}
+  .aboutTitle{font-size:19.5px}
+  .aboutHero{margin-top:8px;font-size:15.5px;white-space:nowrap}
+  .aboutIntro{margin-top:6px;font-size:10.35px!important;line-height:1.42!important;max-width:98%}
+  .aboutScroll{padding:7px 8px 6px}
+  .aboutCards{gap:7px}
+  .aboutCard{padding:8px 11px 8px 12px;border-radius:16px}
+  .aboutCard::before{top:9px;bottom:9px;width:3px}
+  .aboutCardTitle{font-size:16.6px!important;margin-bottom:2px!important}
+  .aboutCardText{font-size:10.2px!important;line-height:1.36!important}
+  .aboutStatement{margin-top:7px;min-height:88px;padding:10px 14px 10px}
+  .aboutStatementLead{font-size:14.6px!important;margin-left:16%}
+  .aboutStatementMain{font-size:12.1px!important;max-width:72%;margin-left:3%;margin-top:3px}
+  .aboutStatement::after{right:18px;bottom:10px;font-size:25px}
+  .aboutStatementSwoosh{left:17%;right:31%;bottom:6px;height:18px}
+  .aboutFooter{padding:7px 8px calc(8px + env(safe-area-inset-bottom))}
+  .aboutClose{min-height:42px;font-size:13.2px}
+}
+
+/* Very short phones / browser chrome-heavy layouts: compact further, never clip CTA. */
+@media(max-height:690px){
+  .aboutTop{padding-top:11px;padding-bottom:9px}
+  .aboutMetaRow{margin-bottom:5px}
+  .aboutHero{margin-top:6px}
+  .aboutIntro{margin-top:5px;line-height:1.36!important}
+  .aboutScroll{padding-top:6px}
+  .aboutCards{gap:6px}
+  .aboutCard{padding-top:7px;padding-bottom:7px}
+  .aboutStatement{min-height:80px;margin-top:6px}
 }
 </style>
