@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.34</title>
+<title>足球場邊記錄器 v4.37</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -4510,7 +4510,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.34 Dark Glass Frame refinement
+   v4.37 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4674,7 +4674,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.34 Unified event module
+   v4.37 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
 #eventHubSection.stateManaged{max-height:402px}
@@ -4786,7 +4786,7 @@ eventHubTitle{
 
 
 /* =========================
-   v4.34 iPhone Safari bottom-safe scrolling
+   v4.37 iPhone Safari bottom-safe scrolling
    比賽中／中場／等待階段，替底部瀏覽器工具列保留可捲動空間，
    避免「紀錄」按鈕被 Safari 底部列遮住。
    ========================= */
@@ -4817,7 +4817,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.34 iPhone Safari bottom obstruction fallback
+   v4.37 iPhone Safari bottom obstruction fallback
    Safari 的 visualViewport 在部分 iOS 狀態下不會把底部工具列算進 bottomGap，
    因此不能只依賴動態差值。加入固定安全下限，確保「紀錄」可捲到工具列上方。
    ========================= */
@@ -4864,7 +4864,7 @@ body.matchStateBreak .wrap{
 }
 
 
-/* v4.34 compact event module to keep record fully visible above Safari toolbar */
+/* v4.37 compact event module to keep record fully visible above Safari toolbar */
 #eventHubSection .eventTop{font-size:19px}
 #eventHubSection .eventIcon{font-size:24px}
 #eventHubSection .disciplineLabel{font-size:18px}
@@ -4887,7 +4887,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.34 PK score lock / card shape / red-card eligibility / winner badge lower-right
+   v4.37 PK score lock / card shape / red-card eligibility / winner badge lower-right
    ========================= */
 .numberTitle{
   display:flex;
@@ -4935,7 +4935,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.34 Venue picker portal fix
+   v4.37 Venue picker portal fix
    將最近場地選單移出 matchCard stacking context，避免 isolation / glass cards 遮擋。
    ========================= */
 body > .venueMenu.venueMenuPortal{
@@ -4960,7 +4960,7 @@ body > .venueMenu.venueMenuPortal.open{display:block!important}
 
 
 /* =========================
-   v4.34 Pre-match time summary compact mode
+   v4.37 Pre-match time summary compact mode
    賽前預設不顯示尚未產生的開始 / 結束時間，只保留標題與展開。
    ========================= */
 body.matchStatePre .timeSummary:not(.open) .timeCompact{
@@ -4974,6 +4974,92 @@ body.matchStatePre .timeSummary:not(.open){
   margin-bottom:5px;
 }
 
+
+
+/* =========================
+   v4.37 Pre-match score hierarchy
+   賽前 0:0 為預設值，不使用比賽中黃色高亮；開始比賽後恢復既有黃色比分。
+   ========================= */
+body.matchStatePre .scoreTile{
+  color:#d7e1ee!important;
+  border-color:rgba(131,164,198,.34)!important;
+  background:linear-gradient(180deg,#0c1825 0%,#08131f 49%,#0a1622 51%,#0b1724 100%)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    inset 0 -1px 0 rgba(0,0,0,.32),
+    0 4px 12px rgba(0,0,0,.16)!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.30)!important;
+}
+body.matchStatePre .scoreTile::after{
+  background:rgba(172,205,236,.06)!important;
+}
+body.matchStatePre .scoreColon{
+  color:rgba(177,193,210,.55)!important;
+}
+
+
+
+/* =========================
+   v4.37 Regulation controls touch-target refinement
+   手機場邊操作：分鐘選單獨立一列，套用 / 清除改為大尺寸等寬按鈕
+   ========================= */
+.regBox{
+  padding:11px!important;
+}
+.regRow{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:10px!important;
+}
+.regChooser{
+  width:100%!important;
+}
+.regSelect{
+  min-height:50px!important;
+  padding-top:12px!important;
+  padding-bottom:12px!important;
+  font-size:15px!important;
+}
+.regButtons{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:10px!important;
+  width:100%!important;
+}
+.regButtons button{
+  width:100%!important;
+  min-height:50px!important;
+  padding:12px 10px!important;
+  border-radius:12px!important;
+  font-size:14.5px!important;
+  font-weight:950!important;
+  letter-spacing:.2px!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent;
+}
+.regApply{
+  background:linear-gradient(180deg,#3b82f6 0%,#2563eb 100%)!important;
+  border:1px solid rgba(147,197,253,.52)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 5px 14px rgba(37,99,235,.18)!important;
+}
+.regClear{
+  background:linear-gradient(180deg,#5b6b80 0%,#475569 100%)!important;
+  border:1px solid rgba(148,163,184,.34)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+.regButtons button:active{
+  transform:scale(.985);
+}
+@media(max-width:390px){
+  .regRow{gap:9px!important}
+  .regButtons{gap:9px!important}
+  .regButtons button{
+    min-height:48px!important;
+    font-size:14px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -4982,7 +5068,7 @@ body.matchStatePre .timeSummary:not(.open){
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.34</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.37</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -5217,7 +5303,7 @@ body.matchStatePre .timeSummary:not(.open){
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.34</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.37</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -6036,7 +6122,7 @@ function loadState(){
         m.assist_number=(Number.isInteger(a)&&a>=1&&a<=99)?String(a):'';
       }
     });
-    // v4.34：清除舊版本可能產生的「同隊同背號重複紅牌」。
+    // v4.37：清除舊版本可能產生的「同隊同背號重複紅牌」。
     // 足球規則上第一張紅牌後球員已退場，後續不應再有第二張紅牌。
     sanitizeDuplicateRedCards();
   }
@@ -6302,7 +6388,7 @@ function renderTimeBox(){
   byId('fullStart').textContent=fmtDateTime(matchStart);
   byId('fullEnd').textContent=fmtDateTime(matchEnd);
 
-  // v4.34：收合狀態的開始 / 結束時間只在「全場結束後」顯示。
+  // v4.37：收合狀態的開始 / 結束時間只在「全場結束後」顯示。
   // 賽前兩個時間尚不存在，顯示 --:--:-- 沒有操作價值；
   // 因此賽前預設只保留「時間紀錄＋展開」，需要時再展開查看完整設定。
   // 比賽中 / 中場 / 等待下一階段同樣維持精簡收合。
@@ -8265,21 +8351,22 @@ function hasMeaningfulPreMatchSetup(){
   if(state.started || state.finished || state.awaitingNextPeriod || state.penalty?.active) return false;
 
   const rememberedOur=String(localStorage.getItem(LAST_OUR_TEAM_KEY)||'忠義').trim();
-  const rememberedVenue=String(localStorage.getItem(LAST_VENUE_KEY)||'').trim();
-
   const currentOur=String(byId('ourTeam')?.value||state.ourTeam||'').trim();
   const currentOpp=String(byId('oppTeam')?.value||state.oppTeam||'').trim();
   const currentCompetition=String(byId('competition')?.value||state.competition||'').trim();
   const currentVenue=String(byId('venue')?.value||state.venue||'').trim();
 
+  /* v4.37：場地只要目前有值，就視為本場已存在賽前設定。
+     舊版若場地剛好等於「上次使用場地」，會誤判為預設值而隱藏重設按鈕，
+     造成畫面明明顯示場地（例如新北高中）卻沒有「↻ 重設」的矛盾。 */
   return Boolean(
     currentOpp ||
     currentCompetition ||
+    currentVenue ||
     String(state.goalkeeperNumber||'') ||
     currentRosterNumbers().length ||
     Number(state.regulationMinutes||0) ||
-    (currentOur && currentOur!==rememberedOur) ||
-    (currentVenue && currentVenue!==rememberedVenue)
+    (currentOur && currentOur!==rememberedOur)
   );
 }
 
