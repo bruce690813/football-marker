@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.20</title>
+<title>足球場邊記錄器 v4.21</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -4482,7 +4482,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.20 Dark Glass Frame refinement
+   v4.21 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4646,12 +4646,12 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.20 Unified event module
+   v4.21 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
-#eventHubSection.stateManaged{max-height:420px}
+#eventHubSection.stateManaged{max-height:455px}
 .eventHubShell{
-  padding:10px 12px 12px!important;
+  padding:11px 12px 14px!important;
   border-radius:22px;
 }
 .eventHubHeader{
@@ -4659,7 +4659,7 @@ body.resultMode .quickResultCard{
   align-items:center;
   justify-content:space-between;
   gap:10px;
-  margin-bottom:8px;
+  margin-bottom:12px;
 }
 .eventHubTitle{
   font-size:15px;
@@ -4687,12 +4687,19 @@ body.resultMode .quickResultCard{
 #eventHubSection #eventSection.stateManaged{max-height:170px}
 #eventHubSection #disciplineSection.stateManaged,
 #eventHubSection #recordSection.stateManaged{max-height:110px}
-#eventHubSection .eventSubsection + .eventSubsection{
-  margin-top:9px!important;
-  padding-top:9px!important;
-  border-top:1px solid rgba(188,214,243,.12);
+#eventHubSection #disciplineSection{
+  margin-top:14px!important;
+  padding-top:12px!important;
+  border-top:1px solid rgba(188,214,243,.15)!important;
+}
+#eventHubSection #recordSection{
+  margin-top:12px!important;
+  padding-top:12px!important;
+  border-top:1px solid rgba(188,214,243,.15)!important;
 }
 #eventHubSection .eventSubsection.stateHidden{
+  margin-top:0!important;
+  padding-top:0!important;
   border-top-width:0!important;
 }
 .eventMiniRow{
@@ -4725,8 +4732,10 @@ body.resultMode .quickResultCard{
   min-height:50px;
 }
 @media(max-width:390px){
-  #eventHubSection.stateManaged{max-height:430px}
-  .eventHubShell{padding:9px 10px 10px!important}
+  #eventHubSection.stateManaged{max-height:465px}
+  .eventHubShell{padding:10px 10px 12px!important}
+  #eventHubSection #disciplineSection{margin-top:12px!important;padding-top:10px!important}
+  #eventHubSection #recordSection{margin-top:10px!important;padding-top:10px!important}
   .eventHubTitle{font-size:14px}
   .eventHubHint{font-size:10px}
 }
@@ -4739,7 +4748,7 @@ body.resultMode .quickResultCard{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.20</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.21</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -4972,7 +4981,7 @@ body.resultMode .quickResultCard{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.20</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.21</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
