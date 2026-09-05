@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.17</title>
+<title>足球場邊記錄器 v4.19</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -646,16 +646,37 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   min-width:0;
   text-align:center;
   font-weight:900;
-  font-size:27px;
+  font-size:25px;
   line-height:1.08;
   color:var(--text);
   overflow:hidden;
   display:block;
   white-space:nowrap;
   text-overflow:clip;
-  letter-spacing:-.2px;
+  letter-spacing:-.25px;
+  transform-origin:center center;
 }
 .teamNameDisplay.empty{color:#8997a6}
+.teamNameDisplay.suffixSplit{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  white-space:normal;
+  text-overflow:clip;
+  overflow:visible;
+  font-size:21px;
+  line-height:1.02;
+  letter-spacing:-.2px;
+}
+.teamNameDisplay.suffixSplit .teamNameLine{
+  display:block;
+  width:100%;
+  text-align:center;
+}
+.teamNameDisplay.suffixSplit .teamNameLine + .teamNameLine{
+  margin-top:2px;
+}
 .teamNameEditor{
   display:none;
   width:100%;
@@ -1468,7 +1489,7 @@ body.keyboardOpen .finalToolsCard{display:none}
   .card{padding:6px}
   .matchMetaRow input{padding-top:6px;padding-bottom:6px}
   .scoreRow{margin-top:0;padding:8px 7px 4px}
-  .teamNameDisplay{font-size:25px}.teamNameEditor{font-size:21px}.teamNameBox{min-height:58px}
+  .teamNameDisplay{font-size:24px}.teamNameEditor{font-size:21px}.teamNameBox{min-height:58px}.teamNameDisplay.suffixSplit{font-size:19px;line-height:1.01}
   .scoreText{font-size:36px}
   .pkMainScore{font-size:11px;padding:3px 8px;margin-top:4px}
   .scoreEdit{padding-top:2px;padding-bottom:2px}
@@ -1712,14 +1733,21 @@ body.matchStateLive .new{
   display:none!important;
 }
 
-/* v4.17 球隊名稱：4 字名稱必須完整單行；1～8 字由 JS 依實際可用寬度自動縮字。 */
+/* 長隊名自動縮字，而不是固定兩行硬擠。 */
+.teamNameDisplay.mediumName{
+  font-size:clamp(22px,5vw,24px);
+  line-height:1.07;
+  letter-spacing:-.28px;
+}
 .teamNameDisplay.longName{
+  font-size:clamp(18px,4.3vw,21px);
+  line-height:1.07;
   white-space:nowrap;
   text-overflow:clip;
-  letter-spacing:-.35px;
+  letter-spacing:-.45px;
 }
 .teamNameDisplay.veryLongName{
-  font-size:clamp(16px,4.2vw,20px);
+  font-size:clamp(17px,4.5vw,20px);
   line-height:1.06;
   letter-spacing:-.35px;
   display:-webkit-box;
@@ -4454,7 +4482,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.17 Dark Glass Frame refinement
+   v4.19 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4615,6 +4643,94 @@ body.resultMode .quickResultCard{
   }
 }
 
+
+
+/* =========================
+   v4.19 Unified event module
+   主要事件 / 牌卡 / 紀錄整合為同一個外框
+   ========================= */
+#eventHubSection.stateManaged{max-height:420px}
+.eventHubShell{
+  padding:10px 12px 12px!important;
+  border-radius:22px;
+}
+.eventHubHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+.eventHubTitle{
+  font-size:15px;
+  font-weight:950;
+  letter-spacing:.24px;
+  color:#e8f2ff;
+}
+.eventHubHint{
+  font-size:11px;
+  font-weight:850;
+  color:#95abca;
+  white-space:nowrap;
+}
+#eventHubSection #eventSection,
+#eventHubSection #disciplineSection,
+#eventHubSection #recordSection{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  margin:0!important;
+  padding:0!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+#eventHubSection #eventSection.stateManaged{max-height:170px}
+#eventHubSection #disciplineSection.stateManaged,
+#eventHubSection #recordSection.stateManaged{max-height:110px}
+#eventHubSection .eventSubsection + .eventSubsection{
+  margin-top:8px!important;
+  padding-top:8px!important;
+  border-top:1px solid rgba(188,214,243,.12);
+}
+#eventHubSection .eventSubsection.stateHidden{
+  border-top-width:0!important;
+}
+.eventMiniRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+}
+.eventMiniLabel{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.22px;
+  color:#8fa9c9;
+  padding-left:2px;
+}
+.eventMiniHint{
+  font-size:10px;
+  font-weight:800;
+  color:#6f87a6;
+  white-space:nowrap;
+}
+#eventHubSection .events{gap:8px}
+#eventHubSection .event{min-height:58px}
+#eventHubSection .cardEventBtn{
+  min-height:44px;
+  border-radius:12px;
+}
+#eventHubSection #recordSection .recordFullBtn{
+  min-height:50px;
+}
+@media(max-width:390px){
+  #eventHubSection.stateManaged{max-height:430px}
+  .eventHubShell{padding:9px 10px 10px!important}
+  .eventHubTitle{font-size:14px}
+  .eventHubHint{font-size:10px}
+}
+
 </style>
 </head>
 <body>
@@ -4623,7 +4739,7 @@ body.resultMode .quickResultCard{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.17</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.19</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -4780,17 +4896,24 @@ body.resultMode .quickResultCard{
     </div>
   </div>
 
-  <div class="card stateManaged" id="eventSection">
-    <div class="events">
-      <button id="goalBtn" class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
-      <button id="saveBtn" class="event save" onclick="openPlayerEvent('SAVE')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span></button>
-      <button id="shotBtn" class="event shot" onclick="openPlayerEvent('SHOT')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span></button>
-      <button id="greatPlayBtn" class="event play" onclick="openPlayerEvent('DEFENSE')"><span class="eventTop"><span class="eventIcon">🛡️</span> 防守</span></button>
+  <div class="card stateManaged eventHubShell" id="eventHubSection" aria-hidden="true">
+    <div class="eventHubHeader">
+      <div class="eventHubTitle">本場事件</div>
+      <div class="eventHubHint">標記／牌卡／紀錄</div>
     </div>
-  </div>
 
-  <div class="card cardEventWrap stateManaged" id="disciplineSection">
-    <button id="cardBtn" class="cardEventBtn" onclick="openCardModal()" aria-label="新增黃牌或紅牌紀錄">
+    <div class="eventSubsection stateManaged" id="eventSection">
+      <div class="events">
+        <button id="goalBtn" class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
+        <button id="saveBtn" class="event save" onclick="openPlayerEvent('SAVE')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span></button>
+        <button id="shotBtn" class="event shot" onclick="openPlayerEvent('SHOT')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span></button>
+        <button id="greatPlayBtn" class="event play" onclick="openPlayerEvent('DEFENSE')"><span class="eventTop"><span class="eventIcon">🛡️</span> 防守</span></button>
+      </div>
+    </div>
+
+    <div class="eventSubsection stateManaged eventMinorSection" id="disciplineSection">
+      <div class="eventMiniRow"><div class="eventMiniLabel">牌卡事件</div><div class="eventMiniHint">低頻但同屬事件</div></div>
+      <button id="cardBtn" class="cardEventBtn" onclick="openCardModal()" aria-label="新增黃牌或紅牌紀錄">
         <span class="disciplinePair disciplineYellowPair">
           <span class="yellowCardShape disciplineCardShape" aria-hidden="true"></span>
           <span class="disciplineLabel">黃牌</span>
@@ -4801,10 +4924,12 @@ body.resultMode .quickResultCard{
           <span class="disciplineLabel">紅牌</span>
         </span>
       </button>
-  </div>
+    </div>
 
-  <div class="card stateManaged" id="recordSection">
-    <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">紀錄</span></span><span class="recordMeta"><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
+    <div class="eventSubsection stateManaged eventMinorSection" id="recordSection">
+      <div class="eventMiniRow"><div class="eventMiniLabel">事件紀錄</div><div class="eventMiniHint">查看本場已記內容</div></div>
+      <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">紀錄</span></span><span class="recordMeta"><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
+    </div>
   </div>
 
 <div class="card finalToolsCard">
@@ -4850,7 +4975,7 @@ body.resultMode .quickResultCard{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.17</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.19</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -7381,32 +7506,6 @@ function closeLogModal(){
   byId('logModal').classList.remove('open');
   document.body.style.overflow='';
 }
-function fitTeamNameSingleLine(el, name){
-  if(!el || !name) return;
-  // 1～8 字優先維持單行。先以較大的字級呈現，再依「實際欄寬」逐級縮小，
-  // 不使用省略號，因此像「忠義國小」這類四字隊名一定完整顯示。
-  el.style.fontSize='';
-  el.style.letterSpacing='';
-  el.style.whiteSpace='nowrap';
-  el.style.textOverflow='clip';
-
-  const smallScreen=window.matchMedia && window.matchMedia('(max-width:390px)').matches;
-  let size = smallScreen ? 24 : 27;
-  if(name.length>=5) size = smallScreen ? 22 : 24;
-  if(name.length>=7) size = smallScreen ? 18 : 21;
-  const minSize = name.length<=4 ? 18 : (name.length<=6 ? 16 : 14);
-
-  el.style.fontSize=size+'px';
-  // 等瀏覽器套用字型後，以 scrollWidth / clientWidth 實際量測。
-  while(size>minSize && el.scrollWidth > el.clientWidth){
-    size -= 1;
-    el.style.fontSize=size+'px';
-  }
-  // 最後仍過寬時再略收字距，避免最後一字被切掉。
-  if(el.scrollWidth > el.clientWidth){
-    el.style.letterSpacing='-.8px';
-  }
-}
 function updateTeamNameDisplays(){
   const our=(byId('ourTeam')?.value || state.ourTeam || '').trim();
   const opp=(byId('oppTeam')?.value || state.oppTeam || '').trim();
@@ -7414,24 +7513,37 @@ function updateTeamNameDisplays(){
   const ourDisplay=byId('ourTeamDisplay');
   const oppDisplay=byId('oppTeamDisplay');
 
-  if(ourDisplay){
-    ourDisplay.textContent=our || '我方';
-    ourDisplay.classList.toggle('empty', !our);
-    ourDisplay.classList.toggle('longName', our.length>=5 && our.length<=8);
-    ourDisplay.classList.toggle('veryLongName', our.length>=9);
-    if(our && our.length<=8) fitTeamNameSingleLine(ourDisplay, our);
-    else { ourDisplay.style.fontSize=''; ourDisplay.style.letterSpacing=''; ourDisplay.style.whiteSpace=''; ourDisplay.style.textOverflow=''; }
+  function applyTeamNameLayout(el,name,fallback){
+    if(!el) return;
+    const clean=(name||'').trim();
+    el.classList.remove('empty','mediumName','longName','veryLongName','suffixSplit');
+
+    if(!clean){
+      el.textContent=fallback;
+      el.classList.add('empty');
+      return;
+    }
+
+    const footballIdx=clean.indexOf('足球隊');
+    const shouldSplitFootballTeam = footballIdx > 0 && clean.length >= 7;
+
+    if(shouldSplitFootballTeam){
+      const first=clean.slice(0,footballIdx).trim();
+      const second=clean.slice(footballIdx).trim();
+      el.innerHTML=`<span class="teamNameLine">${escapeHtml(first)}</span><span class="teamNameLine">${escapeHtml(second)}</span>`;
+      el.classList.add('suffixSplit');
+      return;
+    }
+
+    el.textContent=clean;
+    el.classList.toggle('mediumName', clean.length>=4 && clean.length<7);
+    el.classList.toggle('longName', clean.length>=7 && clean.length<9);
+    el.classList.toggle('veryLongName', clean.length>=9);
   }
-  if(oppDisplay){
-    oppDisplay.textContent=opp || '對手';
-    oppDisplay.classList.toggle('empty', !opp);
-    oppDisplay.classList.toggle('longName', opp.length>=5 && opp.length<=8);
-    oppDisplay.classList.toggle('veryLongName', opp.length>=9);
-    if(opp && opp.length<=8) fitTeamNameSingleLine(oppDisplay, opp);
-    else { oppDisplay.style.fontSize=''; oppDisplay.style.letterSpacing=''; oppDisplay.style.whiteSpace=''; oppDisplay.style.textOverflow=''; }
-  }
+
+  applyTeamNameLayout(ourDisplay, our, '我方');
+  applyTeamNameLayout(oppDisplay, opp, '對手');
 }
-window.addEventListener('resize',()=>{ requestAnimationFrame(updateTeamNameDisplays); });
 
 function editTeamName(id){
   const box=byId(id+'Box');
@@ -7703,7 +7815,8 @@ function renderMatchStateUI(){
   const isLive=!!state.started && !isFinished && !isBreak && !isPenalty;
   const isPre=!state.started && !isBreak && !isFinished && !isPenalty;
 
-  // 一般比賽 / 下半場 / 延長賽進行中：顯示所有現場標記事件。
+  // 事件模組：賽前隱藏；進行中顯示全部；賽後保留紀錄入口。
+  setStateSectionVisible('eventHubSection', !isPre);
   setStateSectionVisible('eventSection', isLive);
   setStateSectionVisible('disciplineSection', isLive);
 
