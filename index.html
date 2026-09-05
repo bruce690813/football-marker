@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.19</title>
+<title>足球場邊記錄器 v4.20</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -4482,7 +4482,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.19 Dark Glass Frame refinement
+   v4.20 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4646,7 +4646,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.19 Unified event module
+   v4.20 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
 #eventHubSection.stateManaged{max-height:420px}
@@ -4688,8 +4688,8 @@ body.resultMode .quickResultCard{
 #eventHubSection #disciplineSection.stateManaged,
 #eventHubSection #recordSection.stateManaged{max-height:110px}
 #eventHubSection .eventSubsection + .eventSubsection{
-  margin-top:8px!important;
-  padding-top:8px!important;
+  margin-top:9px!important;
+  padding-top:9px!important;
   border-top:1px solid rgba(188,214,243,.12);
 }
 #eventHubSection .eventSubsection.stateHidden{
@@ -4739,7 +4739,7 @@ body.resultMode .quickResultCard{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.19</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.20</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -4899,7 +4899,6 @@ body.resultMode .quickResultCard{
   <div class="card stateManaged eventHubShell" id="eventHubSection" aria-hidden="true">
     <div class="eventHubHeader">
       <div class="eventHubTitle">本場事件</div>
-      <div class="eventHubHint">標記／牌卡／紀錄</div>
     </div>
 
     <div class="eventSubsection stateManaged" id="eventSection">
@@ -4912,7 +4911,6 @@ body.resultMode .quickResultCard{
     </div>
 
     <div class="eventSubsection stateManaged eventMinorSection" id="disciplineSection">
-      <div class="eventMiniRow"><div class="eventMiniLabel">牌卡事件</div><div class="eventMiniHint">低頻但同屬事件</div></div>
       <button id="cardBtn" class="cardEventBtn" onclick="openCardModal()" aria-label="新增黃牌或紅牌紀錄">
         <span class="disciplinePair disciplineYellowPair">
           <span class="yellowCardShape disciplineCardShape" aria-hidden="true"></span>
@@ -4927,7 +4925,6 @@ body.resultMode .quickResultCard{
     </div>
 
     <div class="eventSubsection stateManaged eventMinorSection" id="recordSection">
-      <div class="eventMiniRow"><div class="eventMiniLabel">事件紀錄</div><div class="eventMiniHint">查看本場已記內容</div></div>
       <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">紀錄</span></span><span class="recordMeta"><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
     </div>
   </div>
@@ -4975,7 +4972,7 @@ body.resultMode .quickResultCard{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.19</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.20</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
