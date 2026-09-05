@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.31</title>
+<title>足球場邊記錄器 v4.32</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -3459,7 +3459,10 @@ body.matchStatePre .preQuickSetup{
 
 body.matchStatePre .venueMetaField{
   overflow:visible!important;
-  z-index:20;
+  z-index:1200;
+}
+body.matchStatePre .venueMetaField:has(.venueMenu.open){
+  z-index:1800;
 }
 
 .venueInputWrap{
@@ -3505,16 +3508,20 @@ body.matchStatePre .venueInputWrap input{
 
 .venueMenu{
   display:none;
-  position:absolute;
-  top:calc(100% + 6px);
-  right:0;
-  width:min(292px,calc(100vw - 38px));
+  position:fixed;
+  top:0;
+  left:0;
+  right:auto;
+  width:min(292px,calc(100vw - 24px));
+  max-height:min(360px,calc(var(--vv-height,100dvh) - 24px));
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
   padding:7px;
-  border:1px solid rgba(96,165,250,.38);
+  border:1px solid rgba(96,165,250,.46);
   border-radius:13px;
-  background:#101b2a;
-  box-shadow:0 14px 30px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.04);
-  z-index:100;
+  background:rgba(16,27,42,.98);
+  box-shadow:0 18px 38px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.06),0 0 0 1px rgba(56,189,248,.06);
+  z-index:1800;
 }
 
 .venueMenu.open{
@@ -3585,7 +3592,7 @@ body.matchStatePre .venueInputWrap input{
 
 @media(max-width:390px){
   .venueMenu{
-    width:min(276px,calc(100vw - 30px));
+    width:min(276px,calc(100vw - 20px));
   }
 }
 
@@ -4503,7 +4510,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.31 Dark Glass Frame refinement
+   v4.32 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4667,7 +4674,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.31 Unified event module
+   v4.32 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
 #eventHubSection.stateManaged{max-height:402px}
@@ -4779,7 +4786,7 @@ eventHubTitle{
 
 
 /* =========================
-   v4.31 iPhone Safari bottom-safe scrolling
+   v4.32 iPhone Safari bottom-safe scrolling
    比賽中／中場／等待階段，替底部瀏覽器工具列保留可捲動空間，
    避免「紀錄」按鈕被 Safari 底部列遮住。
    ========================= */
@@ -4810,7 +4817,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.31 iPhone Safari bottom obstruction fallback
+   v4.32 iPhone Safari bottom obstruction fallback
    Safari 的 visualViewport 在部分 iOS 狀態下不會把底部工具列算進 bottomGap，
    因此不能只依賴動態差值。加入固定安全下限，確保「紀錄」可捲到工具列上方。
    ========================= */
@@ -4857,7 +4864,7 @@ body.matchStateBreak .wrap{
 }
 
 
-/* v4.31 compact event module to keep record fully visible above Safari toolbar */
+/* v4.32 compact event module to keep record fully visible above Safari toolbar */
 #eventHubSection .eventTop{font-size:19px}
 #eventHubSection .eventIcon{font-size:24px}
 #eventHubSection .disciplineLabel{font-size:18px}
@@ -4880,7 +4887,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.31 PK score lock / card shape / red-card eligibility / winner badge lower-right
+   v4.32 PK score lock / card shape / red-card eligibility / winner badge lower-right
    ========================= */
 .numberTitle{
   display:flex;
@@ -4933,7 +4940,7 @@ body.matchStateBreak .wrap{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.31</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.32</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -5168,7 +5175,7 @@ body.matchStateBreak .wrap{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.31</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.32</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -5811,6 +5818,37 @@ function renderVenueMenu(){
   });
 }
 
+function positionVenueMenu(){
+  const menu=byId('venueMenu');
+  const field=document.querySelector('.venueMetaField');
+  if(!menu || !field || !menu.classList.contains('open')) return;
+
+  const rect=field.getBoundingClientRect();
+  const vv=window.visualViewport;
+  const viewportWidth=vv?.width || window.innerWidth || document.documentElement.clientWidth;
+  const viewportHeight=vv?.height || window.innerHeight || document.documentElement.clientHeight;
+  const offsetLeft=vv?.offsetLeft || 0;
+  const offsetTop=vv?.offsetTop || 0;
+  const sideGap=10;
+  const menuWidth=Math.min(292,Math.max(220,viewportWidth-sideGap*2));
+
+  menu.style.width=`${menuWidth}px`;
+  let left=rect.right-menuWidth;
+  left=Math.max(offsetLeft+sideGap,Math.min(left,offsetLeft+viewportWidth-menuWidth-sideGap));
+
+  // 先在欄位下方展開；若下方不足，就改往上展開。
+  let top=rect.bottom+6;
+  const menuHeight=Math.min(menu.scrollHeight || menu.offsetHeight || 220,360);
+  const visualBottom=offsetTop+viewportHeight-sideGap;
+  if(top+menuHeight>visualBottom && rect.top-menuHeight-6>offsetTop+sideGap){
+    top=rect.top-menuHeight-6;
+  }
+  top=Math.max(offsetTop+sideGap,Math.min(top,visualBottom-menuHeight));
+
+  menu.style.left=`${Math.round(left)}px`;
+  menu.style.top=`${Math.round(top)}px`;
+}
+
 function openVenueMenu(){
   if(state.started || state.finished) return;
   const menu=byId('venueMenu'), btn=byId('venueDropdownBtn');
@@ -5819,11 +5857,17 @@ function openVenueMenu(){
   menu.classList.add('open');
   btn.classList.add('open');
   btn.setAttribute('aria-expanded','true');
+  requestAnimationFrame(positionVenueMenu);
 }
 
 function closeVenueMenu(){
   const menu=byId('venueMenu'), btn=byId('venueDropdownBtn');
   menu?.classList.remove('open');
+  if(menu){
+    menu.style.left='';
+    menu.style.top='';
+    menu.style.width='';
+  }
   btn?.classList.remove('open');
   btn?.setAttribute('aria-expanded','false');
 }
@@ -5913,7 +5957,7 @@ function loadState(){
         m.assist_number=(Number.isInteger(a)&&a>=1&&a<=99)?String(a):'';
       }
     });
-    // v4.31：清除舊版本可能產生的「同隊同背號重複紅牌」。
+    // v4.32：清除舊版本可能產生的「同隊同背號重複紅牌」。
     // 足球規則上第一張紅牌後球員已退場，後續不應再有第二張紅牌。
     sanitizeDuplicateRedCards();
   }
@@ -9493,6 +9537,19 @@ document.addEventListener('click',e=>{
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape') closeVenueMenu();
 });
+
+window.addEventListener('resize',()=>{
+  if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
+},{passive:true});
+window.addEventListener('scroll',()=>{
+  if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
+},{passive:true});
+window.visualViewport?.addEventListener('resize',()=>{
+  if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
+},{passive:true});
+window.visualViewport?.addEventListener('scroll',()=>{
+  if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
+},{passive:true});
 
 
 ['competition','venue'].forEach(id=>{
