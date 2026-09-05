@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.44</title>
+<title>足球場邊記錄器 v4.45</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -3268,7 +3268,7 @@ body.finalOutputVisible .wrap{
 }
 
 /* =========================
-   v4.44 Full-time compact output priority
+   v4.45 Full-time compact output priority
    全場收合時間明細，並替 iPhone Safari 底部工具列預留真正可捲動的安全空間。
    ========================= */
 body.resultMode .timeSummary:not(.open) .timeCompact{
@@ -4538,7 +4538,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.44 Dark Glass Frame refinement
+   v4.45 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4702,7 +4702,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.44 Unified event module
+   v4.45 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
 #eventHubSection.stateManaged{max-height:402px}
@@ -4814,7 +4814,7 @@ eventHubTitle{
 
 
 /* =========================
-   v4.44 iPhone Safari bottom-safe scrolling
+   v4.45 iPhone Safari bottom-safe scrolling
    比賽中／中場／等待階段，替底部瀏覽器工具列保留可捲動空間，
    避免「紀錄」按鈕被 Safari 底部列遮住。
    ========================= */
@@ -4845,7 +4845,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.44 iPhone Safari bottom obstruction fallback
+   v4.45 iPhone Safari bottom obstruction fallback
    Safari 的 visualViewport 在部分 iOS 狀態下不會把底部工具列算進 bottomGap，
    因此不能只依賴動態差值。加入固定安全下限，確保「紀錄」可捲到工具列上方。
    ========================= */
@@ -4892,7 +4892,7 @@ body.matchStateBreak .wrap{
 }
 
 
-/* v4.44 compact event module to keep record fully visible above Safari toolbar */
+/* v4.45 compact event module to keep record fully visible above Safari toolbar */
 #eventHubSection .eventTop{font-size:19px}
 #eventHubSection .eventIcon{font-size:24px}
 #eventHubSection .disciplineLabel{font-size:18px}
@@ -4915,7 +4915,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.44 PK score lock / card shape / red-card eligibility / winner badge lower-right
+   v4.45 PK score lock / card shape / red-card eligibility / winner badge lower-right
    ========================= */
 .numberTitle{
   display:flex;
@@ -4963,7 +4963,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.44 Venue picker portal fix
+   v4.45 Venue picker portal fix
    將最近場地選單移出 matchCard stacking context，避免 isolation / glass cards 遮擋。
    ========================= */
 body > .venueMenu.venueMenuPortal{
@@ -4988,7 +4988,7 @@ body > .venueMenu.venueMenuPortal.open{display:block!important}
 
 
 /* =========================
-   v4.44 Pre-match time summary compact mode
+   v4.45 Pre-match time summary compact mode
    賽前預設不顯示尚未產生的開始 / 結束時間，只保留標題與展開。
    ========================= */
 body.matchStatePre .timeSummary:not(.open) .timeCompact{
@@ -5005,7 +5005,7 @@ body.matchStatePre .timeSummary:not(.open){
 
 
 /* =========================
-   v4.44 Pre-match score hierarchy
+   v4.45 Pre-match score hierarchy
    賽前 0:0 為預設值，不使用比賽中黃色高亮；開始比賽後恢復既有黃色比分。
    ========================= */
 body.matchStatePre .scoreTile{
@@ -5028,7 +5028,7 @@ body.matchStatePre .scoreColon{
 
 
 /* =========================
-   v4.44 Regulation controls touch-target refinement
+   v4.45 Regulation controls touch-target refinement
    手機場邊操作：分鐘選單獨立一列，套用 / 清除改為大尺寸等寬按鈕
    ========================= */
 .regBox{
@@ -5090,7 +5090,7 @@ body.matchStatePre .scoreColon{
 
 
 /* =========================
-   v4.44 record-only spacing fix
+   v4.45 record-only spacing fix
    中場／全場等非比賽進行中狀態，只保留「事件紀錄 + 紀錄入口」。
    直接 display:none 隱藏主事件與牌卡區，避免 max-height transition 留下空白。
    ========================= */
@@ -5137,7 +5137,7 @@ body.matchStatePre .scoreColon{
 
 
 /* =========================
-   v4.44 Event hierarchy refinement
+   v4.45 Event hierarchy refinement
    區分「黃／紅牌輸入」與「事件紀錄管理」
    ========================= */
 
@@ -5233,7 +5233,7 @@ body.matchStatePre .scoreColon{
 
 
 /* =========================
-   v4.44 Card-flow UI/UX refinement
+   v4.45 Card-flow UI/UX refinement
    黃 / 紅牌 → 選擇球隊 → 選擇球員
    ========================= */
 
@@ -5420,6 +5420,197 @@ body.matchStatePre .scoreColon{
   }
 }
 
+
+/* =========================
+   v4.45 全場「本場事件統計」強化
+   目標：比分之外，四個事件一眼可讀
+   ========================= */
+
+/* 統計區外層微增亮，與紅色全場區塊之下形成第二視覺層級。 */
+.quickResultCard,
+body.resultMode .quickResultCard{
+  padding:14px 14px 15px!important;
+  background:
+    linear-gradient(180deg,rgba(27,51,78,.78) 0%,rgba(10,24,39,.84) 100%)!important;
+  border:1px solid rgba(166,202,243,.26)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 12px 30px rgba(0,0,0,.22)!important;
+}
+
+/* 標題提高層級，並用左側亮藍導引視線。 */
+.quickResultTitle,
+body.resultMode .quickResultTitle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:17px!important;
+  line-height:1.15;
+  font-weight:950;
+  color:#eef5ff!important;
+  margin-bottom:11px!important;
+  letter-spacing:.2px;
+}
+.quickResultTitle::before{
+  content:'';
+  width:4px;
+  height:18px;
+  border-radius:999px;
+  background:linear-gradient(180deg,#67d4ff 0%,#2b8dff 100%);
+  box-shadow:0 0 10px rgba(58,164,255,.35);
+}
+
+/* 四格統計直接採用對應事件色彩，保持與主操作按鈕一致的肌肉記憶。 */
+.quickResultStats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px!important;
+}
+.quickResultStat,
+body.resultMode .quickResultStat{
+  position:relative;
+  min-height:86px!important;
+  padding:12px 8px 10px!important;
+  display:flex!important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border-radius:16px!important;
+  text-align:center;
+  overflow:hidden;
+  isolation:isolate;
+  border-width:1.5px!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 10px 20px rgba(0,0,0,.16)!important;
+}
+.quickResultStat::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,rgba(255,255,255,0) 36%);
+  pointer-events:none;
+  z-index:0;
+}
+.quickResultLabel{
+  position:relative;
+  z-index:1;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:14px!important;
+  line-height:1.1;
+  font-weight:850;
+  letter-spacing:.2px;
+  color:#f5f9ff;
+  opacity:.96;
+}
+.quickResultIcon{
+  font-size:17px;
+  line-height:1;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.25));
+}
+.quickResultStat strong,
+body.resultMode .quickResultStat strong{
+  position:relative;
+  z-index:1;
+  margin-top:0!important;
+  font-size:30px!important;
+  line-height:1!important;
+  font-weight:950;
+  color:#ffffff!important;
+  font-variant-numeric:tabular-nums;
+  text-shadow:0 2px 8px rgba(0,0,0,.22);
+}
+
+/* 對應四大事件：綠 / 黃 / 藍 / 紫 */
+.quickResultStat.goalStat{
+  background:linear-gradient(180deg,rgba(29,125,56,.92) 0%,rgba(18,78,36,.96) 100%)!important;
+  border-color:rgba(118,233,143,.44)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09),
+    0 10px 20px rgba(24,102,47,.24),
+    0 0 0 1px rgba(51,209,91,.06)!important;
+}
+.quickResultStat.shotStat{
+  background:linear-gradient(180deg,rgba(208,151,22,.96) 0%,rgba(164,109,5,.96) 100%)!important;
+  border-color:rgba(255,220,118,.46)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09),
+    0 10px 20px rgba(145,97,4,.24),
+    0 0 0 1px rgba(255,201,40,.06)!important;
+}
+.quickResultStat.saveStat{
+  background:linear-gradient(180deg,rgba(39,123,245,.96) 0%,rgba(22,84,194,.96) 100%)!important;
+  border-color:rgba(133,187,255,.48)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09),
+    0 10px 20px rgba(17,73,176,.24),
+    0 0 0 1px rgba(73,155,255,.06)!important;
+}
+.quickResultStat.defenseStat{
+  background:linear-gradient(180deg,rgba(156,92,245,.96) 0%,rgba(120,58,211,.96) 100%)!important;
+  border-color:rgba(202,160,255,.46)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09),
+    0 10px 20px rgba(93,46,168,.24),
+    0 0 0 1px rgba(176,116,255,.06)!important;
+}
+
+/* 全場模式下再把字級拉開一些，但仍維持手機一屏資訊密度。 */
+body.resultMode .quickResultTitle{
+  font-size:18px!important;
+  margin-bottom:12px!important;
+}
+body.resultMode .quickResultLabel{
+  font-size:14px!important;
+}
+body.resultMode .quickResultStat{
+  min-height:90px!important;
+}
+body.resultMode .quickResultStat strong{
+  font-size:32px!important;
+}
+
+@media(max-width:390px){
+  .quickResultCard,
+  body.resultMode .quickResultCard{
+    padding:12px 11px 13px!important;
+  }
+  .quickResultTitle,
+  body.resultMode .quickResultTitle{
+    font-size:16px!important;
+    margin-bottom:10px!important;
+  }
+  .quickResultTitle::before{
+    height:16px;
+  }
+  .quickResultStats{
+    gap:6px!important;
+  }
+  .quickResultStat,
+  body.resultMode .quickResultStat{
+    min-height:78px!important;
+    padding:10px 4px 9px!important;
+    border-radius:14px!important;
+    gap:5px;
+  }
+  .quickResultLabel,
+  body.resultMode .quickResultLabel{
+    gap:4px;
+    font-size:12px!important;
+  }
+  .quickResultIcon{
+    font-size:15px;
+  }
+  .quickResultStat strong,
+  body.resultMode .quickResultStat strong{
+    font-size:26px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5428,7 +5619,7 @@ body.matchStatePre .scoreColon{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.44</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.45</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -5580,10 +5771,22 @@ body.matchStatePre .scoreColon{
   <div class="card quickResultCard stateManaged stateHidden" id="quickResultSection" aria-hidden="true">
     <div class="quickResultTitle">本場事件統計</div>
     <div class="quickResultStats" aria-label="本場事件統計">
-      <div class="quickResultStat">進球<strong id="quickResultGoal">0</strong></div>
-      <div class="quickResultStat">射門<strong id="quickResultShot">0</strong></div>
-      <div class="quickResultStat">撲救<strong id="quickResultSave">0</strong></div>
-      <div class="quickResultStat">防守<strong id="quickResultDefense">0</strong></div>
+      <div class="quickResultStat goalStat">
+        <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">⚽</span><span>進球</span></span>
+        <strong id="quickResultGoal">0</strong>
+      </div>
+      <div class="quickResultStat shotStat">
+        <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">🥅</span><span>射門</span></span>
+        <strong id="quickResultShot">0</strong>
+      </div>
+      <div class="quickResultStat saveStat">
+        <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">🧤</span><span>撲救</span></span>
+        <strong id="quickResultSave">0</strong>
+      </div>
+      <div class="quickResultStat defenseStat">
+        <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">🛡️</span><span>防守</span></span>
+        <strong id="quickResultDefense">0</strong>
+      </div>
     </div>
   </div>
 
@@ -5663,7 +5866,7 @@ body.matchStatePre .scoreColon{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.44</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.45</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -6482,7 +6685,7 @@ function loadState(){
         m.assist_number=(Number.isInteger(a)&&a>=1&&a<=99)?String(a):'';
       }
     });
-    // v4.44：清除舊版本可能產生的重複紅牌，以及紅牌退場後仍被記為助攻的無效資料。
+    // v4.45：清除舊版本可能產生的重複紅牌，以及紅牌退場後仍被記為助攻的無效資料。
     const cleanedDuplicateRed=sanitizeDuplicateRedCards();
     const cleanedInvalidAssist=sanitizeInvalidAssistsAfterRed();
     if(cleanedDuplicateRed || cleanedInvalidAssist){
@@ -6770,7 +6973,7 @@ function renderTimeBox(){
   byId('fullStart').textContent=fmtDateTime(matchStart);
   byId('fullEnd').textContent=fmtDateTime(matchEnd);
 
-  // v4.44：所有狀態在「收合」時都只保留「時間紀錄＋展開」。
+  // v4.45：所有狀態在「收合」時都只保留「時間紀錄＋展開」。
   // 全場結束後，開始 / 結束時間仍可按「展開」查看；
   // 主畫面優先把空間留給摘要、儲存圖片、匯出 CSV 與「＋ 新比賽」。
   box.classList.add('compactBoundaryHidden');
@@ -8762,7 +8965,7 @@ function hasMeaningfulPreMatchSetup(){
   const currentCompetition=String(byId('competition')?.value||state.competition||'').trim();
   const currentVenue=String(byId('venue')?.value||state.venue||'').trim();
 
-  /* v4.44：場地只要目前有值，就視為本場已存在賽前設定。
+  /* v4.45：場地只要目前有值，就視為本場已存在賽前設定。
      舊版若場地剛好等於「上次使用場地」，會誤判為預設值而隱藏重設按鈕，
      造成畫面明明顯示場地（例如新北高中）卻沒有「↻ 重設」的矛盾。 */
   return Boolean(
