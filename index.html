@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.24</title>
+<title>足球場邊記錄器 v4.29</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -170,7 +170,7 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 .aboutAudience{margin:11px 2px 0;font-size:11.7px;line-height:1.46;color:#f4f9fd;font-weight:860;text-align:center}
 .aboutAudience strong{color:#ffffff}
 .aboutFooter{position:relative;bottom:auto;flex:0 0 auto;padding-top:9px;margin-top:8px;background:linear-gradient(180deg,rgba(4,11,20,0) 0%,rgba(4,11,20,.84) 24%,#040b14 100%)}
-.aboutClose{width:100%;margin-top:0;min-height:46px;background:linear-gradient(180deg,#ffffff 0%,#e5edf5 100%);color:#08111c;border:1px solid rgba(255,255,255,.80);box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 10px 22px rgba(0,0,0,.24);font-size:14px;font-weight:1000;letter-spacing:.38px}
+.aboutClose{width:100%;margin-top:0;min-height:46px;background:linear-gradient(180deg,rgba(20,114,185,.96) 0%,rgba(12,78,137,.98) 52%,rgba(8,48,95,1) 100%);color:#f6fbff;border:1px solid rgba(121,216,255,.52);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 12px 24px rgba(0,0,0,.24),0 0 0 1px rgba(18,102,183,.16);font-size:14px;font-weight:1000;letter-spacing:.42px;text-shadow:0 1px 1px rgba(0,0,0,.18)}
 .aboutClose:active{transform:translateY(1px)}
 @media (max-width:390px){
   .modal.aboutModal{width:min(470px,calc(100vw - 12px));height:min(calc(var(--vv-height,100dvh) - 10px),760px)}
@@ -438,6 +438,27 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 }
 .keeperSaveBtn{background:#238636}
 .keeperClearBtn{background:#475569}
+.keeperEmpty{
+  margin:8px 0 10px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:#eef2f7;
+  border:1px dashed #c4ceda;
+  color:#64748b;
+  font-size:12px;
+  font-weight:800;
+  text-align:center;
+}
+#keeperModal.keeperRedCardMode .modal{
+  border-top:4px solid #ef4444;
+}
+#keeperModal.keeperRedCardMode .keeperModalTitle{
+  color:#991b1b;
+}
+#keeperModal.keeperRedCardMode #keeperModalHint{
+  color:#475569;
+  font-weight:750;
+}
 .assistPlayerGrid{
   display:grid;
   grid-template-columns:repeat(5,minmax(0,1fr));
@@ -4482,7 +4503,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.24 Dark Glass Frame refinement
+   v4.29 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4646,7 +4667,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.24 Unified event module
+   v4.29 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
 #eventHubSection.stateManaged{max-height:402px}
@@ -4697,6 +4718,18 @@ eventHubTitle{
   padding-top:8px!important;
   border-top:1px solid rgba(188,214,243,.15)!important;
 }
+#eventHubSection.recordOnly{
+  padding-top:7px!important;
+  padding-bottom:8px!important;
+}
+#eventHubSection.recordOnly .eventHubHeader{
+  margin-bottom:4px!important;
+}
+#eventHubSection.recordOnly #recordSection{
+  margin-top:4px!important;
+  padding-top:4px!important;
+  border-top-color:rgba(188,214,243,.10)!important;
+}
 #eventHubSection .eventSubsection.stateHidden{
   margin-top:0!important;
   padding-top:0!important;
@@ -4736,6 +4769,9 @@ eventHubTitle{
   .eventHubShell{padding:8px 10px 10px!important}
   #eventHubSection #disciplineSection{margin-top:8px!important;padding-top:7px!important}
   #eventHubSection #recordSection{margin-top:7px!important;padding-top:7px!important}
+  #eventHubSection.recordOnly{padding-top:7px!important;padding-bottom:7px!important}
+  #eventHubSection.recordOnly .eventHubHeader{margin-bottom:3px!important}
+  #eventHubSection.recordOnly #recordSection{margin-top:3px!important;padding-top:3px!important}
   .eventHubTitle{font-size:14px}
   .eventHubHint{font-size:10px}
 }
@@ -4743,7 +4779,7 @@ eventHubTitle{
 
 
 /* =========================
-   v4.24 iPhone Safari bottom-safe scrolling
+   v4.29 iPhone Safari bottom-safe scrolling
    比賽中／中場／等待階段，替底部瀏覽器工具列保留可捲動空間，
    避免「紀錄」按鈕被 Safari 底部列遮住。
    ========================= */
@@ -4774,7 +4810,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.24 iPhone Safari bottom obstruction fallback
+   v4.29 iPhone Safari bottom obstruction fallback
    Safari 的 visualViewport 在部分 iOS 狀態下不會把底部工具列算進 bottomGap，
    因此不能只依賴動態差值。加入固定安全下限，確保「紀錄」可捲到工具列上方。
    ========================= */
@@ -4821,7 +4857,7 @@ body.matchStateBreak .wrap{
 }
 
 
-/* v4.24 compact event module to keep record fully visible above Safari toolbar */
+/* v4.29 compact event module to keep record fully visible above Safari toolbar */
 #eventHubSection .eventTop{font-size:19px}
 #eventHubSection .eventIcon{font-size:24px}
 #eventHubSection .disciplineLabel{font-size:18px}
@@ -4841,6 +4877,53 @@ body.matchStateBreak .wrap{
   #eventHubSection #recordSection .recordMeta{min-width:58px!important;height:28px!important}
 }
 
+
+
+/* =========================
+   v4.29 PK score lock / card shape / red-card eligibility / winner badge
+   ========================= */
+.numberTitle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.numberTitleCard{
+  display:none;
+  width:20px;
+  height:31px;
+  flex:0 0 20px;
+  border-radius:2.5px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 2px 5px rgba(0,0,0,.18);
+}
+.numberTitleCard.show{display:inline-block}
+.numberTitleCard.yellow{background:linear-gradient(180deg,#ffd52f 0%,#f4be00 100%)}
+.numberTitleCard.red{background:linear-gradient(180deg,#ff4b4b 0%,#e52626 100%)}
+.teamNameBox{position:relative}
+.winnerBadge{
+  display:none;
+  position:absolute;
+  top:-11px;
+  z-index:3;
+  min-width:28px;
+  height:28px;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  background:linear-gradient(180deg,rgba(74,56,8,.96) 0%,rgba(35,27,4,.96) 100%);
+  border:1px solid rgba(250,204,21,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 12px rgba(0,0,0,.28),0 0 12px rgba(250,204,21,.12);
+  font-size:16px;
+  line-height:1;
+}
+#ourWinnerBadge{left:4px}
+#oppWinnerBadge{right:4px}
+.teamNameBox.winner .winnerBadge{display:inline-flex}
+.teamNameBox.winner .teamNameDisplay{color:#fff7cf;text-shadow:0 1px 10px rgba(250,204,21,.12)}
+@media(max-width:390px){
+  .numberTitleCard{width:18px;height:28px;flex-basis:18px}
+  .winnerBadge{top:-9px;min-width:25px;height:25px;font-size:14px}
+}
+
 </style>
 </head>
 <body>
@@ -4849,7 +4932,7 @@ body.matchStateBreak .wrap{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.24</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.29</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -4904,6 +4987,7 @@ body.matchStateBreak .wrap{
       </div>
       <div class="scoreRow">
         <div class="teamNameBox" id="ourTeamBox" onclick="editTeamName('ourTeam')">
+          <span class="winnerBadge" id="ourWinnerBadge" aria-label="獲勝" title="獲勝">🏆</span>
           <div class="teamNameDisplay" id="ourTeamDisplay">忠義</div>
           <input id="ourTeam" class="teamNameEditor" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱">
         </div>
@@ -4917,6 +5001,7 @@ body.matchStateBreak .wrap{
           <button class="scoreEdit" id="scoreEditBtn" onclick="openScoreModal()" aria-label="修正比分">✎ 修正比分</button>
         </div>
         <div class="teamNameBox" id="oppTeamBox" onclick="editTeamName('oppTeam')">
+          <span class="winnerBadge" id="oppWinnerBadge" aria-label="獲勝" title="獲勝">🏆</span>
           <div class="teamNameDisplay empty" id="oppTeamDisplay">對手</div>
           <input id="oppTeam" class="teamNameEditor" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="對手隊伍名稱">
         </div>
@@ -5082,7 +5167,7 @@ body.matchStateBreak .wrap{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.24</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.29</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -5113,7 +5198,7 @@ body.matchStateBreak .wrap{
       </div>
       </div>
       <div class="aboutFooter">
-        <button class="aboutClose" type="button" onclick="closeAboutModal()">開始使用這個工具</button>
+        <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
     </div>
   </div>
@@ -5220,16 +5305,17 @@ body.matchStateBreak .wrap{
 <!-- Keeper modal -->
 <div class="modalBack" id="keeperModal">
   <div class="modal">
-    <h2 class="keeperModalTitle">🧤 設定守門員背號</h2>
-    <p>設定後，按「撲救」會直接套用目前守門員背號。比賽中可隨時更換。</p>
+    <h2 class="keeperModalTitle" id="keeperModalTitle">🧤 設定守門員背號</h2>
+    <p id="keeperModalHint">設定後，按「撲救」會直接套用目前守門員背號。比賽中可隨時更換。</p>
     <div class="keeperGrid" id="keeperGrid"></div>
+    <div class="keeperEmpty" id="keeperEmpty" hidden>目前名單沒有可選球員，可輸入其他背號或稍後再設定。</div>
     <div class="keeperCustomRow">
       <input id="keeperCustomNumber" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="其他背號 1–99" aria-label="守門員背號">
       <button class="keeperSaveBtn" type="button" onclick="saveKeeperCustom()">儲存</button>
     </div>
     <div class="numberActions">
-      <button class="keeperClearBtn" type="button" onclick="clearKeeperNumber()">清除設定</button>
-      <button class="cancel" type="button" onclick="closeKeeperModal()">取消</button>
+      <button class="keeperClearBtn" id="keeperClearBtn" type="button" onclick="clearKeeperNumber()">清除設定</button>
+      <button class="cancel" id="keeperCancelBtn" type="button" onclick="closeKeeperModal()">取消</button>
     </div>
   </div>
 </div>
@@ -5290,7 +5376,7 @@ body.matchStateBreak .wrap{
 <!-- Number modal -->
 <div class="modalBack" id="numberModal">
   <div class="modal">
-    <h2 id="numberTitle">選擇背號</h2>
+    <h2 id="numberTitle" class="numberTitle"><span id="numberTitleCard" class="numberTitleCard" aria-hidden="true"></span><span id="numberTitleText">選擇背號</span></h2>
     <p id="numberHint"></p>
     <div id="ourNumberArea">
       <div class="numberGrid" id="numberGrid"></div>
@@ -5915,6 +6001,43 @@ function teamDisplay(code){
   if(code==='OPP') return state.oppTeam || '對手';
   return '';
 }
+function redCardedPlayerNumbers(team, beforeIndex=null){
+  const set=new Set();
+  (state.markers||[]).forEach((m,i)=>{
+    if(beforeIndex!==null && i>=beforeIndex) return;
+    if(m?.event!=='RED_CARD' || m?.team!==team || !m?.player_number) return;
+    const n=Number(m.player_number);
+    if(Number.isInteger(n) && n>=1 && n<=99) set.add(String(n));
+  });
+  return set;
+}
+function isRedCardedPlayer(team, number, beforeIndex=null){
+  const raw=String(number||'').trim();
+  if(!raw) return false;
+  return redCardedPlayerNumbers(team,beforeIndex).has(raw);
+}
+function yellowCardCountForPlayer(team, number, beforeIndex=null){
+  const raw=String(number||'').trim();
+  if(!raw) return 0;
+  let count=0;
+  (state.markers||[]).forEach((m,i)=>{
+    if(beforeIndex!==null && i>=beforeIndex) return;
+    if(m?.event!=='YELLOW_CARD' || m?.team!==team || !m?.player_number) return;
+    if(String(m.player_number)===raw) count+=1;
+  });
+  return count;
+}
+function isSecondYellowCard(team, number, beforeIndex=null){
+  const raw=String(number||'').trim();
+  if(!raw) return false;
+  return yellowCardCountForPlayer(team,raw,beforeIndex)>=1;
+}
+function canPlayerParticipateAfterRed(team, number, event, beforeIndex=null){
+  if(!number || event==='RED_CARD') return true;
+  if(!isRedCardedPlayer(team,number,beforeIndex)) return true;
+  alert(`#${number} 已領紅牌退場，後續不能再記錄進球、射門、撲救、防守或其他球員事件。`);
+  return false;
+}
 function periodLabel(n){
   if(!state.multiPeriod) return '全場';
   return Number(n)===1 ? '上半場' : Number(n)===2 ? '下半場' : Number(n)===3 ? '延長賽' : `第${n}段`;
@@ -6355,11 +6478,16 @@ function clearRoster(){
 }
 
 
+let keeperModalMode='NORMAL';
+let keeperRedCardNumber='';
+
 function buildKeeperGrid(){
   const grid=byId('keeperGrid');
   if(!grid) return;
   grid.innerHTML='';
-  preferredOurNumbers().forEach(n=>{
+  const redOut=redCardedPlayerNumbers('OUR');
+  const available=preferredOurNumbers().filter(n=>!redOut.has(String(n)));
+  available.forEach(n=>{
     const btn=document.createElement('button');
     btn.type='button';
     btn.className='keeperNumBtn'+(String(state.goalkeeperNumber||'')===String(n)?' active':'');
@@ -6367,25 +6495,64 @@ function buildKeeperGrid(){
     btn.onclick=()=>setKeeperNumber(n);
     grid.appendChild(btn);
   });
+  const empty=byId('keeperEmpty');
+  if(empty) empty.hidden=available.length>0;
 }
-function openKeeperModal(){
+function openKeeperModal(options=null){
   if(state.finished){
     alert('本場比賽已結束，守門員背號已鎖定。');
     return;
   }
+
+  const replacement=!!(options && typeof options==='object' && options.mode==='RED_CARD_REPLACEMENT');
+  keeperModalMode=replacement?'RED_CARD_REPLACEMENT':'NORMAL';
+  keeperRedCardNumber=replacement?String(options.redCardNumber||''):'';
+
+  const modal=byId('keeperModal');
+  const title=byId('keeperModalTitle');
+  const hint=byId('keeperModalHint');
+  const clearBtn=byId('keeperClearBtn');
+  const cancelBtn=byId('keeperCancelBtn');
+
+  if(modal) modal.classList.toggle('keeperRedCardMode',replacement);
+  if(title) title.textContent=replacement?'🟥 守門員紅牌退場｜更換守門員':'🧤 設定守門員背號';
+  if(hint){
+    hint.textContent=replacement
+      ? `#${keeperRedCardNumber} 已紅牌退場。可選擇新的守門員；若暫時不確定，也可以稍後再設定。`
+      : '設定後，按「撲救」會直接套用目前守門員背號。比賽中可隨時更換。';
+  }
+  if(clearBtn) clearBtn.style.display=replacement?'none':'';
+  if(cancelBtn) cancelBtn.textContent=replacement?'稍後設定':'取消';
+
   buildKeeperGrid();
   const input=byId('keeperCustomNumber');
-  if(input) input.value=state.goalkeeperNumber||'';
-  byId('keeperModal').classList.add('open');
+  if(input){
+    input.value=replacement?'':(state.goalkeeperNumber||'');
+    input.placeholder=replacement?'新守門員背號 1–99':'其他背號 1–99';
+  }
+  modal?.classList.add('open');
 }
 function closeKeeperModal(){
-  byId('keeperModal').classList.remove('open');
+  const modal=byId('keeperModal');
+  modal?.classList.remove('open','keeperRedCardMode');
+  keeperModalMode='NORMAL';
+  keeperRedCardNumber='';
+  const clearBtn=byId('keeperClearBtn');
+  const cancelBtn=byId('keeperCancelBtn');
+  const input=byId('keeperCustomNumber');
+  if(clearBtn) clearBtn.style.display='';
+  if(cancelBtn) cancelBtn.textContent='取消';
+  if(input) input.placeholder='其他背號 1–99';
 }
 function setKeeperNumber(number){
   if(state.finished) return;
   const n=Number(number);
   if(!Number.isInteger(n) || n<1 || n>99){
     alert('守門員背號請輸入 1～99 的整數');
+    return;
+  }
+  if(isRedCardedPlayer('OUR',String(n))){
+    alert(`#${n} 已領紅牌退場，不能再設定為守門員。`);
     return;
   }
   state.goalkeeperNumber=String(n);
@@ -6419,8 +6586,12 @@ function clearKeeperNumber(){
 
 function buildNumberGrid(){
   const grid=byId('numberGrid');
+  if(!grid) return;
   grid.innerHTML='';
-  preferredOurNumbers().forEach(n=>{
+  const redOut=(pendingNumberTeam==='OUR' && pendingNumberEvent!=='RED_CARD')
+    ? redCardedPlayerNumbers('OUR')
+    : new Set();
+  preferredOurNumbers().filter(n=>!redOut.has(String(n))).forEach(n=>{
     const btn=document.createElement('button');
     btn.className='numBtn';
     btn.textContent=n;
@@ -6665,7 +6836,13 @@ function renderPenaltyRosterPicker(){
   }
 
   grid.innerHTML='';
-  roster.forEach(n=>{
+  const redOut=redCardedPlayerNumbers('OUR');
+  const eligibleRoster=roster.filter(n=>!redOut.has(String(n)));
+  if(!eligibleRoster.length && roster.length){
+    grid.innerHTML='<div class="rosterEmpty" style="grid-column:1/-1">本場名單球員皆無可用背號（紅牌退場球員不可參與 PK）。</div>';
+    return;
+  }
+  eligibleRoster.forEach(n=>{
     const btn=document.createElement('button');
     btn.type='button';
     btn.className=`penaltyRosterBtn${selected===String(n)?' selected':''}`;
@@ -6706,7 +6883,9 @@ function clearPenaltyRosterNumber(){
 
 function emptyPenaltyKick(){ return {number:'',result:null}; }
 function ensurePenaltyState(){
-  if(!state.penalty) state.penalty={active:true,completed:false,startEpoch:Date.now(),endEpoch:null,our:[],opp:[]};
+  if(!state.penalty) state.penalty={active:true,completed:false,startEpoch:Date.now(),endEpoch:null,our:[],opp:[],baseOurScore:state.ourScore,baseOppScore:state.oppScore};
+  if(!Number.isFinite(Number(state.penalty.baseOurScore))) state.penalty.baseOurScore=state.ourScore;
+  if(!Number.isFinite(Number(state.penalty.baseOppScore))) state.penalty.baseOppScore=state.oppScore;
   while(state.penalty.our.length<5) state.penalty.our.push(emptyPenaltyKick());
   while(state.penalty.opp.length<5) state.penalty.opp.push(emptyPenaltyKick());
 }
@@ -6726,7 +6905,7 @@ function beginPenaltyShootout(){
   state.finished=false;
   state.awaitingNextPeriod=false;
   state.nextPeriodType=null;
-  state.penalty={active:true,completed:false,startEpoch:Date.now(),endEpoch:null,our:[],opp:[]};
+  state.penalty={active:true,completed:false,startEpoch:Date.now(),endEpoch:null,our:[],opp:[],baseOurScore:state.ourScore,baseOppScore:state.oppScore};
   ensurePenaltyState();
   pendingFinishEnd=null;
   pendingFinishElapsed=null;
@@ -6859,6 +7038,8 @@ function finishPenaltyShootout(){
     alert(allSet ? '目前 PK 仍然平手，請按「＋ 加一輪」繼續記錄。' : '目前 PK 仍然平手，請繼續記錄尚未完成的點球。');
     return;
   }
+  state.ourScore=Number(state.penalty.baseOurScore);
+  state.oppScore=Number(state.penalty.baseOppScore);
   state.penalty.active=false;
   state.penalty.completed=true;
   state.penalty.endEpoch=Date.now();
@@ -7036,7 +7217,8 @@ function markerUndoText(marker){
   if(!marker) return '已記錄事件';
   const team=teamDisplay(marker.team)||'';
   const num=marker.player_number ? ` #${marker.player_number}` : '';
-  return `✓ 已記錄　${emoji(marker.event)} ${eventLabel(marker.event)}${team?` · ${team}${num}`:''}`;
+  const label=marker.second_yellow ? '紅牌（兩黃）' : eventLabel(marker.event);
+  return `✓ 已記錄　${emoji(marker.event)} ${label}${team?` · ${team}${num}`:''}`;
 }
 
 function showMarkerUndo(index){
@@ -7070,6 +7252,11 @@ function hideMarkerUndo(){
 function undoLastMarker(){
   if(!undoMarkerState) return;
   const {index,recorded_at,event}=undoMarkerState;
+  if((state.penalty?.active || state.penalty?.completed) && event==='GOAL'){
+    alert('已進入 PK，正規賽比分已鎖定；進球紀錄不可再復原。');
+    hideMarkerUndo();
+    return;
+  }
   const marker=state.markers[index];
 
   if(!marker || marker.event!==event || (recorded_at && marker.recorded_at!==recorded_at)){
@@ -7084,6 +7271,10 @@ function undoLastMarker(){
   }
 
   state.markers.splice(index,1);
+  if(marker.event==='RED_CARD' && marker.keeper_before_red && !state.goalkeeperNumber){
+    state.goalkeeperNumber=String(marker.keeper_before_red);
+    closeKeeperModal();
+  }
   if(dOur || dOpp){
     state.ourScore=Math.max(0,state.ourScore+dOur);
     state.oppScore=Math.max(0,state.oppScore+dOpp);
@@ -7205,23 +7396,31 @@ function openNumberSelection(event, team, sec){
   byId('oppNumberArea').style.display=isOur?'none':'block';
 
   const label=eventLabel(event);
+  const titleCard=byId('numberTitleCard');
+  const titleText=byId('numberTitleText');
+  if(titleCard){
+    titleCard.className='numberTitleCard';
+    if(event==='YELLOW_CARD') titleCard.classList.add('show','yellow');
+    if(event==='RED_CARD') titleCard.classList.add('show','red');
+  }
   if(event==='GOAL'){
-    byId('numberTitle').textContent=isOur?'選擇進球球員背號':'選擇對手進球背號';
+    if(titleText) titleText.textContent=isOur?'選擇進球球員背號':'選擇對手進球背號';
     byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：優先顯示本場球員名單；也可輸入其他背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。'):'選填：記錄對手進球球員背號；若看不清楚可直接略過。';
   }else if(event==='YELLOW_CARD' || event==='RED_CARD'){
-    byId('numberTitle').textContent=`${event==='YELLOW_CARD'?'🟨':'🟥'} 選擇${label}球員背號`;
+    if(titleText) titleText.textContent=`選擇${label}球員背號`;
     byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：指定拿牌球員；優先顯示本場名單，也可以略過。':'選填：指定是哪一位球員拿牌；可直接點常用背號，也可以略過。'):'選填：輸入對手拿牌球員背號，也可以略過。';
   }else if(event==='DEFENSE'){
-    byId('numberTitle').textContent='🛡️ 選擇防守球員背號';
+    if(titleText) titleText.textContent='🛡️ 選擇防守球員背號';
     byId('numberHint').textContent='選填：可指定完成這次防守的球員；團隊防守可直接略過。';
   }else{
-    byId('numberTitle').textContent=`選擇${label}球員背號`;
+    if(titleText) titleText.textContent=`選擇${label}球員背號`;
     byId('numberHint').textContent=currentRosterNumbers().length?'選填：優先顯示本場球員名單；團隊事件也可以略過背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。';
   }
 
   const cancelBtn=byId('cancelNumberBtn');
   if(cancelBtn) cancelBtn.textContent=`取消這筆${label}`;
 
+  buildNumberGrid();
   byId('numberModal').classList.add('open');
 }
 
@@ -7287,28 +7486,56 @@ function cancelNumber(){
 function finishNumberSelection(playerNumber){
   if(!pendingNumberEvent || pendingNumberTime===null) return;
 
+  if(playerNumber && !canPlayerParticipateAfterRed(pendingNumberTeam||'OUR',playerNumber,pendingNumberEvent)) return;
+
   if(pendingNumberEvent==='GOAL'){
     finishGoal(playerNumber);
     return;
   }
 
+  const recordedTeam=pendingNumberTeam||'OUR';
+  const requestedEvent=pendingNumberEvent;
+  const secondYellow=
+    requestedEvent==='YELLOW_CARD' &&
+    !!playerNumber &&
+    isSecondYellowCard(recordedTeam,playerNumber);
+  const recordedEvent=secondYellow ? 'RED_CARD' : requestedEvent;
+  const keeperBefore=String(state.goalkeeperNumber||'');
+  const keeperSentOff=
+    recordedEvent==='RED_CARD' &&
+    recordedTeam==='OUR' &&
+    !!playerNumber &&
+    !!keeperBefore &&
+    String(playerNumber)===keeperBefore;
+
   state.markers.push({
-    event:pendingNumberEvent,
-    team:pendingNumberTeam||'OUR',
+    event:recordedEvent,
+    team:recordedTeam,
     period:state.currentPeriod||1,
     period_label:state.multiPeriod ? periodLabel(state.currentPeriod||1) : '',
     player_number:playerNumber,
     seconds:pendingNumberTime,
     time:fmtMMSS(pendingNumberTime),
     score_after:`${state.ourScore}:${state.oppScore}`,
-    recorded_at:new Date().toISOString()
+    recorded_at:new Date().toISOString(),
+    ...(secondYellow?{second_yellow:true}:{}),
+    ...(keeperSentOff?{keeper_before_red:keeperBefore}:{})
   });
+
+  if(keeperSentOff){
+    state.goalkeeperNumber='';
+  }
 
   resetPendingNumber();
   byId('numberModal').classList.remove('open');
   saveState();
   render();
-  showMarkerUndo(state.markers.length-1);
+  const markerIndex=state.markers.length-1;
+  showMarkerUndo(markerIndex);
+
+  if(keeperSentOff){
+    setTimeout(()=>openKeeperModal({mode:'RED_CARD_REPLACEMENT',redCardNumber:playerNumber}),100);
+  }
 }
 
 function finishGoal(playerNumber){
@@ -7455,6 +7682,16 @@ function saveEditMarker(){
     }
   }
 
+  if(playerNumber && !canPlayerParticipateAfterRed(editingMarkerTeam,playerNumber,editingMarkerEvent,editingMarkerIndex)) return;
+
+  const editSecondYellow=
+    editingMarkerEvent==='YELLOW_CARD' &&
+    !!playerNumber &&
+    isSecondYellowCard(editingMarkerTeam,playerNumber,editingMarkerIndex);
+  if(editSecondYellow){
+    editingMarkerEvent='RED_CARD';
+  }
+
   let assistNumber='';
   if(editingMarkerEvent==='GOAL'){
     const rawAssist=String(byId('editAssistNumber').value||'').trim();
@@ -7485,6 +7722,10 @@ function saveEditMarker(){
 
   const nextOur=state.ourScore+dOur;
   const nextOpp=state.oppScore+dOpp;
+  if((state.penalty?.active || state.penalty?.completed) && (dOur || dOpp)){
+    alert('已進入 PK，正規賽比分已鎖定；不可再透過事件編輯改變比分。');
+    return;
+  }
   if(nextOur<0 || nextOpp<0){
     alert('目前比分與事件紀錄不一致，無法自動調整。請先確認比分。');
     return;
@@ -7494,10 +7735,47 @@ function saveEditMarker(){
     return;
   }
 
+  const keeperBeforeFromOldRed=
+    marker.event==='RED_CARD' && marker.team==='OUR' && marker.keeper_before_red
+      ? String(marker.keeper_before_red)
+      : '';
+  const sameKeeperRedPersists=
+    !!keeperBeforeFromOldRed &&
+    editingMarkerEvent==='RED_CARD' &&
+    editingMarkerTeam==='OUR' &&
+    String(playerNumber||'')===keeperBeforeFromOldRed;
+
+  // 若原本這筆就是守門員紅牌，但現在改成別的事件／球員，且尚未指定新守門員，先恢復原守門員。
+  if(keeperBeforeFromOldRed && !sameKeeperRedPersists && !state.goalkeeperNumber){
+    state.goalkeeperNumber=keeperBeforeFromOldRed;
+  }
+
+  const keeperBeforeEdit=String(state.goalkeeperNumber||'');
+  const keeperSentOffByEdit=
+    !sameKeeperRedPersists &&
+    editingMarkerEvent==='RED_CARD' &&
+    editingMarkerTeam==='OUR' &&
+    !!playerNumber &&
+    !!keeperBeforeEdit &&
+    String(playerNumber)===keeperBeforeEdit;
+
   marker.event=editingMarkerEvent;
   marker.team=editingMarkerTeam;
   marker.player_number=playerNumber;
   marker.assist_number=editingMarkerEvent==='GOAL'?assistNumber:'';
+  if(editSecondYellow){
+    marker.second_yellow=true;
+  }else if(!(marker.second_yellow && editingMarkerEvent==='RED_CARD')){
+    delete marker.second_yellow;
+  }
+  if(keeperSentOffByEdit){
+    marker.keeper_before_red=keeperBeforeEdit;
+    state.goalkeeperNumber='';
+  }else if(sameKeeperRedPersists){
+    marker.keeper_before_red=keeperBeforeFromOldRed;
+  }else{
+    delete marker.keeper_before_red;
+  }
 
   // 時間 seconds / time / recorded_at 完全保留。
   if(marker.team==='OUR' && marker.player_number){
@@ -7517,16 +7795,27 @@ function saveEditMarker(){
   render();
   renderLogModal();
   closeEditMarker();
+  if(keeperSentOffByEdit){
+    setTimeout(()=>openKeeperModal({mode:'RED_CARD_REPLACEMENT',redCardNumber:playerNumber}),100);
+  }
 }
 
 function deleteMarker(i){
   hideMarkerUndo();
   const m=state.markers[i];
+  if((state.penalty?.active || state.penalty?.completed) && m?.event==='GOAL'){
+    alert('已進入 PK，正規賽比分已鎖定；進球紀錄不可再刪除。');
+    return;
+  }
   const label=m?eventLabel(m.event):'事件';
   const ok=window.confirm(`確定要刪除第${i+1}筆「${label}」紀錄嗎？
 刪除後無法復原。`);
   if(!ok) return;
   state.markers.splice(i,1);
+  if(m && m.event==='RED_CARD' && m.keeper_before_red && !state.goalkeeperNumber){
+    state.goalkeeperNumber=String(m.keeper_before_red);
+    closeKeeperModal();
+  }
   if(m && m.event==='GOAL'){
     if(m.team==='OUR') state.ourScore=Math.max(0, state.ourScore-1);
     if(m.team==='OPP') state.oppScore=Math.max(0, state.oppScore-1);
@@ -7543,7 +7832,12 @@ function openScoreModal(){
     (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME') &&
     !state.penalty?.active;
 
-  // 只允許中場、等待延長賽、全場進入人工比分修正。
+  // PK 開始後即鎖定正規賽比分；PK 完成後也不可再人工改比分，避免正規賽比分與 PK 結果矛盾。
+  if(state.penalty?.active || state.penalty?.completed){
+    return;
+  }
+
+  // 只允許中場、等待延長賽、未進入 PK 的全場結果進入人工比分修正。
   if(!state.finished && !isScoreReviewBreak){
     return;
   }
@@ -7556,6 +7850,11 @@ function openScoreModal(){
 }
 function closeScoreModal(){ byId('scoreModal').classList.remove('open'); }
 function saveScoreModal(){
+  if(state.penalty?.active || state.penalty?.completed){
+    closeScoreModal();
+    alert('已進入 PK 點球大戰，正規賽比分已鎖定，不能再修改。');
+    return;
+  }
   const our=validateIntegerField('editOur','我方比分',0,99,false);
   if(our===undefined) return;
   const opp=validateIntegerField('editOpp','對手比分',0,99,false);
@@ -7580,7 +7879,7 @@ function renderLogTo(container){
     row.innerHTML=`
       <div class="logSeq">第${i+1}筆</div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
-      <div class="logDetailLine"><span class="logMainText">${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}${team||m.player_number?`${team?'<span style="color:#91a0b6">'+team+'</span>':''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${eventLabel(m.event)}</b>${assist}</span></div>
+      <div class="logDetailLine"><span class="logMainText">${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}${team||m.player_number?`${team?'<span style="color:#91a0b6">'+team+'</span>':''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${m.second_yellow?'紅牌（兩黃）':eventLabel(m.event)}</b>${assist}</span></div>
       <div class="scoreSnap">${m.score_after||''}</div>
       <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${i+1}筆紀錄">✎</button>
       <button class="del" onclick="deleteMarker(${i})" aria-label="刪除第${i+1}筆紀錄">✕</button>
@@ -7774,6 +8073,28 @@ function saveResultMetaEdit(){
   render();
 }
 
+function renderWinnerBadge(){
+  const ourBox=byId('ourTeamBox');
+  const oppBox=byId('oppTeamBox');
+  if(!ourBox || !oppBox) return;
+  ourBox.classList.remove('winner');
+  oppBox.classList.remove('winner');
+  if(!state.finished) return;
+
+  let winner='';
+  if(state.penalty?.completed){
+    const po=penaltyGoals('our'), pp=penaltyGoals('opp');
+    if(po>pp) winner='OUR';
+    else if(pp>po) winner='OPP';
+  }else if(state.ourScore>state.oppScore){
+    winner='OUR';
+  }else if(state.oppScore>state.ourScore){
+    winner='OPP';
+  }
+  if(winner==='OUR') ourBox.classList.add('winner');
+  if(winner==='OPP') oppBox.classList.add('winner');
+}
+
 function renderQuickResult(){
   const section=byId('quickResultSection');
   if(!section) return;
@@ -7922,13 +8243,18 @@ function renderMatchStateUI(){
   const isLive=!!state.started && !isFinished && !isBreak && !isPenalty;
   const isPre=!state.started && !isBreak && !isFinished && !isPenalty;
 
-  // 事件模組：賽前隱藏；進行中顯示全部；賽後保留紀錄入口。
+  // 事件模組：賽前隱藏；進行中顯示全部；中場／賽後保留紀錄入口。
   setStateSectionVisible('eventHubSection', !isPre);
   setStateSectionVisible('eventSection', isLive);
   setStateSectionVisible('disciplineSection', isLive);
 
   // 紀錄在比賽進行、中場、PK、全場後都具有回顧價值；賽前沒有紀錄則不顯示。
   setStateSectionVisible('recordSection', !isPre);
+
+  const eventHubEl = byId('eventHubSection');
+  if(eventHubEl){
+    eventHubEl.classList.toggle('recordOnly', !isPre && !isLive);
+  }
 
   // 極簡結果卡只屬於全場後的 Result Mode。
   setStateSectionVisible('quickResultSection', isFinished);
@@ -8000,6 +8326,7 @@ function render(){
   renderMatchStateUI();
   renderRegulationTimeAlert();
   renderQuickResult();
+  renderWinnerBadge();
   renderLiveFocusUI();
   renderPreResetUI();
 
@@ -8120,7 +8447,8 @@ function render(){
       (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME') &&
       !state.penalty?.active;
 
-    const canEditScore=!!state.finished || isScoreReviewBreak;
+    const pkLocksScore=!!(state.penalty?.active || state.penalty?.completed);
+    const canEditScore=!pkLocksScore && (!!state.finished || isScoreReviewBreak);
 
     scoreEditBtn.hidden=!canEditScore;
     scoreEditBtn.disabled=!canEditScore;
@@ -8738,7 +9066,7 @@ function reportHTMLText(){
   }).join('') : '<li>尚未標記進球事件</li>';
   const otherHtml=others.length ? others.map(m=>{
     const team=teamDisplay(m.team);
-    return `<li><span>${fmtMMSS(m.seconds)}</span> ${emoji(m.event)} ${escapeHtml(eventLabel(m.event))}${team ? ' · '+escapeHtml(team) : ''}${m.player_number ? ' #'+escapeHtml(m.player_number) : ''} <b>${escapeHtml(m.score_after||'')}</b></li>`;
+    return `<li><span>${fmtMMSS(m.seconds)}</span> ${emoji(m.event)} ${escapeHtml(m.second_yellow?'紅牌（兩黃）':eventLabel(m.event))}${team ? ' · '+escapeHtml(team) : ''}${m.player_number ? ' #'+escapeHtml(m.player_number) : ''} <b>${escapeHtml(m.score_after||'')}</b></li>`;
   }).join('') : '<li>尚未標記其他精彩事件</li>';
   let diff='';
   if(state.regulationMinutes && state.finished){
@@ -9402,7 +9730,18 @@ setInterval(renderRegulationTimeAlert,1000);
   min-height:44px;
   border-radius:15px;
   font-size:13.8px;
+  position:relative;
+  overflow:hidden;
 }
+.aboutClose::before{
+  content:"";
+  position:absolute;
+  left:12px;right:12px;top:1px;height:42%;
+  border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0));
+  pointer-events:none;
+}
+.aboutClose:active{transform:translateY(1px) scale(.997)}
 
 @media(max-width:390px){
   .modal.aboutModal{
@@ -9411,7 +9750,7 @@ setInterval(renderRegulationTimeAlert,1000);
     max-height:calc(var(--vv-height,100dvh) - 10px);
   }
   .aboutTop{padding:14px 44px 11px 13px}
-  .aboutDismiss{top:10px;right:10px;width:32px;height:32px;min-width:32px;font-size:14px}
+  .aboutDismiss{top:10px;right:10px;width:31px;height:31px;min-width:31px;font-size:13.5px;background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.07)}
   .aboutTitle{font-size:19.5px}
   .aboutHero{margin-top:8px;font-size:15.5px;white-space:nowrap}
   .aboutIntro{margin-top:6px;font-size:10.35px!important;line-height:1.42!important;max-width:98%}
