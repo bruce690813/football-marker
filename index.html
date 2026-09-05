@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.29</title>
+<title>足球場邊記錄器 v4.31</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -4503,7 +4503,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.29 Dark Glass Frame refinement
+   v4.31 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4667,7 +4667,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.29 Unified event module
+   v4.31 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
 #eventHubSection.stateManaged{max-height:402px}
@@ -4779,7 +4779,7 @@ eventHubTitle{
 
 
 /* =========================
-   v4.29 iPhone Safari bottom-safe scrolling
+   v4.31 iPhone Safari bottom-safe scrolling
    比賽中／中場／等待階段，替底部瀏覽器工具列保留可捲動空間，
    避免「紀錄」按鈕被 Safari 底部列遮住。
    ========================= */
@@ -4810,7 +4810,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.29 iPhone Safari bottom obstruction fallback
+   v4.31 iPhone Safari bottom obstruction fallback
    Safari 的 visualViewport 在部分 iOS 狀態下不會把底部工具列算進 bottomGap，
    因此不能只依賴動態差值。加入固定安全下限，確保「紀錄」可捲到工具列上方。
    ========================= */
@@ -4857,7 +4857,7 @@ body.matchStateBreak .wrap{
 }
 
 
-/* v4.29 compact event module to keep record fully visible above Safari toolbar */
+/* v4.31 compact event module to keep record fully visible above Safari toolbar */
 #eventHubSection .eventTop{font-size:19px}
 #eventHubSection .eventIcon{font-size:24px}
 #eventHubSection .disciplineLabel{font-size:18px}
@@ -4880,7 +4880,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.29 PK score lock / card shape / red-card eligibility / winner badge
+   v4.31 PK score lock / card shape / red-card eligibility / winner badge lower-right
    ========================= */
 .numberTitle{
   display:flex;
@@ -4902,26 +4902,27 @@ body.matchStateBreak .wrap{
 .winnerBadge{
   display:none;
   position:absolute;
-  top:-11px;
+  right:3px;
+  bottom:1px;
   z-index:3;
-  min-width:28px;
-  height:28px;
+  min-width:24px;
+  height:24px;
   align-items:center;
   justify-content:center;
   border-radius:999px;
-  background:linear-gradient(180deg,rgba(74,56,8,.96) 0%,rgba(35,27,4,.96) 100%);
-  border:1px solid rgba(250,204,21,.55);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 12px rgba(0,0,0,.28),0 0 12px rgba(250,204,21,.12);
-  font-size:16px;
+  background:linear-gradient(180deg,rgba(74,56,8,.92) 0%,rgba(35,27,4,.92) 100%);
+  border:1px solid rgba(250,204,21,.46);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 3px 9px rgba(0,0,0,.24),0 0 9px rgba(250,204,21,.10);
+  font-size:14px;
   line-height:1;
+  pointer-events:none;
 }
-#ourWinnerBadge{left:4px}
-#oppWinnerBadge{right:4px}
+#ourWinnerBadge,#oppWinnerBadge{right:3px;left:auto}
 .teamNameBox.winner .winnerBadge{display:inline-flex}
 .teamNameBox.winner .teamNameDisplay{color:#fff7cf;text-shadow:0 1px 10px rgba(250,204,21,.12)}
 @media(max-width:390px){
   .numberTitleCard{width:18px;height:28px;flex-basis:18px}
-  .winnerBadge{top:-9px;min-width:25px;height:25px;font-size:14px}
+  .winnerBadge{right:2px;bottom:1px;min-width:22px;height:22px;font-size:13px}
 }
 
 </style>
@@ -4932,7 +4933,7 @@ body.matchStateBreak .wrap{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.29</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.31</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -5167,7 +5168,7 @@ body.matchStateBreak .wrap{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.29</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.31</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -5912,6 +5913,9 @@ function loadState(){
         m.assist_number=(Number.isInteger(a)&&a>=1&&a<=99)?String(a):'';
       }
     });
+    // v4.31：清除舊版本可能產生的「同隊同背號重複紅牌」。
+    // 足球規則上第一張紅牌後球員已退場，後續不應再有第二張紅牌。
+    sanitizeDuplicateRedCards();
   }
   if(state.goalkeeperNumber!==''){
     const gk=Number(state.goalkeeperNumber);
@@ -6033,10 +6037,37 @@ function isSecondYellowCard(team, number, beforeIndex=null){
   return yellowCardCountForPlayer(team,raw,beforeIndex)>=1;
 }
 function canPlayerParticipateAfterRed(team, number, event, beforeIndex=null){
-  if(!number || event==='RED_CARD') return true;
+  if(!number) return true;
   if(!isRedCardedPlayer(team,number,beforeIndex)) return true;
-  alert(`#${number} 已領紅牌退場，後續不能再記錄進球、射門、撲救、防守或其他球員事件。`);
+  alert(`#${number} 已領紅牌退場，後續不能再記錄任何球員事件（包含黃牌、紅牌、進球、射門、撲救與防守）。`);
   return false;
+}
+function hasOtherRedCardForPlayer(team, number, excludeIndex=null){
+  const raw=String(number||'').trim();
+  if(!raw) return false;
+  return (state.markers||[]).some((m,i)=>{
+    if(excludeIndex!==null && i===excludeIndex) return false;
+    return m?.event==='RED_CARD' && m?.team===team && String(m?.player_number||'')===raw;
+  });
+}
+function sanitizeDuplicateRedCards(){
+  if(!Array.isArray(state.markers) || !state.markers.length) return false;
+  const seen=new Set();
+  let changed=false;
+  const cleaned=[];
+  state.markers.forEach(m=>{
+    if(m?.event==='RED_CARD' && m?.team && m?.player_number){
+      const key=`${m.team}:${String(m.player_number)}`;
+      if(seen.has(key)){
+        changed=true;
+        return;
+      }
+      seen.add(key);
+    }
+    cleaned.push(m);
+  });
+  if(changed) state.markers=cleaned;
+  return changed;
 }
 function periodLabel(n){
   if(!state.multiPeriod) return '全場';
@@ -6588,8 +6619,8 @@ function buildNumberGrid(){
   const grid=byId('numberGrid');
   if(!grid) return;
   grid.innerHTML='';
-  const redOut=(pendingNumberTeam==='OUR' && pendingNumberEvent!=='RED_CARD')
-    ? redCardedPlayerNumbers('OUR')
+  const redOut=pendingNumberTeam
+    ? redCardedPlayerNumbers(pendingNumberTeam)
     : new Set();
   preferredOurNumbers().filter(n=>!redOut.has(String(n))).forEach(n=>{
     const btn=document.createElement('button');
@@ -7690,6 +7721,15 @@ function saveEditMarker(){
     isSecondYellowCard(editingMarkerTeam,playerNumber,editingMarkerIndex);
   if(editSecondYellow){
     editingMarkerEvent='RED_CARD';
+  }
+
+  if(
+    editingMarkerEvent==='RED_CARD' &&
+    playerNumber &&
+    hasOtherRedCardForPlayer(editingMarkerTeam,playerNumber,editingMarkerIndex)
+  ){
+    alert(`#${playerNumber} 已有紅牌退場紀錄，不能再新增第二張紅牌。`);
+    return;
   }
 
   let assistNumber='';
