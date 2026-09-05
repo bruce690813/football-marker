@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.47</title>
+<title>足球場邊記錄器 v4.48</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -5714,6 +5714,61 @@ body.resultMode .quickResultStat strong{
   }
 }
 
+
+/* =========================
+   v4.48 比賽中賽事名稱 / 場地可讀性再提升
+   與守門員 / 名單接近同級，但仍略低於比分與主狀態
+   ========================= */
+
+body.matchStateLive .liveMetaStrip.show,
+body.matchActive .liveMetaStrip.show,
+body.matchStateSecondHalf .liveMetaStrip.show,
+body.matchStateExtraActive .liveMetaStrip.show{
+  min-height:36px!important;
+  margin-bottom:7px!important;
+  padding:7px 9px!important;
+  font-size:clamp(15.5px,3.95vw,16.2px)!important;
+  line-height:1.15!important;
+  font-weight:950!important;
+  letter-spacing:.08px!important;
+  color:#edf5ff!important;
+}
+
+/* 若未來 liveMetaStrip 改成 span 結構，也套用相同字級。 */
+body.matchStateLive .liveMetaStrip .liveMetaText,
+body.matchActive .liveMetaStrip .liveMetaText,
+body.matchStateSecondHalf .liveMetaStrip .liveMetaText,
+body.matchStateExtraActive .liveMetaStrip .liveMetaText{
+  font-size:clamp(15.5px,3.95vw,16.2px)!important;
+  line-height:1.15!important;
+  font-weight:950!important;
+}
+
+/* icon 只微幅放大，避免搶過文字本身。 */
+body.matchStateLive .liveMetaStrip .metaIcon,
+body.matchActive .liveMetaStrip .metaIcon,
+body.matchStateSecondHalf .liveMetaStrip .metaIcon,
+body.matchStateExtraActive .liveMetaStrip .metaIcon{
+  font-size:1.06em!important;
+}
+
+/* 小型 iPhone：仍維持約 15px，避免長賽事名稱過早被截斷。 */
+@media(max-width:390px){
+  body.matchStateLive .liveMetaStrip.show,
+  body.matchActive .liveMetaStrip.show,
+  body.matchStateSecondHalf .liveMetaStrip.show,
+  body.matchStateExtraActive .liveMetaStrip.show,
+  body.matchStateLive .liveMetaStrip .liveMetaText,
+  body.matchActive .liveMetaStrip .liveMetaText,
+  body.matchStateSecondHalf .liveMetaStrip .liveMetaText,
+  body.matchStateExtraActive .liveMetaStrip .liveMetaText{
+    min-height:34px!important;
+    padding-top:6px!important;
+    padding-bottom:6px!important;
+    font-size:15px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5722,7 +5777,7 @@ body.resultMode .quickResultStat strong{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.47</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.48</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -5965,7 +6020,7 @@ body.resultMode .quickResultStat strong{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.47</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.48</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
