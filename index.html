@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.43</title>
+<title>足球場邊記錄器 v4.44</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -3268,7 +3268,7 @@ body.finalOutputVisible .wrap{
 }
 
 /* =========================
-   v4.43 Full-time compact output priority
+   v4.44 Full-time compact output priority
    全場收合時間明細，並替 iPhone Safari 底部工具列預留真正可捲動的安全空間。
    ========================= */
 body.resultMode .timeSummary:not(.open) .timeCompact{
@@ -4538,7 +4538,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.43 Dark Glass Frame refinement
+   v4.44 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4702,7 +4702,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.43 Unified event module
+   v4.44 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
 #eventHubSection.stateManaged{max-height:402px}
@@ -4814,7 +4814,7 @@ eventHubTitle{
 
 
 /* =========================
-   v4.43 iPhone Safari bottom-safe scrolling
+   v4.44 iPhone Safari bottom-safe scrolling
    比賽中／中場／等待階段，替底部瀏覽器工具列保留可捲動空間，
    避免「紀錄」按鈕被 Safari 底部列遮住。
    ========================= */
@@ -4845,7 +4845,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.43 iPhone Safari bottom obstruction fallback
+   v4.44 iPhone Safari bottom obstruction fallback
    Safari 的 visualViewport 在部分 iOS 狀態下不會把底部工具列算進 bottomGap，
    因此不能只依賴動態差值。加入固定安全下限，確保「紀錄」可捲到工具列上方。
    ========================= */
@@ -4892,7 +4892,7 @@ body.matchStateBreak .wrap{
 }
 
 
-/* v4.43 compact event module to keep record fully visible above Safari toolbar */
+/* v4.44 compact event module to keep record fully visible above Safari toolbar */
 #eventHubSection .eventTop{font-size:19px}
 #eventHubSection .eventIcon{font-size:24px}
 #eventHubSection .disciplineLabel{font-size:18px}
@@ -4915,7 +4915,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.43 PK score lock / card shape / red-card eligibility / winner badge lower-right
+   v4.44 PK score lock / card shape / red-card eligibility / winner badge lower-right
    ========================= */
 .numberTitle{
   display:flex;
@@ -4963,7 +4963,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.43 Venue picker portal fix
+   v4.44 Venue picker portal fix
    將最近場地選單移出 matchCard stacking context，避免 isolation / glass cards 遮擋。
    ========================= */
 body > .venueMenu.venueMenuPortal{
@@ -4988,7 +4988,7 @@ body > .venueMenu.venueMenuPortal.open{display:block!important}
 
 
 /* =========================
-   v4.43 Pre-match time summary compact mode
+   v4.44 Pre-match time summary compact mode
    賽前預設不顯示尚未產生的開始 / 結束時間，只保留標題與展開。
    ========================= */
 body.matchStatePre .timeSummary:not(.open) .timeCompact{
@@ -5005,7 +5005,7 @@ body.matchStatePre .timeSummary:not(.open){
 
 
 /* =========================
-   v4.43 Pre-match score hierarchy
+   v4.44 Pre-match score hierarchy
    賽前 0:0 為預設值，不使用比賽中黃色高亮；開始比賽後恢復既有黃色比分。
    ========================= */
 body.matchStatePre .scoreTile{
@@ -5028,7 +5028,7 @@ body.matchStatePre .scoreColon{
 
 
 /* =========================
-   v4.43 Regulation controls touch-target refinement
+   v4.44 Regulation controls touch-target refinement
    手機場邊操作：分鐘選單獨立一列，套用 / 清除改為大尺寸等寬按鈕
    ========================= */
 .regBox{
@@ -5090,7 +5090,7 @@ body.matchStatePre .scoreColon{
 
 
 /* =========================
-   v4.43 record-only spacing fix
+   v4.44 record-only spacing fix
    中場／全場等非比賽進行中狀態，只保留「事件紀錄 + 紀錄入口」。
    直接 display:none 隱藏主事件與牌卡區，避免 max-height transition 留下空白。
    ========================= */
@@ -5137,7 +5137,7 @@ body.matchStatePre .scoreColon{
 
 
 /* =========================
-   v4.43 Event hierarchy refinement
+   v4.44 Event hierarchy refinement
    區分「黃／紅牌輸入」與「事件紀錄管理」
    ========================= */
 
@@ -5231,6 +5231,195 @@ body.matchStatePre .scoreColon{
   }
 }
 
+
+/* =========================
+   v4.44 Card-flow UI/UX refinement
+   黃 / 紅牌 → 選擇球隊 → 選擇球員
+   ========================= */
+
+/* Step 1: card type. Keep a large touch target, but reduce the banner feeling. */
+#cardModal .cardTypeGrid{
+  gap:10px!important;
+  margin-bottom:14px!important;
+}
+#cardModal .cardTypeGrid button{
+  min-height:80px!important;
+  border-radius:18px!important;
+  font-size:26px!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.09),inset 0 1px 0 rgba(255,255,255,.22)!important;
+}
+#cardModal .cancel{
+  min-height:46px!important;
+  margin-top:10px!important;
+  border-radius:15px!important;
+  background:linear-gradient(180deg,#e9edf2 0%,#dde3ea 100%)!important;
+  color:#586576!important;
+  border:1px solid rgba(133,146,164,.28)!important;
+  font-size:14px!important;
+  font-weight:800!important;
+  opacity:1!important;
+}
+
+/* Step 2: team selection. Same light modal language; only a subtle our/opponent distinction. */
+#cardTeamModal .modal{
+  width:min(500px,100%);
+  padding:18px;
+  border-radius:26px;
+  background:linear-gradient(180deg,#f8f9fc 0%,#f1f4f8 100%);
+  border:1px solid rgba(255,255,255,.88);
+  box-shadow:0 20px 48px rgba(0,0,0,.26),0 4px 14px rgba(0,0,0,.08);
+}
+#cardTeamModal h2{
+  font-size:23px;
+  line-height:1.2;
+  margin-bottom:7px;
+  letter-spacing:-.2px;
+}
+#cardTeamModal p{
+  font-size:13.5px;
+  line-height:1.45;
+  color:#687383;
+  margin-bottom:15px;
+}
+#cardTeamModal .cardTeamGrid{
+  gap:12px;
+  margin-top:0;
+}
+#cardTeamModal .cardTeamChoice{
+  min-height:78px;
+  border-radius:17px;
+  font-size:20px;
+  font-weight:900;
+  background:linear-gradient(180deg,#3b5573 0%,#2d435f 100%);
+  border:1px solid rgba(77,134,196,.48);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 5px 13px rgba(17,39,67,.18);
+}
+#cardTeamModal .cardTeamChoice.oppNeutral{
+  background:linear-gradient(180deg,#4a586b 0%,#3c495a 100%);
+  border-color:rgba(125,140,159,.48);
+}
+#cardTeamModal .cancel{
+  min-height:46px;
+  margin-top:14px;
+  border-radius:15px;
+  background:linear-gradient(180deg,#e9edf2 0%,#dde3ea 100%)!important;
+  color:#586576!important;
+  border:1px solid rgba(133,146,164,.28)!important;
+  font-size:14px;
+  font-weight:800;
+}
+
+/* Step 3: player selection. Make grid visuals match the team-selection card language. */
+#numberModal.cardFlow .modal{
+  width:min(500px,100%);
+  padding:18px;
+  border-radius:26px;
+  background:linear-gradient(180deg,#f8f9fc 0%,#f1f4f8 100%);
+  border:1px solid rgba(255,255,255,.88);
+  box-shadow:0 20px 48px rgba(0,0,0,.26),0 4px 14px rgba(0,0,0,.08);
+}
+#numberModal.cardFlow .numberTitle{
+  margin-bottom:8px;
+  font-size:23px;
+  line-height:1.2;
+  letter-spacing:-.25px;
+}
+#numberModal.cardFlow .numberTitleCard{
+  width:19px;
+  height:30px;
+  flex-basis:19px;
+  border-radius:2.5px;
+}
+#numberModal.cardFlow p{
+  margin-bottom:14px;
+  color:#687383;
+  font-size:13.5px;
+  line-height:1.45;
+}
+#numberModal.cardFlow .numberGrid{
+  gap:7px;
+}
+#numberModal.cardFlow .numBtn{
+  min-height:48px;
+  border-radius:14px;
+  background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  color:#111827;
+  border:1px solid #b7c1cd;
+  font-size:18px;
+  font-weight:900;
+  box-shadow:0 2px 6px rgba(29,43,58,.05),inset 0 1px 0 rgba(255,255,255,.9);
+}
+#numberModal.cardFlow .numBtn:active{
+  transform:scale(.97);
+  background:#eef4fa;
+}
+
+/* Clear hierarchy: Other number > Skip > Cancel. */
+#numberModal.cardFlow .numberActions{
+  gap:10px;
+  margin-top:12px;
+}
+#numberModal.cardFlow .otherNum{
+  min-height:46px;
+  border-radius:14px;
+  background:linear-gradient(180deg,#687482 0%,#596471 100%);
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+  border:1px solid rgba(66,78,93,.24);
+}
+#numberModal.cardFlow .skipNum{
+  min-height:46px;
+  border-radius:14px;
+  background:linear-gradient(180deg,#9ca6b1 0%,#8d98a5 100%);
+  color:#f8fafc;
+  font-size:14px;
+  font-weight:850;
+  border:1px solid rgba(120,132,146,.22);
+}
+#numberModal.cardFlow #cancelNumberBtn{
+  min-height:46px;
+  margin-top:14px;
+  border-radius:15px;
+  background:linear-gradient(180deg,#e9edf2 0%,#dde3ea 100%)!important;
+  color:#384657!important;
+  border:1px solid rgba(133,146,164,.28)!important;
+  font-size:14px;
+  font-weight:850;
+}
+#numberModal.cardFlow.yellowFlow .numberTitleCard{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 2px 7px rgba(244,190,0,.20);
+}
+#numberModal.cardFlow.redFlow .numberTitleCard{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 2px 7px rgba(229,38,38,.18);
+}
+
+@media(max-width:390px){
+  #cardModal .cardTypeGrid button{
+    min-height:76px!important;
+    font-size:25px!important;
+  }
+  #cardTeamModal .modal,
+  #numberModal.cardFlow .modal{
+    padding:16px;
+    border-radius:24px;
+  }
+  #cardTeamModal .cardTeamChoice{
+    min-height:72px;
+    font-size:19px;
+  }
+  #numberModal.cardFlow .numBtn{
+    min-height:46px;
+    font-size:17px;
+    border-radius:13px;
+  }
+  #numberModal.cardFlow .otherNum,
+  #numberModal.cardFlow .skipNum,
+  #numberModal.cardFlow #cancelNumberBtn{
+    min-height:44px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5239,7 +5428,7 @@ body.matchStatePre .scoreColon{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.43</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.44</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -5474,7 +5663,7 @@ body.matchStatePre .scoreColon{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.43</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.44</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -6293,7 +6482,7 @@ function loadState(){
         m.assist_number=(Number.isInteger(a)&&a>=1&&a<=99)?String(a):'';
       }
     });
-    // v4.43：清除舊版本可能產生的重複紅牌，以及紅牌退場後仍被記為助攻的無效資料。
+    // v4.44：清除舊版本可能產生的重複紅牌，以及紅牌退場後仍被記為助攻的無效資料。
     const cleanedDuplicateRed=sanitizeDuplicateRedCards();
     const cleanedInvalidAssist=sanitizeInvalidAssistsAfterRed();
     if(cleanedDuplicateRed || cleanedInvalidAssist){
@@ -6581,7 +6770,7 @@ function renderTimeBox(){
   byId('fullStart').textContent=fmtDateTime(matchStart);
   byId('fullEnd').textContent=fmtDateTime(matchEnd);
 
-  // v4.43：所有狀態在「收合」時都只保留「時間紀錄＋展開」。
+  // v4.44：所有狀態在「收合」時都只保留「時間紀錄＋展開」。
   // 全場結束後，開始 / 結束時間仍可按「展開」查看；
   // 主畫面優先把空間留給摘要、儲存圖片、匯出 CSV 與「＋ 新比賽」。
   box.classList.add('compactBoundaryHidden');
@@ -7837,12 +8026,18 @@ function openNumberSelection(event, team, sec){
     if(event==='YELLOW_CARD') titleCard.classList.add('show','yellow');
     if(event==='RED_CARD') titleCard.classList.add('show','red');
   }
+  const numberModalEl=byId('numberModal');
+  if(numberModalEl){
+    numberModalEl.classList.remove('cardFlow','yellowFlow','redFlow');
+    if(event==='YELLOW_CARD') numberModalEl.classList.add('cardFlow','yellowFlow');
+    if(event==='RED_CARD') numberModalEl.classList.add('cardFlow','redFlow');
+  }
   if(event==='GOAL'){
     if(titleText) titleText.textContent=isOur?'選擇進球球員背號':'選擇對手進球背號';
     byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：優先顯示本場球員名單；也可輸入其他背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。'):'選填：記錄對手進球球員背號；若看不清楚可直接略過。';
   }else if(event==='YELLOW_CARD' || event==='RED_CARD'){
-    if(titleText) titleText.textContent=`選擇${label}球員背號`;
-    byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：指定拿牌球員；優先顯示本場名單，也可以略過。':'選填：指定是哪一位球員拿牌；可直接點常用背號，也可以略過。'):'選填：輸入對手拿牌球員背號，也可以略過。';
+    if(titleText) titleText.textContent=`${label}｜選擇球員`;
+    byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：指定拿牌球員背號；優先顯示本場名單，也可以略過。':'選填：指定拿牌球員背號；可直接點常用背號，也可以略過。'):'選填：輸入對手拿牌球員背號，也可以略過。';
   }else if(event==='DEFENSE'){
     if(titleText) titleText.textContent='🛡️ 選擇防守球員背號';
     byId('numberHint').textContent='選填：可指定完成這次防守的球員；團隊防守可直接略過。';
@@ -8567,7 +8762,7 @@ function hasMeaningfulPreMatchSetup(){
   const currentCompetition=String(byId('competition')?.value||state.competition||'').trim();
   const currentVenue=String(byId('venue')?.value||state.venue||'').trim();
 
-  /* v4.43：場地只要目前有值，就視為本場已存在賽前設定。
+  /* v4.44：場地只要目前有值，就視為本場已存在賽前設定。
      舊版若場地剛好等於「上次使用場地」，會誤判為預設值而隱藏重設按鈕，
      造成畫面明明顯示場地（例如新北高中）卻沒有「↻ 重設」的矛盾。 */
   return Boolean(
