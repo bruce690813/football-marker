@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.37</title>
+<title>足球場邊記錄器 v4.39</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -3267,6 +3267,34 @@ body.finalOutputVisible .wrap{
   }
 }
 
+/* =========================
+   v4.39 Full-time compact output priority
+   全場收合時間明細，並替 iPhone Safari 底部工具列預留真正可捲動的安全空間。
+   ========================= */
+body.resultMode .timeSummary:not(.open) .timeCompact{
+  display:none!important;
+}
+body.resultMode .timeSummary:not(.open) .timeHead{
+  border-bottom:0!important;
+  min-height:46px;
+}
+body.resultMode .timeSummary:not(.open){
+  margin-top:4px;
+  margin-bottom:5px;
+}
+
+/* 讓「摘要 / 儲存圖片 / 匯出 CSV / ＋ 新比賽」可完整捲到 Safari 工具列上方。
+   這不是固定 footer，而是文件流底部的實際安全空間。 */
+@media(max-width:430px){
+  body.resultMode.finalOutputVisible .wrap{
+    padding-bottom:calc(132px + env(safe-area-inset-bottom))!important;
+    scroll-padding-bottom:calc(132px + env(safe-area-inset-bottom))!important;
+  }
+  body.resultMode .resultNewMatchBtn{
+    scroll-margin-bottom:calc(132px + env(safe-area-inset-bottom));
+  }
+}
+
 
 /* =========================
    v4.04 Roster modal cleanup
@@ -4510,7 +4538,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.37 Dark Glass Frame refinement
+   v4.39 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4674,7 +4702,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.37 Unified event module
+   v4.39 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
 #eventHubSection.stateManaged{max-height:402px}
@@ -4786,7 +4814,7 @@ eventHubTitle{
 
 
 /* =========================
-   v4.37 iPhone Safari bottom-safe scrolling
+   v4.39 iPhone Safari bottom-safe scrolling
    比賽中／中場／等待階段，替底部瀏覽器工具列保留可捲動空間，
    避免「紀錄」按鈕被 Safari 底部列遮住。
    ========================= */
@@ -4817,7 +4845,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.37 iPhone Safari bottom obstruction fallback
+   v4.39 iPhone Safari bottom obstruction fallback
    Safari 的 visualViewport 在部分 iOS 狀態下不會把底部工具列算進 bottomGap，
    因此不能只依賴動態差值。加入固定安全下限，確保「紀錄」可捲到工具列上方。
    ========================= */
@@ -4864,7 +4892,7 @@ body.matchStateBreak .wrap{
 }
 
 
-/* v4.37 compact event module to keep record fully visible above Safari toolbar */
+/* v4.39 compact event module to keep record fully visible above Safari toolbar */
 #eventHubSection .eventTop{font-size:19px}
 #eventHubSection .eventIcon{font-size:24px}
 #eventHubSection .disciplineLabel{font-size:18px}
@@ -4887,7 +4915,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.37 PK score lock / card shape / red-card eligibility / winner badge lower-right
+   v4.39 PK score lock / card shape / red-card eligibility / winner badge lower-right
    ========================= */
 .numberTitle{
   display:flex;
@@ -4935,7 +4963,7 @@ body.matchStateBreak .wrap{
 
 
 /* =========================
-   v4.37 Venue picker portal fix
+   v4.39 Venue picker portal fix
    將最近場地選單移出 matchCard stacking context，避免 isolation / glass cards 遮擋。
    ========================= */
 body > .venueMenu.venueMenuPortal{
@@ -4960,7 +4988,7 @@ body > .venueMenu.venueMenuPortal.open{display:block!important}
 
 
 /* =========================
-   v4.37 Pre-match time summary compact mode
+   v4.39 Pre-match time summary compact mode
    賽前預設不顯示尚未產生的開始 / 結束時間，只保留標題與展開。
    ========================= */
 body.matchStatePre .timeSummary:not(.open) .timeCompact{
@@ -4977,7 +5005,7 @@ body.matchStatePre .timeSummary:not(.open){
 
 
 /* =========================
-   v4.37 Pre-match score hierarchy
+   v4.39 Pre-match score hierarchy
    賽前 0:0 為預設值，不使用比賽中黃色高亮；開始比賽後恢復既有黃色比分。
    ========================= */
 body.matchStatePre .scoreTile{
@@ -5000,7 +5028,7 @@ body.matchStatePre .scoreColon{
 
 
 /* =========================
-   v4.37 Regulation controls touch-target refinement
+   v4.39 Regulation controls touch-target refinement
    手機場邊操作：分鐘選單獨立一列，套用 / 清除改為大尺寸等寬按鈕
    ========================= */
 .regBox{
@@ -5068,7 +5096,7 @@ body.matchStatePre .scoreColon{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.37</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.39</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -5303,7 +5331,7 @@ body.matchStatePre .scoreColon{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.37</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.39</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -6122,9 +6150,12 @@ function loadState(){
         m.assist_number=(Number.isInteger(a)&&a>=1&&a<=99)?String(a):'';
       }
     });
-    // v4.37：清除舊版本可能產生的「同隊同背號重複紅牌」。
-    // 足球規則上第一張紅牌後球員已退場，後續不應再有第二張紅牌。
-    sanitizeDuplicateRedCards();
+    // v4.39：清除舊版本可能產生的重複紅牌，以及紅牌退場後仍被記為助攻的無效資料。
+    const cleanedDuplicateRed=sanitizeDuplicateRedCards();
+    const cleanedInvalidAssist=sanitizeInvalidAssistsAfterRed();
+    if(cleanedDuplicateRed || cleanedInvalidAssist){
+      try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){}
+    }
   }
   if(state.goalkeeperNumber!==''){
     const gk=Number(state.goalkeeperNumber);
@@ -6278,6 +6309,25 @@ function sanitizeDuplicateRedCards(){
   if(changed) state.markers=cleaned;
   return changed;
 }
+function sanitizeInvalidAssistsAfterRed(){
+  if(!Array.isArray(state.markers) || !state.markers.length) return false;
+  const sentOff={OUR:new Set(),OPP:new Set()};
+  let changed=false;
+  state.markers.forEach(m=>{
+    const team=m?.team;
+    if(m?.event==='GOAL' && team && m?.assist_number){
+      const assist=String(m.assist_number);
+      if(sentOff[team]?.has(assist)){
+        m.assist_number='';
+        changed=true;
+      }
+    }
+    if(m?.event==='RED_CARD' && team && m?.player_number){
+      sentOff[team]?.add(String(m.player_number));
+    }
+  });
+  return changed;
+}
 function periodLabel(n){
   if(!state.multiPeriod) return '全場';
   return Number(n)===1 ? '上半場' : Number(n)===2 ? '下半場' : Number(n)===3 ? '延長賽' : `第${n}段`;
@@ -6388,12 +6438,10 @@ function renderTimeBox(){
   byId('fullStart').textContent=fmtDateTime(matchStart);
   byId('fullEnd').textContent=fmtDateTime(matchEnd);
 
-  // v4.37：收合狀態的開始 / 結束時間只在「全場結束後」顯示。
-  // 賽前兩個時間尚不存在，顯示 --:--:-- 沒有操作價值；
-  // 因此賽前預設只保留「時間紀錄＋展開」，需要時再展開查看完整設定。
-  // 比賽中 / 中場 / 等待下一階段同樣維持精簡收合。
-  const showCompactBoundary=!!state.finished;
-  box.classList.toggle('compactBoundaryHidden',!showCompactBoundary);
+  // v4.39：所有狀態在「收合」時都只保留「時間紀錄＋展開」。
+  // 全場結束後，開始 / 結束時間仍可按「展開」查看；
+  // 主畫面優先把空間留給摘要、儲存圖片、匯出 CSV 與「＋ 新比賽」。
+  box.classList.add('compactBoundaryHidden');
 
   // 中場展開時，把第一階段明確標為上半場，
   // 避免「結束」被誤解成全場結束。
@@ -7275,6 +7323,7 @@ function finishPenaltyShootout(){
   state.penalty.endEpoch=Date.now();
   state.finished=true;
   state.started=false;
+  timeExpanded=false;
   state.endEpoch=state.penalty.endEpoch;
   state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
   byId('penaltyRosterModal')?.classList.remove('open');
@@ -7311,6 +7360,7 @@ function confirmFinishFull(){
   state.endEpoch=pendingFinishEnd;
   state.started=false;
   state.finished=true;
+  timeExpanded=false;
   state.awaitingNextPeriod=false;
   state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
 
@@ -7523,7 +7573,14 @@ function buildAssistGrid(){
   const grid=byId('assistPlayerGrid');
   if(!grid) return;
   grid.innerHTML='';
-  preferredOurNumbers().forEach(n=>{
+  const marker=(pendingAssistMarkerIndex!==null) ? state.markers[pendingAssistMarkerIndex] : null;
+  const scorer=String(marker?.player_number||'');
+  const eligible=preferredOurNumbers().filter(n=>{
+    const raw=String(n);
+    if(scorer && raw===scorer) return false;
+    return !isRedCardedPlayer('OUR',raw,pendingAssistMarkerIndex);
+  });
+  eligible.forEach(n=>{
     const btn=document.createElement('button');
     btn.type='button';
     btn.textContent=n;
@@ -7571,6 +7628,10 @@ function validateAssistNumber(marker, raw){
   }
   if(marker?.player_number && String(marker.player_number)===String(n)){
     alert('助攻球員不能與進球球員為同一背號');
+    return null;
+  }
+  if(marker?.team && isRedCardedPlayer(marker.team,String(n),pendingAssistMarkerIndex)){
+    alert(`#${n} 已領紅牌退場，不能再列為助攻球員。`);
     return null;
   }
   return String(n);
@@ -7945,6 +8006,10 @@ function saveEditMarker(){
         alert('助攻球員不能與進球球員為同一背號');
         return;
       }
+      if(editingMarkerTeam && isRedCardedPlayer(editingMarkerTeam,assistNumber,editingMarkerIndex)){
+        alert(`#${assistNumber} 在此進球之前已領紅牌退場，不能列為助攻球員。`);
+        return;
+      }
     }
   }
 
@@ -8029,6 +8094,9 @@ function saveEditMarker(){
   state.ourScore=nextOur;
   state.oppScore=nextOpp;
   adjustScoreSnapshotsFrom(editingMarkerIndex,dOur,dOpp);
+
+  // 若把較早事件改成紅牌，清除該球員之後才出現的無效助攻紀錄。
+  sanitizeInvalidAssistsAfterRed();
 
   saveState();
   render();
@@ -8356,7 +8424,7 @@ function hasMeaningfulPreMatchSetup(){
   const currentCompetition=String(byId('competition')?.value||state.competition||'').trim();
   const currentVenue=String(byId('venue')?.value||state.venue||'').trim();
 
-  /* v4.37：場地只要目前有值，就視為本場已存在賽前設定。
+  /* v4.39：場地只要目前有值，就視為本場已存在賽前設定。
      舊版若場地剛好等於「上次使用場地」，會誤判為預設值而隱藏重設按鈕，
      造成畫面明明顯示場地（例如新北高中）卻沒有「↻ 重設」的矛盾。 */
   return Boolean(
