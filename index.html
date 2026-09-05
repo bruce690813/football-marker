@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.16</title>
+<title>足球場邊記錄器 v4.17</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -652,7 +652,7 @@ button{border:0;border-radius:12px;padding:10px 8px;font-size:15px;font-weight:8
   overflow:hidden;
   display:block;
   white-space:nowrap;
-  text-overflow:ellipsis;
+  text-overflow:clip;
   letter-spacing:-.2px;
 }
 .teamNameDisplay.empty{color:#8997a6}
@@ -1712,16 +1712,14 @@ body.matchStateLive .new{
   display:none!important;
 }
 
-/* 長隊名自動縮字，而不是固定兩行硬擠。 */
+/* v4.17 球隊名稱：4 字名稱必須完整單行；1～8 字由 JS 依實際可用寬度自動縮字。 */
 .teamNameDisplay.longName{
-  font-size:clamp(22px,5.1vw,25px);
-  line-height:1.06;
   white-space:nowrap;
-  text-overflow:ellipsis;
-  letter-spacing:-.28px;
+  text-overflow:clip;
+  letter-spacing:-.35px;
 }
 .teamNameDisplay.veryLongName{
-  font-size:clamp(17px,4.8vw,22px);
+  font-size:clamp(16px,4.2vw,20px);
   line-height:1.06;
   letter-spacing:-.35px;
   display:-webkit-box;
@@ -4456,7 +4454,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.16 Dark Glass Frame refinement
+   v4.17 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4625,7 +4623,7 @@ body.resultMode .quickResultCard{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.16</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.17</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -4852,7 +4850,7 @@ body.resultMode .quickResultCard{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.16</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.17</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -7383,6 +7381,32 @@ function closeLogModal(){
   byId('logModal').classList.remove('open');
   document.body.style.overflow='';
 }
+function fitTeamNameSingleLine(el, name){
+  if(!el || !name) return;
+  // 1～8 字優先維持單行。先以較大的字級呈現，再依「實際欄寬」逐級縮小，
+  // 不使用省略號，因此像「忠義國小」這類四字隊名一定完整顯示。
+  el.style.fontSize='';
+  el.style.letterSpacing='';
+  el.style.whiteSpace='nowrap';
+  el.style.textOverflow='clip';
+
+  const smallScreen=window.matchMedia && window.matchMedia('(max-width:390px)').matches;
+  let size = smallScreen ? 24 : 27;
+  if(name.length>=5) size = smallScreen ? 22 : 24;
+  if(name.length>=7) size = smallScreen ? 18 : 21;
+  const minSize = name.length<=4 ? 18 : (name.length<=6 ? 16 : 14);
+
+  el.style.fontSize=size+'px';
+  // 等瀏覽器套用字型後，以 scrollWidth / clientWidth 實際量測。
+  while(size>minSize && el.scrollWidth > el.clientWidth){
+    size -= 1;
+    el.style.fontSize=size+'px';
+  }
+  // 最後仍過寬時再略收字距，避免最後一字被切掉。
+  if(el.scrollWidth > el.clientWidth){
+    el.style.letterSpacing='-.8px';
+  }
+}
 function updateTeamNameDisplays(){
   const our=(byId('ourTeam')?.value || state.ourTeam || '').trim();
   const opp=(byId('oppTeam')?.value || state.oppTeam || '').trim();
@@ -7393,16 +7417,21 @@ function updateTeamNameDisplays(){
   if(ourDisplay){
     ourDisplay.textContent=our || '我方';
     ourDisplay.classList.toggle('empty', !our);
-    ourDisplay.classList.toggle('longName', our.length>=5 && our.length<7);
-    ourDisplay.classList.toggle('veryLongName', our.length>=7);
+    ourDisplay.classList.toggle('longName', our.length>=5 && our.length<=8);
+    ourDisplay.classList.toggle('veryLongName', our.length>=9);
+    if(our && our.length<=8) fitTeamNameSingleLine(ourDisplay, our);
+    else { ourDisplay.style.fontSize=''; ourDisplay.style.letterSpacing=''; ourDisplay.style.whiteSpace=''; ourDisplay.style.textOverflow=''; }
   }
   if(oppDisplay){
     oppDisplay.textContent=opp || '對手';
     oppDisplay.classList.toggle('empty', !opp);
-    oppDisplay.classList.toggle('longName', opp.length>=5 && opp.length<7);
-    oppDisplay.classList.toggle('veryLongName', opp.length>=7);
+    oppDisplay.classList.toggle('longName', opp.length>=5 && opp.length<=8);
+    oppDisplay.classList.toggle('veryLongName', opp.length>=9);
+    if(opp && opp.length<=8) fitTeamNameSingleLine(oppDisplay, opp);
+    else { oppDisplay.style.fontSize=''; oppDisplay.style.letterSpacing=''; oppDisplay.style.whiteSpace=''; oppDisplay.style.textOverflow=''; }
   }
 }
+window.addEventListener('resize',()=>{ requestAnimationFrame(updateTeamNameDisplays); });
 
 function editTeamName(id){
   const box=byId(id+'Box');
