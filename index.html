@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.46</title>
+<title>足球場邊記錄器 v4.47</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -5659,6 +5659,61 @@ body.resultMode .quickResultStat strong{
   }
 }
 
+
+/* =========================
+   v4.47 事件區精簡
+   移除獨立「事件紀錄」標題，名稱直接整合至紀錄按鈕
+   ========================= */
+
+/* 移除標題後，事件按鈕直接接在外框頂部，節省一列高度。 */
+#eventHubSection{
+  padding-top:8px!important;
+}
+#eventHubSection .eventHubHeader{
+  display:none!important;
+}
+
+/* 紀錄入口本身承擔區塊名稱，文字略縮以支援四字完整顯示。 */
+#eventHubSection #recordSection .recordLabel{
+  font-size:18px!important;
+  letter-spacing:.1px;
+  white-space:nowrap;
+}
+
+/* 中場 / 全場只有紀錄入口時，不需要額外分隔線與上方留白。 */
+#eventHubSection.recordOnly{
+  max-height:78px!important;
+  padding:7px 12px 8px!important;
+}
+#eventHubSection.recordOnly #recordSection{
+  display:block!important;
+  max-height:58px!important;
+  margin:0!important;
+  padding:0!important;
+  border-top:0!important;
+}
+#eventHubSection.recordOnly #recordSection .recordFullBtn{
+  margin:0!important;
+}
+
+/* 比賽進行中：主事件 → 黃紅牌 → 事件紀錄，維持必要分隔但不多占一列。 */
+#eventHubSection:not(.recordOnly) #eventSection{
+  margin-top:0!important;
+}
+
+@media(max-width:390px){
+  #eventHubSection{
+    padding-top:7px!important;
+  }
+  #eventHubSection #recordSection .recordLabel{
+    font-size:17px!important;
+  }
+  #eventHubSection.recordOnly{
+    max-height:74px!important;
+    padding:6px 10px 7px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5667,7 +5722,7 @@ body.resultMode .quickResultStat strong{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.46</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.47</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -5839,10 +5894,6 @@ body.resultMode .quickResultStat strong{
   </div>
 
   <div class="card stateManaged eventHubShell" id="eventHubSection" aria-hidden="true">
-    <div class="eventHubHeader">
-      <div class="eventHubTitle">事件紀錄</div>
-    </div>
-
     <div class="eventSubsection stateManaged" id="eventSection">
       <div class="events">
         <button id="goalBtn" class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
@@ -5867,7 +5918,7 @@ body.resultMode .quickResultStat strong{
     </div>
 
     <div class="eventSubsection stateManaged eventMinorSection" id="recordSection">
-      <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">紀錄</span></span><span class="recordMeta"><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
+      <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">事件紀錄</span></span><span class="recordMeta"><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
     </div>
   </div>
 
@@ -5914,7 +5965,7 @@ body.resultMode .quickResultStat strong{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.46</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.47</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
