@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.21</title>
+<title>足球場邊記錄器 v4.22</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -4482,7 +4482,7 @@ body.resultMode .scoreText{
 
 
 /* =========================
-   v4.21 Dark Glass Frame refinement
+   v4.22 Dark Glass Frame refinement
    - iOS-inspired translucent outer frames
    - keep scoreboard / time / action surfaces high-contrast
    - preserve state colors as subtle accents, not heavy outlines
@@ -4646,7 +4646,7 @@ body.resultMode .quickResultCard{
 
 
 /* =========================
-   v4.21 Unified event module
+   v4.22 Unified event module
    主要事件 / 牌卡 / 紀錄整合為同一個外框
    ========================= */
 #eventHubSection.stateManaged{max-height:455px}
@@ -4740,6 +4740,37 @@ body.resultMode .quickResultCard{
   .eventHubHint{font-size:10px}
 }
 
+
+
+/* =========================
+   v4.22 iPhone Safari bottom-safe scrolling
+   比賽中／中場／等待階段，替底部瀏覽器工具列保留可捲動空間，
+   避免「紀錄」按鈕被 Safari 底部列遮住。
+   ========================= */
+body.matchStateLive .wrap,
+body.matchStateHalftime .wrap,
+body.matchStateExtraWait .wrap,
+body.matchStateBreak .wrap{
+  padding-bottom:calc(max(24px, calc(var(--browser-bottom-gap,0px) + 18px)) + env(safe-area-inset-bottom))!important;
+  scroll-padding-bottom:calc(max(32px, calc(var(--browser-bottom-gap,0px) + 26px)) + env(safe-area-inset-bottom))!important;
+}
+
+/* 事件模組底部再留少量呼吸空間，讓紀錄卡完整離開瀏覽器工具列。 */
+#eventHubSection{
+  margin-bottom:8px!important;
+}
+
+@media(max-width:390px){
+  body.matchStateLive .wrap,
+  body.matchStateHalftime .wrap,
+  body.matchStateExtraWait .wrap,
+  body.matchStateBreak .wrap{
+    padding-bottom:calc(max(28px, calc(var(--browser-bottom-gap,0px) + 20px)) + env(safe-area-inset-bottom))!important;
+    scroll-padding-bottom:calc(max(36px, calc(var(--browser-bottom-gap,0px) + 28px)) + env(safe-area-inset-bottom))!important;
+  }
+  #eventHubSection{margin-bottom:10px!important}
+}
+
 </style>
 </head>
 <body>
@@ -4748,7 +4779,7 @@ body.resultMode .quickResultCard{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.21</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.22</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -4981,7 +5012,7 @@ body.resultMode .quickResultCard{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.21</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.22</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
