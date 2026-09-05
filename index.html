@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.12</title>
+<title>足球場邊記錄器 v4.13</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -4299,8 +4299,8 @@ body.matchStateSecondHalf .liveMetaStrip .metaSep{
    深色比分牌 + Score Amber 暖黃數字
    ========================= */
 .scoreMid{
-  min-width:138px!important;
-  padding:2px 5px 4px!important;
+  min-width:152px!important;
+  padding:2px 4px 4px!important;
   background:transparent!important;
   border:0!important;
   box-shadow:none!important;
@@ -4342,22 +4342,25 @@ body.matchStateSecondHalf .liveMetaStrip .metaSep{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:7px;
+  gap:6px;
   font-size:inherit!important;
   line-height:1!important;
   letter-spacing:0!important;
   white-space:nowrap;
 }
 
+/* v4.13：比分成為記分板第一視覺焦點。
+   數字放大約 15%，比分框小幅加寬，高度維持不變，避免整體變笨重。 */
 .scoreTile{
   position:relative;
   isolation:isolate;
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-width:50px;
+  width:56px;
+  min-width:56px;
   height:62px;
-  padding:0 8px;
+  padding:0 4px;
   overflow:hidden;
   border-radius:13px;
   background:linear-gradient(180deg,#0b1826 0%,#07121e 49%,#091522 51%,#0a1724 100%);
@@ -4367,12 +4370,15 @@ body.matchStateSecondHalf .liveMetaStrip .metaSep{
     inset 0 -1px 0 rgba(0,0,0,.35),
     0 5px 14px rgba(0,0,0,.20);
   color:#FFE36E;
-  font-size:40px;
+  font-size:46px;
   font-weight:950;
   font-variant-numeric:tabular-nums;
-  letter-spacing:.5px;
+  letter-spacing:.2px;
   text-shadow:0 1px 0 rgba(74,50,0,.35),0 0 12px rgba(255,227,110,.10);
 }
+
+/* 10–99 自動縮字，保持左右比分框寬度一致。 */
+.scoreTile.twoDigit{font-size:42px}
 
 /* 非常淡的翻頁水平線：只提供設計語彙，不干擾戶外辨識。 */
 .scoreTile::after{
@@ -4389,9 +4395,9 @@ body.matchStateSecondHalf .liveMetaStrip .metaSep{
 }
 
 .scoreColon{
-  color:#c7d5e3;
-  font-size:34px;
-  font-weight:800;
+  color:rgba(199,213,227,.68);
+  font-size:28px;
+  font-weight:760;
   line-height:1;
   transform:translateY(-1px);
   text-shadow:none;
@@ -4411,28 +4417,32 @@ body.resultMode .scoreText{
 }
 
 @media(max-height:900px){
-  .scoreMid{min-width:128px!important}
-  .scoreText{gap:6px}
+  .scoreMid{min-width:142px!important}
+  .scoreText{gap:5px}
   .scoreTile{
-    min-width:46px;
+    width:52px;
+    min-width:52px;
     height:56px;
-    padding:0 7px;
+    padding:0 4px;
     border-radius:12px;
-    font-size:36px;
+    font-size:42px;
   }
-  .scoreColon{font-size:31px}
+  .scoreTile.twoDigit{font-size:38px}
+  .scoreColon{font-size:26px}
 }
 
 @media(max-width:390px){
-  .scoreMid{min-width:122px!important;padding-left:3px!important;padding-right:3px!important}
+  .scoreMid{min-width:136px!important;padding-left:2px!important;padding-right:2px!important}
   .scoreText{gap:5px}
   .scoreTile{
-    min-width:44px;
+    width:50px;
+    min-width:50px;
     height:54px;
-    padding:0 6px;
-    font-size:35px;
+    padding:0 3px;
+    font-size:40px;
   }
-  .scoreColon{font-size:29px}
+  .scoreTile.twoDigit{font-size:36px}
+  .scoreColon{font-size:25px}
 }
 
 </style>
@@ -4443,7 +4453,7 @@ body.resultMode .scoreText{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.12</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.13</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -4670,7 +4680,7 @@ body.resultMode .scoreText{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.12</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.13</div></div>
       <div class="aboutTitle" id="aboutTitle">⚽ 足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -7547,8 +7557,12 @@ function renderRegulationTimeAlert(){
 
 function render(){
   updateTeamNameDisplays();
-  byId('ourScore').textContent=state.ourScore;
-  byId('oppScore').textContent=state.oppScore;
+  const ourScoreEl=byId('ourScore');
+  const oppScoreEl=byId('oppScore');
+  ourScoreEl.textContent=state.ourScore;
+  oppScoreEl.textContent=state.oppScore;
+  ourScoreEl.closest('.scoreTile')?.classList.toggle('twoDigit',Number(state.ourScore)>=10);
+  oppScoreEl.closest('.scoreTile')?.classList.toggle('twoDigit',Number(state.oppScore)>=10);
 
   const pkMainScore=byId('pkMainScore');
   if(pkMainScore){
