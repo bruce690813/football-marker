@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.66</title>
+<title>足球場邊記錄器 v4.67</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -7118,6 +7118,82 @@ body.matchStateHalftime .recordFullBtn:disabled{
   }
 }
 
+
+/* =========================
+   v4.67 四狀態最終 polish
+   賽前 / 比賽中 / 中場 / 下半場
+   ========================= */
+
+/* 1. 統一四狀態主卡 → 下一模組的節奏 token。
+      下半場沿用 matchStateLive，因此自動與比賽中一致。 */
+:root{
+  --state-section-gap:0px;
+}
+body.matchStatePre .matchCard,
+body.matchStateLive .matchCard,
+body.matchStateHalftime .matchCard{
+  margin-bottom:var(--state-section-gap)!important;
+}
+
+/* 2. 中場事件紀錄再往上靠 4px，
+      只收斂視覺斷層，不增加任何新內容。 */
+body.matchStateHalftime #eventHubSection.recordOnly{
+  margin-top:-4px!important;
+  padding-top:4px!important;
+  padding-bottom:7px!important;
+}
+body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
+  padding-top:0!important;
+  margin-top:0!important;
+}
+
+/* 3. 賽前「重設」再淡約 5%，真正退到 tertiary action。 */
+body.matchStatePre .preResetBtn{
+  background:rgba(15,23,42,.045)!important;
+  border-color:rgba(203,213,225,.065)!important;
+  color:rgba(226,232,240,.49)!important;
+  opacity:.60!important;
+  box-shadow:none!important;
+}
+body.matchStatePre .preResetBtn:active{
+  background:rgba(51,65,85,.22)!important;
+  border-color:rgba(203,213,225,.14)!important;
+  color:rgba(241,245,249,.84)!important;
+  opacity:.90!important;
+}
+
+/* 4. 中場主 CTA 與賽前開始、下半場開始維持完全相同語言。 */
+body.matchStateHalftime #startBtn:not(:disabled){
+  background:linear-gradient(180deg,#18b5a6 0%,#109b90 100%)!important;
+  border-color:rgba(91,231,214,.34)!important;
+  color:#fff!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 5px 14px rgba(15,159,143,.18)!important;
+}
+
+/* 5. 四狀態的次要 disabled 按鈕保持一致的冷灰語言。 */
+body.matchStatePre #finishBtn:disabled,
+body.matchStateHalftime #finishBtn:disabled{
+  background:linear-gradient(180deg,rgba(55,65,81,.72) 0%,rgba(45,55,68,.78) 100%)!important;
+  border-color:rgba(148,163,184,.12)!important;
+  color:rgba(203,213,225,.48)!important;
+  box-shadow:none!important;
+  opacity:.76!important;
+}
+
+/* 小尺寸 iPhone：保持相同節奏，不再額外壓縮觸控區。 */
+@media(max-width:390px){
+  body.matchStatePre .matchCard,
+  body.matchStateLive .matchCard,
+  body.matchStateHalftime .matchCard{
+    margin-bottom:var(--state-section-gap)!important;
+  }
+  body.matchStateHalftime #eventHubSection.recordOnly{
+    margin-top:-4px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -7126,7 +7202,7 @@ body.matchStateHalftime .recordFullBtn:disabled{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.66</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.67</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -7372,7 +7448,7 @@ body.matchStateHalftime .recordFullBtn:disabled{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.66</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.67</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
