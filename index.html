@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.57</title>
+<title>足球場邊記錄器 v4.58</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -6268,7 +6268,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
 
 
 /* =========================
-   v4.57 黃牌紅牌選擇改為真實卡牌式長方形
+   v4.58 黃牌紅牌選擇改為真實卡牌式長方形
    編輯 / 刪除只保留在完整「事件紀錄」
    ========================= */
 
@@ -6299,7 +6299,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
 
 
 /* =========================
-   v4.57 黃牌 / 紅牌選擇改為真實卡牌式長方形
+   v4.58 黃牌 / 紅牌選擇改為真實卡牌式長方形
    保留大觸控範圍，但視覺上改成更接近足球裁判出牌的直向卡片語言。
    ========================= */
 #cardModal .cardTypeGrid{
@@ -6363,6 +6363,71 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   }
 }
 
+
+/* =========================
+   v4.58 主畫面拆分黃牌 / 紅牌獨立按鈕
+   目的：縮短流程、讓主畫面互動與四個事件按鈕一致。
+   ========================= */
+#eventHubSection #disciplineSection .disciplineButtonsGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  align-items:stretch;
+}
+#eventHubSection #disciplineSection .cardEventBtn.cardEventDirect{
+  min-height:50px!important;
+  padding:8px 12px!important;
+  border-radius:14px!important;
+  justify-content:center!important;
+  gap:10px!important;
+  font-size:18px!important;
+  font-weight:950!important;
+  letter-spacing:.12px!important;
+  touch-action:manipulation;
+}
+#eventHubSection #disciplineSection .cardEventBtn.cardEventDirect .cardLabel{
+  gap:10px!important;
+}
+#eventHubSection #disciplineSection .cardEventBtn.cardEventDirect .disciplineLabel{
+  line-height:1!important;
+  white-space:nowrap;
+}
+#eventHubSection #disciplineSection .yellowDirectCardBtn{
+  background:linear-gradient(180deg,rgba(84,62,6,.96) 0%,rgba(62,44,6,.98) 100%)!important;
+  border:1px solid rgba(250,204,21,.34)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 4px 10px rgba(0,0,0,.18)!important;
+}
+#eventHubSection #disciplineSection .redDirectCardBtn{
+  background:linear-gradient(180deg,rgba(92,20,26,.96) 0%,rgba(66,12,17,.98) 100%)!important;
+  border:1px solid rgba(248,113,113,.34)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 4px 10px rgba(0,0,0,.18)!important;
+}
+#eventHubSection #disciplineSection .yellowDirectCardBtn .disciplineLabel{
+  color:#fff4c3!important;
+}
+#eventHubSection #disciplineSection .redDirectCardBtn .disciplineLabel{
+  color:#ffe0e0!important;
+}
+#eventHubSection #disciplineSection .cardEventBtn.cardEventDirect:disabled{
+  background:linear-gradient(180deg,#2a3038 0%,#242a32 100%)!important;
+  border-color:#333b46!important;
+  box-shadow:none!important;
+}
+#eventHubSection #disciplineSection .cardEventBtn.cardEventDirect:disabled .disciplineLabel,
+#eventHubSection #disciplineSection .cardEventBtn.cardEventDirect:disabled .disciplineCardShape{
+  opacity:.46!important;
+}
+@media(max-width:430px){
+  #eventHubSection #disciplineSection .disciplineButtonsGrid{
+    gap:8px;
+  }
+  #eventHubSection #disciplineSection .cardEventBtn.cardEventDirect{
+    min-height:48px!important;
+    padding:7px 10px!important;
+    font-size:17px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -6371,7 +6436,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.57</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.58</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -6551,17 +6616,20 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
     </div>
 
     <div class="eventSubsection stateManaged eventMinorSection" id="disciplineSection">
-      <button id="cardBtn" class="cardEventBtn" onclick="openCardModal()" aria-label="新增黃牌或紅牌紀錄">
-        <span class="disciplinePair disciplineYellowPair">
-          <span class="yellowCardShape disciplineCardShape" aria-hidden="true"></span>
-          <span class="disciplineLabel">黃牌</span>
-        </span>
-        
-        <span class="disciplinePair disciplineRedPair">
-          <span class="redCardShape disciplineCardShape" aria-hidden="true"></span>
-          <span class="disciplineLabel">紅牌</span>
-        </span>
-      </button>
+      <div class="disciplineButtonsGrid" role="group" aria-label="牌卡事件">
+        <button id="yellowCardBtn" class="cardEventBtn cardEventDirect yellowDirectCardBtn" type="button" onclick="openDirectCardEvent('YELLOW_CARD')" aria-label="新增黃牌紀錄">
+          <span class="cardLabel">
+            <span class="yellowCardShape disciplineCardShape" aria-hidden="true"></span>
+            <span class="disciplineLabel">黃牌</span>
+          </span>
+        </button>
+        <button id="redCardBtn" class="cardEventBtn cardEventDirect redDirectCardBtn" type="button" onclick="openDirectCardEvent('RED_CARD')" aria-label="新增紅牌紀錄">
+          <span class="cardLabel">
+            <span class="redCardShape disciplineCardShape" aria-hidden="true"></span>
+            <span class="disciplineLabel">紅牌</span>
+          </span>
+        </button>
+      </div>
     </div>
 
     <div class="eventSubsection stateManaged eventMinorSection" id="recordSection">
@@ -6614,7 +6682,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.57</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.58</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -8747,6 +8815,18 @@ function openCardModal(){
   pendingCardEvent=null;
   byId('cardModal').classList.add('open');
 }
+function openDirectCardEvent(event){
+  if(!['YELLOW_CARD','RED_CARD'].includes(event)) return;
+  if(!state.started){ alert('請先按「開始比賽」'); return; }
+  if(state.finished){ alert('本場比賽已結束'); return; }
+  if(state.awaitingNextPeriod || state.penalty?.active){ return; }
+  pendingCardTime=elapsed();
+  pendingCardEvent=event;
+  byId('cardOurName').textContent=state.ourTeam||'我方';
+  byId('cardOppName').textContent=state.oppTeam||'對手';
+  byId('cardTeamTitle').textContent=event==='YELLOW_CARD'?'黃牌｜選擇球隊':'紅牌｜選擇球隊';
+  byId('cardTeamModal').classList.add('open');
+}
 function chooseCardType(event){
   if(!['YELLOW_CARD','RED_CARD'].includes(event)) return;
   pendingCardEvent=event;
@@ -10130,7 +10210,7 @@ function render(){
 
   // 比賽事件按鈕只在「比賽進行中」啟用。
   const eventEnabled=state.started && !state.finished && !state.awaitingNextPeriod;
-  ['goalBtn','saveBtn','shotBtn','greatPlayBtn','cardBtn'].forEach(id=>{
+  ['goalBtn','saveBtn','shotBtn','greatPlayBtn','cardBtn','yellowCardBtn','redCardBtn'].forEach(id=>{
     const btn=byId(id);
     if(btn) btn.disabled=!eventEnabled;
   });
