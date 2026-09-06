@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.50</title>
+<title>足球場邊記錄器 v4.52</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -5961,6 +5961,186 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   }
 }
 
+
+/* =========================
+   v4.51 勝方印章 + 統計卡細節 drill-down
+   ========================= */
+
+/* 勝方：以「勝」圓形印章取代 trophy，呼應使用者提供的視覺參考。
+   維持右下角、小尺寸，不遮擋隊名。 */
+.winnerBadge,
+#ourWinnerBadge,
+#oppWinnerBadge{
+  right:3px!important;
+  left:auto!important;
+  bottom:2px!important;
+  min-width:29px!important;
+  width:29px!important;
+  height:29px!important;
+  padding:0!important;
+
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:50%!important;
+
+  background:rgba(255,252,244,.98)!important;
+  border:2px solid #e51d2a!important;
+  color:#df0e20!important;
+
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif!important;
+  font-size:16px!important;
+  line-height:1!important;
+  font-weight:950!important;
+  letter-spacing:-1px!important;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.72),
+    0 3px 9px rgba(0,0,0,.24),
+    0 0 9px rgba(229,29,42,.12)!important;
+  text-shadow:none!important;
+}
+.teamNameBox.winner .teamNameDisplay{
+  color:#fff4c7!important;
+  text-shadow:0 1px 10px rgba(250,204,21,.10)!important;
+}
+
+/* 統計卡本身就是可點擊資訊卡：保留資訊面板感，新增輕量可鑽取提示。 */
+.quickResultStat{
+  -webkit-appearance:none!important;
+  appearance:none!important;
+  width:100%;
+  font-family:inherit;
+  color:inherit;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+.quickResultMore{
+  position:absolute;
+  z-index:2;
+  top:9px;
+  right:10px;
+  width:18px;
+  height:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  color:rgba(255,255,255,.72);
+  font-size:18px;
+  font-weight:700;
+  line-height:1;
+  opacity:.68;
+  transition:opacity .14s ease,transform .14s ease,background .14s ease;
+}
+.quickResultStat.hasData .quickResultMore{
+  opacity:1;
+  background:rgba(255,255,255,.13);
+  color:#fff;
+}
+.quickResultStat:active{
+  transform:scale(.975);
+  filter:brightness(1.07);
+}
+.quickResultStat:active .quickResultMore{
+  transform:translateX(1px);
+}
+
+/* 有資料的卡片只做非常輕的 accent，避免又變成 CTA 按鈕。 */
+.quickResultStat.hasData{
+  border-color:rgba(205,228,255,.38)!important;
+}
+.quickResultStat.hasData strong{
+  text-shadow:
+    0 2px 8px rgba(0,0,0,.24),
+    0 0 12px rgba(255,255,255,.08)!important;
+}
+
+/* 細節 modal 空資料狀態。 */
+.quickResultEmpty{
+  min-height:150px;
+  padding:28px 12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  text-align:center;
+  color:#91a0b6;
+  font-size:14px;
+  font-weight:800;
+}
+.quickResultEmptyIcon{
+  font-size:30px;
+  line-height:1;
+  opacity:.72;
+}
+
+/* 細節 modal 標題更適合事件 drill-down。 */
+#logModal .logModalTitle{
+  display:flex;
+  align-items:center;
+  min-width:0;
+}
+#logModal .logModalCount{
+  white-space:nowrap;
+}
+
+@media(max-width:390px){
+  .winnerBadge,
+  #ourWinnerBadge,
+  #oppWinnerBadge{
+    right:2px!important;
+    bottom:2px!important;
+    min-width:27px!important;
+    width:27px!important;
+    height:27px!important;
+    font-size:15px!important;
+  }
+  .quickResultMore{
+    top:7px;
+    right:7px;
+    width:17px;
+    height:17px;
+    font-size:17px;
+  }
+}
+
+
+/* =========================
+   v4.52 統計卡 0 筆不可進入
+   ========================= */
+
+/* 0 筆：保持資訊可讀，但明確不是可操作卡。 */
+.quickResultStat:disabled{
+  cursor:default!important;
+  pointer-events:none!important;
+  transform:none!important;
+  filter:saturate(.72) brightness(.88)!important;
+  opacity:.78!important;
+}
+.quickResultStat:disabled .quickResultMore{
+  display:none!important;
+}
+.quickResultStat:disabled strong{
+  color:#dbe4ee!important;
+  text-shadow:none!important;
+}
+.quickResultStat:disabled .quickResultLabel{
+  opacity:.82!important;
+}
+
+/* 有資料才顯示 drill-down 提示與可按狀態。 */
+.quickResultStat.hasData{
+  cursor:pointer!important;
+  opacity:1!important;
+}
+.quickResultStat.hasData .quickResultMore{
+  display:flex!important;
+}
+
 </style>
 </head>
 <body>
@@ -5969,7 +6149,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.50</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.52</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -6024,7 +6204,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
       </div>
       <div class="scoreRow">
         <div class="teamNameBox" id="ourTeamBox" onclick="editTeamName('ourTeam')">
-          <span class="winnerBadge" id="ourWinnerBadge" aria-label="獲勝" title="獲勝">🏆</span>
+          <span class="winnerBadge" id="ourWinnerBadge" aria-label="勝方" title="勝方">勝</span>
           <div class="teamNameDisplay" id="ourTeamDisplay">忠義</div>
           <input id="ourTeam" class="teamNameEditor" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱">
         </div>
@@ -6038,7 +6218,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
           <button class="scoreEdit" id="scoreEditBtn" onclick="openScoreModal()" aria-label="修正比分">✎ 修正比分</button>
         </div>
         <div class="teamNameBox" id="oppTeamBox" onclick="editTeamName('oppTeam')">
-          <span class="winnerBadge" id="oppWinnerBadge" aria-label="獲勝" title="獲勝">🏆</span>
+          <span class="winnerBadge" id="oppWinnerBadge" aria-label="勝方" title="勝方">勝</span>
           <div class="teamNameDisplay empty" id="oppTeamDisplay">對手</div>
           <input id="oppTeam" class="teamNameEditor" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="對手隊伍名稱">
         </div>
@@ -6121,22 +6301,26 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   <div class="card quickResultCard stateManaged stateHidden" id="quickResultSection" aria-hidden="true">
     <div class="quickResultTitle">本場事件統計</div>
     <div class="quickResultStats" aria-label="本場事件統計">
-      <div class="quickResultStat goalStat">
+      <button type="button" class="quickResultStat goalStat" data-event="GOAL" onclick="openQuickResultDetail('GOAL')" aria-label="查看進球細節">
+        <span class="quickResultMore" aria-hidden="true">›</span>
         <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">⚽</span><span>進球</span></span>
         <strong id="quickResultGoal">0</strong>
-      </div>
-      <div class="quickResultStat shotStat">
+      </button>
+      <button type="button" class="quickResultStat shotStat" data-event="SHOT" onclick="openQuickResultDetail('SHOT')" aria-label="查看射門細節">
+        <span class="quickResultMore" aria-hidden="true">›</span>
         <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">🥅</span><span>射門</span></span>
         <strong id="quickResultShot">0</strong>
-      </div>
-      <div class="quickResultStat saveStat">
+      </button>
+      <button type="button" class="quickResultStat saveStat" data-event="SAVE" onclick="openQuickResultDetail('SAVE')" aria-label="查看撲救細節">
+        <span class="quickResultMore" aria-hidden="true">›</span>
         <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">🧤</span><span>撲救</span></span>
         <strong id="quickResultSave">0</strong>
-      </div>
-      <div class="quickResultStat defenseStat">
+      </button>
+      <button type="button" class="quickResultStat defenseStat" data-event="DEFENSE" onclick="openQuickResultDetail('DEFENSE')" aria-label="查看防守細節">
+        <span class="quickResultMore" aria-hidden="true">›</span>
         <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">🛡️</span><span>防守</span></span>
         <strong id="quickResultDefense">0</strong>
-      </div>
+      </button>
     </div>
   </div>
 
@@ -6214,7 +6398,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.50</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.52</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -6473,7 +6657,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
 <div class="modalBack" id="logModal">
   <div class="modal logModal">
     <div class="logModalTop">
-      <div class="logModalTitle">☰ 事件紀錄</div>
+      <div class="logModalTitle" id="logModalTitle">☰ 事件紀錄</div>
       <div class="logModalCount">共 <span id="logModalCount">0</span> 筆</div>
     </div>
     <div class="logModalBody">
@@ -9063,39 +9247,63 @@ function saveScoreModal(){
   render();
 }
 
-function renderLogTo(container){
+let currentLogFilter=null;
+
+function renderLogTo(container, filterEvent=null){
   if(!container) return;
   container.innerHTML='';
+
+  let shownSeq=0;
   state.markers.forEach((m,i)=>{
+    if(filterEvent && m.event!==filterEvent) return;
+    shownSeq++;
+
     const row=document.createElement('div');
     row.className='item';
     const team=teamDisplay(m.team);
     const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
     const assist=(m.event==='GOAL' && m.assist_number)?`<span class="numberTag" style="color:#fbbf24">助攻 #${m.assist_number}</span>`:'';
+
     row.innerHTML=`
-      <div class="logSeq">第${i+1}筆</div>
+      <div class="logSeq">第${shownSeq}筆</div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
       <div class="logDetailLine"><span class="logMainText">${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}${team||m.player_number?`${team?'<span style="color:#91a0b6">'+team+'</span>':''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${m.second_yellow?'紅牌（兩黃）':eventLabel(m.event)}</b>${assist}</span></div>
       <div class="scoreSnap">${m.score_after||''}</div>
-      <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${i+1}筆紀錄">✎</button>
-      <button class="del" onclick="deleteMarker(${i})" aria-label="刪除第${i+1}筆紀錄">✕</button>
+      <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${shownSeq}筆${filterEvent?eventLabel(filterEvent):'事件'}紀錄">✎</button>
+      <button class="del" onclick="deleteMarker(${i})" aria-label="刪除第${shownSeq}筆${filterEvent?eventLabel(filterEvent):'事件'}紀錄">✕</button>
     `;
     container.appendChild(row);
   });
+
+  return shownSeq;
 }
+
 function renderLog(){
   renderLogTo(byId('log'));
 }
+
 function renderLogModal(){
-  byId('logModalCount').textContent=state.markers.length;
   const list=byId('logModalList');
-  renderLogTo(list);
-  if(!state.markers.length){
-    list.innerHTML='<div style="text-align:center;color:#91a0b6;padding:30px 10px">尚無事件紀錄</div>';
+  const filteredCount=renderLogTo(list,currentLogFilter) || 0;
+
+  byId('logModalCount').textContent=filteredCount;
+
+  const title=byId('logModalTitle');
+  if(title){
+    title.textContent=currentLogFilter
+      ? `${eventIcon(currentLogFilter)} ${eventLabel(currentLogFilter)}細節`
+      : '☰ 事件紀錄';
+  }
+
+  if(!filteredCount){
+    const emptyLabel=currentLogFilter?eventLabel(currentLogFilter):'事件';
+    list.innerHTML=`<div class="quickResultEmpty"><div class="quickResultEmptyIcon">${currentLogFilter?eventIcon(currentLogFilter):'☰'}</div><div>尚無${emptyLabel}紀錄</div></div>`;
   }
 }
+
 function openLogModal(){
   if(!state.markers.length) return;
+  currentLogFilter=null;
   syncVisualViewport();
   renderLogModal();
   document.body.style.overflow='hidden';
@@ -9104,10 +9312,27 @@ function openLogModal(){
   const body=modal.querySelector('.logModalBody');
   if(body) body.scrollTop=0;
 }
+
+function openQuickResultDetail(event){
+  if(!['GOAL','SHOT','SAVE','DEFENSE'].includes(event)) return;
+  const hasData=state.markers.some(m=>m.event===event);
+  if(!hasData) return;
+  currentLogFilter=event;
+  syncVisualViewport();
+  renderLogModal();
+  document.body.style.overflow='hidden';
+  const modal=byId('logModal');
+  modal.classList.add('open');
+  const body=modal.querySelector('.logModalBody');
+  if(body) body.scrollTop=0;
+}
+
 function closeLogModal(){
   byId('logModal').classList.remove('open');
   document.body.style.overflow='';
+  currentLogFilter=null;
 }
+
 function updateTeamNameDisplays(){
   const our=(byId('ourTeam')?.value || state.ourTeam || '').trim();
   const opp=(byId('oppTeam')?.value || state.oppTeam || '').trim();
@@ -9295,12 +9520,30 @@ function renderQuickResult(){
   const section=byId('quickResultSection');
   if(!section) return;
 
-  const countEvent=event=>state.markers.filter(m=>m.event===event).length;
-  byId('quickResultGoal').textContent=countEvent('GOAL');
-  byId('quickResultShot').textContent=countEvent('SHOT');
-  byId('quickResultSave').textContent=countEvent('SAVE');
-  byId('quickResultDefense').textContent=
-    state.markers.filter(m=>m.event==='DEFENSE').length;
+  const stats=[
+    ['GOAL','quickResultGoal','進球'],
+    ['SHOT','quickResultShot','射門'],
+    ['SAVE','quickResultSave','撲救'],
+    ['DEFENSE','quickResultDefense','防守']
+  ];
+
+  stats.forEach(([event,id,label])=>{
+    const count=state.markers.filter(m=>m.event===event).length;
+    const value=byId(id);
+    if(value) value.textContent=count;
+
+    const card=section.querySelector(`.quickResultStat[data-event="${event}"]`);
+    if(card){
+      const hasData=count>0;
+      card.classList.toggle('hasData',hasData);
+      card.disabled=!hasData;
+      card.setAttribute('aria-disabled',hasData?'false':'true');
+      card.setAttribute(
+        'aria-label',
+        hasData?`查看${label}細節，共 ${count} 筆`:`${label}目前 0 筆`
+      );
+    }
+  });
 }
 
 
