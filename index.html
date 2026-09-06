@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.55</title>
+<title>足球場邊記錄器 v4.57</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -6266,6 +6266,103 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   display:none!important;
 }
 
+
+/* =========================
+   v4.57 黃牌紅牌選擇改為真實卡牌式長方形
+   編輯 / 刪除只保留在完整「事件紀錄」
+   ========================= */
+
+/* 細節視窗移除操作欄後，把空間還給內容與比分。 */
+.logModalBody .quickDetailItem{
+  grid-template-columns:46px 72px minmax(0,1fr) 52px!important;
+  column-gap:7px!important;
+}
+
+/* 細節頁不顯示任何編輯 / 刪除操作。 */
+.logModalBody .quickDetailItem .editMarkerBtn,
+.logModalBody .quickDetailItem .del{
+  display:none!important;
+}
+
+/* 完整事件紀錄仍維持原本六欄與編輯 / 刪除功能。 */
+.logModalBody .item:not(.quickDetailItem){
+  grid-template-columns:46px 72px minmax(0,1fr) 52px 36px 26px;
+}
+
+@media(max-width:390px){
+  .logModalBody .quickDetailItem{
+    grid-template-columns:44px 68px minmax(0,1fr) 46px!important;
+    column-gap:5px!important;
+  }
+}
+
+
+
+/* =========================
+   v4.57 黃牌 / 紅牌選擇改為真實卡牌式長方形
+   保留大觸控範圍，但視覺上改成更接近足球裁判出牌的直向卡片語言。
+   ========================= */
+#cardModal .cardTypeGrid{
+  gap:12px!important;
+}
+#cardModal .cardTypeGrid .realCardChoice{
+  min-height:88px!important;
+  border-radius:16px!important;
+  padding:16px 18px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:18px!important;
+  font-size:0!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.10), inset 0 1px 0 rgba(255,255,255,.20)!important;
+}
+#cardModal .cardTypeGrid .yellowCardChoice.realCardChoice{
+  background:linear-gradient(180deg,#fff6bf 0%,#fff0a3 100%)!important;
+  border:1px solid rgba(222,179,0,.28)!important;
+  color:#201700!important;
+}
+#cardModal .cardTypeGrid .redCardChoice.realCardChoice{
+  background:linear-gradient(180deg,#ffe1e1 0%,#ffd1d1 100%)!important;
+  border:1px solid rgba(220,70,70,.26)!important;
+  color:#7d1212!important;
+}
+#cardModal .cardTypeGrid .realCardSwatch{
+  display:inline-block!important;
+  width:52px!important;
+  height:68px!important;
+  border-radius:6px!important;
+  flex:0 0 52px!important;
+  box-shadow:0 10px 20px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.35)!important;
+  border:1px solid rgba(0,0,0,.08)!important;
+}
+#cardModal .cardTypeGrid .realCardSwatch.yellow{
+  background:linear-gradient(180deg,#ffd84d 0%,#f4c400 100%)!important;
+}
+#cardModal .cardTypeGrid .realCardSwatch.red{
+  background:linear-gradient(180deg,#ff5a5a 0%,#ea3030 100%)!important;
+}
+#cardModal .cardTypeGrid .realCardText{
+  font-size:28px!important;
+  line-height:1.1!important;
+  font-weight:900!important;
+  letter-spacing:-.01em!important;
+}
+@media(max-width:420px){
+  #cardModal .cardTypeGrid .realCardChoice{
+    min-height:82px!important;
+    padding:14px 16px!important;
+    gap:14px!important;
+  }
+  #cardModal .cardTypeGrid .realCardSwatch{
+    width:46px!important;
+    height:62px!important;
+    flex-basis:46px!important;
+  }
+  #cardModal .cardTypeGrid .realCardText{
+    font-size:24px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -6274,7 +6371,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.55</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.57</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -6517,7 +6614,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.55</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.57</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -6634,8 +6731,8 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
 <div class="modalBack" id="cardModal">
   <div class="modal">
     <div class="cardTypeGrid" style="margin-top:0">
-      <button class="yellowCardChoice" type="button" onclick="chooseCardType('YELLOW_CARD')"><span>黃牌</span></button>
-      <button class="redCardChoice" type="button" onclick="chooseCardType('RED_CARD')"><span>紅牌</span></button>
+      <button class="yellowCardChoice realCardChoice" type="button" onclick="chooseCardType('YELLOW_CARD')"><span class="realCardSwatch yellow" aria-hidden="true"></span><span class="realCardText">黃牌</span></button>
+      <button class="redCardChoice realCardChoice" type="button" onclick="chooseCardType('RED_CARD')"><span class="realCardSwatch red" aria-hidden="true"></span><span class="realCardText">紅牌</span></button>
     </div>
     <button class="cancel" type="button" onclick="cancelCard()">取消</button>
   </div>
@@ -9372,24 +9469,31 @@ function renderLogTo(container, filterEvent=null){
   if(!container) return;
   container.innerHTML='';
 
+  const readOnlyDetail=Boolean(filterEvent);
   let shownSeq=0;
+
   state.markers.forEach((m,i)=>{
     if(filterEvent && m.event!==filterEvent) return;
     shownSeq++;
 
     const row=document.createElement('div');
-    row.className='item';
+    row.className=readOnlyDetail?'item quickDetailItem':'item';
+
     const team=teamDisplay(m.team);
     const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
     const assist=(m.event==='GOAL' && m.assist_number)?`<span class="numberTag" style="color:#fbbf24">助攻 #${m.assist_number}</span>`:'';
+
+    const controls=readOnlyDetail?'':`
+      <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${shownSeq}筆事件紀錄">✎</button>
+      <button class="del" onclick="deleteMarker(${i})" aria-label="刪除第${shownSeq}筆事件紀錄">✕</button>
+    `;
 
     row.innerHTML=`
       <div class="logSeq">第${shownSeq}筆</div>
       <div class="time">${fmtMMSS(m.seconds)}</div>
       <div class="logDetailLine"><span class="logMainText">${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}${team||m.player_number?`${team?'<span style="color:#91a0b6">'+team+'</span>':''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${m.second_yellow?'紅牌（兩黃）':eventLabel(m.event)}</b>${assist}</span></div>
       <div class="scoreSnap">${m.score_after||''}</div>
-      <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${shownSeq}筆${filterEvent?eventLabel(filterEvent):'事件'}紀錄">✎</button>
-      <button class="del" onclick="deleteMarker(${i})" aria-label="刪除第${shownSeq}筆${filterEvent?eventLabel(filterEvent):'事件'}紀錄">✕</button>
+      ${controls}
     `;
     container.appendChild(row);
   });
