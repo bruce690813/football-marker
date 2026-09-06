@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.54</title>
+<title>足球場邊記錄器 v4.55</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -6253,6 +6253,19 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   .scoreTile #oppWinnerBadge{ left:-8px!important; }
 }
 
+
+/* =========================
+   v4.55 本場事件統計細節開啟修正
+   ========================= */
+/* 有資料才具備輕微點擊回饋；不使用任何箭頭提示。 */
+.quickResultStat.hasData:not(:disabled){
+  -webkit-user-select:none;
+  user-select:none;
+}
+.quickResultMore{
+  display:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -6261,7 +6274,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.54</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.55</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -6504,7 +6517,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.54</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.55</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -9388,6 +9401,18 @@ function renderLog(){
   renderLogTo(byId('log'));
 }
 
+function eventIcon(event){
+  const icons={
+    GOAL:'⚽',
+    SHOT:'🥅',
+    SAVE:'🧤',
+    DEFENSE:'🛡️',
+    YELLOW_CARD:'🟨',
+    RED_CARD:'🟥'
+  };
+  return icons[event] || '•';
+}
+
 function renderLogModal(){
   const list=byId('logModalList');
   const filteredCount=renderLogTo(list,currentLogFilter) || 0;
@@ -9421,14 +9446,20 @@ function openLogModal(){
 
 function openQuickResultDetail(event){
   if(!['GOAL','SHOT','SAVE','DEFENSE'].includes(event)) return;
+
   const hasData=state.markers.some(m=>m.event===event);
   if(!hasData) return;
+
+  const modal=byId('logModal');
+  if(!modal) return;
+
   currentLogFilter=event;
   syncVisualViewport();
   renderLogModal();
+
   document.body.style.overflow='hidden';
-  const modal=byId('logModal');
   modal.classList.add('open');
+
   const body=modal.querySelector('.logModalBody');
   if(body) body.scrollTop=0;
 }
