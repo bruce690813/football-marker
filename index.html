@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.60</title>
+<title>足球場邊記錄器 v4.61</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -6532,6 +6532,208 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   min-height:44px;
 }
 
+
+/* =========================
+   v4.61 本場球員名單 10/10 UX
+   ========================= */
+#rosterModal .rosterModalPanel{
+  width:min(430px,100%);
+  max-height:min(90vh,760px);
+  padding:0!important;
+  overflow:hidden!important;
+  display:flex;
+  flex-direction:column;
+  border-radius:22px;
+  background:#f6f7fb;
+  box-shadow:0 24px 60px rgba(0,0,0,.30);
+}
+#rosterModal .rosterModalFixedHead{
+  flex:0 0 auto;
+  padding:18px 18px 12px;
+  border-bottom:1px solid #e2e8f0;
+  background:rgba(246,247,251,.97);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+#rosterModal .rosterModalFixedHead h2{
+  margin:0!important;
+}
+#rosterModal .rosterHeadHint{
+  margin-top:5px;
+  color:#64748b;
+  font-size:12px;
+  font-weight:800;
+}
+#rosterModal .rosterModalScroll{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  padding:4px 18px 16px;
+}
+#rosterModal .rosterModalFooter{
+  flex:0 0 auto;
+  padding:10px 18px calc(12px + env(safe-area-inset-bottom));
+  border-top:1px solid #dbe3ee;
+  background:rgba(246,247,251,.97);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 -10px 22px rgba(15,23,42,.06);
+}
+#rosterModal .rosterDoneBtn{
+  margin:0!important;
+  min-height:50px!important;
+}
+#rosterModal .rosterCountBadge{
+  transition:transform .18s ease,background .18s ease;
+}
+#rosterModal .rosterCountBadge.pulse{
+  animation:rosterCountPulse .22s ease-out;
+}
+@keyframes rosterCountPulse{
+  0%{transform:scale(1)}
+  45%{transform:scale(1.14)}
+  100%{transform:scale(1)}
+}
+
+#rosterModal .rosterPreviousBtn{
+  width:100%;
+  min-height:42px;
+  margin:8px 0 3px;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  background:#edf4ff;
+  border:1px solid #bfd2f3;
+  color:#244f87;
+  font-size:13px;
+  font-weight:950;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+#rosterModal .rosterPreviousBtn:active{
+  transform:scale(.985);
+  background:#e2edff;
+}
+
+#rosterModal .rosterPickerLabel{
+  margin-top:12px;
+}
+#rosterModal .rosterPresetGrid{
+  margin-bottom:4px!important;
+}
+#rosterModal .rosterPresetBtn,
+#rosterModal .rosterPresetBtn.selected{
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+}
+#rosterModal .rosterPresetBtn.selected::after{
+  content:none!important;
+  display:none!important;
+}
+
+/* 不再完整重複列出已選名單；只有非快捷背號才 progressive disclosure。 */
+#rosterModal .rosterExtraWrap{
+  margin-top:4px;
+}
+#rosterModal .rosterExtraLabel{
+  margin-top:8px;
+}
+#rosterModal .rosterExtraGrid{
+  margin:5px 0 8px!important;
+}
+#rosterModal .rosterChip{
+  min-height:42px;
+}
+
+#rosterModal .rosterOtherLabel{
+  margin-top:12px;
+}
+#rosterModal .rosterInputRow{
+  margin-top:6px;
+}
+#rosterModal .rosterInlineStatus{
+  min-height:18px;
+  margin-top:5px;
+  padding:0 2px;
+  color:#64748b;
+  font-size:11.5px;
+  font-weight:800;
+}
+#rosterModal .rosterInlineStatus.success{color:#15803d}
+#rosterModal .rosterInlineStatus.error{color:#b91c1c}
+#rosterModal .rosterInlineStatus.info{color:#475569}
+
+/* 單人取消使用 undo，而不是確認視窗。 */
+#rosterModal .rosterUndoBar{
+  display:none;
+  margin:7px 0 2px;
+  min-height:40px;
+  padding:6px 8px 6px 12px;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  border-radius:12px;
+  background:#17263a;
+  color:#f8fafc;
+  box-shadow:0 5px 14px rgba(15,23,42,.15);
+}
+#rosterModal .rosterUndoBar.show{
+  display:flex;
+}
+#rosterModal .rosterUndoBar span{
+  font-size:12.5px;
+  font-weight:850;
+}
+#rosterModal .rosterUndoBar button{
+  min-height:30px;
+  padding:5px 12px;
+  border-radius:9px;
+  background:#dbeafe;
+  color:#1d4ed8;
+  font-size:12px;
+  font-weight:950;
+}
+
+/* 清空名單降為低頻危險操作，不再佔滿一整塊粉紅色。 */
+#rosterModal .rosterUtilityRow{
+  display:flex;
+  justify-content:center;
+  margin-top:10px;
+}
+#rosterModal .rosterClearBtn{
+  width:auto!important;
+  min-height:36px!important;
+  padding:6px 13px!important;
+  border-radius:10px!important;
+  background:transparent!important;
+  border:1px solid #fecaca!important;
+  color:#b91c1c!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  box-shadow:none!important;
+}
+#rosterModal .rosterClearBtn:active{
+  background:#fff1f2!important;
+  transform:scale(.98);
+}
+
+@media(max-width:390px){
+  #rosterModal .rosterModalPanel{
+    max-height:92vh;
+  }
+  #rosterModal .rosterModalFixedHead{
+    padding:15px 14px 10px;
+  }
+  #rosterModal .rosterModalScroll{
+    padding:3px 14px 14px;
+  }
+  #rosterModal .rosterModalFooter{
+    padding-left:14px;
+    padding-right:14px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -6540,7 +6742,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.60</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.61</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -6786,7 +6988,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.60</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.61</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -6941,28 +7143,48 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
 
 <!-- Match roster modal -->
 <div class="modalBack" id="rosterModal">
-  <div class="modal">
-    <div class="rosterModalHead">
-      <h2 style="margin:0">👕 本場球員名單</h2>
+  <div class="modal rosterModalPanel">
+    <div class="rosterModalHead rosterModalFixedHead">
+      <div>
+        <h2 style="margin:0">👕 本場球員名單</h2>
+        <div class="rosterHeadHint">點一下加入，再點一次取消</div>
+      </div>
       <span class="rosterCountBadge" id="rosterCountBadge">0 人</span>
     </div>
-    <p>首頁只顯示名單人數。可直接點選常用背號加入本場名單；其他背號可一次新增 1 個。</p>
 
-    <div class="rosterPickerLabel">快速點選背號</div>
-    <div id="rosterPresetGrid" class="rosterPresetGrid"></div>
+    <div class="rosterModalScroll">
+      <button id="rosterPreviousBtn" class="rosterPreviousBtn" type="button" onclick="applyPreviousRoster()" style="display:none">
+        ↻ 沿用上一場名單
+      </button>
 
-    <div class="rosterPickerLabel">已選本場名單</div>
-    <div id="rosterGrid" class="rosterGrid"></div>
-    <div id="rosterEmpty" class="rosterEmpty">尚未設定本場球員名單</div>
+      <div class="rosterPickerLabel">快速點選背號</div>
+      <div id="rosterPresetGrid" class="rosterPresetGrid"></div>
 
-    <div class="rosterInputRow">
-      <input id="rosterInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="其他背號 1–99" aria-label="新增單一球員背號">
-      <button class="rosterAddBtn" type="button" onclick="addRosterNumbers()">＋ 新增</button>
+      <div id="rosterUndoBar" class="rosterUndoBar" role="status" aria-live="polite">
+        <span id="rosterUndoText">已移除球員</span>
+        <button type="button" onclick="undoRosterRemoval()">復原</button>
+      </div>
+
+      <div id="rosterExtraWrap" class="rosterExtraWrap" style="display:none">
+        <div class="rosterPickerLabel rosterExtraLabel">其他已選</div>
+        <div id="rosterGrid" class="rosterGrid rosterExtraGrid"></div>
+      </div>
+
+      <div class="rosterPickerLabel rosterOtherLabel">其他背號</div>
+      <div class="rosterInputRow">
+        <input id="rosterInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="其他背號 1–99" aria-label="新增單一球員背號">
+        <button class="rosterAddBtn" type="button" onclick="addRosterNumbers()">＋ 新增</button>
+      </div>
+      <div id="rosterInlineStatus" class="rosterInlineStatus" aria-live="polite"></div>
+
+      <div class="rosterUtilityRow">
+        <button class="rosterClearBtn" type="button" onclick="clearRoster()">↻ 清空名單</button>
+      </div>
     </div>
-    <div class="rosterFooterActions">
-<button class="rosterClearBtn" type="button" onclick="clearRoster()">清空名單</button>
+
+    <div class="rosterModalFooter">
+      <button class="rosterDoneBtn" type="button" onclick="closeRosterModal()">完成</button>
     </div>
-    <button class="rosterDoneBtn" type="button" onclick="closeRosterModal()">完成</button>
   </div>
 </div>
 
@@ -8066,21 +8288,48 @@ function rememberCurrentRosterAsPrevious(){
   if(roster.length) localStorage.setItem(LAST_ROSTER_KEY,JSON.stringify(roster));
 }
 
+let lastRosterRenderedCount=null;
+let rosterUndoNumber=null;
+let rosterUndoTimer=null;
+
+function setRosterInlineStatus(message='',tone=''){
+  const el=byId('rosterInlineStatus');
+  if(!el) return;
+  el.textContent=message;
+  el.className=`rosterInlineStatus${tone?` ${tone}`:''}`;
+}
+
+function pulseRosterCount(){
+  const badge=byId('rosterCountBadge');
+  if(!badge) return;
+  badge.classList.remove('pulse');
+  void badge.offsetWidth;
+  badge.classList.add('pulse');
+  setTimeout(()=>badge.classList.remove('pulse'),220);
+}
+
 function renderRosterModal(){
   const roster=currentRosterNumbers();
   const presetGrid=byId('rosterPresetGrid');
   const grid=byId('rosterGrid');
-  const empty=byId('rosterEmpty');
+  const extraWrap=byId('rosterExtraWrap');
   const badge=byId('rosterCountBadge');
+  const previousBtn=byId('rosterPreviousBtn');
 
-  if(badge) badge.textContent=`${roster.length} 人`;
-  if(empty) empty.style.display=roster.length?'none':'block';
+  if(badge){
+    badge.textContent=`${roster.length} 人`;
+    if(lastRosterRenderedCount!==null && lastRosterRenderedCount!==roster.length){
+      pulseRosterCount();
+    }
+  }
+  lastRosterRenderedCount=roster.length;
 
-  // v4.60：恢復既有且較直覺的切換操作。
-  // 快捷背號：點一下加入；已選背號再點一下直接移除。
+  const quickNumbers=allCommonNumbers();
+
+  // 快捷背號就是主要名單控制器：點一下加入，再點一次取消。
   if(presetGrid){
     presetGrid.innerHTML='';
-    allCommonNumbers().forEach(n=>{
+    quickNumbers.forEach(n=>{
       const selected=roster.includes(n);
       const btn=document.createElement('button');
       btn.type='button';
@@ -8093,9 +8342,14 @@ function renderRosterModal(){
     });
   }
 
+  // Progressive disclosure：
+  // 只有目前名單裡「尚未出現在快捷列表」的背號才另外顯示 chip。
+  const quickSet=new Set(quickNumbers);
+  const extraNumbers=roster.filter(n=>!quickSet.has(n));
+
   if(grid){
     grid.innerHTML='';
-    roster.forEach(n=>{
+    extraNumbers.forEach(n=>{
       const btn=document.createElement('button');
       btn.type='button';
       btn.className='rosterChip';
@@ -8105,7 +8359,22 @@ function renderRosterModal(){
       grid.appendChild(btn);
     });
   }
+  if(extraWrap) extraWrap.style.display=extraNumbers.length?'block':'none';
 
+  // 「沿用上一場」只在真的有上一場名單、且和目前不同時才顯示。
+  if(previousBtn){
+    const previous=getPreviousRoster();
+    const same=
+      previous.length===roster.length &&
+      previous.every((n,i)=>n===roster[i]);
+
+    if(previous.length && !same){
+      previousBtn.style.display='flex';
+      previousBtn.textContent=`↻ 沿用上一場名單 ${previous.length} 人`;
+    }else{
+      previousBtn.style.display='none';
+    }
+  }
 }
 
 function openRosterModal(){
@@ -8113,6 +8382,9 @@ function openRosterModal(){
     alert('本場比賽已結束，球員名單已鎖定。');
     return;
   }
+  hideRosterUndo();
+  setRosterInlineStatus('');
+  lastRosterRenderedCount=null;
   renderRosterModal();
   const input=byId('rosterInput');
   if(input) input.value='';
@@ -8120,7 +8392,7 @@ function openRosterModal(){
 }
 
 function closeRosterModal(){
-  rememberCurrentRosterAsPrevious();
+  hideRosterUndo();
   saveState();
   render();
   byId('rosterModal').classList.remove('open');
@@ -8140,25 +8412,37 @@ function addRosterNumbers(){
 
   const number=parseRosterNumber(input.value);
   if(number===null){
-    alert('請輸入 1～99 的單一球員背號。');
-    input.value='';
+    setRosterInlineStatus('請輸入 1～99 的球員背號。','error');
     input.focus();
     return;
   }
 
-  const roster=currentRosterNumbers();
-  if(!roster.includes(number)){
-    state.rosterNumbers=[...roster,number].sort((a,b)=>a-b);
-    rememberPlayerNumber(number);
-    rememberCurrentRosterAsPrevious();
-    buildNumberGrid();
-    buildKeeperGrid();
-    saveState();
-    renderRosterModal();
+  const redOut=redCardedPlayerNumbers('OUR');
+  if(redOut.has(String(number))){
+    setRosterInlineStatus(`#${number} 已紅牌退場，不能加入本場名單。`,'error');
+    input.value='';
+    return;
   }
 
-  // 一次新增一個背號；加入後清空欄位並維持數字鍵盤，
-  // 下一位球員可直接繼續輸入，不需要逗號或分隔符號。
+  const roster=currentRosterNumbers();
+  if(roster.includes(number)){
+    setRosterInlineStatus(`#${number} 已在本場名單中。`,'info');
+    input.value='';
+    return;
+  }
+
+  hideRosterUndo();
+  state.rosterNumbers=[...roster,number].sort((a,b)=>a-b);
+  rememberPlayerNumber(number);
+  buildNumberGrid();
+  buildKeeperGrid();
+  saveState();
+
+  setRosterInlineStatus(`已加入 #${number}`,'success');
+  renderRosterModal();
+  render();
+  byId('rosterModal')?.classList.add('open');
+
   input.value='';
   setTimeout(()=>{
     const nextInput=byId('rosterInput');
@@ -8169,26 +8453,68 @@ function addRosterNumbers(){
   },0);
 }
 
+function showRosterUndo(number){
+  clearTimeout(rosterUndoTimer);
+  rosterUndoNumber=Number(number);
+  const bar=byId('rosterUndoBar');
+  const txt=byId('rosterUndoText');
+  if(txt) txt.textContent=`已移除 #${rosterUndoNumber}`;
+  if(bar) bar.classList.add('show');
+  rosterUndoTimer=setTimeout(()=>hideRosterUndo(),3600);
+}
+
+function hideRosterUndo(){
+  clearTimeout(rosterUndoTimer);
+  rosterUndoTimer=null;
+  rosterUndoNumber=null;
+  byId('rosterUndoBar')?.classList.remove('show');
+}
+
+function undoRosterRemoval(){
+  const n=Number(rosterUndoNumber);
+  if(!Number.isInteger(n) || n<1 || n>99) return;
+
+  const roster=currentRosterNumbers();
+  if(!roster.includes(n)){
+    state.rosterNumbers=[...roster,n].sort((a,b)=>a-b);
+    rememberPlayerNumber(n);
+    buildNumberGrid();
+    buildKeeperGrid();
+    saveState();
+  }
+
+  hideRosterUndo();
+  setRosterInlineStatus(`已復原 #${n}`,'success');
+  renderRosterModal();
+  render();
+  byId('rosterModal')?.classList.add('open');
+}
+
 function toggleRosterNumber(number){
   if(state.finished) return;
   const n=Number(number);
   if(!Number.isInteger(n) || n<1 || n>99) return;
 
   const roster=currentRosterNumbers();
+  setRosterInlineStatus('');
+
   if(roster.includes(n)){
     state.rosterNumbers=roster.filter(v=>v!==n);
+    showRosterUndo(n);
   }else{
+    const redOut=redCardedPlayerNumbers('OUR');
+    if(redOut.has(String(n))){
+      setRosterInlineStatus(`#${n} 已紅牌退場，不能加入本場名單。`,'error');
+      return;
+    }
+    hideRosterUndo();
     state.rosterNumbers=[...roster,n].sort((a,b)=>a-b);
     rememberPlayerNumber(n);
   }
 
-  rememberCurrentRosterAsPrevious();
   buildNumberGrid();
   buildKeeperGrid();
   saveState();
-
-  // 先同步名單視窗，再同步背景首頁人數。
-  // 保留 modal 開啟狀態，避免 iPhone Safari 操作後出現視覺不同步。
   renderRosterModal();
   render();
   byId('rosterModal')?.classList.add('open');
@@ -8199,6 +8525,8 @@ function removeRosterNumber(number){
   const n=Number(number);
   state.rosterNumbers=currentRosterNumbers().filter(v=>v!==n);
 
+  showRosterUndo(n);
+  setRosterInlineStatus('');
   buildNumberGrid();
   buildKeeperGrid();
   saveState();
@@ -8212,22 +8540,49 @@ function clearRoster(){
 
   const roster=currentRosterNumbers();
   if(!roster.length){
-    renderRosterModal();
+    setRosterInlineStatus('目前名單已是空的。','info');
     return;
   }
 
-  if(!confirm('確定要清空本場球員名單嗎？')) return;
+  if(!confirm(`確定清空目前 ${roster.length} 位球員嗎？`)) return;
 
-  // 明確清空資料並立即同步所有依賴名單的 UI。
+  hideRosterUndo();
   state.rosterNumbers=[];
   buildNumberGrid();
   buildKeeperGrid();
   saveState();
 
+  setRosterInlineStatus('本場名單已清空。','info');
   renderRosterModal();
   render();
+  byId('rosterModal')?.classList.add('open');
+}
 
-  // render() 後保證名單 modal 仍維持開啟，避免 Safari 看起來像按鈕沒反應。
+function applyPreviousRoster(){
+  if(state.finished) return;
+
+  const previous=getPreviousRoster();
+  if(!previous.length){
+    setRosterInlineStatus('目前沒有可沿用的上一場名單。','info');
+    return;
+  }
+
+  const current=currentRosterNumbers();
+  if(current.length && !confirm(`以「上一場 ${previous.length} 人」取代目前 ${current.length} 人名單嗎？`)){
+    return;
+  }
+
+  hideRosterUndo();
+  previous.forEach(rememberPlayerNumber);
+  state.rosterNumbers=[...previous];
+
+  buildNumberGrid();
+  buildKeeperGrid();
+  saveState();
+
+  setRosterInlineStatus(`已沿用上一場 ${previous.length} 人名單。`,'success');
+  renderRosterModal();
+  render();
   byId('rosterModal')?.classList.add('open');
 }
 
@@ -8836,6 +9191,7 @@ function confirmFinishFull(){
   state.endEpoch=pendingFinishEnd;
   state.started=false;
   state.finished=true;
+  rememberCurrentRosterAsPrevious();
   timeExpanded=false;
   state.awaitingNextPeriod=false;
   state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
