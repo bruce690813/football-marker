@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.61</title>
+<title>足球場邊記錄器 v4.64</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -6734,6 +6734,248 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   }
 }
 
+
+/* =========================
+   v4.62 賽前狀態 10/10 精修
+   核心：層級更清楚、狀態更輕、主 CTA 更明確，
+   同時維持開始比賽前後的版面骨架穩定，避免跳動。
+   ========================= */
+
+/* 1. 品牌 Header 與操作卡拉開一點距離，建立清楚的兩層架構。 */
+body.matchStatePre .titleBlock{
+  margin-bottom:11px!important;
+}
+
+/* 2. 賽前狀態膠囊視覺縮扁，但外層 broadcastBar 高度維持不變，
+      因此按下開始後不會因 LIVE 狀態切換造成整張卡明顯跳動。 */
+body.matchStatePre .broadcastStage.pre{
+  min-height:37px!important;
+  padding:4px 12px!important;
+  background:linear-gradient(180deg,rgba(77,93,116,.90) 0%,rgba(52,65,86,.92) 100%)!important;
+  border-color:rgba(203,213,225,.25)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    0 3px 10px rgba(0,0,0,.14)!important;
+}
+body.matchStatePre .broadcastStage.pre .stageLabel{
+  font-size:16px!important;
+  font-weight:950!important;
+  letter-spacing:.35px!important;
+}
+
+/* 3. 重設降到 tertiary action：保留可發現性，但不與「賽前」或開始比賽搶焦點。 */
+body.matchStatePre .preResetBtn{
+  right:10px!important;
+  min-width:auto!important;
+  min-height:25px!important;
+  padding:2px 6px!important;
+  border:1px solid rgba(203,213,225,.13)!important;
+  border-radius:7px!important;
+  background:rgba(15,23,42,.10)!important;
+  color:rgba(226,232,240,.68)!important;
+  font-size:10.8px!important;
+  font-weight:820!important;
+  opacity:.82!important;
+  box-shadow:none!important;
+}
+body.matchStatePre .preResetBtn:active{
+  transform:translateY(-50%) scale(.96)!important;
+  background:rgba(51,65,85,.34)!important;
+  border-color:rgba(203,213,225,.24)!important;
+  color:#f1f5f9!important;
+  opacity:1!important;
+}
+
+/* 4. 賽前比分是「初始資訊」，再降低一點發光感，保留清晰但不搶主 CTA。 */
+body.matchStatePre .scoreTile{
+  color:#d5e0ec!important;
+  border-color:rgba(129,158,190,.30)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    inset 0 -1px 0 rgba(0,0,0,.28),
+    0 3px 9px rgba(0,0,0,.13)!important;
+}
+body.matchStatePre .scoreColon{
+  color:rgba(177,193,210,.47)!important;
+}
+
+/* 5. 賽前唯一主要 CTA：開始比賽。
+      保留既有 teal 系統，但增加非常克制的層次與戶外辨識度。 */
+body.matchStatePre #startBtn:not(:disabled){
+  background:linear-gradient(180deg,#18b5a6 0%,#109b90 100%)!important;
+  border-color:rgba(91,231,214,.34)!important;
+  color:#ffffff!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 5px 14px rgba(15,159,143,.18)!important;
+}
+body.matchStatePre #startBtn:not(:disabled):active{
+  transform:scale(.985);
+  filter:brightness(1.04);
+}
+
+/* 比賽結束在賽前不可用，降低存在感，避免與開始比賽形成兩個 CTA。 */
+body.matchStatePre #finishBtn:disabled{
+  background:linear-gradient(180deg,rgba(55,65,81,.72) 0%,rgba(45,55,68,.78) 100%)!important;
+  border-color:rgba(148,163,184,.12)!important;
+  color:rgba(203,213,225,.48)!important;
+  box-shadow:none!important;
+  opacity:.76!important;
+}
+
+/* 6. 賽前時間紀錄仍可展開，但預設標題列再輕一點，
+      讓視線順序維持：賽前 → 0:0 → 開始比賽。 */
+body.matchStatePre .timeSummary:not(.open){
+  background:rgba(13,21,34,.92)!important;
+  border-color:rgba(83,105,132,.38)!important;
+}
+body.matchStatePre .timeSummary:not(.open) .timeTitle{
+  color:#edf4fb!important;
+}
+body.matchStatePre .timeSummary:not(.open) .timeToggle{
+  background:rgba(39,55,76,.78)!important;
+  border-color:rgba(148,163,184,.12)!important;
+}
+
+/* 7. 主卡下緣與足球場留白之間保持乾淨，不再額外塞資訊。 */
+body.matchStatePre .matchCard{
+  margin-bottom:10px!important;
+}
+
+/* 小尺寸 iPhone：保留同樣層級，但不犧牲觸控尺寸。 */
+@media(max-width:390px){
+  body.matchStatePre .titleBlock{
+    margin-bottom:9px!important;
+  }
+  body.matchStatePre .broadcastStage.pre{
+    min-height:36px!important;
+    padding:4px 10px!important;
+  }
+  body.matchStatePre .broadcastStage.pre .stageLabel{
+    font-size:15.5px!important;
+  }
+  body.matchStatePre .preResetBtn{
+    right:8px!important;
+    min-height:25px!important;
+    padding:2px 5px!important;
+    font-size:10.5px!important;
+  }
+}
+
+
+/* =========================
+   v4.63 四狀態一致性收尾
+   賽前 / 比賽中 / 中場 / 全場
+   ========================= */
+
+/* 1. 全場勝方印章移到比分框「外側」，
+      不再壓住分數，也不靠近中間冒號。 */
+.scoreTile #ourWinnerBadge{
+  left:-11px!important;
+  right:auto!important;
+  bottom:-10px!important;
+}
+.scoreTile #oppWinnerBadge{
+  right:-11px!important;
+  left:auto!important;
+  bottom:-10px!important;
+}
+
+/* 2. 四種主狀態的主卡與下一模組間距統一。
+      賽前下一模組會被隱藏，因此只保留很輕的呼吸空間。 */
+body.matchStatePre .matchCard,
+body.matchStateLive .matchCard,
+body.matchStateHalftime .matchCard,
+body.matchStateExtraWait .matchCard,
+body.resultMode .matchCard{
+  margin-bottom:6px!important;
+}
+
+/* 3. 中場 / 等待延長賽 / 全場狀態列採相同的資訊密度，
+      讓狀態切換時文字重量不突然變化。 */
+body.matchStateHalftime .broadcastStage.halftime,
+body.matchStateExtraWait .broadcastStage.halftime,
+body.resultMode .broadcastStage.full{
+  min-height:50px!important;
+  padding-top:7px!important;
+  padding-bottom:7px!important;
+}
+body.matchStateHalftime .broadcastStage.halftime .stageLabel,
+body.matchStateExtraWait .broadcastStage.halftime .stageLabel,
+body.resultMode .broadcastStage.full .stageLabel{
+  font-weight:950!important;
+  letter-spacing:.20px!important;
+}
+
+/* 4. 中場「開始下半場」與賽前「開始比賽」使用同一 CTA 語言。 */
+body.matchStateHalftime #startBtn:not(:disabled),
+body.matchStateExtraWait #startBtn:not(:disabled){
+  background:linear-gradient(180deg,#18b5a6 0%,#109b90 100%)!important;
+  border-color:rgba(91,231,214,.34)!important;
+  color:#fff!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.15),
+    0 5px 14px rgba(15,159,143,.16)!important;
+}
+
+/* 5. Record-only（中場）與 Result record（全場）
+      使用相同的單列資訊節奏。 */
+#eventHubSection.recordOnly{
+  border-radius:20px!important;
+}
+#eventHubSection.recordOnly #recordSection .recordFullBtn{
+  min-height:44px!important;
+}
+
+/* 6. 全場輸出區與上方統計保持固定節奏，避免工具列看起來黏住。 */
+body.resultMode .quickResultCard{
+  margin-bottom:6px!important;
+}
+body.resultMode #eventHubSection{
+  margin-bottom:10px!important;
+}
+body.resultMode .finalToolsCard{
+  margin-top:6px!important;
+}
+
+/* 小尺寸 iPhone 微調 */
+@media(max-width:390px){
+  .scoreTile #ourWinnerBadge{
+    left:-9px!important;
+    right:auto!important;
+    bottom:-9px!important;
+  }
+  .scoreTile #oppWinnerBadge{
+    right:-9px!important;
+    left:auto!important;
+    bottom:-9px!important;
+  }
+}
+
+
+/* =========================
+   v4.64 QA 收尾
+   勝方印章再往比分框外側移，完全避開比分字形。
+   ========================= */
+.scoreTile #ourWinnerBadge{
+  left:-19px!important;
+  right:auto!important;
+}
+.scoreTile #oppWinnerBadge{
+  right:-19px!important;
+  left:auto!important;
+}
+@media(max-width:390px){
+  .scoreTile #ourWinnerBadge{
+    left:-17px!important;
+    right:auto!important;
+  }
+  .scoreTile #oppWinnerBadge{
+    right:-17px!important;
+    left:auto!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -6742,7 +6984,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.61</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.64</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -6988,7 +7230,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.61</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.64</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
