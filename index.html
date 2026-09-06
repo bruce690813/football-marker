@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.69</title>
+<title>足球場邊記錄器 v4.70</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -7222,7 +7222,7 @@ body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
 
 
 /* =========================
-   v4.69 iPhone Safari 全場底部 Safe Area QA
+   v4.70 iPhone Safari 全場底部 Safe Area QA
    目的：
    1. 滑到頁面最底時，「＋ 新比賽」可完整露出
    2. 按鈕底部與 Safari 工具列至少保留約 16px 的視覺安全距離
@@ -7285,7 +7285,7 @@ html{
 }
 
 
-/* v4.69 QA 補強：iPhone SE / 4.7 吋級 320～375px */
+/* v4.70 QA 補強：iPhone SE / 4.7 吋級 320～375px */
 @media(max-width:375px){
   body.resultMode.finalOutputVisible{
     --result-bottom-safe-tail:
@@ -7294,12 +7294,68 @@ html{
 }
 
 
-/* v4.69 QA 補強：高度較短的 iPhone（例如 Plus 414×736） */
-@media(max-height:760px){
+/* =========================
+   v4.70 全場「＋ 新比賽」Safari 可視區修正
+   這版不只增加頁尾空間，而是：
+   1. 全場工具區稍微 compact，減少垂直佔用
+   2. 保留可捲動 Safe Area
+   3. 進入全場時，若 Safari 工具列仍壓住「＋ 新比賽」，
+      自動只捲動必要距離，把整顆按鈕抬到可視安全區
+   ========================= */
+
+@media(max-width:430px){
+  /* 全場統計稍微收斂，不改資訊層級，只回收約 10～14px 高度。 */
+  body.resultMode.finalOutputVisible .quickResultCard{
+    padding:11px 12px 12px!important;
+  }
+  body.resultMode.finalOutputVisible .quickResultTitle{
+    margin-bottom:9px!important;
+  }
+  body.resultMode.finalOutputVisible .quickResultStat{
+    min-height:84px!important;
+    padding:10px 6px 9px!important;
+  }
+
+  /* 三顆輸出工具維持 >=44px 觸控高度，但縮小不必要的上下空白。 */
+  body.resultMode.finalOutputVisible .finalToolsCard{
+    padding:6px!important;
+    margin-top:5px!important;
+    margin-bottom:0!important;
+  }
+  body.resultMode.finalOutputVisible .toolGrid.finalTools{
+    gap:6px!important;
+  }
+  body.resultMode.finalOutputVisible .toolGrid.finalTools button{
+    min-height:44px!important;
+    padding:7px 5px!important;
+    font-size:14px!important;
+  }
+
+  /* 新比賽維持主要 CTA，最低仍有 48px。 */
+  body.resultMode.finalOutputVisible .resultNewMatchBtn{
+    min-height:48px!important;
+    margin-top:7px!important;
+    padding:9px 14px!important;
+  }
+
+  /* 手動滑到底時仍保有足夠真實文件流空間。 */
   body.resultMode.finalOutputVisible{
     --result-bottom-safe-tail:
-      max(220px, calc(var(--browser-bottom-gap, 0px) + 48px));
+      max(196px, calc(var(--browser-bottom-gap,0px) + 56px));
   }
+}
+
+@media(max-width:390px){
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(208px, calc(var(--browser-bottom-gap,0px) + 60px));
+  }
+}
+
+/* 自動抬升後若使用者再手動捲動，仍保留安全落點。 */
+body.resultMode.finalOutputVisible .resultNewMatchBtn{
+  scroll-margin-bottom:
+    calc(max(92px, var(--browser-bottom-gap,0px) + 28px) + env(safe-area-inset-bottom))!important;
 }
 
 </style>
@@ -7310,7 +7366,7 @@ html{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.69</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.70</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -7556,7 +7612,7 @@ html{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.69</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.70</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -11132,6 +11188,72 @@ function renderRegulationTimeAlert(){
   }
 }
 
+
+/* =========================
+   v4.70 Safari 全場 CTA 自動可視修正
+   ========================= */
+let resultActionRevealKey='';
+let resultActionRevealTimerA=0;
+let resultActionRevealTimerB=0;
+
+function ensureResultNewMatchVisible(){
+  if(!state.finished) return;
+
+  const btn=byId('resultNewMatchBtn');
+  if(!btn) return;
+
+  syncVisualViewport();
+
+  const vv=window.visualViewport;
+  const layoutH=window.innerHeight || document.documentElement.clientHeight || 0;
+  const vvBottom=vv ? (Number(vv.offsetTop||0) + Number(vv.height||0)) : layoutH;
+
+  /* iOS Safari 有些狀態不會把底部工具列反映在 visualViewport。
+     因此 iPhone / 小型 touch viewport 採 72px 保守 fallback。
+     只用於「判斷按鈕是否被遮住」，不永久占畫面。 */
+  const ua=String(navigator.userAgent||'');
+  const iphone=/iPhone|iPod/i.test(ua);
+  const touch=('ontouchstart' in window) || Number(navigator.maxTouchPoints||0)>0;
+  const smallTouch=touch && window.innerWidth<=430;
+  const fallbackToolbar=(iphone || smallTouch) ? 72 : 0;
+
+  const fallbackBottom=Math.max(0,layoutH-fallbackToolbar);
+  const safeBottom=Math.min(vvBottom || layoutH, fallbackBottom || layoutH)-16;
+
+  const rect=btn.getBoundingClientRect();
+  const hidden=Math.ceil(rect.bottom-safeBottom);
+
+  if(hidden>0){
+    /* 只捲「真正被遮住的距離 + 8px」，避免頁面跳太多。 */
+    window.scrollBy({
+      top:hidden+8,
+      left:0,
+      behavior:'smooth'
+    });
+  }
+}
+
+function scheduleResultNewMatchReveal(){
+  if(!state.finished){
+    resultActionRevealKey='';
+    clearTimeout(resultActionRevealTimerA);
+    clearTimeout(resultActionRevealTimerB);
+    return;
+  }
+
+  const key=String(state.endEpoch || state.finalElapsed || 'finished');
+  if(resultActionRevealKey===key) return;
+  resultActionRevealKey=key;
+
+  clearTimeout(resultActionRevealTimerA);
+  clearTimeout(resultActionRevealTimerB);
+
+  /* 第一次：DOM / 字型完成後；
+     第二次：Safari 動態底部工具列或 smooth scroll 改變 viewport 後再校正一次。 */
+  resultActionRevealTimerA=setTimeout(ensureResultNewMatchVisible,140);
+  resultActionRevealTimerB=setTimeout(ensureResultNewMatchVisible,520);
+}
+
 function render(){
   updateTeamNameDisplays();
   const ourScoreEl=byId('ourScore');
@@ -11322,6 +11444,7 @@ function render(){
   syncRegulationInputsFromState();
   renderTimeBox();
   renderLog();
+  scheduleResultNewMatchReveal();
 }
 
 function openAboutModal(){
