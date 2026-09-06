@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.67</title>
+<title>足球場邊記錄器 v4.68</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -7194,6 +7194,32 @@ body.matchStateHalftime #finishBtn:disabled{
   }
 }
 
+
+/* =========================
+   v4.68 中場事件紀錄間距修正
+   問題：v4.67 為了壓縮中場高度，record-only 使用 margin-top:-4px，
+   實機上造成事件紀錄卡與主比分卡視覺上黏住／像重疊。
+   修正：改為明確 8px 外部間距；內部仍維持 compact。
+   ========================= */
+
+body.matchStateHalftime #eventHubSection.recordOnly{
+  margin-top:8px!important;
+  padding-top:4px!important;
+  padding-bottom:7px!important;
+}
+
+body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
+  margin-top:0!important;
+  padding-top:0!important;
+}
+
+/* 其他狀態不動，避免破壞 v4.67 已完成的視覺平衡。 */
+@media(max-width:390px){
+  body.matchStateHalftime #eventHubSection.recordOnly{
+    margin-top:8px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -7202,7 +7228,7 @@ body.matchStateHalftime #finishBtn:disabled{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.67</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.68</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -7448,7 +7474,7 @@ body.matchStateHalftime #finishBtn:disabled{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.67</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.68</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
