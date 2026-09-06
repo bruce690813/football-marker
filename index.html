@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.68</title>
+<title>足球場邊記錄器 v4.69</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -7220,6 +7220,88 @@ body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
   }
 }
 
+
+/* =========================
+   v4.69 iPhone Safari 全場底部 Safe Area QA
+   目的：
+   1. 滑到頁面最底時，「＋ 新比賽」可完整露出
+   2. 按鈕底部與 Safari 工具列至少保留約 16px 的視覺安全距離
+   3. 不改動賽前 / 比賽中 / 中場 / 下半場版面
+   ========================= */
+
+/* 用單一 token 管理「全場結果頁的真實尾端安全空間」。
+   --browser-bottom-gap 由 visualViewport 即時更新；
+   固定 fallback 用來處理部分 iOS Safari 無法正確回報工具列高度的情況。 */
+body.resultMode.finalOutputVisible{
+  --result-bottom-safe-tail:
+    max(156px, calc(var(--browser-bottom-gap, 0px) + 32px));
+}
+
+/* iPhone 主流寬度：多留一點，確保 compact / expanded bottom bar 切換後仍可完整捲出。 */
+@media(max-width:430px){
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(168px, calc(var(--browser-bottom-gap, 0px) + 36px));
+  }
+}
+
+/* 較窄 iPhone（SE / 12 mini 等）工具列佔畫面比例較高，再增加少量安全尾端。 */
+@media(max-width:390px){
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(176px, calc(var(--browser-bottom-gap, 0px) + 40px));
+  }
+}
+
+/* 真正存在文件流中的尾端 spacer。
+   不使用 fixed footer，因此不會壓住「＋ 新比賽」。 */
+body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+  display:block!important;
+  height:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+  min-height:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+}
+
+/* 讓手動捲到底、scrollIntoView、鍵盤/工具列高度切換都有相同安全規則。 */
+body.resultMode.finalOutputVisible .wrap{
+  padding-bottom:calc(12px + env(safe-area-inset-bottom))!important;
+  scroll-padding-bottom:
+    calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+}
+
+body.resultMode .resultNewMatchBtn{
+  scroll-margin-bottom:
+    calc(var(--result-bottom-safe-tail, 156px) + env(safe-area-inset-bottom))!important;
+  margin-bottom:0!important;
+}
+
+/* 最後一顆 CTA 與 spacer 之間保留明確但不浪費空間的 16px 呼吸距離。 */
+body.resultMode.finalOutputVisible .finalToolsCard{
+  margin-bottom:16px!important;
+}
+
+/* Safari 動態工具列展開 / 收合時，避免捲動錨點被頂回工具列後面。 */
+html{
+  overflow-anchor:none;
+}
+
+
+/* v4.69 QA 補強：iPhone SE / 4.7 吋級 320～375px */
+@media(max-width:375px){
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(200px, calc(var(--browser-bottom-gap, 0px) + 44px));
+  }
+}
+
+
+/* v4.69 QA 補強：高度較短的 iPhone（例如 Plus 414×736） */
+@media(max-height:760px){
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(220px, calc(var(--browser-bottom-gap, 0px) + 48px));
+  }
+}
+
 </style>
 </head>
 <body>
@@ -7228,7 +7310,7 @@ body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.68</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.69</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -7474,7 +7556,7 @@ body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.68</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.69</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
