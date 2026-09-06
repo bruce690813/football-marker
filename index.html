@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.58</title>
+<title>足球場邊記錄器 v4.60</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -6268,7 +6268,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
 
 
 /* =========================
-   v4.58 黃牌紅牌選擇改為真實卡牌式長方形
+   v4.59 黃牌紅牌選擇改為真實卡牌式長方形
    編輯 / 刪除只保留在完整「事件紀錄」
    ========================= */
 
@@ -6299,7 +6299,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
 
 
 /* =========================
-   v4.58 黃牌 / 紅牌選擇改為真實卡牌式長方形
+   v4.59 黃牌 / 紅牌選擇改為真實卡牌式長方形
    保留大觸控範圍，但視覺上改成更接近足球裁判出牌的直向卡片語言。
    ========================= */
 #cardModal .cardTypeGrid{
@@ -6365,7 +6365,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
 
 
 /* =========================
-   v4.58 主畫面拆分黃牌 / 紅牌獨立按鈕
+   v4.59 主畫面拆分黃牌 / 紅牌獨立按鈕
    目的：縮短流程、讓主畫面互動與四個事件按鈕一致。
    ========================= */
 #eventHubSection #disciplineSection .disciplineButtonsGrid{
@@ -6428,6 +6428,110 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   }
 }
 
+
+
+/* =========================
+   v4.59 黃牌 / 紅牌：中性深色玻璃按鈕
+   不再使用黃 / 紅大面積底色；顏色只保留在真實牌卡圖示。
+   ========================= */
+#eventHubSection #disciplineSection .disciplineButtonsGrid{
+  gap:10px!important;
+}
+#eventHubSection #disciplineSection .cardEventBtn.cardEventDirect{
+  min-height:50px!important;
+  padding:8px 12px!important;
+  border-radius:15px!important;
+  background:
+    linear-gradient(180deg,rgba(29,49,69,.80) 0%,rgba(12,28,43,.88) 100%)!important;
+  border:1px solid rgba(135,175,208,.30)!important;
+  color:#f4f8fc!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    inset 0 -1px 0 rgba(255,255,255,.025),
+    0 5px 14px rgba(0,0,0,.20)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(125%);
+  backdrop-filter:blur(14px) saturate(125%);
+}
+#eventHubSection #disciplineSection .yellowDirectCardBtn,
+#eventHubSection #disciplineSection .redDirectCardBtn{
+  background:
+    linear-gradient(180deg,rgba(29,49,69,.80) 0%,rgba(12,28,43,.88) 100%)!important;
+  border-color:rgba(135,175,208,.30)!important;
+}
+#eventHubSection #disciplineSection .yellowDirectCardBtn .disciplineLabel,
+#eventHubSection #disciplineSection .redDirectCardBtn .disciplineLabel{
+  color:#f4f8fc!important;
+}
+#eventHubSection #disciplineSection .yellowDirectCardBtn .disciplineCardShape{
+  box-shadow:0 0 0 1px rgba(255,220,73,.22),0 2px 7px rgba(255,205,0,.12)!important;
+}
+#eventHubSection #disciplineSection .redDirectCardBtn .disciplineCardShape{
+  box-shadow:0 0 0 1px rgba(255,92,92,.22),0 2px 7px rgba(255,62,62,.12)!important;
+}
+#eventHubSection #disciplineSection .cardEventBtn.cardEventDirect:active{
+  transform:translateY(1px) scale(.988)!important;
+  background:
+    linear-gradient(180deg,rgba(36,61,84,.90) 0%,rgba(15,34,51,.94) 100%)!important;
+  border-color:rgba(157,202,235,.42)!important;
+}
+
+/* =========================
+   v4.59 本場名單：操作語意與狀態同步修正
+   ========================= */
+#rosterModal .rosterPresetBtn.selected{
+  cursor:default!important;
+  pointer-events:none!important;
+}
+#rosterModal .rosterPresetBtn.selected:active{
+  transform:none!important;
+}
+/* 避免已選快捷背號看起來像還能再次點擊取消。 */
+#rosterModal .rosterPresetBtn.selected::after{
+  content:'✓';
+  position:absolute;
+  top:4px;
+  right:6px;
+  font-size:10px;
+  line-height:1;
+  color:#0f8f4e;
+  font-weight:950;
+}
+#rosterModal .rosterPresetBtn{
+  position:relative;
+}
+
+
+/* =========================
+   v4.60 本場球員名單操作修正
+   1. 快捷背號恢復「加入 / 再點取消」
+   2. 清空後立即同步 modal 與首頁人數
+   3. 移除 v4.59 對 selected 快捷背號的 pointer-events 封鎖
+   ========================= */
+#rosterModal .rosterPresetBtn,
+#rosterModal .rosterPresetBtn.selected,
+#rosterModal .rosterChip,
+#rosterModal .rosterClearBtn{
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:rgba(37,99,235,.10);
+}
+#rosterModal .rosterPresetBtn.selected{
+  cursor:pointer!important;
+}
+#rosterModal .rosterPresetBtn.selected:active{
+  transform:scale(.97)!important;
+}
+/* 已選狀態用綠色本身表示即可，不再顯示 v4.59 的 ✓。 */
+#rosterModal .rosterPresetBtn.selected::after{
+  content:none!important;
+  display:none!important;
+}
+#rosterModal .rosterClearBtn{
+  position:relative;
+  z-index:2;
+  min-height:44px;
+}
+
 </style>
 </head>
 <body>
@@ -6436,7 +6540,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.58</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.60</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -6682,7 +6786,7 @@ body.resultMode #eventHubSection #recordSection .recordMeta{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.58</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.60</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutIntro">
@@ -7972,7 +8076,8 @@ function renderRosterModal(){
   if(badge) badge.textContent=`${roster.length} 人`;
   if(empty) empty.style.display=roster.length?'none':'block';
 
-  // 跟進球選背號一致：常用背號直接點選加入／取消。
+  // v4.60：恢復既有且較直覺的切換操作。
+  // 快捷背號：點一下加入；已選背號再點一下直接移除。
   if(presetGrid){
     presetGrid.innerHTML='';
     allCommonNumbers().forEach(n=>{
@@ -8050,7 +8155,6 @@ function addRosterNumbers(){
     buildKeeperGrid();
     saveState();
     renderRosterModal();
-    render();
   }
 
   // 一次新增一個背號；加入後清空欄位並維持數字鍵盤，
@@ -8066,8 +8170,10 @@ function addRosterNumbers(){
 }
 
 function toggleRosterNumber(number){
+  if(state.finished) return;
   const n=Number(number);
   if(!Number.isInteger(n) || n<1 || n>99) return;
+
   const roster=currentRosterNumbers();
   if(roster.includes(n)){
     state.rosterNumbers=roster.filter(v=>v!==n);
@@ -8075,35 +8181,54 @@ function toggleRosterNumber(number){
     state.rosterNumbers=[...roster,n].sort((a,b)=>a-b);
     rememberPlayerNumber(n);
   }
+
   rememberCurrentRosterAsPrevious();
   buildNumberGrid();
   buildKeeperGrid();
   saveState();
+
+  // 先同步名單視窗，再同步背景首頁人數。
+  // 保留 modal 開啟狀態，避免 iPhone Safari 操作後出現視覺不同步。
   renderRosterModal();
   render();
+  byId('rosterModal')?.classList.add('open');
 }
 
 function removeRosterNumber(number){
   if(state.finished) return;
   const n=Number(number);
   state.rosterNumbers=currentRosterNumbers().filter(v=>v!==n);
-  rememberCurrentRosterAsPrevious();
+
   buildNumberGrid();
   buildKeeperGrid();
   saveState();
   renderRosterModal();
   render();
+  byId('rosterModal')?.classList.add('open');
 }
 
 function clearRoster(){
   if(state.finished) return;
-  if(currentRosterNumbers().length && !confirm('確定要清空本場球員名單嗎？')) return;
+
+  const roster=currentRosterNumbers();
+  if(!roster.length){
+    renderRosterModal();
+    return;
+  }
+
+  if(!confirm('確定要清空本場球員名單嗎？')) return;
+
+  // 明確清空資料並立即同步所有依賴名單的 UI。
   state.rosterNumbers=[];
   buildNumberGrid();
   buildKeeperGrid();
   saveState();
+
   renderRosterModal();
   render();
+
+  // render() 後保證名單 modal 仍維持開啟，避免 Safari 看起來像按鈕沒反應。
+  byId('rosterModal')?.classList.add('open');
 }
 
 
