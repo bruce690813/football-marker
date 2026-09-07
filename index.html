@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.79</title>
+<title>足球場邊記錄器 v4.81</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -7222,7 +7222,7 @@ body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
 
 
 /* =========================
-   v4.79 iPhone Safari 全場底部 Safe Area QA
+   v4.81 iPhone Safari 全場底部 Safe Area QA
    目的：
    1. 滑到頁面最底時，「＋ 新比賽」可完整露出
    2. 按鈕底部與 Safari 工具列至少保留約 16px 的視覺安全距離
@@ -7285,7 +7285,7 @@ html{
 }
 
 
-/* v4.79 QA 補強：iPhone SE / 4.7 吋級 320～375px */
+/* v4.81 QA 補強：iPhone SE / 4.7 吋級 320～375px */
 @media(max-width:375px){
   body.resultMode.finalOutputVisible{
     --result-bottom-safe-tail:
@@ -7295,7 +7295,7 @@ html{
 
 
 /* =========================
-   v4.79 全場「＋ 新比賽」Safari 可視區修正
+   v4.81 全場「＋ 新比賽」Safari 可視區修正
    這版不只增加頁尾空間，而是：
    1. 全場工具區稍微 compact，減少垂直佔用
    2. 保留可捲動 Safe Area
@@ -7360,13 +7360,13 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn{
 
 
 /* =========================
-   v4.79 全場 viewport 校正
+   v4.81 全場 viewport 校正
    =========================
    v4.70 的問題：
    為了讓「＋ 新比賽」立即露出，會自動 scrollBy，
    因此全場一進入就把標題 / 賽事名稱 / 場地往上推掉。
 
-   v4.79：
+   v4.81：
    - 完全取消全場自動捲動。
    - 進入全場時維持使用者原本畫面位置。
    - 「＋ 新比賽」的 Safari 防遮蔽只靠真實文件流 Safe Area。
@@ -7413,7 +7413,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.79 About：線上工具 / 免下載 App
+   v4.81 About：線上工具 / 免下載 App
    設計原則：
    「線上工具」是產品使用方式，不是第 4 個功能，
    因此放在 Hero 內做 compact badge，而不增加功能卡。
@@ -7494,7 +7494,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.79 About 最後視覺 polish
+   v4.81 About 最後視覺 polish
    1. 線上工具 badge 降低按鈕感
    2. badge 與介紹文字增加呼吸距離
    3. 底部 CTA 收斂高光與藍色漸層
@@ -7560,7 +7560,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.79 時間紀錄 UI/UX 收尾
+   v4.81 時間紀錄 UI/UX 收尾
    ========================= */
 
 /* 日期只出現一次，降低每列重複 YYYY/MM/DD 的視覺噪音。 */
@@ -7706,7 +7706,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.79 本場名單 / 守門員 Design System 一致化
+   v4.81 本場名單 / 守門員 Design System 一致化
    ========================= */
 
 /* A. 本場名單：主流 iPhone 統一 6 欄快捷背號。 */
@@ -7924,7 +7924,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.79 進球流程 Player Picker Design System
+   v4.81 進球流程 Player Picker Design System
    ========================= */
 .playerPickerSourceRow{
   display:flex;align-items:center;justify-content:space-between;
@@ -8009,7 +8009,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.79 射門 / 防守 Player Picker 收尾
+   v4.81 射門 / 防守 Player Picker 收尾
    ========================= */
 /* 射門與防守與進球流程共用同一個視覺層級：事件標題 → 簡短提示 → 名單來源 → 6欄背號。 */
 #numberModal:not(.cardFlow) .numberTitle{
@@ -8046,7 +8046,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.79 黃 / 紅牌 Player Picker Design System 收尾
+   v4.81 黃 / 紅牌 Player Picker Design System 收尾
    ========================= */
 
 /* Step 1「選擇球隊」與 Step 2「選擇球員」使用同一張真實牌卡。
@@ -8132,7 +8132,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.79 事件紀錄 Timeline UI
+   v4.81 事件紀錄 Timeline UI
    - 球隊名稱固定單行，避免「足球 / 隊」破碎換行
    - 恢復事件 icon，沿用首頁事件語言
    - 第幾筆降權重，時間與事件成為主要資訊
@@ -8175,6 +8175,19 @@ body.resultMode.finalOutputVisible{
 #logModal .logEvent-yellow_card::before{background:#facc15}
 #logModal .logEvent-red_card::before{background:#ef4444}
 
+#logModal .logEvent-goal{
+  border-color:rgba(52,199,89,.42)!important;
+  background:linear-gradient(180deg,rgba(18,44,30,.90) 0%,rgba(13,30,23,.96) 100%);
+  box-shadow:0 0 0 1px rgba(52,199,89,.12) inset, 0 8px 18px rgba(0,0,0,.16);
+}
+#logModal .logEvent-goal::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle at 82% 18%, rgba(255,255,255,.10), transparent 28%);
+}
+
 /* 第幾筆變成定位資訊，而不是第一視覺焦點。 */
 #logModal .logTimelineItem .logSeq{
   align-self:start;
@@ -8213,6 +8226,11 @@ body.resultMode.finalOutputVisible{
   letter-spacing:.1px;
   white-space:nowrap;
 }
+#logModal .logEvent-goal .logEventMeta .time{
+  color:#fde68a!important;
+  font-size:18px!important;
+  text-shadow:0 0 14px rgba(250,204,21,.18);
+}
 
 #logModal .logEventPrimary{
   min-width:0;
@@ -8228,6 +8246,26 @@ body.resultMode.finalOutputVisible{
   font-size:18px;
   line-height:1;
 }
+
+#logModal .logEvent-yellow_card .logEventIcon,
+#logModal .logEvent-red_card .logEventIcon{
+  width:14px;
+  height:22px;
+  display:inline-block;
+  border-radius:3px;
+  font-size:0;
+  line-height:0;
+  color:transparent;
+  box-shadow:0 2px 8px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.22);
+}
+#logModal .logEvent-yellow_card .logEventIcon{
+  background:linear-gradient(180deg,#ffe66d 0%, #facc15 100%);
+  border:1px solid rgba(182,128,0,.35);
+}
+#logModal .logEvent-red_card .logEventIcon{
+  background:linear-gradient(180deg,#ff7b7b 0%, #ef4444 100%);
+  border:1px solid rgba(153,27,27,.35);
+}
 #logModal .logEventPrimary .numberTag{
   margin-left:0!important;
   color:#7ee787!important;
@@ -8241,6 +8279,31 @@ body.resultMode.finalOutputVisible{
   font-size:16px!important;
   font-weight:950;
   white-space:nowrap;
+}
+#logModal .logEvent-goal .logEventPrimary b{
+  color:#ffffff;
+  font-size:17px!important;
+  text-shadow:0 0 12px rgba(52,199,89,.14);
+}
+#logModal .goalBadge{
+  display:inline-flex;
+  align-items:center;
+  height:20px;
+  padding:0 7px;
+  border-radius:999px;
+  background:rgba(52,199,89,.16);
+  border:1px solid rgba(52,199,89,.32);
+  color:#b7f7c6;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.3px;
+}
+#logModal .logEvent-goal .logEventIcon{
+  font-size:20px;
+  filter:drop-shadow(0 0 8px rgba(255,255,255,.10));
+}
+#logModal .logEvent-goal .numberTag{
+  color:#a7f3b8!important;
 }
 #logModal .logDot{
   color:#66788d;
@@ -8291,6 +8354,20 @@ body.resultMode.finalOutputVisible{
   font-weight:950!important;
   text-align:right;
   line-height:1.1;
+}
+#logModal .logEvent-goal .scoreSnap{
+  min-width:auto!important;
+  padding:4px 8px!important;
+  border-radius:999px;
+  background:rgba(52,199,89,.12);
+  border:1px solid rgba(52,199,89,.28);
+  color:#d9ffe2!important;
+  font-size:14px!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.04) inset;
+}
+
+#logModal .logTimelineItem .scoreSnapEmpty{
+  min-height:18px;
 }
 #logModal .logRowActions{
   display:flex;
@@ -8356,10 +8433,16 @@ body.resultMode.finalOutputVisible{
   #logModal .logTimelineItem .logSeq{font-size:11.5px!important}
   #logModal .logEventMeta{gap:6px}
   #logModal .logEventMeta .time{font-size:16px!important}
+  #logModal .logEvent-goal .logEventMeta .time{font-size:17px!important}
   #logModal .logEventPrimary{gap:4px}
   #logModal .logEventIcon{width:21px;font-size:17px}
+  #logModal .logEvent-yellow_card .logEventIcon,
+  #logModal .logEvent-red_card .logEventIcon{width:13px;height:20px}
+
   #logModal .logEventPrimary .numberTag{font-size:15px}
   #logModal .logEventPrimary b{font-size:15px!important}
+  #logModal .logEvent-goal .logEventPrimary b{font-size:16px!important}
+  #logModal .goalBadge{height:18px;padding:0 6px;font-size:9.5px}
   #logModal .logEventTeam{font-size:12.5px}
   #logModal .logTimelineItem .editMarkerBtn{
     width:32px!important;height:32px!important;min-width:32px!important;
@@ -8389,7 +8472,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.79</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.81</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8668,7 +8751,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.79</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.81</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -10088,7 +10171,7 @@ function preferredOurNumbers(){
   return roster.length ? roster : allCommonNumbers();
 }
 
-// v4.79：我方背號 picker 共用資格邏輯。
+// v4.81：我方背號 picker 共用資格邏輯。
 // 有本場名單時優先只顯示本場球員；無名單才 fallback 常用背號。
 // 已紅牌退場者排除；可額外排除指定球員（例如助攻不能等於進球者）。
 function eligibleOurPlayerNumbers({excludeNumber='', beforeIndex=null}={}){
@@ -10442,7 +10525,7 @@ function buildKeeperGrid(){
 
   const roster=currentRosterNumbers();
 
-  // v4.79：守門員與進球者 / 助攻者共用相同球員資格規則。
+  // v4.81：守門員與進球者 / 助攻者共用相同球員資格規則。
   const available=eligibleOurPlayerNumbers();
 
   const sourceLabel=byId('keeperSourceLabel');
@@ -11961,6 +12044,11 @@ function renderLogTo(container, filterEvent=null){
     const label=m.second_yellow?'紅牌（兩黃）':eventLabel(m.event);
     const period=state.multiPeriod?periodLabel(m.period||1):'';
     const score=m.score_after||'';
+    const prevMarker=i>0 ? state.markers[i-1] : null;
+    const showScore=shouldShowLogScore(m, prevMarker);
+    const scoreBlock=showScore
+      ? `<div class="scoreSnap">${escapeHtml(score)}</div>`
+      : `<div class="scoreSnap scoreSnapEmpty" aria-hidden="true"></div>`;
 
     // 本場事件統計 drill-down 維持原本唯讀列表，不放編輯 / 刪除。
     if(readOnlyDetail){
@@ -11968,7 +12056,7 @@ function renderLogTo(container, filterEvent=null){
         <div class="logSeq">第${shownSeq}筆</div>
         <div class="time">${fmtMMSS(m.seconds)}</div>
         <div class="logDetailLine"><span class="logMainText">${period?`<span class="periodBadge">${escapeHtml(period)}</span>`:''}${safeTeam||m.player_number?`${safeTeam?`<span style="color:#91a0b6">${safeTeam}</span>`:''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${escapeHtml(label)}</b>${assist}</span></div>
-        <div class="scoreSnap">${escapeHtml(score)}</div>
+        ${scoreBlock}
       `;
       container.appendChild(row);
       return;
@@ -11989,6 +12077,7 @@ function renderLogTo(container, filterEvent=null){
           ${num}
           ${num?'<span class="logDot">·</span>':''}
           <b>${escapeHtml(label)}</b>
+          ${m.event==='GOAL' ? '<span class="goalBadge">關鍵</span>' : ''}
           ${assist}
         </div>
 
@@ -11998,7 +12087,7 @@ function renderLogTo(container, filterEvent=null){
       </div>
 
       <div class="logRowSide">
-        <div class="scoreSnap">${escapeHtml(score)}</div>
+        ${scoreBlock}
         <div class="logRowActions">
           <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${shownSeq}筆事件紀錄">✎</button>
           <button class="del logDeleteBtn" onclick="deleteMarker(${i})" aria-label="刪除第${shownSeq}筆事件紀錄">✕</button>
@@ -12015,14 +12104,21 @@ function renderLog(){
   renderLogTo(byId('log'));
 }
 
+function shouldShowLogScore(marker, prevMarker=null){
+  if(!marker || !marker.score_after) return false;
+  if(marker.event==='GOAL') return true;
+  if(!prevMarker || !prevMarker.score_after) return false;
+  return marker.score_after!==prevMarker.score_after;
+}
+
 function eventIcon(event){
   const icons={
     GOAL:'⚽',
     SHOT:'🥅',
     SAVE:'🧤',
     DEFENSE:'🛡️',
-    YELLOW_CARD:'🟨',
-    RED_CARD:'🟥'
+    YELLOW_CARD:'',
+    RED_CARD:''
   };
   return icons[event] || '•';
 }
