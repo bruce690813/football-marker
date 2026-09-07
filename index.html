@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.72</title>
+<title>足球場邊記錄器 v4.78</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -7222,7 +7222,7 @@ body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
 
 
 /* =========================
-   v4.72 iPhone Safari 全場底部 Safe Area QA
+   v4.78 iPhone Safari 全場底部 Safe Area QA
    目的：
    1. 滑到頁面最底時，「＋ 新比賽」可完整露出
    2. 按鈕底部與 Safari 工具列至少保留約 16px 的視覺安全距離
@@ -7285,7 +7285,7 @@ html{
 }
 
 
-/* v4.72 QA 補強：iPhone SE / 4.7 吋級 320～375px */
+/* v4.78 QA 補強：iPhone SE / 4.7 吋級 320～375px */
 @media(max-width:375px){
   body.resultMode.finalOutputVisible{
     --result-bottom-safe-tail:
@@ -7295,7 +7295,7 @@ html{
 
 
 /* =========================
-   v4.72 全場「＋ 新比賽」Safari 可視區修正
+   v4.78 全場「＋ 新比賽」Safari 可視區修正
    這版不只增加頁尾空間，而是：
    1. 全場工具區稍微 compact，減少垂直佔用
    2. 保留可捲動 Safe Area
@@ -7360,13 +7360,13 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn{
 
 
 /* =========================
-   v4.72 全場 viewport 校正
+   v4.78 全場 viewport 校正
    =========================
    v4.70 的問題：
    為了讓「＋ 新比賽」立即露出，會自動 scrollBy，
    因此全場一進入就把標題 / 賽事名稱 / 場地往上推掉。
 
-   v4.72：
+   v4.78：
    - 完全取消全場自動捲動。
    - 進入全場時維持使用者原本畫面位置。
    - 「＋ 新比賽」的 Safari 防遮蔽只靠真實文件流 Safe Area。
@@ -7413,7 +7413,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.72 About：線上工具 / 免下載 App
+   v4.78 About：線上工具 / 免下載 App
    設計原則：
    「線上工具」是產品使用方式，不是第 4 個功能，
    因此放在 Hero 內做 compact badge，而不增加功能卡。
@@ -7492,6 +7492,644 @@ body.resultMode.finalOutputVisible{
   }
 }
 
+
+/* =========================
+   v4.78 About 最後視覺 polish
+   1. 線上工具 badge 降低按鈕感
+   2. badge 與介紹文字增加呼吸距離
+   3. 底部 CTA 收斂高光與藍色漸層
+   ========================= */
+
+/* 「線上工具」是產品屬性，不是 CTA：
+   保留 cyan 品牌辨識，但降低外框 / 光暈約 10～15%。 */
+.aboutOnlinePill{
+  margin:10px 0 12px!important;
+  border-color:rgba(93,204,255,.22)!important;
+  background:
+    linear-gradient(180deg,rgba(14,49,71,.62) 0%,rgba(7,31,49,.70) 100%)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 4px 11px rgba(0,0,0,.11),
+    0 0 0 1px rgba(13,116,166,.035)!important;
+}
+.aboutOnlineMain{
+  color:#8fdcf5!important;
+}
+.aboutOnlineDivider{
+  background:rgba(154,218,246,.20)!important;
+}
+.aboutOnlineSub{
+  color:#bfcfde!important;
+  font-weight:820!important;
+}
+
+/* badge 與介紹文字切成兩個清楚層級。 */
+.aboutIntro{
+  margin-top:0!important;
+}
+
+/* 底部「開始記錄比賽」仍是主 CTA，
+   但降低亮面塑膠感，讓它與 Safari toolbar 不會形成兩條搶眼橫條。 */
+.aboutClose{
+  background:
+    linear-gradient(180deg,
+      rgba(20,102,167,.93) 0%,
+      rgba(13,76,132,.96) 56%,
+      rgba(8,49,94,.98) 100%)!important;
+  border-color:rgba(121,216,255,.38)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 9px 20px rgba(0,0,0,.20),
+    0 0 0 1px rgba(18,102,183,.10)!important;
+}
+.aboutClose::before{
+  left:14px!important;
+  right:14px!important;
+  top:1px!important;
+  height:34%!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0))!important;
+}
+
+/* 小型 iPhone：仍維持閱讀節奏，不犧牲 CTA 觸控尺寸。 */
+@media(max-width:390px){
+  .aboutOnlinePill{
+    margin:8px 0 10px!important;
+  }
+}
+
+
+/* =========================
+   v4.78 時間紀錄 UI/UX 收尾
+   ========================= */
+
+/* 日期只出現一次，降低每列重複 YYYY/MM/DD 的視覺噪音。 */
+.timeRecordDate{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:34px;
+  margin:0 0 8px;
+  padding:7px 10px;
+  border-radius:10px;
+  border:1px solid rgba(125,211,252,.16);
+  background:rgba(15,31,48,.58);
+}
+.timeRecordDate[hidden]{display:none!important}
+.timeRecordDate span{
+  color:#8ca5bc;
+  font-size:11.5px;
+  font-weight:850;
+}
+.timeRecordDate strong{
+  color:#7dd3fc;
+  font-size:13px;
+  font-weight:950;
+  letter-spacing:.25px;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+
+/* 階段時間軸：與既有中場紀錄使用同一套語言。 */
+.periodPhaseDetailBlock{
+  margin:10px 0 12px;
+  padding:10px 0;
+  border-top:1px solid rgba(148,163,184,.18);
+  border-bottom:1px solid rgba(148,163,184,.18);
+}
+.periodPhaseDetailBlock[hidden]{display:none!important}
+.periodPhaseDetailTitle{
+  margin:0 0 6px;
+  color:#7dd3fc;
+  font-size:14px;
+  font-weight:950;
+}
+.periodPhaseDetailBlock.extraPhase .periodPhaseDetailTitle{
+  color:#c4b5fd;
+}
+.periodPhaseDetailBlock .detailRow{
+  min-height:32px;
+}
+.periodPhaseDetailBlock .detailRow .label{
+  color:#d7e0ea!important;
+  font-size:14px!important;
+  font-weight:900!important;
+}
+.periodPhaseDetailBlock .detailRow .value{
+  color:#f8fafc!important;
+  font-size:16px!important;
+  font-weight:950!important;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+
+/* 開賽後規定時間改成 compact row。
+   只有按「編輯」才展開大尺寸選單 / 套用 / 清除。 */
+.regCompact{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  min-height:50px;
+}
+.regCompact[hidden]{display:none!important}
+.regCompactInfo{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.regCompactLabel{
+  color:#9aabba;
+  font-size:11px;
+  line-height:1.1;
+  font-weight:850;
+}
+.regCompactValue{
+  color:#f1f5f9;
+  font-size:15px;
+  line-height:1.15;
+  font-weight:950;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.regCompactEdit{
+  flex:0 0 auto;
+  min-width:72px;
+  min-height:44px;
+  padding:9px 13px!important;
+  border-radius:11px!important;
+  background:#24364b!important;
+  border:1px solid rgba(125,211,252,.18)!important;
+  color:#d8e7f5!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+.regEditor[hidden]{display:none!important}
+.regBox.compactMode{
+  padding:7px 10px!important;
+  background:linear-gradient(180deg,rgba(16,29,44,.92) 0%,rgba(11,21,33,.96) 100%)!important;
+}
+.regBox.editingMode .regCompact{
+  padding-bottom:9px;
+  margin-bottom:10px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+.regBox.editingMode .regEditor{
+  display:block;
+}
+
+/* 同一天只顯示時間後，數字可稍微放大，但不搶過主計時。 */
+.timeDetail .detailRow .value{
+  letter-spacing:.2px;
+}
+
+/* 小型 iPhone 仍維持單行 compact regulation。 */
+@media(max-width:390px){
+  .timeRecordDate{
+    min-height:32px;
+    padding:6px 9px;
+  }
+  .timeRecordDate strong{font-size:12.5px}
+  .regCompact{gap:8px}
+  .regCompactEdit{
+    min-width:66px;
+    min-height:44px;
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+  .regCompactValue{font-size:14px}
+}
+
+
+/* =========================
+   v4.78 本場名單 / 守門員 Design System 一致化
+   ========================= */
+
+/* A. 本場名單：主流 iPhone 統一 6 欄快捷背號。 */
+#rosterModal .rosterPresetGrid{
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:7px!important;
+}
+
+/* 清空名單改成一致的次要 destructive outline，
+   觸控高度提升到 44px，並緊跟在「其他背號」之後。 */
+#rosterModal .rosterUtilityRow{
+  justify-content:flex-start!important;
+  margin-top:12px!important;
+  margin-bottom:0!important;
+}
+#rosterModal .rosterClearBtn{
+  min-height:44px!important;
+  padding:8px 14px!important;
+  border-radius:11px!important;
+  background:transparent!important;
+  border:1px solid #fca5a5!important;
+  color:#b91c1c!important;
+  font-size:12.5px!important;
+  font-weight:950!important;
+}
+#rosterModal .rosterClearBtn:active{
+  background:#fff1f2!important;
+}
+
+/* B. 守門員 modal 版型與名單頁靠攏。 */
+#keeperModal .keeperModalPanel{
+  width:min(430px,100%);
+  border-radius:22px;
+  padding:18px;
+  background:#f6f7fb;
+}
+#keeperModal .keeperModalTitle{
+  margin-bottom:6px!important;
+}
+#keeperModal #keeperModalHint{
+  margin-bottom:12px!important;
+  color:#64748b!important;
+  line-height:1.45;
+  font-weight:750;
+}
+
+/* 顯示目前 picker 的資料來源，讓「只從本場名單選」更容易理解。 */
+#keeperModal .keeperSourceRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:4px 0 7px;
+}
+#keeperModal .keeperSourceLabel{
+  color:#475569;
+  font-size:12px;
+  font-weight:950;
+}
+#keeperModal .keeperSourceBadge{
+  flex:0 0 auto;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#dbeafe;
+  color:#17436c;
+  font-size:11.5px;
+  font-weight:950;
+}
+#keeperModal .keeperSourceBadge.fallback{
+  background:#eef2f7;
+  color:#64748b;
+}
+
+/* 名單與守門員都採 6 欄，建立相同肌肉記憶。 */
+#keeperModal .keeperGrid{
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:7px!important;
+  margin:7px 0 12px!important;
+}
+#keeperModal .keeperNumBtn{
+  min-width:0;
+  min-height:48px;
+  padding:6px 2px;
+  border-radius:12px;
+  background:#eef3f8;
+  border:1px solid #cbd5e1;
+  color:#243246;
+  font-size:16px;
+  font-weight:950;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85);
+}
+#keeperModal .keeperNumBtn.active{
+  background:linear-gradient(180deg,#dff7e8 0%,#c7f0d5 100%);
+  border:2px solid #22c55e;
+  color:#166534;
+  box-shadow:0 0 0 2px rgba(34,197,94,.14);
+}
+#keeperModal .keeperNumBtn:active{
+  transform:scale(.97);
+}
+
+/* 其他背號與本場名單使用同一套 section label。 */
+#keeperModal .keeperOtherLabel{
+  margin:10px 0 6px;
+  color:#475569;
+  font-size:12px;
+  font-weight:950;
+}
+#keeperModal .keeperCustomRow{
+  margin-top:0!important;
+  grid-template-columns:minmax(0,1fr) 88px!important;
+  gap:8px!important;
+}
+#keeperModal .keeperCustomRow input{
+  min-height:48px;
+  border-radius:12px;
+  background:#fff;
+  color:#111827;
+  border:1px solid #cbd5e1;
+  padding:10px 12px;
+  font-size:16px;
+  font-weight:850;
+}
+#keeperModal .keeperCustomRow input:focus{
+  outline:none;
+  border-color:#60a5fa;
+  box-shadow:0 0 0 3px rgba(59,130,246,.14);
+}
+
+/* 儲存使用全站主要 Action 藍，不再另外建立綠色語意。 */
+#keeperModal .keeperSaveBtn{
+  min-height:48px;
+  border-radius:12px;
+  background:linear-gradient(180deg,#2f73ea 0%,#1d4ed8 100%)!important;
+  border:1px solid #1d4ed8!important;
+  color:#fff!important;
+  font-size:14px;
+  font-weight:1000;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 5px 14px rgba(29,78,216,.18);
+}
+#keeperModal .keeperSaveBtn:active{
+  transform:scale(.985);
+  background:linear-gradient(180deg,#2563eb 0%,#1e40af 100%)!important;
+}
+
+/* Footer：清除 = 次要紅色 outline；取消 = 中性。
+   Action hierarchy 與本場名單「清空 / 完成」一致。 */
+#keeperModal .keeperFooterActions{
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+  margin-top:12px!important;
+}
+#keeperModal .keeperClearBtn{
+  min-height:46px;
+  border-radius:12px;
+  background:transparent!important;
+  border:1px solid #fca5a5!important;
+  color:#b91c1c!important;
+  font-size:14px;
+  font-weight:950;
+  box-shadow:none!important;
+}
+#keeperModal .keeperClearBtn:active{
+  background:#fff1f2!important;
+  transform:scale(.985);
+}
+#keeperModal .keeperCancelBtn{
+  min-height:46px;
+  margin-top:0!important;
+  border-radius:12px;
+  background:#e5eaf0!important;
+  border:1px solid #d5dce5!important;
+  color:#334155!important;
+  font-size:14px;
+  font-weight:950;
+}
+#keeperModal .keeperCancelBtn:active{
+  background:#dce3eb!important;
+  transform:scale(.985);
+}
+
+/* 紅牌更換模式仍維持既有警示語意。 */
+#keeperModal.keeperRedCardMode .keeperSourceLabel{
+  color:#b91c1c;
+}
+
+/* 主流 iPhone 仍維持 6 欄；縮小 gap / padding 確保不溢出。 */
+@media(max-width:390px){
+  #rosterModal .rosterPresetGrid,
+  #keeperModal .keeperGrid{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+  #keeperModal .keeperModalPanel{
+    padding:15px 14px;
+  }
+  #keeperModal .keeperNumBtn{
+    min-height:46px;
+    font-size:15px;
+  }
+  #keeperModal .keeperCustomRow{
+    grid-template-columns:minmax(0,1fr) 82px!important;
+  }
+}
+
+/* 極窄舊機型保護：避免 320px 等級出現過窄觸控目標。 */
+@media(max-width:350px){
+  #rosterModal .rosterPresetGrid,
+  #keeperModal .keeperGrid{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  }
+}
+
+
+/* =========================
+   v4.78 進球流程 Player Picker Design System
+   ========================= */
+.playerPickerSourceRow{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin:7px 0 8px;
+}
+.playerPickerSourceLabel{
+  color:#475569;font-size:12px;font-weight:950;
+}
+.playerPickerSourceBadge{
+  flex:0 0 auto;padding:5px 9px;border-radius:999px;
+  background:#dbeafe;color:#17436c;font-size:11.5px;font-weight:950;
+}
+.playerPickerSourceBadge.fallback{
+  background:#eef2f7;color:#64748b;
+}
+
+#numberModal .numberGrid,
+#assistModal .assistPlayerGrid{
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:7px!important;
+}
+
+#numberModal:not(.cardFlow) .numBtn,
+#assistModal .assistPlayerGrid button{
+  min-width:0;min-height:48px;padding:6px 3px;border-radius:13px;
+  background:linear-gradient(180deg,#f9fbfd 0%,#edf3f8 100%);
+  border:1px solid #c3cfdb;color:#172033;
+  font-size:17px;font-weight:950;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 2px 5px rgba(30,45,62,.045);
+}
+#numberModal:not(.cardFlow) .numBtn:active,
+#assistModal .assistPlayerGrid button:active{
+  transform:scale(.97);background:#e7eff7;
+}
+
+#assistModal .assistGoalInfo{
+  display:inline-flex;align-items:center;min-height:34px;
+  margin:2px 0 4px;padding:7px 11px;border-radius:999px;
+  background:#e8f2fc;border:1px solid #d4e5f6;color:#334155;
+  font-size:12.5px;font-weight:900;
+}
+#assistModal .assistSourceRow{margin-top:7px}
+
+.playerPickerEmpty{
+  margin:7px 0 2px;padding:9px 10px;border-radius:11px;
+  border:1px dashed #cbd5e1;background:#f1f5f9;color:#64748b;
+  font-size:11.5px;line-height:1.4;font-weight:800;text-align:center;
+}
+.playerPickerEmpty[hidden]{display:none!important}
+
+#assistModal .assistActions{gap:8px;margin-top:10px}
+#assistModal .assistOther{background:#5d6670}
+#assistModal .assistSkip{background:#8b949e}
+#assistModal .assistOther,
+#assistModal .assistSkip{
+  min-height:46px;border-radius:13px;font-size:14px;font-weight:900;
+}
+#assistModal .assistCustomRow{
+  grid-template-columns:minmax(0,1fr) 84px;
+}
+#assistModal .assistCustomRow button{
+  min-height:46px;background:#1f6feb;
+}
+
+@media(max-width:390px){
+  #numberModal .numberGrid,
+  #assistModal .assistPlayerGrid{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+  #numberModal:not(.cardFlow) .numBtn,
+  #assistModal .assistPlayerGrid button{
+    min-height:46px;font-size:16px;border-radius:12px;
+  }
+}
+@media(max-width:350px){
+  #numberModal .numberGrid,
+  #assistModal .assistPlayerGrid{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  }
+}
+
+
+/* =========================
+   v4.78 射門 / 防守 Player Picker 收尾
+   ========================= */
+/* 射門與防守與進球流程共用同一個視覺層級：事件標題 → 簡短提示 → 名單來源 → 6欄背號。 */
+#numberModal:not(.cardFlow) .numberTitle{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  line-height:1.18;
+}
+#numberModal:not(.cardFlow) #numberHint{
+  margin-top:6px;
+  margin-bottom:5px;
+  color:#6b7280;
+  line-height:1.42;
+}
+#numberModal:not(.cardFlow) .playerPickerSourceRow{
+  margin-top:7px;
+  margin-bottom:8px;
+}
+
+/* 事件色只留在 icon / 主畫面事件按鈕；picker 本身保持中性，避免視覺過度彩色。 */
+#numberModal:not(.cardFlow) .otherNum,
+#numberModal:not(.cardFlow) .skipNum{
+  min-height:46px;
+  border-radius:13px;
+  font-weight:900;
+}
+#numberModal:not(.cardFlow) .otherNum{background:#626b75;}
+#numberModal:not(.cardFlow) .skipNum{background:#929ba5;}
+#numberModal:not(.cardFlow) #cancelNumberBtn{
+  min-height:44px;
+  border-radius:13px;
+  font-weight:900;
+}
+
+
+/* =========================
+   v4.78 黃 / 紅牌 Player Picker Design System 收尾
+   ========================= */
+
+/* Step 1「選擇球隊」與 Step 2「選擇球員」使用同一張真實牌卡。
+   事件色只放在牌卡本體，不把整個 modal 染黃 / 染紅。 */
+#cardTeamModal .cardTeamTitle{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:7px;
+  font-size:23px;
+  line-height:1.2;
+  letter-spacing:-.25px;
+}
+#cardTeamModal .cardTeamTitle .numberTitleCard{
+  width:19px;
+  height:30px;
+  flex:0 0 19px;
+  border-radius:2.5px;
+}
+#cardTeamModal .cardTeamTitle .numberTitleCard.yellow{
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.18),
+    0 2px 7px rgba(244,190,0,.20);
+}
+#cardTeamModal .cardTeamTitle .numberTitleCard.red{
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.18),
+    0 2px 7px rgba(229,38,38,.18);
+}
+
+/* Step 2：名單來源列正式納入 cardFlow，
+   讓黃牌 / 紅牌與進球、射門、防守使用相同資訊結構。 */
+#numberModal.cardFlow .playerPickerSourceRow{
+  margin-top:6px;
+  margin-bottom:9px;
+}
+#numberModal.cardFlow .playerPickerSourceLabel{
+  color:#475569;
+  font-size:12px;
+  font-weight:950;
+}
+#numberModal.cardFlow .playerPickerSourceBadge{
+  background:#dbeafe;
+  color:#17436c;
+  font-size:11.5px;
+  font-weight:950;
+}
+#numberModal.cardFlow .playerPickerSourceBadge.fallback{
+  background:#eef2f7;
+  color:#64748b;
+}
+
+/* 黃 / 紅牌選球員維持 6 欄；事件色不延伸到背號按鈕。 */
+#numberModal.cardFlow .numberGrid{
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+}
+
+/* 對手沒有 roster 時維持快速操作，不硬塞 1–99 號碼。 */
+#numberModal.cardFlow #oppNumberArea .oppActions{
+  gap:10px;
+}
+
+/* 小尺寸 iPhone 收斂間距，但保留同一視覺語言。 */
+@media(max-width:390px){
+  #cardTeamModal .cardTeamTitle{
+    font-size:22px;
+    gap:8px;
+  }
+  #cardTeamModal .cardTeamTitle .numberTitleCard{
+    width:18px;
+    height:28px;
+    flex-basis:18px;
+  }
+  #numberModal.cardFlow .numberGrid{
+    gap:5px!important;
+  }
+}
+@media(max-width:350px){
+  #numberModal.cardFlow .numberGrid{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -7500,7 +8138,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.72</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.78</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -7584,8 +8222,19 @@ body.resultMode.finalOutputVisible{
         <div class="timeCell"><div class="label">結束時間</div><div class="value" id="compactEnd">--:--:--</div></div>
       </div>
       <div class="timeDetail">
+        <div class="timeRecordDate" id="timeRecordDate" hidden>
+          <span>比賽日期</span><strong id="timeRecordDateValue">----</strong>
+        </div>
+
         <div class="detailRow"><div class="label" id="fullStartLabel">比賽開始</div><div class="value" id="fullStart">--</div></div>
         <div class="detailRow"><div class="label" id="fullEndLabel">比賽結束</div><div class="value" id="fullEnd">--</div></div>
+
+        <div class="periodPhaseDetailBlock" id="firstHalfDetailBlock" hidden>
+          <div class="periodPhaseDetailTitle">上半場紀錄</div>
+          <div class="detailRow"><div class="label">上半場開始</div><div class="value" id="firstHalfStartText">--</div></div>
+          <div class="detailRow"><div class="label">上半場結束</div><div class="value" id="firstHalfEndText">--</div></div>
+        </div>
+
         <div class="halftimeDetailBlock" id="halftimeDetailBlock" hidden>
           <div class="halftimeDetailTitle">中場紀錄</div>
           <div class="detailRow">
@@ -7602,39 +8251,61 @@ body.resultMode.finalOutputVisible{
           </div>
         </div>
 
+        <div class="periodPhaseDetailBlock" id="secondHalfDetailBlock" hidden>
+          <div class="periodPhaseDetailTitle">下半場紀錄</div>
+          <div class="detailRow"><div class="label">下半場開始</div><div class="value" id="secondHalfStartText">--</div></div>
+          <div class="detailRow"><div class="label">下半場結束</div><div class="value" id="secondHalfEndText">--</div></div>
+        </div>
+
+        <div class="periodPhaseDetailBlock extraPhase" id="extraTimeDetailBlock" hidden>
+          <div class="periodPhaseDetailTitle">延長賽紀錄</div>
+          <div class="detailRow"><div class="label">延長賽開始</div><div class="value" id="extraTimeStartText">--</div></div>
+          <div class="detailRow"><div class="label">延長賽結束</div><div class="value" id="extraTimeEndText">--</div></div>
+        </div>
+
         <div class="fullTimeActualBox" id="fullTimeActualBox" hidden>
           <div class="label">實際比賽時間</div>
           <div class="value" id="fullTimeActualValue">00:00</div>
         </div>
 
-        <div class="regBox">
-          <div class="regTitle">規定時間（可賽後補填）</div>
-          <div class="regRow">
-            <div class="regChooser">
-              <div class="regSelectWrap">
-                <select id="regPreset" class="regSelect" aria-label="規定比賽時間選項" onchange="toggleRegCustomInput()">
-                  <option value="">請選擇分鐘</option>
-                  <option value="15">15 分鐘</option>
-                  <option value="20">20 分鐘</option>
-                  <option value="25">25 分鐘</option>
-                  <option value="custom">自訂分鐘</option>
-                </select>
-              </div>
-              <div class="regCustomCard" id="regCustomCard">
-                <div class="regCustomLabel">自訂分鐘</div>
-                <div class="regCustomInputWrap">
-                  <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" placeholder="請輸入 1–45" aria-label="自訂規定比賽時間（分鐘）">
-                  <span class="regUnit">分鐘</span>
-                </div>
-                <div class="regCustomHint">可輸入 1–45 分鐘整數，預設不帶值</div>
-              </div>
+        <div class="regBox" id="regBox">
+          <div class="regCompact" id="regCompact" hidden>
+            <div class="regCompactInfo">
+              <span class="regCompactLabel">規定時間</span>
+              <strong class="regCompactValue" id="regCompactValue">未設定</strong>
             </div>
-            <div class="regButtons">
-              <button class="regApply" onclick="saveRegulation()">套用</button>
-              <button class="regClear" onclick="clearRegulation()">清除</button>
-            </div>
+            <button class="regCompactEdit" id="regCompactEdit" type="button" onclick="toggleRegulationEditor()">編輯</button>
           </div>
-          <div class="diff" id="diffText">未設定規定時間</div>
+
+          <div class="regEditor" id="regEditor">
+            <div class="regTitle">規定時間（可賽後補填）</div>
+            <div class="regRow">
+              <div class="regChooser">
+                <div class="regSelectWrap">
+                  <select id="regPreset" class="regSelect" aria-label="規定比賽時間選項" onchange="toggleRegCustomInput()">
+                    <option value="">請選擇分鐘</option>
+                    <option value="15">15 分鐘</option>
+                    <option value="20">20 分鐘</option>
+                    <option value="25">25 分鐘</option>
+                    <option value="custom">自訂分鐘</option>
+                  </select>
+                </div>
+                <div class="regCustomCard" id="regCustomCard">
+                  <div class="regCustomLabel">自訂分鐘</div>
+                  <div class="regCustomInputWrap">
+                    <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" placeholder="請輸入 1–45" aria-label="自訂規定比賽時間（分鐘）">
+                    <span class="regUnit">分鐘</span>
+                  </div>
+                  <div class="regCustomHint">可輸入 1–45 分鐘整數，預設不帶值</div>
+                </div>
+              </div>
+              <div class="regButtons">
+                <button class="regApply" onclick="saveRegulation()">套用</button>
+                <button class="regClear" onclick="clearRegulation()">清除</button>
+              </div>
+            </div>
+            <div class="diff" id="diffText">未設定規定時間</div>
+          </div>
         </div>
       </div>
     </div>
@@ -7746,7 +8417,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.72</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.78</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -7877,8 +8548,11 @@ body.resultMode.finalOutputVisible{
 </div>
 <div class="modalBack" id="cardTeamModal">
   <div class="modal">
-    <h2 id="cardTeamTitle">選擇球隊</h2>
-    <p>選擇拿到牌卡的球員所屬球隊。</p>
+    <h2 id="cardTeamTitle" class="cardTeamTitle">
+      <span id="cardTeamTitleCard" class="numberTitleCard" aria-hidden="true"></span>
+      <span id="cardTeamTitleText">選擇球隊</span>
+    </h2>
+    <p>選擇拿到這張牌的球員所屬球隊。</p>
     <div class="cardTeamGrid">
       <button class="cardTeamChoice" type="button" onclick="chooseCardTeam('OUR')"><span id="cardOurName">我方</span></button>
       <button class="cardTeamChoice oppNeutral" type="button" onclick="chooseCardTeam('OPP')"><span id="cardOppName">對手</span></button>
@@ -7889,18 +8563,27 @@ body.resultMode.finalOutputVisible{
 
 <!-- Keeper modal -->
 <div class="modalBack" id="keeperModal">
-  <div class="modal">
+  <div class="modal keeperModalPanel">
     <h2 class="keeperModalTitle" id="keeperModalTitle">🧤 設定守門員背號</h2>
-    <p id="keeperModalHint">設定後，按「撲救」會直接套用目前守門員背號。比賽中可隨時更換。</p>
+    <p id="keeperModalHint">從本場球員中選擇守門員。設定後，按「撲救」會直接套用；比賽中可隨時更換。</p>
+
+    <div class="keeperSourceRow">
+      <span class="keeperSourceLabel" id="keeperSourceLabel">本場名單</span>
+      <span class="keeperSourceBadge" id="keeperSourceBadge">0 人</span>
+    </div>
+
     <div class="keeperGrid" id="keeperGrid"></div>
-    <div class="keeperEmpty" id="keeperEmpty" hidden>目前名單沒有可選球員，可輸入其他背號或稍後再設定。</div>
+    <div class="keeperEmpty" id="keeperEmpty" hidden>本場名單目前沒有可用球員，可輸入其他背號或稍後再設定。</div>
+
+    <div class="keeperOtherLabel">其他背號</div>
     <div class="keeperCustomRow">
       <input id="keeperCustomNumber" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="其他背號 1–99" aria-label="守門員背號">
       <button class="keeperSaveBtn" type="button" onclick="saveKeeperCustom()">儲存</button>
     </div>
-    <div class="numberActions">
+
+    <div class="numberActions keeperFooterActions">
       <button class="keeperClearBtn" id="keeperClearBtn" type="button" onclick="clearKeeperNumber()">清除設定</button>
-      <button class="cancel" id="keeperCancelBtn" type="button" onclick="closeKeeperModal()">取消</button>
+      <button class="cancel keeperCancelBtn" id="keeperCancelBtn" type="button" onclick="closeKeeperModal()">取消</button>
     </div>
   </div>
 </div>
@@ -7957,9 +8640,14 @@ body.resultMode.finalOutputVisible{
   <div class="modal">
     <h2>🎯 是否有助攻？</h2>
     <p>助攻球員背號為選填，可直接略過。</p>
-    <div class="assistGoalInfo" id="assistGoalInfo">本球進球者：未指定</div>
+    <div class="assistGoalInfo" id="assistGoalInfo">進球者　未指定</div>
     <div id="assistOurArea">
-      <div class="assistPlayerGrid" id="assistPlayerGrid"></div>
+      <div class="playerPickerSourceRow assistSourceRow" id="assistSourceRow">
+        <span class="playerPickerSourceLabel" id="assistSourceLabel">本場名單</span>
+        <span class="playerPickerSourceBadge" id="assistSourceBadge">0 人可選</span>
+      </div>
+      <div class="assistPlayerGrid playerPickerGrid" id="assistPlayerGrid"></div>
+      <div class="playerPickerEmpty" id="assistEmpty" hidden>目前沒有可選的助攻球員，可使用其他背號或略過助攻。</div>
       <div class="assistActions">
         <button class="assistOther" type="button" onclick="showAssistCustom()">其他背號</button>
         <button class="assistSkip" type="button" onclick="skipAssist()">略過助攻</button>
@@ -7984,7 +8672,11 @@ body.resultMode.finalOutputVisible{
     <h2 id="numberTitle" class="numberTitle"><span id="numberTitleCard" class="numberTitleCard" aria-hidden="true"></span><span id="numberTitleText">選擇背號</span></h2>
     <p id="numberHint"></p>
     <div id="ourNumberArea">
-      <div class="numberGrid" id="numberGrid"></div>
+      <div class="playerPickerSourceRow" id="numberSourceRow">
+        <span class="playerPickerSourceLabel" id="numberSourceLabel">本場名單</span>
+        <span class="playerPickerSourceBadge" id="numberSourceBadge">0 人可選</span>
+      </div>
+      <div class="numberGrid playerPickerGrid" id="numberGrid"></div>
       <div class="numberActions">
         <button class="otherNum" onclick="showCustomNumber()">其他背號</button>
         <button class="skipNum" onclick="finishNumberSelection('')">略過背號</button>
@@ -8178,6 +8870,7 @@ let pendingCardTime=null, pendingCardEvent=null;
 let pendingNumberEvent=null, pendingNumberTime=null, pendingNumberTeam=null;
 let pendingFinishEnd=null, pendingFinishElapsed=null;
 let timeExpanded=false;
+let regulationEditorExpanded=false;
 
 let state={
   ourTeam:'忠義', oppTeam:'', venue:'', competition:'',
@@ -8648,6 +9341,23 @@ function fmtDateTime(epoch){
   const d=new Date(epoch);
   return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+' '+fmtClock(epoch);
 }
+function fmtDateOnly(epoch){
+  if(!epoch) return '----/--/--';
+  const d=new Date(epoch);
+  return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');
+}
+function isSameCalendarDay(aEpoch,bEpoch){
+  if(!aEpoch || !bEpoch) return true;
+  const a=new Date(aEpoch), b=new Date(bEpoch);
+  return a.getFullYear()===b.getFullYear() &&
+    a.getMonth()===b.getMonth() &&
+    a.getDate()===b.getDate();
+}
+function fmtTimelineTime(epoch,baseEpoch){
+  if(!epoch) return '--';
+  if(!baseEpoch || isSameCalendarDay(epoch,baseEpoch)) return fmtClock(epoch);
+  return fmtMonthDayClock(epoch);
+}
 function fmtMonthDayClock(epoch){
   if(!epoch) return '--';
   const d=new Date(epoch);
@@ -8792,13 +9502,58 @@ function renderHalftimeTimeDetail(){
   block.hidden=!hasHalftime;
   if(!hasHalftime) return;
 
+  const baseEpoch=matchStartEpoch();
   const start=byId('halftimeStartText');
   const end=byId('halftimeEndText');
   const duration=byId('halftimeDurationText');
 
-  if(start) start.textContent=fmtDateTime(state.halftimeStartEpoch);
-  if(end) end.textContent=state.halftimeEndEpoch ? fmtDateTime(state.halftimeEndEpoch) : '--';
+  if(start) start.textContent=fmtTimelineTime(state.halftimeStartEpoch,baseEpoch);
+  if(end) end.textContent=state.halftimeEndEpoch ? fmtTimelineTime(state.halftimeEndEpoch,baseEpoch) : '--';
   if(duration) duration.textContent=fmtMMSS(halftimeElapsed());
+}
+
+function periodRecord(number){
+  return (state.periods||[]).find(p=>Number(p.number)===Number(number)) || null;
+}
+function currentPeriodStartEpoch(number){
+  if(Number(state.currentPeriod)===Number(number) && state.started && state.startEpoch){
+    return state.startEpoch;
+  }
+  return null;
+}
+function renderPeriodPhaseTimeDetail(){
+  const baseEpoch=matchStartEpoch();
+  const p1=periodRecord(1);
+  const p2=periodRecord(2);
+  const p3=periodRecord(3);
+
+  const firstBlock=byId('firstHalfDetailBlock');
+  const firstStart=byId('firstHalfStartText');
+  const firstEnd=byId('firstHalfEndText');
+  const showFirst=Boolean(state.finished && state.multiPeriod && (p1?.startEpoch || baseEpoch));
+  if(firstBlock) firstBlock.hidden=!showFirst;
+  if(showFirst){
+    if(firstStart) firstStart.textContent=fmtTimelineTime(p1?.startEpoch || baseEpoch,baseEpoch);
+    if(firstEnd) firstEnd.textContent=p1?.endEpoch ? fmtTimelineTime(p1.endEpoch,baseEpoch) : '--';
+  }
+
+  const secondStartEpoch=p2?.startEpoch || currentPeriodStartEpoch(2);
+  const secondEndEpoch=p2?.endEpoch || null;
+  const secondBlock=byId('secondHalfDetailBlock');
+  if(secondBlock) secondBlock.hidden=!secondStartEpoch;
+  if(secondStartEpoch){
+    byId('secondHalfStartText').textContent=fmtTimelineTime(secondStartEpoch,baseEpoch);
+    byId('secondHalfEndText').textContent=secondEndEpoch ? fmtTimelineTime(secondEndEpoch,baseEpoch) : '--';
+  }
+
+  const extraStartEpoch=p3?.startEpoch || currentPeriodStartEpoch(3);
+  const extraEndEpoch=p3?.endEpoch || null;
+  const extraBlock=byId('extraTimeDetailBlock');
+  if(extraBlock) extraBlock.hidden=!extraStartEpoch;
+  if(extraStartEpoch){
+    byId('extraTimeStartText').textContent=fmtTimelineTime(extraStartEpoch,baseEpoch);
+    byId('extraTimeEndText').textContent=extraEndEpoch ? fmtTimelineTime(extraEndEpoch,baseEpoch) : '--';
+  }
 }
 
 function halftimeSummaryLine(){
@@ -8861,60 +9616,105 @@ function tick(){
 
 function toggleTimeBox(){
   timeExpanded=!timeExpanded;
+  if(!timeExpanded) regulationEditorExpanded=false;
   renderTimeBox();
+}
+function toggleRegulationEditor(){
+  if(!matchStartEpoch()) return;
+  regulationEditorExpanded=!regulationEditorExpanded;
+  renderTimeBox();
+}
+function regulationCompactText(){
+  if(!state.regulationMinutes) return '未設定';
+  if(state.multiPeriod){
+    const extra=state.extraTime && state.extraTimeMinutes ? `＋延長 ${state.extraTimeMinutes} 分` : '';
+    return `每半場 ${state.regulationMinutes} 分${extra}`;
+  }
+  return `${state.regulationMinutes} 分鐘`;
+}
+function renderRegulationTimeBox(){
+  const hasBegun=Boolean(matchStartEpoch());
+  const compact=byId('regCompact');
+  const editor=byId('regEditor');
+  const regBox=byId('regBox');
+  const editBtn=byId('regCompactEdit');
+  const value=byId('regCompactValue');
+
+  if(value) value.textContent=regulationCompactText();
+
+  if(!hasBegun){
+    if(compact) compact.hidden=true;
+    if(editor) editor.hidden=false;
+    if(regBox) regBox.classList.remove('compactMode','editingMode');
+    return;
+  }
+
+  if(compact) compact.hidden=false;
+  if(editor) editor.hidden=!regulationEditorExpanded;
+  if(editBtn) editBtn.textContent=regulationEditorExpanded?'收合':'編輯';
+  if(regBox){
+    regBox.classList.toggle('compactMode',!regulationEditorExpanded);
+    regBox.classList.toggle('editingMode',regulationEditorExpanded);
+  }
 }
 function renderTimeBox(){
   const box=byId('timeSummary');
   box.classList.toggle('open', timeExpanded);
   byId('timeToggle').textContent=timeExpanded?'收合':'展開';
 
-  // v4.04：開始 / 結束必須代表整場比賽的邊界，
-  // 不能直接使用 state.startEpoch / state.endEpoch，
-  // 因為開始下半場 / 延長賽時 state.startEpoch 會被重設。
+  // 整場邊界必須取自 periods 的第一段 / 最後一段，而不是目前段落 startEpoch。
   const matchStart=matchStartEpoch();
   const matchEnd=matchEndEpoch();
 
   byId('compactStart').textContent=fmtClock(matchStart);
   byId('compactEnd').textContent=fmtClock(matchEnd);
-  byId('fullStart').textContent=fmtDateTime(matchStart);
-  byId('fullEnd').textContent=fmtDateTime(matchEnd);
 
-  // v4.45：所有狀態在「收合」時都只保留「時間紀錄＋展開」。
-  // 全場結束後，開始 / 結束時間仍可按「展開」查看；
-  // 主畫面優先把空間留給摘要、儲存圖片、匯出 CSV 與「＋ 新比賽」。
+  // 日期只顯示一次；同一天的各列只顯示 HH:MM:SS。
+  const dateBox=byId('timeRecordDate');
+  const dateValue=byId('timeRecordDateValue');
+  if(dateBox) dateBox.hidden=!matchStart;
+  if(dateValue && matchStart) dateValue.textContent=fmtDateOnly(matchStart);
+
+  const p1=periodRecord(1);
+  const hasMultiTimeline=Boolean(
+    state.multiPeriod ||
+    state.halftimeStartEpoch ||
+    p1?.label==='上半場'
+  );
+
+  let detailStartEpoch=matchStart;
+  let detailEndEpoch=matchEnd;
+  let detailStartLabel='比賽開始';
+  let detailEndLabel='比賽結束';
+
+  // 中場、下半場與延長賽進行中時，頂端兩列代表第一階段，
+  // 全場結束後則回到整場「比賽開始 / 比賽結束」。
+  if(!state.finished && hasMultiTimeline){
+    detailStartLabel='上半場開始';
+    detailEndLabel='上半場結束';
+    detailStartEpoch=p1?.startEpoch || matchStart;
+    detailEndEpoch=p1?.endEpoch || null;
+  }
+
+  byId('fullStartLabel').textContent=detailStartLabel;
+  byId('fullEndLabel').textContent=detailEndLabel;
+  byId('fullStart').textContent=fmtTimelineTime(detailStartEpoch,matchStart);
+  byId('fullEnd').textContent=fmtTimelineTime(detailEndEpoch,matchStart);
+
+  // 收合狀態保留「時間紀錄＋展開」，主畫面不被大量時間資料佔據。
   box.classList.add('compactBoundaryHidden');
 
-  // 中場展開時，把第一階段明確標為上半場，
-  // 避免「結束」被誤解成全場結束。
-  const isHalftime=
-    !!state.awaitingNextPeriod &&
-    state.nextPeriodType==='SECOND_HALF' &&
-    !state.finished;
+  renderHalftimeTimeDetail();
+  renderPeriodPhaseTimeDetail();
 
-  const fullStartLabel=byId('fullStartLabel');
-  const fullEndLabel=byId('fullEndLabel');
-  if(fullStartLabel){
-    fullStartLabel.textContent=isHalftime?'上半場開始':'比賽開始';
-  }
-  if(fullEndLabel){
-    fullEndLabel.textContent=isHalftime?'上半場結束':'比賽結束';
-  }
-
-  if(typeof renderHalftimeTimeDetail==='function'){
-    renderHalftimeTimeDetail();
-  }
-
-  // 只有全場結束後才在詳細時間紀錄中顯示真正的比賽總時間。
+  // 全場才顯示真正的比賽有效時間（不含中場休息）。
   const actualBox=byId('fullTimeActualBox');
   const actualValue=byId('fullTimeActualValue');
-  if(actualBox){
-    actualBox.hidden=!state.finished;
-  }
-  if(actualValue){
-    actualValue.textContent=state.finished ? fmtMMSS(state.finalElapsed) : '00:00';
-  }
+  if(actualBox) actualBox.hidden=!state.finished;
+  if(actualValue) actualValue.textContent=state.finished ? fmtMMSS(state.finalElapsed) : '00:00';
 
   renderDiff(byId('diffText'));
+  renderRegulationTimeBox();
 }
 function regulationPeriodCount(){
   // regulationMinutes 代表正規比賽每一段 / 每半場的規定分鐘數。
@@ -9035,6 +9835,36 @@ function currentRosterNumbers(){
 function preferredOurNumbers(){
   const roster=currentRosterNumbers();
   return roster.length ? roster : allCommonNumbers();
+}
+
+// v4.78：我方背號 picker 共用資格邏輯。
+// 有本場名單時優先只顯示本場球員；無名單才 fallback 常用背號。
+// 已紅牌退場者排除；可額外排除指定球員（例如助攻不能等於進球者）。
+function eligibleOurPlayerNumbers({excludeNumber='', beforeIndex=null}={}){
+  const excluded=String(excludeNumber||'').trim();
+  return preferredOurNumbers().filter(n=>{
+    const raw=String(n);
+    if(excluded && raw===excluded) return false;
+    return !isRedCardedPlayer('OUR',raw,beforeIndex);
+  });
+}
+
+function playerPickerSourceMeta(eligibleCount){
+  const roster=currentRosterNumbers();
+  return roster.length
+    ? {label:'本場名單',badge:`${eligibleCount} 人可選`,fallback:false}
+    : {label:'常用背號',badge:`${eligibleCount} 個`,fallback:true};
+}
+
+function renderPlayerPickerSource(labelId,badgeId,count){
+  const meta=playerPickerSourceMeta(count);
+  const label=byId(labelId);
+  const badge=byId(badgeId);
+  if(label) label.textContent=meta.label;
+  if(badge){
+    badge.textContent=meta.badge;
+    badge.classList.toggle('fallback',meta.fallback);
+  }
 }
 
 function getPreviousRoster(){
@@ -9358,18 +10188,40 @@ function buildKeeperGrid(){
   const grid=byId('keeperGrid');
   if(!grid) return;
   grid.innerHTML='';
-  const redOut=redCardedPlayerNumbers('OUR');
-  const available=preferredOurNumbers().filter(n=>!redOut.has(String(n)));
+
+  const roster=currentRosterNumbers();
+
+  // v4.78：守門員與進球者 / 助攻者共用相同球員資格規則。
+  const available=eligibleOurPlayerNumbers();
+
+  const sourceLabel=byId('keeperSourceLabel');
+  const sourceBadge=byId('keeperSourceBadge');
+  const empty=byId('keeperEmpty');
+
+  if(sourceLabel){
+    sourceLabel.textContent=roster.length ? '本場名單' : '尚未設定本場名單';
+  }
+  if(sourceBadge){
+    sourceBadge.textContent=roster.length ? `${available.length} 人` : '常用背號';
+    sourceBadge.classList.toggle('fallback',!roster.length);
+  }
+
   available.forEach(n=>{
     const btn=document.createElement('button');
     btn.type='button';
     btn.className='keeperNumBtn'+(String(state.goalkeeperNumber||'')===String(n)?' active':'');
     btn.textContent=n;
+    btn.setAttribute('aria-label',`設定背號 ${n} 為守門員`);
     btn.onclick=()=>setKeeperNumber(n);
     grid.appendChild(btn);
   });
-  const empty=byId('keeperEmpty');
-  if(empty) empty.hidden=available.length>0;
+
+  if(empty){
+    empty.hidden=available.length>0;
+    empty.textContent=roster.length
+      ? '本場名單目前沒有可用球員，可輸入其他背號或稍後再設定。'
+      : '目前沒有可用的常用背號，可輸入其他背號或稍後再設定。';
+  }
 }
 function openKeeperModal(options=null){
   if(state.finished){
@@ -9390,9 +10242,12 @@ function openKeeperModal(options=null){
   if(modal) modal.classList.toggle('keeperRedCardMode',replacement);
   if(title) title.textContent=replacement?'🟥 守門員紅牌退場｜更換守門員':'🧤 設定守門員背號';
   if(hint){
+    const roster=currentRosterNumbers();
     hint.textContent=replacement
-      ? `#${keeperRedCardNumber} 已紅牌退場。可選擇新的守門員；若暫時不確定，也可以稍後再設定。`
-      : '設定後，按「撲救」會直接套用目前守門員背號。比賽中可隨時更換。';
+      ? `#${keeperRedCardNumber} 已紅牌退場。${roster.length?'請從本場名單選擇新的守門員':'目前尚未設定本場名單，可先從常用背號選擇'}；若暫時不確定，也可以稍後再設定。`
+      : roster.length
+        ? '從本場球員中選擇守門員。設定後，按「撲救」會直接套用；比賽中可隨時更換。'
+        : '尚未設定本場名單，先顯示常用背號；也可輸入其他背號。比賽中可隨時更換。';
   }
   if(clearBtn) clearBtn.style.display=replacement?'none':'';
   if(cancelBtn) cancelBtn.textContent=replacement?'稍後設定':'取消';
@@ -9461,13 +10316,19 @@ function buildNumberGrid(){
   const grid=byId('numberGrid');
   if(!grid) return;
   grid.innerHTML='';
-  const redOut=pendingNumberTeam
-    ? redCardedPlayerNumbers(pendingNumberTeam)
-    : new Set();
-  preferredOurNumbers().filter(n=>!redOut.has(String(n))).forEach(n=>{
+
+  const eligible=pendingNumberTeam==='OUR'
+    ? eligibleOurPlayerNumbers()
+    : [];
+
+  renderPlayerPickerSource('numberSourceLabel','numberSourceBadge',eligible.length);
+
+  eligible.forEach(n=>{
     const btn=document.createElement('button');
-    btn.className='numBtn';
+    btn.type='button';
+    btn.className='numBtn playerPickerBtn';
     btn.textContent=n;
+    btn.setAttribute('aria-label',`選擇背號 ${n}`);
     btn.onclick=()=>finishNumberSelection(String(n));
     grid.appendChild(btn);
   });
@@ -9957,6 +10818,7 @@ function confirmFinishFull(){
   state.finished=true;
   rememberCurrentRosterAsPrevious();
   timeExpanded=false;
+  regulationEditorExpanded=false;
   state.awaitingNextPeriod=false;
   state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
 
@@ -10005,6 +10867,7 @@ function newMatch(){
   byId('competition').value=currentCompetition;
   syncRegulationInputsFromState();
   timeExpanded=false;
+  regulationEditorExpanded=false;
   saveState();
   render();
 
@@ -10028,12 +10891,14 @@ function saveRegulation(){
     return;
   }
   state.regulationMinutes=n;
+  if(matchStartEpoch()) regulationEditorExpanded=false;
   saveState();
   syncRegulationInputsFromState();
   render();
 }
 function clearRegulation(){
   state.regulationMinutes=null;
+  if(matchStartEpoch()) regulationEditorExpanded=false;
   syncRegulationInputsFromState();
   saveState();
   render();
@@ -10060,6 +10925,21 @@ function openCardModal(){
   pendingCardEvent=null;
   byId('cardModal').classList.add('open');
 }
+function setCardTeamTitle(event){
+  const titleCard=byId('cardTeamTitleCard');
+  const titleText=byId('cardTeamTitleText');
+
+  if(titleCard){
+    titleCard.className='numberTitleCard show';
+    titleCard.classList.add(event==='YELLOW_CARD'?'yellow':'red');
+  }
+  if(titleText){
+    titleText.textContent=event==='YELLOW_CARD'
+      ? '黃牌｜選擇球隊'
+      : '紅牌｜選擇球隊';
+  }
+}
+
 function openDirectCardEvent(event){
   if(!['YELLOW_CARD','RED_CARD'].includes(event)) return;
   if(!state.started){ alert('請先按「開始比賽」'); return; }
@@ -10069,7 +10949,7 @@ function openDirectCardEvent(event){
   pendingCardEvent=event;
   byId('cardOurName').textContent=state.ourTeam||'我方';
   byId('cardOppName').textContent=state.oppTeam||'對手';
-  byId('cardTeamTitle').textContent=event==='YELLOW_CARD'?'黃牌｜選擇球隊':'紅牌｜選擇球隊';
+  setCardTeamTitle(event);
   byId('cardTeamModal').classList.add('open');
 }
 function chooseCardType(event){
@@ -10078,7 +10958,7 @@ function chooseCardType(event){
   byId('cardModal').classList.remove('open');
   byId('cardOurName').textContent=state.ourTeam||'我方';
   byId('cardOppName').textContent=state.oppTeam||'對手';
-  byId('cardTeamTitle').textContent=event==='YELLOW_CARD'?'黃牌｜選擇球隊':'紅牌｜選擇球隊';
+  setCardTeamTitle(event);
   byId('cardTeamModal').classList.add('open');
 }
 function chooseCardTeam(team){
@@ -10181,20 +11061,28 @@ function buildAssistGrid(){
   const grid=byId('assistPlayerGrid');
   if(!grid) return;
   grid.innerHTML='';
+
   const marker=(pendingAssistMarkerIndex!==null) ? state.markers[pendingAssistMarkerIndex] : null;
   const scorer=String(marker?.player_number||'');
-  const eligible=preferredOurNumbers().filter(n=>{
-    const raw=String(n);
-    if(scorer && raw===scorer) return false;
-    return !isRedCardedPlayer('OUR',raw,pendingAssistMarkerIndex);
+  const eligible=eligibleOurPlayerNumbers({
+    excludeNumber:scorer,
+    beforeIndex:pendingAssistMarkerIndex
   });
+
+  renderPlayerPickerSource('assistSourceLabel','assistSourceBadge',eligible.length);
+
   eligible.forEach(n=>{
     const btn=document.createElement('button');
     btn.type='button';
+    btn.className='playerPickerBtn';
     btn.textContent=n;
+    btn.setAttribute('aria-label',`選擇背號 ${n} 為助攻球員`);
     btn.onclick=()=>saveAssistNumber(String(n));
     grid.appendChild(btn);
   });
+
+  const empty=byId('assistEmpty');
+  if(empty) empty.hidden=eligible.length>0;
 }
 function openAssistModal(markerIndex){
   const marker=state.markers[markerIndex];
@@ -10209,9 +11097,8 @@ function openAssistModal(markerIndex){
 
   pendingAssistMarkerIndex=markerIndex;
 
-  const team=teamDisplay(marker.team)||'未指定';
   const scorer=marker.player_number ? `#${marker.player_number}` : '未填背號';
-  byId('assistGoalInfo').textContent=`本球進球者：${team} ${scorer}`;
+  byId('assistGoalInfo').textContent=`進球者　${scorer}`;
 
   const isOur=marker.team==='OUR';
   byId('assistOurArea').style.display=isOur?'block':'none';
@@ -10293,6 +11180,8 @@ function openNumberSelection(event, team, sec){
   const isOur=team==='OUR';
   byId('ourNumberArea').style.display=isOur?'block':'none';
   byId('oppNumberArea').style.display=isOur?'none':'block';
+  const sourceRow=byId('numberSourceRow');
+  if(sourceRow) sourceRow.style.display=isOur?'flex':'none';
 
   const label=eventLabel(event);
   const titleCard=byId('numberTitleCard');
@@ -10313,13 +11202,18 @@ function openNumberSelection(event, team, sec){
     byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：優先顯示本場球員名單；也可輸入其他背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。'):'選填：記錄對手進球球員背號；若看不清楚可直接略過。';
   }else if(event==='YELLOW_CARD' || event==='RED_CARD'){
     if(titleText) titleText.textContent=`${label}｜選擇球員`;
-    byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：指定拿牌球員背號；優先顯示本場名單，也可以略過。':'選填：指定拿牌球員背號；可直接點常用背號，也可以略過。'):'選填：輸入對手拿牌球員背號，也可以略過。';
+    byId('numberHint').textContent=isOur
+      ? '球員背號為選填，可直接略過。'
+      : '對手球員背號為選填，可直接略過。';
+  }else if(event==='SHOT'){
+    if(titleText) titleText.textContent='🥅 選擇射門球員背號';
+    byId('numberHint').textContent='射門球員背號為選填，可直接略過。';
   }else if(event==='DEFENSE'){
     if(titleText) titleText.textContent='🛡️ 選擇防守球員背號';
-    byId('numberHint').textContent='選填：可指定完成這次防守的球員；團隊防守可直接略過。';
+    byId('numberHint').textContent='防守球員背號為選填，可直接略過。';
   }else{
     if(titleText) titleText.textContent=`選擇${label}球員背號`;
-    byId('numberHint').textContent=currentRosterNumbers().length?'選填：優先顯示本場球員名單；團隊事件也可以略過背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。';
+    byId('numberHint').textContent=currentRosterNumbers().length?'球員背號為選填，可直接略過。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。';
   }
 
   const cancelBtn=byId('cancelNumberBtn');
