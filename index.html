@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.96</title>
+<title>足球場邊記錄器 v4.97</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.96</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.97</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8776,7 +8776,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.96</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.97</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -12225,8 +12225,10 @@ function renderLogTo(container, filterEvent=null){
         <div class="logEventMeta">
           ${period?`<span class="periodBadge">${escapeHtml(period)}</span>`:''}
           <span class="time">${fmtMMSS(m.seconds)}</span>
-          ${teamInline}
-          ${playerInline}
+          <span class="logActorInline">
+            ${teamInline}
+            ${playerInline}
+          </span>
         </div>
 
         <div class="logEventPrimary">
@@ -15196,6 +15198,111 @@ setInterval(renderRegulationTimeAlert,1000);
 /* 黃牌不做整張強烈染色，只給極淡的黃色邊框提示，避免搶過進球 / 紅牌。 */
 #logModal .logEvent-yellow_card{
   border-color:rgba(255,212,0,.22)!important;
+}
+
+
+/* =========================================================
+   v4.97 Event Log WHO Group + Neutral Red-card Background
+   ========================================================= */
+
+/*
+  第一列閱讀：
+  時間 → [球隊 + 背號]
+  將球隊與背號視為同一個 WHO 群組，避免背號被 flex 推到最右側。
+*/
+#logModal .logTimelineItem .logEventMeta{
+  justify-content:flex-start!important;
+}
+
+#logModal .logTimelineItem .logActorInline{
+  flex:0 1 auto;
+  min-width:0;
+  max-width:calc(100% - 62px);
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:5px;
+  overflow:hidden;
+}
+
+/* 隊名只佔內容所需空間；長隊名才縮略。 */
+#logModal .logTimelineItem .logActorInline .logTeamInline{
+  flex:0 1 auto!important;
+  min-width:0!important;
+  max-width:160px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+/* 背號緊接隊名，而且永遠不被擠掉。 */
+#logModal .logTimelineItem .logActorInline .logPlayerInline{
+  flex:0 0 auto!important;
+  margin-left:0!important;
+}
+
+/*
+  紅牌仍是高優先級事件，但不再把整張卡染紅。
+  只保留：
+  - 左側鮮紅 accent
+  - 鮮紅長方形牌卡
+  - 紅色時間
+*/
+#logModal .logEvent-red_card{
+  border-color:rgba(80,105,132,.28)!important;
+  background:linear-gradient(
+    180deg,
+    rgba(22,34,47,.78) 0%,
+    rgba(15,25,36,.88) 100%
+  )!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.03) inset,
+             0 8px 18px rgba(0,0,0,.14)!important;
+}
+
+/* 移除 critical red card 可能帶出的整卡光暈染色。 */
+#logModal .logEvent-red_card::after{
+  background:none!important;
+}
+
+/* 紅牌重點仍由 icon / accent / time 負責。 */
+#logModal .logEvent-red_card::before{
+  background:#ff3131!important;
+  opacity:1!important;
+  box-shadow:0 0 8px rgba(255,49,49,.22);
+}
+
+#logModal .logEvent-red_card .logEventIcon{
+  background:linear-gradient(
+    180deg,
+    #ff4545 0%,
+    #ff2d2d 55%,
+    #dc1818 100%
+  )!important;
+  border:1px solid #991b1b!important;
+}
+
+#logModal .logEvent-red_card .logEventMeta .time{
+  color:#ff625c!important;
+}
+
+/* 小螢幕：WHO 群組仍保持相鄰，不把背號推到右側。 */
+@media(max-width:390px){
+  #logModal .logTimelineItem .logActorInline{
+    max-width:calc(100% - 58px);
+    gap:4px;
+  }
+  #logModal .logTimelineItem .logActorInline .logTeamInline{
+    max-width:125px!important;
+  }
+}
+
+@media(max-width:350px){
+  #logModal .logTimelineItem .logActorInline{
+    max-width:calc(100% - 56px);
+  }
+  #logModal .logTimelineItem .logActorInline .logTeamInline{
+    max-width:96px!important;
+  }
 }
 
 </style>
