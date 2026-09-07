@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.97</title>
+<title>足球場邊記錄器 v4.99</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.97</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.99</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8531,11 +8531,11 @@ body.resultMode.finalOutputVisible{
 
     <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
     <div class="liveQuickSetup" id="liveQuickSetup">
-      <button type="button" onclick="openKeeperModal()" aria-label="比賽中快速設定守門員">
-        <span aria-hidden="true">🧤</span><span id="liveKeeperQuickText">守門員 未設定</span>
+      <button type="button" onclick="openRosterModal()" aria-label="查看或編輯本場球員名單">
+        <span aria-hidden="true">👕</span><span id="liveRosterQuickText">名單 0人</span>
       </button>
-      <button type="button" onclick="openRosterModal()" aria-label="比賽中查看本場球員名單">
-        <span aria-hidden="true">👕</span><span id="liveRosterQuickText">0人</span>
+      <button type="button" onclick="openKeeperModal()" aria-label="快速設定目前守門員">
+        <span aria-hidden="true">🧤</span><span id="liveKeeperQuickText">守門員 未設定</span>
       </button>
     </div>
 
@@ -8776,7 +8776,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.97</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -8813,6 +8813,7 @@ body.resultMode.finalOutputVisible{
       </div>
       </div>
       <div class="aboutFooter">
+        <div class="aboutBuildVersion" aria-label="目前版本 v4.99">版本 v4.99</div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
     </div>
@@ -12439,7 +12440,7 @@ function renderLiveFocusUI(){
     keeperText.textContent=state.goalkeeperNumber ? `守門員 #${state.goalkeeperNumber}` : '守門員 未設定';
   }
   if(rosterText){
-    rosterText.textContent=`${currentRosterNumbers().length}人`;
+    rosterText.textContent=`名單 ${currentRosterNumbers().length}人`;
   }
 }
 
@@ -15302,6 +15303,92 @@ setInterval(renderRegulationTimeAlert,1000);
   }
   #logModal .logTimelineItem .logActorInline .logTeamInline{
     max-width:96px!important;
+  }
+}
+
+
+/* =========================================================
+   v4.98 Roster / Keeper Position Lock
+   所有主要比賽狀態固定：
+   左：👕 名單 / 人數
+   右：🧤 守門員 / 背號
+   ========================================================= */
+
+/* 賽前本來就是正確順序，明確鎖定 grid placement。 */
+body.matchStatePre .preQuickSetup .rosterQuickBtn{
+  grid-column:1!important;
+}
+body.matchStatePre .preQuickSetup .keeperQuickBtn{
+  grid-column:2!important;
+}
+
+/*
+  比賽中 / 中場 / 下半場 / 延長賽共用同一組 liveQuickSetup。
+  DOM 第一顆固定名單，第二顆固定守門員。
+*/
+.liveQuickSetup > button:first-child{
+  grid-column:1!important;
+}
+.liveQuickSetup > button:last-child{
+  grid-column:2!important;
+}
+
+/* 兩邊維持相同視覺權重，避免讓其中一項看起來像主要操作。 */
+.liveQuickSetup > button{
+  justify-content:center;
+  min-width:0;
+}
+
+/* 「名單 12人」與「守門員 #21」在小螢幕仍保持單行。 */
+#liveRosterQuickText,
+#liveKeeperQuickText{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+
+/* =========================================================
+   v4.99 Version Information Hierarchy
+   ========================================================= */
+
+/* 主畫面版本號保留給快速確認部署 / cache，但降低視覺權重。 */
+.versionInfo > .sub{
+  font-size:10.5px!important;
+  color:#8190a5!important;
+  opacity:.78;
+  font-weight:800;
+  letter-spacing:.15px;
+}
+
+/* About Header 不再讓版本號與 MATCHDAY TOOL 並列搶視線。 */
+.aboutMetaRow{
+  margin-bottom:8px!important;
+}
+
+/* About Footer 的版本僅作技術支援 / 問題回報確認。 */
+.aboutBuildVersion{
+  margin:0 0 7px;
+  text-align:center;
+  color:#66788c;
+  font-size:10.5px;
+  font-weight:800;
+  line-height:1.2;
+  letter-spacing:.25px;
+}
+
+/* CTA 仍是 Footer 唯一主視覺。 */
+.aboutFooter .aboutClose{
+  margin-top:0!important;
+}
+
+@media(max-width:390px){
+  .versionInfo > .sub{
+    font-size:10px!important;
+  }
+  .aboutBuildVersion{
+    margin-bottom:6px;
+    font-size:10px;
   }
 }
 
