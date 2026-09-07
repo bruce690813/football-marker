@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.93</title>
+<title>足球場邊記錄器 v4.95</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -2000,7 +2000,9 @@ body.matchStateLive .liveMetaStrip.show{
   border-color:rgba(96,165,250,.24);
 }
 
-/* 守門員 / 本場球員人數：提升一級，不超過主計時與比分。 */
+/* v4.94：第二列與賽前保持同一閱讀順序：
+   左＝👕 名單，右＝🧤 守門員。
+   兩者提升一級，但不超過主計時與比分。 */
 body.matchStateLive .liveQuickSetup{
   gap:7px;
   margin-bottom:7px;
@@ -8497,7 +8499,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.93</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.95</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8531,11 +8533,11 @@ body.resultMode.finalOutputVisible{
 
     <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
     <div class="liveQuickSetup" id="liveQuickSetup">
-      <button type="button" onclick="openKeeperModal()" aria-label="比賽中快速設定守門員">
-        <span aria-hidden="true">🧤</span><span id="liveKeeperQuickText">守門員 未設定</span>
+      <button class="liveRosterBtn" type="button" onclick="openRosterModal()" aria-label="查看或編輯本場球員名單">
+        <span aria-hidden="true">👕</span><span id="liveRosterQuickText">名單 0人</span>
       </button>
-      <button type="button" onclick="openRosterModal()" aria-label="比賽中查看本場球員名單">
-        <span aria-hidden="true">👕</span><span id="liveRosterQuickText">0人</span>
+      <button class="liveKeeperBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
+        <span aria-hidden="true">🧤</span><span id="liveKeeperQuickText">守門員 未設定</span>
       </button>
     </div>
 
@@ -8776,7 +8778,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.93</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.95</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -12404,9 +12406,10 @@ function renderLiveFocusUI(){
   const rosterText=byId('liveRosterQuickText');
   if(!strip) return;
 
-  const isLive=!!state.started && !state.finished && !state.awaitingNextPeriod && !state.penalty?.active;
-  const isHalftime=!!state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF' && !state.finished && !state.penalty?.active;
-  const isExtraWait=!!state.awaitingNextPeriod && state.nextPeriodType==='EXTRA_TIME' && !state.finished && !state.penalty?.active;
+  const isPenalty=!!state.penalty?.active && !state.finished;
+  const isLive=!!state.started && !state.finished && !state.awaitingNextPeriod && !isPenalty;
+  const isHalftime=!!state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF' && !state.finished && !isPenalty;
+  const isExtraWait=!!state.awaitingNextPeriod && state.nextPeriodType==='EXTRA_TIME' && !state.finished && !isPenalty;
   const isResult=!!state.finished;
 
   const meta=[];
@@ -12419,14 +12422,15 @@ function renderLiveFocusUI(){
     strip.classList.add('show');
   }else{
     strip.textContent=meta.join(' · ');
-    strip.classList.toggle('show', (isLive || isHalftime || isExtraWait) && meta.length>0);
+    // v4.95：PK 仍屬於同一場比賽，沿用比賽中的單行賽事 / 場地 Header。
+    strip.classList.toggle('show', (isLive || isHalftime || isExtraWait || isPenalty) && meta.length>0);
   }
 
   if(keeperText){
     keeperText.textContent=state.goalkeeperNumber ? `守門員 #${state.goalkeeperNumber}` : '守門員 未設定';
   }
   if(rosterText){
-    rosterText.textContent=`${currentRosterNumbers().length}人`;
+    rosterText.textContent=`名單 ${currentRosterNumbers().length}人`;
   }
 }
 
@@ -12721,6 +12725,7 @@ function renderMatchStateUI(){
   document.body.classList.toggle('matchStateLive', isLive);
   document.body.classList.toggle('matchStateHalftime', isHalftime);
   document.body.classList.toggle('matchStateExtraWait', isExtraWait);
+  document.body.classList.toggle('matchStatePenalty', isPenalty);
   document.body.classList.toggle('matchStateBreak', isBreak || isPenalty);
   document.body.classList.toggle('resultMode', isFinished);
 }
@@ -14760,6 +14765,61 @@ setInterval(renderRegulationTimeAlert,1000);
   }
   .quickNoticeTitle{font-size:13.5px}
   .quickNoticeText{font-size:11px}
+}
+
+
+
+/* =========================================================
+   v4.95 PK Header consistency
+   PK 仍是同一場比賽的決勝階段，不回到大型表單型 Header。
+   ========================================================= */
+
+/* PK 時隱藏原本賽前才需要的大型賽事名稱 / 場地輸入欄。 */
+body.matchStatePenalty .matchMetaRow,
+body.matchStatePenalty .venueRow{
+  display:none!important;
+}
+
+/* PK 不需要再顯示名單 / 守門員快捷列；
+   將焦點留給「PK 點球 → 正規比分 → PK 比分」。 */
+body.matchStatePenalty .liveQuickSetup{
+  display:none!important;
+}
+
+/* 延續比賽中 / 中場 / 延長賽的單行 Header 語言。 */
+body.matchStatePenalty .liveMetaStrip.show{
+  display:flex!important;
+  align-items:center;
+  justify-content:center;
+  min-height:34px!important;
+  margin:0 1px 8px!important;
+  padding:6px 12px!important;
+  border-radius:11px!important;
+  background:rgba(15,23,42,.70)!important;
+  border:1px solid rgba(96,165,250,.25)!important;
+  color:#eef6fb!important;
+  font-size:clamp(14px,3.75vw,16.5px)!important;
+  font-weight:950!important;
+  line-height:1.2!important;
+  letter-spacing:.1px!important;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* PK 紫色只留給「PK 點球」狀態本身，
+   Header 維持和前面比賽流程相同的中性深藍資訊層。 */
+body.matchStatePenalty .liveMetaStrip.show::first-letter{
+  line-height:1;
+}
+
+@media(max-width:390px){
+  body.matchStatePenalty .liveMetaStrip.show{
+    min-height:32px!important;
+    margin-bottom:7px!important;
+    padding:5px 9px!important;
+    font-size:clamp(13.5px,3.65vw,15.5px)!important;
+  }
 }
 
 </style>
