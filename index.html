@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.83</title>
+<title>足球場邊記錄器 v4.85</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1389,6 +1389,10 @@ body.keyboardOpen .finalToolsCard{display:none}
 }
 .reportScore{font-size:50px;font-weight:900;line-height:1}
 .reportMeta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px;color:#aeb9c5;font-size:12px}
+.reportVenueMeta{display:inline-flex;align-items:center;gap:5px}
+.reportVenuePin{display:inline-flex;width:13px;height:17px;flex:0 0 13px;transform:translateY(-1px)}
+.reportVenuePin svg{display:block;width:100%;height:100%;filter:drop-shadow(0 1px 2px rgba(255,59,48,.24))}
+.reportVenueText{min-width:0}
 .reportStatusBadge{display:inline-flex;align-items:center;justify-content:center;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.4px;margin:10px auto 0;border:1px solid transparent}
 .reportStatusBadge.idle{background:#1f2937;color:#cbd5e1;border-color:#334155}
 .reportStatusBadge.running{background:#052e1b;color:#86efac;border-color:#166534;box-shadow:0 0 0 1px rgba(34,197,94,.15) inset}
@@ -1441,6 +1445,10 @@ body.keyboardOpen .finalToolsCard{display:none}
 .scorerBalls{letter-spacing:2px;font-size:15px;white-space:nowrap}
 .goalOrdinal{display:inline-block;color:#7dd3fc;font-size:11.5px;font-weight:950;white-space:nowrap;letter-spacing:.25px}
 .reportLabel{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.2px;font-weight:800}
+.reportGoalActor{min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;line-height:1.12}
+.reportGoalMain{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.2px;font-weight:850;color:#f1f5f9}
+.reportAssist{white-space:nowrap;overflow:visible;color:#fbbf24;font-size:10.8px;font-weight:950;letter-spacing:.1px}
+.reportTable.goals .reportEvent{min-height:48px}
 .reportGoalLine{display:contents}
 .reportTable{border:1px solid #314155;border-radius:12px;overflow:hidden;background:#0f1720;box-shadow:0 4px 12px rgba(0,0,0,.10),inset 0 0 0 1px rgba(255,255,255,.02)}
 .reportTableHead{gap:6px;padding:9px 9px;background:linear-gradient(180deg,#1b2d45 0%,#172435 100%);color:#bfdbfe;font-size:11px;font-weight:950;letter-spacing:.35px;border-bottom:1px solid #334155}
@@ -1490,6 +1498,9 @@ body.keyboardOpen .finalToolsCard{display:none}
   .reportTable.others .reportTableHead,.reportTable.others .reportEvent{grid-template-columns:96px minmax(0,1fr) 58px 40px;gap:5px}
   .reportPeriodTime,.reportType,.goalOrdinal{font-size:10.4px}
   .reportLabel{font-size:11.2px}
+  .reportGoalMain{font-size:11.2px}
+  .reportAssist{font-size:10.2px}
+  .reportTable.goals .reportEvent{min-height:46px}
   .reportActions{padding:9px 9px 11px;gap:6px}
   .reportActions button{font-size:11.5px;padding:11px 4px}
 }
@@ -7222,7 +7233,7 @@ body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
 
 
 /* =========================
-   v4.83 iPhone Safari 全場底部 Safe Area QA
+   v4.85 iPhone Safari 全場底部 Safe Area QA
    目的：
    1. 滑到頁面最底時，「＋ 新比賽」可完整露出
    2. 按鈕底部與 Safari 工具列至少保留約 16px 的視覺安全距離
@@ -7285,7 +7296,7 @@ html{
 }
 
 
-/* v4.83 QA 補強：iPhone SE / 4.7 吋級 320～375px */
+/* v4.85 QA 補強：iPhone SE / 4.7 吋級 320～375px */
 @media(max-width:375px){
   body.resultMode.finalOutputVisible{
     --result-bottom-safe-tail:
@@ -7295,7 +7306,7 @@ html{
 
 
 /* =========================
-   v4.83 全場「＋ 新比賽」Safari 可視區修正
+   v4.85 全場「＋ 新比賽」Safari 可視區修正
    這版不只增加頁尾空間，而是：
    1. 全場工具區稍微 compact，減少垂直佔用
    2. 保留可捲動 Safe Area
@@ -7360,13 +7371,13 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn{
 
 
 /* =========================
-   v4.83 全場 viewport 校正
+   v4.85 全場 viewport 校正
    =========================
    v4.70 的問題：
    為了讓「＋ 新比賽」立即露出，會自動 scrollBy，
    因此全場一進入就把標題 / 賽事名稱 / 場地往上推掉。
 
-   v4.83：
+   v4.85：
    - 完全取消全場自動捲動。
    - 進入全場時維持使用者原本畫面位置。
    - 「＋ 新比賽」的 Safari 防遮蔽只靠真實文件流 Safe Area。
@@ -7413,7 +7424,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.83 About：線上工具 / 免下載 App
+   v4.85 About：線上工具 / 免下載 App
    設計原則：
    「線上工具」是產品使用方式，不是第 4 個功能，
    因此放在 Hero 內做 compact badge，而不增加功能卡。
@@ -7494,7 +7505,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.83 About 最後視覺 polish
+   v4.85 About 最後視覺 polish
    1. 線上工具 badge 降低按鈕感
    2. badge 與介紹文字增加呼吸距離
    3. 底部 CTA 收斂高光與藍色漸層
@@ -7560,7 +7571,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.83 時間紀錄 UI/UX 收尾
+   v4.85 時間紀錄 UI/UX 收尾
    ========================= */
 
 /* 日期只出現一次，降低每列重複 YYYY/MM/DD 的視覺噪音。 */
@@ -7706,7 +7717,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.83 本場名單 / 守門員 Design System 一致化
+   v4.85 本場名單 / 守門員 Design System 一致化
    ========================= */
 
 /* A. 本場名單：主流 iPhone 統一 6 欄快捷背號。 */
@@ -7924,7 +7935,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.83 進球流程 Player Picker Design System
+   v4.85 進球流程 Player Picker Design System
    ========================= */
 .playerPickerSourceRow{
   display:flex;align-items:center;justify-content:space-between;
@@ -8009,7 +8020,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.83 射門 / 防守 Player Picker 收尾
+   v4.85 射門 / 防守 Player Picker 收尾
    ========================= */
 /* 射門與防守與進球流程共用同一個視覺層級：事件標題 → 簡短提示 → 名單來源 → 6欄背號。 */
 #numberModal:not(.cardFlow) .numberTitle{
@@ -8046,7 +8057,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.83 黃 / 紅牌 Player Picker Design System 收尾
+   v4.85 黃 / 紅牌 Player Picker Design System 收尾
    ========================= */
 
 /* Step 1「選擇球隊」與 Step 2「選擇球員」使用同一張真實牌卡。
@@ -8132,7 +8143,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.83 事件紀錄 Timeline UI
+   v4.85 事件紀錄 Timeline UI
    - 球隊名稱固定單行，避免「足球 / 隊」破碎換行
    - 恢復事件 icon，沿用首頁事件語言
    - 第幾筆降權重，時間與事件成為主要資訊
@@ -8503,7 +8514,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.83</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.85</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8782,7 +8793,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.83</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.85</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -9167,7 +9178,7 @@ body.resultMode.finalOutputVisible{
       </div>
       <div class="reportMeta">
         <span id="reportCompetition" style="display:none">🏆 賽事</span>
-        <span id="reportVenue">📍 未填場地</span>
+        <span id="reportVenue" class="reportVenueMeta"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText">未填場地</span></span>
         <span id="reportRoster" style="display:none">👕 本場名單</span>
         <span id="reportDuration">⏱ 00:00</span>
       </div>
@@ -10202,7 +10213,7 @@ function preferredOurNumbers(){
   return roster.length ? roster : allCommonNumbers();
 }
 
-// v4.83：我方背號 picker 共用資格邏輯。
+// v4.85：我方背號 picker 共用資格邏輯。
 // 有本場名單時優先只顯示本場球員；無名單才 fallback 常用背號。
 // 已紅牌退場者排除；可額外排除指定球員（例如助攻不能等於進球者）。
 function eligibleOurPlayerNumbers({excludeNumber='', beforeIndex=null}={}){
@@ -10556,7 +10567,7 @@ function buildKeeperGrid(){
 
   const roster=currentRosterNumbers();
 
-  // v4.83：守門員與進球者 / 助攻者共用相同球員資格規則。
+  // v4.85：守門員與進球者 / 助攻者共用相同球員資格規則。
   const available=eligibleOurPlayerNumbers();
 
   const sourceLabel=byId('keeperSourceLabel');
@@ -12855,9 +12866,17 @@ function reportEventHTML(m, goalIndex=null){
   const ordinal=(m.event==='GOAL' && goalIndex!==null) ? `G${goalIndex+1}` : eventLabel(m.event);
   const period=state.multiPeriod ? periodLabel(m.period||1) : '';
   const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
-  const assist=m.assist_number ? `｜助攻 #${m.assist_number}` : '';
-  const label = `${team}${num}${assist}`;
-  return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="goalOrdinal">${ordinal}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="rscore">${m.score_after||''}</div></div>`;
+  const actor=`${team}${num}`;
+  const assist=m.assist_number ? `助攻 #${m.assist_number}` : '';
+  return `<div class="reportEvent${assist?' hasAssist':''}">
+    <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
+    <div class="goalOrdinal">${ordinal}</div>
+    <div class="reportGoalActor" title="${escapeHtml(actor+(assist?`｜${assist}`:''))}">
+      <div class="reportGoalMain">${escapeHtml(actor)}</div>
+      ${assist?`<div class="reportAssist">${escapeHtml(assist)}</div>`:''}
+    </div>
+    <div class="rscore">${m.score_after||''}</div>
+  </div>`;
 }
 function reportTypeHTML(event){
   if(event==='YELLOW_CARD'){
@@ -12897,7 +12916,7 @@ function buildReportDOM(){
   }else{
     reportCompetition.style.display='none';
   }
-  byId('reportVenue').textContent=`📍 ${state.venue||'未填場地'}`;
+  byId('reportVenueText').textContent=state.venue||'未填場地';
   const reportRoster=byId('reportRoster');
   const rosterForReport=currentRosterNumbers();
   if(reportRoster && rosterForReport.length){
@@ -13064,7 +13083,8 @@ function reportLines(){
       type:'goalEvent',
       periodTime:period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds),
       ordinal:`G${i+1}`,
-      label:`${team}${num}${m.assist_number?`｜助攻 #${m.assist_number}`:''}`,
+      actor:`${team}${num}`,
+      assist:m.assist_number?`助攻 #${m.assist_number}`:'',
       score:m.score_after||''
     });
   });
@@ -13157,7 +13177,7 @@ function makeReportCanvas(){
     else if(line.type==='section') dynamic+=64;
     else if(line.type==='scorer') dynamic+=54;
     else if(line.type==='goalTableHeader') dynamic+=42;
-    else if(line.type==='goalEvent') dynamic+=52;
+    else if(line.type==='goalEvent') dynamic+=line.assist?66:52;
     else if(line.type==='otherTableHeader') dynamic+=42;
     else if(line.type==='otherEvent') dynamic+=52;
     else if(line.type==='event') dynamic+=52;
@@ -13234,15 +13254,33 @@ function makeReportCanvas(){
       ctx.textAlign='right'; ctx.fillText('比分',W-pad-12,y); ctx.textAlign='left';
       y+=42;
     }else if(line.type==='goalEvent'){
-      const rowX=pad, rowY=y-19, rowH=38;
+      const hasAssist=!!line.assist;
+      const rowX=pad, rowY=y-19, rowH=hasAssist?54:38;
       ctx.fillStyle='#0f1720'; ctx.fillRect(rowX,rowY,W-pad*2,rowH);
       const periodTimeX=pad+8, ordinalX=pad+245, labelX=pad+375, scoreX=W-pad-8;
       ctx.fillStyle='#facc15'; ctx.font='700 23px -apple-system, sans-serif'; ctx.textAlign='left'; ctx.fillText(line.periodTime, periodTimeX, y);
       ctx.fillStyle='#7dd3fc'; ctx.font='700 23px -apple-system, sans-serif'; ctx.fillText(line.ordinal, ordinalX, y);
-      ctx.fillStyle='#f1f5f9'; ctx.font='600 23px -apple-system, sans-serif'; ctx.fillText(line.label, labelX, y);
+
+      // 主資訊維持單行；助攻獨立第二行，避免被比分欄位擠掉。
+      const actorMax=scoreX-labelX-76;
+      ctx.fillStyle='#f1f5f9';
+      ctx.font='600 23px -apple-system, sans-serif';
+      let actor=String(line.actor||'');
+      while(actor.length>1 && ctx.measureText(actor+'…').width>actorMax){
+        actor=actor.slice(0,-1);
+      }
+      if(actor!==line.actor) actor+='…';
+      ctx.fillText(actor,labelX,y);
+
+      if(hasAssist){
+        ctx.fillStyle='#fbbf24';
+        ctx.font='800 19px -apple-system, sans-serif';
+        ctx.fillText(line.assist,labelX,y+24);
+      }
+
       ctx.fillStyle='#cbd5e1'; ctx.font='700 25px -apple-system, sans-serif'; ctx.textAlign='right'; ctx.fillText(line.score, scoreX, y);
-      ctx.strokeStyle='#263442'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pad,y+19); ctx.lineTo(W-pad,y+19); ctx.stroke();
-      ctx.textAlign='left'; y+=52;
+      ctx.strokeStyle='#263442'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pad,y+(hasAssist?35:19)); ctx.lineTo(W-pad,y+(hasAssist?35:19)); ctx.stroke();
+      ctx.textAlign='left'; y+=hasAssist?66:52;
     }else if(line.type==='otherTableHeader'){
       ctx.fillStyle='#172435'; roundRect(ctx,pad,y-18,W-pad*2,34,10,true,false);
       ctx.fillStyle='#93c5fd'; ctx.font='800 20px -apple-system, sans-serif'; ctx.textAlign='left';
