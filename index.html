@@ -8394,35 +8394,6 @@ body.resultMode.finalOutputVisible{
   font-size:14px!important;
   box-shadow:0 0 0 1px rgba(255,255,255,.04) inset;
 }
-#logModal .scoreSnapGoal{
-  min-width:96px!important;
-  padding:6px 8px!important;
-  border-radius:12px!important;
-  text-align:right;
-}
-#logModal .scoreChange{
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:5px;
-  color:#ecfdf3;
-  font-size:14px;
-  font-weight:950;
-  line-height:1.1;
-  white-space:nowrap;
-}
-#logModal .scoreChange .before{color:#b7f7c6; opacity:.88}
-#logModal .scoreChange .arrow{color:#86efac}
-#logModal .scoreChange .after{color:#ffffff}
-#logModal .scoreDeltaLabel{
-  margin-top:3px;
-  color:#9ee6af;
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:.25px;
-  white-space:nowrap;
-}
-#logModal .scoreDeltaLabel strong{color:#eaffef;font-weight:950}
 
 #logModal .logTimelineItem .scoreSnapEmpty{
   min-height:18px;
@@ -8502,8 +8473,6 @@ body.resultMode.finalOutputVisible{
   #logModal .logEventPrimary b{font-size:15px!important}
   #logModal .logEvent-goal .logEventPrimary b{font-size:16px!important}
   #logModal .logEvent-red_card .logEventPrimary b{font-size:16px!important}
-  #logModal .scoreChange{font-size:13px}
-  #logModal .scoreDeltaLabel{font-size:9.5px}
   #logModal .priorityBadge{height:18px;padding:0 6px;font-size:9.5px}
   #logModal .logEventTeam{font-size:12.5px}
   #logModal .logTimelineItem .editMarkerBtn{
@@ -8524,20 +8493,6 @@ body.resultMode.finalOutputVisible{
   #logModal .logEventPrimary b{font-size:14px!important}
   #logModal .logEventTeam{font-size:12px}
   #logModal .logAssistTag{font-size:10px}
-}
-
-
-/* =========================
-   v4.83 Score separator system
-   即時主比分牌：保留冒號，降低一點視覺權重。
-   摘要 / 事件紀錄 / 分享文字：統一使用 en dash（–）。
-   ========================= */
-.scoreColon{
-  color:rgba(199,213,227,.58)!important;
-  transform:translateY(-1px) scaleY(1.06);
-}
-body.matchStatePre .scoreColon{
-  color:rgba(177,193,210,.43)!important;
 }
 
 </style>
@@ -9741,14 +9696,6 @@ function fmtMMSS(sec){
   const m=Math.floor(sec/60), s=sec%60;
   return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 }
-function fmtScoreText(a,b){
-  if(b!==undefined && b!==null){
-    return `${Math.max(0,Number(a)||0)}–${Math.max(0,Number(b)||0)}`;
-  }
-  const raw=String(a??'').trim();
-  const m=raw.match(/^(\d+)\s*:\s*(\d+)$/);
-  return m ? `${m[1]}–${m[2]}` : raw;
-}
 function fmtClock(epoch){
   if(!epoch) return '--:--:--';
   const d=new Date(epoch);
@@ -9994,7 +9941,7 @@ function completedPeriodSummaryHTML(){
   state.periods.forEach(p=>{
     const our=Math.max(0,(p.endOurScore??0)-(p.startOurScore??0));
     const opp=Math.max(0,(p.endOppScore??0)-(p.startOppScore??0));
-    rows.push(`<div class="periodSummaryRow"><div class="pname">${escapeHtml(p.label||periodLabel(p.number))}</div><div class="ptime">${fmtMMSS(p.duration||0)}</div><div class="pscore">${fmtScoreText(our,opp)}</div></div>`);
+    rows.push(`<div class="periodSummaryRow"><div class="pname">${escapeHtml(p.label||periodLabel(p.number))}</div><div class="ptime">${fmtMMSS(p.duration||0)}</div><div class="pscore">${our}:${opp}</div></div>`);
     if(Number(p.number)===1 && state.halftimeStartEpoch){
       rows.push(`<div class="periodSummaryRow"><div class="pname">中場休息</div><div class="ptime">${fmtMMSS(halftimeElapsed())}</div><div class="pscore">—</div></div>`);
     }
@@ -11222,7 +11169,7 @@ function penaltySummaryHTML(){
     rows+=`<div class="penaltySummaryRow"><div class="penaltySummaryRoundNo">${i+1}</div><div class="penaltySummaryKick">${one(a)}</div><div class="penaltySummaryKick">${one(b)}</div></div>`;
   }
   const head=`<div class="penaltySummaryHead"><div>輪</div><div>${escapeHtml(state.ourTeam||'我方')} 背號</div><div>${escapeHtml(state.oppTeam||'對手')} 背號</div></div>`;
-  return `<div class="penaltySummaryTop"><span>${escapeHtml(state.ourTeam||'我方')} vs ${escapeHtml(state.oppTeam||'對手')}</span><span class="penaltySummaryScore">PK ${fmtScoreText(penaltyGoals('our'),penaltyGoals('opp'))}</span></div>${head}${rows}`;
+  return `<div class="penaltySummaryTop"><span>${escapeHtml(state.ourTeam||'我方')} vs ${escapeHtml(state.oppTeam||'對手')}</span><span class="penaltySummaryScore">PK ${penaltyGoals('our')} : ${penaltyGoals('opp')}</span></div>${head}${rows}`;
 }
 
 function confirmFinishFull(){
@@ -11823,31 +11770,6 @@ function parseScorePair(value){
   return m ? [Number(m[1]),Number(m[2])] : null;
 }
 
-function getGoalScoreChange(marker, prevMarker=null){
-  if(!marker || marker.event!=='GOAL' || !marker.score_after) return null;
-  const after=parseScorePair(marker.score_after);
-  if(!after) return null;
-
-  let before=prevMarker && prevMarker.score_after ? parseScorePair(prevMarker.score_after) : null;
-  if(!before){
-    before=[after[0], after[1]];
-    if(marker.team==='OUR') before[0]=Math.max(0,before[0]-1);
-    else if(marker.team==='OPP') before[1]=Math.max(0,before[1]-1);
-  }
-
-  const teamName=marker.team==='OUR'
-    ? (state.ourTeam||'我方')
-    : marker.team==='OPP'
-      ? (state.oppTeam||'對手')
-      : '比分';
-
-  return {
-    before:fmtScoreText(before[0],before[1]),
-    after:fmtScoreText(after[0],after[1]),
-    deltaLabel:`${teamName} +1`
-  };
-}
-
 function adjustScoreSnapshotsFrom(startIndex,dOur,dOpp){
   if(!dOur && !dOpp) return;
   for(let i=startIndex;i<state.markers.length;i++){
@@ -12156,11 +12078,8 @@ function renderLogTo(container, filterEvent=null){
     const score=m.score_after||'';
     const prevMarker=i>0 ? state.markers[i-1] : null;
     const showScore=shouldShowLogScore(m, prevMarker);
-    const goalScoreChange=getGoalScoreChange(m, prevMarker);
     const scoreBlock=showScore
-      ? (m.event==='GOAL' && goalScoreChange
-          ? `<div class="scoreSnap scoreSnapGoal"><div class="scoreChange"><span class="before">${escapeHtml(goalScoreChange.before)}</span><span class="arrow">→</span><span class="after">${escapeHtml(goalScoreChange.after)}</span></div><div class="scoreDeltaLabel">得分變化 <strong>${escapeHtml(goalScoreChange.deltaLabel)}</strong></div></div>`
-          : `<div class="scoreSnap">${escapeHtml(fmtScoreText(score))}</div>`)
+      ? `<div class="scoreSnap">${escapeHtml(score)}</div>`
       : `<div class="scoreSnap scoreSnapEmpty" aria-hidden="true"></div>`;
 
     // 本場事件統計 drill-down 維持原本唯讀列表，不放編輯 / 刪除。
@@ -12938,7 +12857,7 @@ function reportEventHTML(m, goalIndex=null){
   const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
   const assist=m.assist_number ? `｜助攻 #${m.assist_number}` : '';
   const label = `${team}${num}${assist}`;
-  return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="goalOrdinal">${ordinal}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="rscore">${fmtScoreText(m.score_after||'')}</div></div>`;
+  return `<div class="reportEvent"><div class="reportPeriodTime">${escapeHtml(periodTime)}</div><div class="goalOrdinal">${ordinal}</div><div class="reportLabel" title="${escapeHtml(label)}">${escapeHtml(label)}</div><div class="rscore">${m.score_after||''}</div></div>`;
 }
 function reportTypeHTML(event){
   if(event==='YELLOW_CARD'){
@@ -12959,14 +12878,14 @@ function reportOtherEventHTML(m){
     <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
     <div class="reportLabel" title="${escapeHtml(actor)}">${escapeHtml(actor)}</div>
     <div class="reportType">${reportTypeHTML(m.event)}</div>
-    <div class="rscore">${fmtScoreText(m.score_after||'')}</div>
+    <div class="rscore">${m.score_after||''}</div>
   </div>`;
 }
 
 function buildReportDOM(){
   byId('reportOurTeam').textContent=state.ourTeam||'我方';
   byId('reportOppTeam').textContent=state.oppTeam||'對手';
-  byId('reportScore').textContent=fmtScoreText(state.ourScore,state.oppScore);
+  byId('reportScore').textContent=`${state.ourScore} : ${state.oppScore}`;
   const totalElapsed=totalMatchElapsed();
   const reportStartEpoch=matchStartEpoch();
   const reportEndEpoch=matchEndEpoch();
@@ -13020,7 +12939,7 @@ function buildReportDOM(){
 
   const badge=byId('reportStatusBadge');
   badge.className='reportStatusBadge ' + (state.finished ? 'finished' : (state.started ? 'running' : 'idle'));
-  badge.textContent=state.finished ? (state.penalty?.completed?`比賽結束｜PK ${fmtScoreText(penaltyGoals('our'),penaltyGoals('opp'))}`:'比賽結束') : (state.penalty?.active?`PK ${fmtScoreText(penaltyGoals('our'),penaltyGoals('opp'))}`:(state.started ? (state.currentPeriod===3?'延長賽':state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?(state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':`中場 ${fmtMMSS(halftimeElapsed())}`):'尚未開始')));
+  badge.textContent=state.finished ? (state.penalty?.completed?`比賽結束｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:'比賽結束') : (state.penalty?.active?`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:(state.started ? (state.currentPeriod===3?'延長賽':state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?(state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':`中場 ${fmtMMSS(halftimeElapsed())}`):'尚未開始')));
   badge.style.display=state.finished?'none':'inline-flex';
   renderDiff(byId('reportDiff'));
   const goals=state.markers.filter(m=>m.event==='GOAL');
@@ -13081,7 +13000,7 @@ function closeReport(){
 function reportLines(){
   const lines=[];
   lines.push({type:'title', text:'足球比賽摘要'});
-  lines.push({type:'score', left:state.ourTeam||'我方', score:fmtScoreText(state.ourScore,state.oppScore), right:state.oppTeam||'對手', status: state.finished ? '比賽結束' : (state.started ? (state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?'上半場結束':'尚未開始'))});
+  lines.push({type:'score', left:state.ourTeam||'我方', score:`${state.ourScore} : ${state.oppScore}`, right:state.oppTeam||'對手', status: state.finished ? '比賽結束' : (state.started ? (state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?'上半場結束':'尚未開始'))});
   if(state.competition) lines.push({type:'meta', text:`賽事：${state.competition}`});
   lines.push({type:'meta', text:`場地：${state.venue||'未填場地'}`});
   const pngRoster=currentRosterNumbers();
@@ -13097,7 +13016,7 @@ function reportLines(){
     state.periods.forEach(p=>{
       const psOur=Math.max(0,(p.endOurScore??0)-(p.startOurScore??0));
       const psOpp=Math.max(0,(p.endOppScore??0)-(p.startOppScore??0));
-      lines.push({type:'meta', text:`${p.label||periodLabel(p.number)}：${fmtScoreText(psOur,psOpp)}｜${fmtMMSS(p.duration||0)}`});
+      lines.push({type:'meta', text:`${p.label||periodLabel(p.number)}：${psOur}:${psOpp}｜${fmtMMSS(p.duration||0)}`});
       if(Number(p.number)===1 && state.halftimeStartEpoch){
         lines.push({type:'meta', text:`中場開始：${fmtClock(state.halftimeStartEpoch)}`});
         lines.push({type:'meta', text:`中場結束：${state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--'}`});
@@ -13107,7 +13026,7 @@ function reportLines(){
   }
   if(state.penalty){
     lines.push({type:'section', text:'PK 點球大戰'});
-    lines.push({type:'meta', text:`PK 比分：${fmtScoreText(penaltyGoals('our'),penaltyGoals('opp'))}`});
+    lines.push({type:'meta', text:`PK 比分：${penaltyGoals('our')} : ${penaltyGoals('opp')}`});
     const pkCount=Math.max(state.penalty.our.length,state.penalty.opp.length);
     for(let i=0;i<pkCount;i++){
       const a=state.penalty.our[i]||emptyPenaltyKick();
@@ -13146,7 +13065,7 @@ function reportLines(){
       periodTime:period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds),
       ordinal:`G${i+1}`,
       label:`${team}${num}${m.assist_number?`｜助攻 #${m.assist_number}`:''}`,
-      score:fmtScoreText(m.score_after||'')
+      score:m.score_after||''
     });
   });
   lines.push({type:'section', text:'其他精彩標記事件'});
@@ -13162,7 +13081,7 @@ function reportLines(){
       typeLabel:eventLabel(m.event),
       periodTime:period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds),
       actor:`${team}${m.player_number ? ` #${m.player_number}` : ''}`,
-      score:fmtScoreText(m.score_after||'')
+      score:m.score_after||''
     });
   });
   return lines;
@@ -13486,11 +13405,11 @@ function reportHTMLText(){
     const team=teamDisplay(m.team);
     const num=m.player_number?` #${m.player_number}`:'';
     const assist=m.assist_number?`　助攻 #${escapeHtml(m.assist_number)}`:'';
-    return `<li><span>${fmtMMSS(m.seconds)}</span> 第${i+1}球　⚽ 進球 · ${escapeHtml(team+num)}${assist} <b>${escapeHtml(fmtScoreText(m.score_after||''))}</b></li>`;
+    return `<li><span>${fmtMMSS(m.seconds)}</span> 第${i+1}球　⚽ 進球 · ${escapeHtml(team+num)}${assist} <b>${escapeHtml(m.score_after||'')}</b></li>`;
   }).join('') : '<li>尚未標記進球事件</li>';
   const otherHtml=others.length ? others.map(m=>{
     const team=teamDisplay(m.team);
-    return `<li><span>${fmtMMSS(m.seconds)}</span> ${emoji(m.event)} ${escapeHtml(m.second_yellow?'紅牌（兩黃）':eventLabel(m.event))}${team ? ' · '+escapeHtml(team) : ''}${m.player_number ? ' #'+escapeHtml(m.player_number) : ''} <b>${escapeHtml(fmtScoreText(m.score_after||''))}</b></li>`;
+    return `<li><span>${fmtMMSS(m.seconds)}</span> ${emoji(m.event)} ${escapeHtml(m.second_yellow?'紅牌（兩黃）':eventLabel(m.event))}${team ? ' · '+escapeHtml(team) : ''}${m.player_number ? ' #'+escapeHtml(m.player_number) : ''} <b>${escapeHtml(m.score_after||'')}</b></li>`;
   }).join('') : '<li>尚未標記其他精彩事件</li>';
   let diff='';
   if(state.regulationMinutes && state.finished){
@@ -13503,8 +13422,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;backg
 h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;text-align:center;font-weight:800}
 .meta{color:#aeb9c5;text-align:center;margin-top:10px}h2{font-size:16px;color:#38bdf8}ul{list-style:none;padding:0;margin:0}li{padding:10px 0;border-bottom:1px solid #334155}li span{display:inline-block;width:90px;color:#facc15}.note{font-size:12px;color:#64748b;text-align:center}
 </style></head><body><div class="wrap">
-<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${fmtScoreText(state.ourScore,state.oppScore)}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">${state.competition?`🏆 ${escapeHtml(state.competition)}　`:''}📍 ${escapeHtml(state.venue||'未填場地')}　⏱ ${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</div></div>
-${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${fmtScoreText(penaltyGoals('our'),penaltyGoals('opp'))}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
+<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">${state.competition?`🏆 ${escapeHtml(state.competition)}　`:''}📍 ${escapeHtml(state.venue||'未填場地')}　⏱ ${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</div></div>
+${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}${totalMatchElapsed()>=3600?`　<span class="note">總計 ${fmtMMSS(totalMatchElapsed())}</span>`:''}</p>${state.halftimeStartEpoch?`<p><b>中場開始：</b>${escapeHtml(fmtClock(state.halftimeStartEpoch))}<br><b>中場結束：</b>${escapeHtml(state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--')}<br><b>中場休息：</b>${escapeHtml(fmtMMSS(halftimeElapsed()))}</p>`:''}${diff}</div>
 <div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
@@ -13607,7 +13526,7 @@ async function shareCSV(){
     try{
       await navigator.share({
         title:'足球精彩標記 CSV',
-        text:`${state.ourTeam||'我方'} ${fmtScoreText(state.ourScore,state.oppScore)} ${state.oppTeam||'對手'}${state.competition?`｜${state.competition}`:''}｜${state.venue||'未填場地'}`,
+        text:`${state.ourTeam||'我方'} ${state.ourScore}:${state.oppScore} ${state.oppTeam||'對手'}${state.competition?`｜${state.competition}`:''}｜${state.venue||'未填場地'}`,
         files:[file]
       });
       return;
