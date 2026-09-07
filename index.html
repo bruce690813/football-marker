@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.88</title>
+<title>足球場邊記錄器 v4.93</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1411,14 +1411,6 @@ body.keyboardOpen .finalToolsCard{display:none}
 .reportTimeCard{border:1px solid #2b3744;border-radius:12px;padding:10px;background:#111b26;margin-bottom:14px}
 .reportTimeGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px}
 .reportActual{font-size:24px;font-weight:900;color:#38bdf8;text-align:center;margin-top:8px}
-.reportActual .rawDuration{
-  display:block;
-  margin-top:4px;
-  color:#8290a4;
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:.2px;
-}
 .crossDayBadge{
   display:none;
   width:max-content;
@@ -7233,7 +7225,7 @@ body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
 
 
 /* =========================
-   v4.88 iPhone Safari 全場底部 Safe Area QA
+   v4.87 iPhone Safari 全場底部 Safe Area QA
    目的：
    1. 滑到頁面最底時，「＋ 新比賽」可完整露出
    2. 按鈕底部與 Safari 工具列至少保留約 16px 的視覺安全距離
@@ -7296,7 +7288,7 @@ html{
 }
 
 
-/* v4.88 QA 補強：iPhone SE / 4.7 吋級 320～375px */
+/* v4.87 QA 補強：iPhone SE / 4.7 吋級 320～375px */
 @media(max-width:375px){
   body.resultMode.finalOutputVisible{
     --result-bottom-safe-tail:
@@ -7306,7 +7298,7 @@ html{
 
 
 /* =========================
-   v4.88 全場「＋ 新比賽」Safari 可視區修正
+   v4.87 全場「＋ 新比賽」Safari 可視區修正
    這版不只增加頁尾空間，而是：
    1. 全場工具區稍微 compact，減少垂直佔用
    2. 保留可捲動 Safe Area
@@ -7371,13 +7363,13 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn{
 
 
 /* =========================
-   v4.88 全場 viewport 校正
+   v4.87 全場 viewport 校正
    =========================
    v4.70 的問題：
    為了讓「＋ 新比賽」立即露出，會自動 scrollBy，
    因此全場一進入就把標題 / 賽事名稱 / 場地往上推掉。
 
-   v4.88：
+   v4.87：
    - 完全取消全場自動捲動。
    - 進入全場時維持使用者原本畫面位置。
    - 「＋ 新比賽」的 Safari 防遮蔽只靠真實文件流 Safe Area。
@@ -7424,7 +7416,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.88 About：線上工具 / 免下載 App
+   v4.87 About：線上工具 / 免下載 App
    設計原則：
    「線上工具」是產品使用方式，不是第 4 個功能，
    因此放在 Hero 內做 compact badge，而不增加功能卡。
@@ -7505,7 +7497,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.88 About 最後視覺 polish
+   v4.87 About 最後視覺 polish
    1. 線上工具 badge 降低按鈕感
    2. badge 與介紹文字增加呼吸距離
    3. 底部 CTA 收斂高光與藍色漸層
@@ -7571,7 +7563,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.88 時間紀錄 UI/UX 收尾
+   v4.87 時間紀錄 UI/UX 收尾
    ========================= */
 
 /* 日期只出現一次，降低每列重複 YYYY/MM/DD 的視覺噪音。 */
@@ -7717,7 +7709,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.88 本場名單 / 守門員 Design System 一致化
+   v4.87 本場名單 / 守門員 Design System 一致化
    ========================= */
 
 /* A. 本場名單：主流 iPhone 統一 6 欄快捷背號。 */
@@ -7935,7 +7927,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.88 進球流程 Player Picker Design System
+   v4.87 進球流程 Player Picker Design System
    ========================= */
 .playerPickerSourceRow{
   display:flex;align-items:center;justify-content:space-between;
@@ -8020,7 +8012,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.88 射門 / 防守 Player Picker 收尾
+   v4.87 射門 / 防守 Player Picker 收尾
    ========================= */
 /* 射門與防守與進球流程共用同一個視覺層級：事件標題 → 簡短提示 → 名單來源 → 6欄背號。 */
 #numberModal:not(.cardFlow) .numberTitle{
@@ -8057,7 +8049,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.88 黃 / 紅牌 Player Picker Design System 收尾
+   v4.87 黃 / 紅牌 Player Picker Design System 收尾
    ========================= */
 
 /* Step 1「選擇球隊」與 Step 2「選擇球員」使用同一張真實牌卡。
@@ -8143,7 +8135,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.88 事件紀錄 Timeline UI
+   v4.87 事件紀錄 Timeline UI
    - 球隊名稱固定單行，避免「足球 / 隊」破碎換行
    - 恢復事件 icon，沿用首頁事件語言
    - 第幾筆降權重，時間與事件成為主要資訊
@@ -8315,25 +8307,27 @@ body.resultMode.finalOutputVisible{
   font-size:17px!important;
   text-shadow:0 0 12px rgba(239,68,68,.16);
 }
-#logModal .priorityBadge{
+/* v4.93：進球比分就是有價值的附加資訊，取代「關鍵事件」文字。 */
+#logModal .goalScoreInline{
+  flex:0 0 auto;
   display:inline-flex;
   align-items:center;
-  height:20px;
-  padding:0 7px;
+  justify-content:center;
+  min-width:38px;
+  height:21px;
+  padding:0 8px;
+  margin-left:2px;
   border-radius:999px;
-  font-size:10px;
+  background:linear-gradient(180deg,rgba(49,128,76,.42) 0%,rgba(28,93,51,.42) 100%);
+  border:1px solid rgba(91,220,127,.38);
+  color:#d9ffe2;
+  font-size:12px;
   font-weight:950;
-  letter-spacing:.3px;
-}
-#logModal .priorityBadge-goal{
-  background:rgba(52,199,89,.16);
-  border:1px solid rgba(52,199,89,.32);
-  color:#b7f7c6;
-}
-#logModal .priorityBadge-red{
-  background:rgba(239,68,68,.16);
-  border:1px solid rgba(239,68,68,.30);
-  color:#fecaca;
+  line-height:1;
+  letter-spacing:.15px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 0 12px rgba(52,199,89,.08);
 }
 #logModal .logEvent-goal .logEventIcon{
   font-size:20px;
@@ -8376,7 +8370,7 @@ body.resultMode.finalOutputVisible{
 }
 #logModal .logEventTeamMuted{color:#66788d}
 
-/* 右欄：比分第一、維護操作第二。 */
+/* 右欄：一般事件若需要才顯示比分；進球比分已移到事件主體，右側以維護操作為主。 */
 #logModal .logRowSide{
   align-self:stretch;
   min-width:0;
@@ -8395,17 +8389,6 @@ body.resultMode.finalOutputVisible{
   text-align:right;
   line-height:1.1;
 }
-#logModal .logEvent-goal .scoreSnap{
-  min-width:auto!important;
-  padding:4px 8px!important;
-  border-radius:999px;
-  background:rgba(52,199,89,.12);
-  border:1px solid rgba(52,199,89,.28);
-  color:#d9ffe2!important;
-  font-size:14px!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.04) inset;
-}
-
 #logModal .logTimelineItem .scoreSnapEmpty{
   min-height:18px;
 }
@@ -8484,7 +8467,7 @@ body.resultMode.finalOutputVisible{
   #logModal .logEventPrimary b{font-size:15px!important}
   #logModal .logEvent-goal .logEventPrimary b{font-size:16px!important}
   #logModal .logEvent-red_card .logEventPrimary b{font-size:16px!important}
-  #logModal .priorityBadge{height:18px;padding:0 6px;font-size:9.5px}
+  #logModal .goalScoreInline{height:19px;min-width:35px;padding:0 7px;font-size:11px}
   #logModal .logEventTeam{font-size:12.5px}
   #logModal .logTimelineItem .editMarkerBtn{
     width:32px!important;height:32px!important;min-width:32px!important;
@@ -8514,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.88</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.87</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8570,7 +8553,7 @@ body.resultMode.finalOutputVisible{
       <div class="scoreRow">
         <div class="teamNameBox" id="ourTeamBox" onclick="editTeamName('ourTeam')">
           <div class="teamNameDisplay" id="ourTeamDisplay">忠義</div>
-          <input id="ourTeam" class="teamNameEditor" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱">
+          <input id="ourTeam" class="teamNameEditor" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱，可稍後補充">
         </div>
         <div class="scoreMid">
           <div class="scoreText" aria-label="目前比分">
@@ -8775,7 +8758,7 @@ body.resultMode.finalOutputVisible{
     <div class="resultMetaEditHint">全場後可補充或修正賽事名稱與場地；不影響比分、事件時間、守門員或本場球員名單。</div>
     <div class="resultMetaField">
       <label for="resultCompetitionInput">🏆 賽事名稱</label>
-      <input id="resultCompetitionInput" type="text" maxlength="20" placeholder="例如 黃蜂盃">
+      <input id="resultCompetitionInput" type="text" maxlength="15" placeholder="例如 黃蜂盃">
     </div>
     <div class="resultMetaField">
       <label for="resultVenueInput">🏟️ 場地</label>
@@ -8793,7 +8776,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.88</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.87</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -9111,6 +9094,38 @@ body.resultMode.finalOutputVisible{
   </div>
 </div>
 
+
+<!-- Marker manage action sheet -->
+<div class="modalBack" id="markerManageModal">
+  <div class="markerManageSheet" role="dialog" aria-modal="true" aria-labelledby="markerManageTitle">
+    <div class="markerManageHead">
+      <div class="markerManageEyebrow">事件管理</div>
+      <h2 id="markerManageTitle">管理這筆事件</h2>
+      <div class="markerManageSummary" id="markerManageSummary">--</div>
+    </div>
+
+    <div class="markerManageActions">
+      <button type="button" class="markerManageEdit" onclick="editManagedMarker()">
+        <span class="markerManageActionIcon" aria-hidden="true">✎</span>
+        <span>
+          <b>編輯事件</b>
+          <small>修改事件類型、球隊或球員背號</small>
+        </span>
+      </button>
+
+      <button type="button" class="markerManageDelete" onclick="deleteManagedMarker()">
+        <span class="markerManageActionIcon" aria-hidden="true">⌫</span>
+        <span>
+          <b>刪除事件</b>
+          <small>刪除後無法復原</small>
+        </span>
+      </button>
+
+      <button type="button" class="markerManageCancel" onclick="closeMarkerManage()">取消</button>
+    </div>
+  </div>
+</div>
+
 <!-- Edit marker modal -->
 <div class="modalBack" id="editMarkerModal">
   <div class="modal editMarkerModal" role="dialog" aria-modal="true" aria-labelledby="editMarkerTitle">
@@ -9180,7 +9195,6 @@ body.resultMode.finalOutputVisible{
         <span id="reportCompetition" style="display:none">🏆 賽事</span>
         <span id="reportVenue" class="reportVenueMeta"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText">未填場地</span></span>
         <span id="reportRoster" style="display:none">👕 本場名單</span>
-        <span id="reportDuration">⏱ 00:00</span>
       </div>
       <div class="reportStatusBadge idle" id="reportStatusBadge">尚未開始</div>
     </div>
@@ -9248,237 +9262,57 @@ let pendingFinishEnd=null, pendingFinishElapsed=null;
 let timeExpanded=false;
 let regulationEditorExpanded=false;
 
-const SECURITY_LIMITS=Object.freeze({
-  ourTeam:15,
-  oppTeam:15,
-  venue:15,
-  competition:20,
-  markerCount:2000,
-  periodCount:10,
-  penaltyRounds:50,
-  maxElapsedSeconds:2678400, // 31 days: protects render/export from poisoned localStorage
-  maxEpoch:4102444800000     // 2100-01-01 UTC, well beyond normal match data
-});
-const ALLOWED_MARKER_EVENTS=new Set(['GOAL','SAVE','SHOT','DEFENSE','YELLOW_CARD','RED_CARD']);
-const ALLOWED_TEAMS=new Set(['OUR','OPP']);
-const ALLOWED_NEXT_PERIOD_TYPES=new Set(['SECOND_HALF','EXTRA_TIME']);
-const ALLOWED_PENALTY_RESULTS=new Set(['GOAL','MISS']);
-const CONTROL_CHARS_RE=/[\u0000-\u001F\u007F-\u009F]/g;
-
-function createDefaultState(){
-  return {
-    ourTeam:'忠義', oppTeam:'', venue:'', competition:'',
-    started:false, finished:false,
-    startEpoch:null, endEpoch:null, finalElapsed:0,
-    regulationMinutes:null,
-    ourScore:0, oppScore:0,
-    markers:[],
-    currentPeriod:1,
-    awaitingNextPeriod:false,
-    multiPeriod:false,
-    periodStartOurScore:0,
-    periodStartOppScore:0,
-    periods:[],
-    nextPeriodType:null,
-    extraTime:false,
-    extraTimeMinutes:null,
-    penalty:null,
-    goalkeeperNumber:'',
-    rosterNumbers:[],
-    halftimeStartEpoch:null,
-    halftimeEndEpoch:null,
-    halftimeDuration:0
-  };
-}
-let state=createDefaultState();
+let state={
+  ourTeam:'忠義', oppTeam:'', venue:'', competition:'',
+  started:false, finished:false,
+  startEpoch:null, endEpoch:null, finalElapsed:0,
+  regulationMinutes:null,
+  ourScore:0, oppScore:0,
+  markers:[],
+  currentPeriod:1,
+  awaitingNextPeriod:false,
+  multiPeriod:false,
+  periodStartOurScore:0,
+  periodStartOppScore:0,
+  periods:[],
+  nextPeriodType:null,
+  extraTime:false,
+  extraTimeMinutes:null,
+  penalty:null,
+  goalkeeperNumber:'',
+  rosterNumbers:[],
+  halftimeStartEpoch:null,
+  halftimeEndEpoch:null,
+  halftimeDuration:0
+};
 
 function byId(id){ return document.getElementById(id); }
 
-// Security Hardening v4.88: all free-text input follows one validator.
-// Input validation is UX / data-quality defense; output encoding remains the XSS boundary.
-function normalizePlainText(value){
-  let text=String(value??'');
-  try{ text=text.normalize('NFC'); }catch(e){}
-  return text.replace(CONTROL_CHARS_RE,'').replace(/[<>]/g,'').trim();
-}
-function sanitizeStoredText(value,maxLength){
-  return normalizePlainText(value).slice(0,Math.max(0,Number(maxLength)||0));
-}
-function validatePlainTextValue(value,{label='欄位',required=false,maxLength=15,rejectNumericOnly=false}={}){
-  const raw=String(value??'');
-  let normalized=raw;
-  try{ normalized=normalized.normalize('NFC'); }catch(e){}
-
-  if(CONTROL_CHARS_RE.test(normalized)){
-    CONTROL_CHARS_RE.lastIndex=0;
-    return {ok:false,value:'',message:`${label}不可包含控制字元或換行`};
-  }
-  CONTROL_CHARS_RE.lastIndex=0;
-
-  const text=normalized.trim();
-  if(required && !text) return {ok:false,value:'',message:`請先輸入${label}`};
-  if(text.length>maxLength) return {ok:false,value:text,message:`${label}最多可輸入 ${maxLength} 個字`};
-  if(/[<>\r\n]/.test(text)) return {ok:false,value:text,message:`${label}不可包含 <、> 或換行字元`};
-  if(rejectNumericOnly && text && /^\d+$/.test(text)) return {ok:false,value:text,message:`${label}不可全部為數字`};
-  return {ok:true,value:text,message:''};
-}
-function validateTextField(id,label,required,maxLength,options={}){
+function validateTextField(id, label, required, maxLength){
   const el=byId(id);
-  if(!el) return null;
-  const result=validatePlainTextValue(el.value,{label,required,maxLength,...options});
-  if(!result.ok){
+  const value=el.value.trim();
+
+  if(required && !value){
     el.classList.add('requiredError');
-    alert(result.message);
+    alert(`請先輸入${label}`);
     el.focus();
     return null;
   }
+  if(value.length>maxLength){
+    el.classList.add('requiredError');
+    alert(`${label}最多可輸入 ${maxLength} 個字`);
+    el.focus();
+    return null;
+  }
+  if(/[<>\r\n]/.test(value)){
+    el.classList.add('requiredError');
+    alert(`${label}不可包含 <、> 或換行字元`);
+    el.focus();
+    return null;
+  }
+
   el.classList.remove('requiredError');
-  el.value=result.value;
-  return result.value;
-}
-
-function safeInteger(value,min,max,fallback){
-  const n=Number(value);
-  return Number.isInteger(n)&&n>=min&&n<=max ? n : fallback;
-}
-function safeFiniteNumber(value,min,max,fallback){
-  const n=Number(value);
-  return Number.isFinite(n)&&n>=min&&n<=max ? n : fallback;
-}
-function safeBoolean(value,fallback=false){ return typeof value==='boolean' ? value : fallback; }
-function safeEpoch(value){
-  if(value===null || value===undefined || value==='') return null;
-  return safeFiniteNumber(value,0,SECURITY_LIMITS.maxEpoch,null);
-}
-function safePlayerNumber(value){
-  if(value===null || value===undefined || value==='') return '';
-  const n=Number(value);
-  return Number.isInteger(n)&&n>=1&&n<=99 ? String(n) : '';
-}
-function safeScoreSnapshot(value){
-  const m=String(value??'').match(/^(\d{1,2})\s*:\s*(\d{1,2})$/);
-  if(!m) return '';
-  const a=safeInteger(m[1],0,99,null), b=safeInteger(m[2],0,99,null);
-  return a===null||b===null ? '' : `${a}:${b}`;
-}
-function safeIsoTimestamp(value){
-  const s=sanitizeStoredText(value,40);
-  if(!s) return '';
-  const t=Date.parse(s);
-  return Number.isFinite(t) ? new Date(t).toISOString() : '';
-}
-function sanitizeMarkerRecord(marker){
-  if(!marker || typeof marker!=='object' || Array.isArray(marker)) return null;
-  const event=ALLOWED_MARKER_EVENTS.has(marker.event)?marker.event:null;
-  if(!event) return null;
-  const team=ALLOWED_TEAMS.has(marker.team)?marker.team:'OUR';
-  const period=safeInteger(marker.period,1,3,1);
-  const seconds=safeFiniteNumber(marker.seconds,0,SECURITY_LIMITS.maxElapsedSeconds,0);
-  const player_number=safePlayerNumber(marker.player_number);
-  let assist_number=event==='GOAL' ? safePlayerNumber(marker.assist_number) : '';
-  if(assist_number && assist_number===player_number) assist_number='';
-  const out={
-    event,
-    team,
-    period,
-    period_label:sanitizeStoredText(marker.period_label,12),
-    player_number,
-    ...(event==='GOAL'?{assist_number}:{}),
-    seconds,
-    time:fmtMMSS(seconds),
-    score_after:safeScoreSnapshot(marker.score_after),
-    recorded_at:safeIsoTimestamp(marker.recorded_at)
-  };
-  if(event==='RED_CARD' && marker.second_yellow===true) out.second_yellow=true;
-  const keeperBefore=safePlayerNumber(marker.keeper_before_red);
-  if(event==='RED_CARD' && keeperBefore) out.keeper_before_red=keeperBefore;
-  return out;
-}
-function sanitizePeriodRecord(period){
-  if(!period || typeof period!=='object' || Array.isArray(period)) return null;
-  const number=safeInteger(period.number,1,3,null);
-  if(number===null) return null;
-  const defaultLabel=number===1?'上半場':number===2?'下半場':'延長賽';
-  return {
-    number,
-    label:sanitizeStoredText(period.label,12)||defaultLabel,
-    startEpoch:safeEpoch(period.startEpoch),
-    endEpoch:safeEpoch(period.endEpoch),
-    duration:safeFiniteNumber(period.duration,0,SECURITY_LIMITS.maxElapsedSeconds,0),
-    startOurScore:safeInteger(period.startOurScore,0,99,0),
-    startOppScore:safeInteger(period.startOppScore,0,99,0),
-    endOurScore:safeInteger(period.endOurScore,0,99,0),
-    endOppScore:safeInteger(period.endOppScore,0,99,0)
-  };
-}
-function sanitizePenaltyKick(kick){
-  if(!kick || typeof kick!=='object' || Array.isArray(kick)) return {number:'',result:null};
-  return {
-    number:safePlayerNumber(kick.number),
-    result:ALLOWED_PENALTY_RESULTS.has(kick.result)?kick.result:null
-  };
-}
-function sanitizePenaltyState(penalty,ourScore,oppScore){
-  if(!penalty || typeof penalty!=='object' || Array.isArray(penalty)) return null;
-  const clean={
-    active:safeBoolean(penalty.active,false),
-    completed:safeBoolean(penalty.completed,false),
-    startEpoch:safeEpoch(penalty.startEpoch),
-    endEpoch:safeEpoch(penalty.endEpoch),
-    our:Array.isArray(penalty.our)?penalty.our.slice(0,SECURITY_LIMITS.penaltyRounds).map(sanitizePenaltyKick):[],
-    opp:Array.isArray(penalty.opp)?penalty.opp.slice(0,SECURITY_LIMITS.penaltyRounds).map(sanitizePenaltyKick):[],
-    baseOurScore:safeInteger(penalty.baseOurScore,0,99,ourScore),
-    baseOppScore:safeInteger(penalty.baseOppScore,0,99,oppScore)
-  };
-  return clean;
-}
-function sanitizeLoadedState(input){
-  const base=createDefaultState();
-  if(!input || typeof input!=='object' || Array.isArray(input)) return base;
-
-  const loadedOurTeam=sanitizeStoredText(input.ourTeam,SECURITY_LIMITS.ourTeam);
-  const loadedOppTeam=sanitizeStoredText(input.oppTeam,SECURITY_LIMITS.oppTeam);
-  base.ourTeam=(loadedOurTeam && !/^\d+$/.test(loadedOurTeam))?loadedOurTeam:'';
-  base.oppTeam=(loadedOppTeam && !/^\d+$/.test(loadedOppTeam))?loadedOppTeam:'';
-  base.venue=sanitizeStoredText(input.venue,SECURITY_LIMITS.venue);
-  base.competition=sanitizeStoredText(input.competition,SECURITY_LIMITS.competition);
-  base.started=safeBoolean(input.started,false);
-  base.finished=safeBoolean(input.finished,false);
-  base.startEpoch=safeEpoch(input.startEpoch);
-  base.endEpoch=safeEpoch(input.endEpoch);
-  base.finalElapsed=safeFiniteNumber(input.finalElapsed,0,SECURITY_LIMITS.maxElapsedSeconds,0);
-  base.regulationMinutes=input.regulationMinutes==null?null:safeInteger(input.regulationMinutes,1,45,null);
-  base.ourScore=safeInteger(input.ourScore,0,99,0);
-  base.oppScore=safeInteger(input.oppScore,0,99,0);
-  base.currentPeriod=safeInteger(input.currentPeriod,1,3,1);
-  base.awaitingNextPeriod=safeBoolean(input.awaitingNextPeriod,false);
-  base.multiPeriod=safeBoolean(input.multiPeriod,false);
-  base.periodStartOurScore=safeInteger(input.periodStartOurScore,0,99,0);
-  base.periodStartOppScore=safeInteger(input.periodStartOppScore,0,99,0);
-  base.periods=Array.isArray(input.periods)
-    ? input.periods.slice(0,SECURITY_LIMITS.periodCount).map(sanitizePeriodRecord).filter(Boolean)
-    : [];
-  base.nextPeriodType=ALLOWED_NEXT_PERIOD_TYPES.has(input.nextPeriodType)?input.nextPeriodType:null;
-  base.extraTime=safeBoolean(input.extraTime,false);
-  base.extraTimeMinutes=input.extraTimeMinutes==null?null:safeInteger(input.extraTimeMinutes,1,45,null);
-  base.goalkeeperNumber=safePlayerNumber(input.goalkeeperNumber);
-  base.rosterNumbers=Array.isArray(input.rosterNumbers)
-    ? [...new Set(input.rosterNumbers.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=99))].sort((a,b)=>a-b)
-    : [];
-  base.halftimeStartEpoch=safeEpoch(input.halftimeStartEpoch);
-  base.halftimeEndEpoch=safeEpoch(input.halftimeEndEpoch);
-  base.halftimeDuration=safeFiniteNumber(input.halftimeDuration,0,SECURITY_LIMITS.maxElapsedSeconds,0);
-  base.markers=Array.isArray(input.markers)
-    ? input.markers.slice(0,SECURITY_LIMITS.markerCount).map(sanitizeMarkerRecord).filter(Boolean)
-    : [];
-  base.penalty=sanitizePenaltyState(input.penalty,base.ourScore,base.oppScore);
-
-  // Inconsistent poisoned state is normalized into a deterministic lifecycle.
-  if(base.finished){ base.started=false; base.awaitingNextPeriod=false; }
-  if(base.started){ base.finished=false; }
-  if(base.penalty?.active){ base.started=false; base.finished=false; base.awaitingNextPeriod=false; }
-  if(base.penalty?.completed){ base.started=false; base.finished=true; base.awaitingNextPeriod=false; }
-  return base;
+  return value;
 }
 
 function validateIntegerField(id, label, min, max, allowBlank=false){
@@ -9527,28 +9361,16 @@ function focusMatchRequiredField(id){
 }
 
 function focusFirstMissingPreMatchField(){
-  if(state.started) return false;
-  const el=byId('ourTeam');
-  if(!String(el?.value||'').trim()){
-    guidedSetupStep='our';
-    focusMatchRequiredField('ourTeam');
-    return true;
-  }
+  // v4.93：我方名稱可稍後補，不再有會阻擋開賽的必填欄位。
   return false;
 }
 
 function validateMatchTextFields(){
-  // 開始比賽只要求「我方」必填；對手與場地皆為選填。
-  const ourEl=byId('ourTeam');
-  if(!String(ourEl?.value||'').trim()){
-    focusMatchRequiredField('ourTeam');
-    return false;
-  }
-
-  const our=validateTextField('ourTeam','我方隊伍名稱',true,15);
+  // v4.93：我方 / 對手 / 場地 / 賽事名稱都可稍後補充。
+  // 空白不阻擋開賽；只有「有填內容但格式不合法」才需要修正。
+  const our=validateTextField('ourTeam','我方隊伍名稱',false,15);
   if(our===null){ focusMatchRequiredField('ourTeam'); return false; }
 
-  // 對手／場地若有填才驗證格式；空白不阻擋開始比賽。
   const opp=validateTextField('oppTeam','對手隊伍名稱',false,15);
   if(opp===null){ focusMatchRequiredField('oppTeam'); return false; }
 
@@ -9563,11 +9385,14 @@ function validateMatchTextFields(){
 
 
 function isEligibleVenueValue(value){
-  const result=validatePlainTextValue(value,{label:'場地',required:false,maxLength:SECURITY_LIMITS.venue});
-  if(!result.ok || !result.value) return false;
-  const venue=result.value;
+  const venue=String(value||'').trim();
   const chineseCount=(venue.match(/[\u3400-\u4DBF\u4E00-\u9FFF]/g)||[]).length;
-  return venue.length>=3 && chineseCount>=2;
+  return Boolean(
+    venue.length>=3 &&
+    venue.length<=15 &&
+    chineseCount>=2 &&
+    !/[<>\r\n]/.test(venue)
+  );
 }
 
 function getRecentVenues(){
@@ -9619,7 +9444,7 @@ function renderVenueMenu(){
           <span class="venueName">${escapeHtml(v)}</span>
           <span class="venueRecentIcon">最近</span>
         </button>
-        <button class="venueDeleteBtn" type="button" data-delete-venue-index="${index}" aria-label="刪除 ${escapeAttr(v)}">×</button>
+        <button class="venueDeleteBtn" type="button" data-delete-venue-index="${index}" aria-label="刪除 ${escapeHtml(v)}">×</button>
       </div>
     `).join('');
   }else{
@@ -9793,16 +9618,13 @@ function rememberVenueIfEligible(value){
 }
 
 function saveState(){
-  state.ourTeam=sanitizeStoredText(byId('ourTeam')?.value,SECURITY_LIMITS.ourTeam);
-  state.oppTeam=sanitizeStoredText(byId('oppTeam')?.value,SECURITY_LIMITS.oppTeam);
-  state.venue=sanitizeStoredText(byId('venue')?.value,SECURITY_LIMITS.venue);
-  state.competition=sanitizeStoredText(byId('competition')?.value,SECURITY_LIMITS.competition);
-  // Persist only the documented schema. This also bounds arrays and removes unknown fields.
-  state=sanitizeLoadedState(state);
+  state.ourTeam=byId('ourTeam').value.trim();
+  state.oppTeam=byId('oppTeam').value.trim();
+  state.venue=byId('venue').value.trim();
+  state.competition=byId('competition').value.trim();
   localStorage.setItem(KEY, JSON.stringify(state));
-  const rememberedTeamCheck=validatePlainTextValue(state.ourTeam,{label:'我方隊伍名稱',required:true,maxLength:SECURITY_LIMITS.ourTeam,rejectNumericOnly:true});
-  if(rememberedTeamCheck.ok){
-    localStorage.setItem(LAST_OUR_TEAM_KEY, rememberedTeamCheck.value);
+  if(state.ourTeam && !/[<>\r\n]/.test(state.ourTeam)){
+    localStorage.setItem(LAST_OUR_TEAM_KEY, state.ourTeam);
   }
 
   // v4.04：賽前輸入 / blur / saveState 都不寫入場地歷史。
@@ -9811,39 +9633,63 @@ function saveState(){
   updateAllPreMetaFits();
 }
 function loadState(){
-  let parsed=null;
   try{
     const raw=localStorage.getItem(KEY);
-    if(raw) parsed=JSON.parse(raw);
-  }catch(e){
-    parsed=null;
+    if(raw) state={...state, ...JSON.parse(raw)};
+  }catch(e){}
+  if(!Array.isArray(state.periods)) state.periods=[];
+  if(!Number.isInteger(state.currentPeriod) || state.currentPeriod<1) state.currentPeriod=1;
+  if(typeof state.awaitingNextPeriod!=='boolean') state.awaitingNextPeriod=false;
+  if(typeof state.multiPeriod!=='boolean') state.multiPeriod=false;
+  if(typeof state.periodStartOurScore!=='number') state.periodStartOurScore=0;
+  if(typeof state.periodStartOppScore!=='number') state.periodStartOppScore=0;
+  if(typeof state.extraTime!=='boolean') state.extraTime=false;
+  if(state.extraTimeMinutes!=null) state.extraTimeMinutes=Number(state.extraTimeMinutes)||null;
+  if(!('nextPeriodType' in state)) state.nextPeriodType=null;
+  if(!('penalty' in state)) state.penalty=null;
+  if(!('goalkeeperNumber' in state)) state.goalkeeperNumber='';
+  if(!Array.isArray(state.rosterNumbers)) state.rosterNumbers=[];
+  state.rosterNumbers=[...new Set(state.rosterNumbers.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=99))].sort((a,b)=>a-b);
+  if(!('halftimeStartEpoch' in state)) state.halftimeStartEpoch=null;
+  if(!('halftimeEndEpoch' in state)) state.halftimeEndEpoch=null;
+  if(!('halftimeDuration' in state)) state.halftimeDuration=0;
+  if(!('competition' in state)) state.competition='';
+  if(Array.isArray(state.markers)){
+    state.markers.forEach(m=>{
+      if(!('assist_number' in m)) m.assist_number='';
+      if(m.assist_number!==''){
+        const a=Number(m.assist_number);
+        m.assist_number=(Number.isInteger(a)&&a>=1&&a<=99)?String(a):'';
+      }
+    });
+    // v4.45：清除舊版本可能產生的重複紅牌，以及紅牌退場後仍被記為助攻的無效資料。
+    const cleanedDuplicateRed=sanitizeDuplicateRedCards();
+    const cleanedInvalidAssist=sanitizeInvalidAssistsAfterRed();
+    if(cleanedDuplicateRed || cleanedInvalidAssist){
+      try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){}
+    }
   }
-  state=sanitizeLoadedState(parsed);
-
-  // v4.45 cleanup rules remain after schema validation.
-  const cleanedDuplicateRed=sanitizeDuplicateRedCards();
-  const cleanedInvalidAssist=sanitizeInvalidAssistsAfterRed();
-
-  const rememberedOurRaw=localStorage.getItem(LAST_OUR_TEAM_KEY)||'';
-  const rememberedVenueRaw=localStorage.getItem(LAST_VENUE_KEY)||'';
-  const rememberedOurCheck=validatePlainTextValue(rememberedOurRaw,{label:'我方隊伍名稱',required:false,maxLength:SECURITY_LIMITS.ourTeam,rejectNumericOnly:true});
-  const rememberedOurTeam=rememberedOurCheck.ok?rememberedOurCheck.value:'';
-  const rememberedVenue=sanitizeStoredText(rememberedVenueRaw,SECURITY_LIMITS.venue);
-
-  if(rememberedOurTeam){
-    state.ourTeam=rememberedOurTeam;
-  }else if(!state.ourTeam){
-    state.ourTeam='忠義';
+  if(state.goalkeeperNumber!==''){
+    const gk=Number(state.goalkeeperNumber);
+    state.goalkeeperNumber=(Number.isInteger(gk) && gk>=1 && gk<=99) ? String(gk) : '';
   }
-  if(!state.venue && isEligibleVenueValue(rememberedVenue)){
+  if(state.penalty){
+    if(!Array.isArray(state.penalty.our)) state.penalty.our=[];
+    if(!Array.isArray(state.penalty.opp)) state.penalty.opp=[];
+  }
+  const rememberedOurTeam=localStorage.getItem(LAST_OUR_TEAM_KEY)||'';
+  const rememberedVenue=localStorage.getItem(LAST_VENUE_KEY)||'';
+
+  // 只在「尚未開始的新比賽」帶入常用隊名。
+  // 比賽一旦已開始或已結束，就尊重本場保存的名稱；即使本場是空白，也維持「我方」暫代狀態。
+  if(!state.started && !state.finished && !state.ourTeam){
+    if(rememberedOurTeam) state.ourTeam=rememberedOurTeam;
+    else state.ourTeam='忠義';
+  }
+
+  if(!state.venue && rememberedVenue){
     state.venue=rememberedVenue;
   }
-
-  // Save back a canonical copy when old/poisoned localStorage was normalized.
-  if(parsed || cleanedDuplicateRed || cleanedInvalidAssist){
-    try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){}
-  }
-
   byId('ourTeam').value=state.ourTeam||'';
   byId('oppTeam').value=state.oppTeam||'';
   byId('venue').value=state.venue||'';
@@ -9914,9 +9760,7 @@ function fmtDurationReadable(sec){
   return `${h}小時 ${m}分 ${s}秒`;
 }
 function durationReportHTML(sec){
-  const raw=fmtMMSS(sec);
-  if(Number(sec)<3600) return escapeHtml(raw);
-  return `${escapeHtml(fmtDurationReadable(sec))}<span class="rawDuration">總計 ${escapeHtml(raw)}</span>`;
+  return escapeHtml(fmtDurationReadable(sec));
 }
 function emoji(ev){
   return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', DEFENSE:'🛡️', YELLOW_CARD:'🟨', RED_CARD:'🟥'}[ev] || '•';
@@ -10370,7 +10214,7 @@ function preferredOurNumbers(){
   return roster.length ? roster : allCommonNumbers();
 }
 
-// v4.88：我方背號 picker 共用資格邏輯。
+// v4.87：我方背號 picker 共用資格邏輯。
 // 有本場名單時優先只顯示本場球員；無名單才 fallback 常用背號。
 // 已紅牌退場者排除；可額外排除指定球員（例如助攻不能等於進球者）。
 function eligibleOurPlayerNumbers({excludeNumber='', beforeIndex=null}={}){
@@ -10724,7 +10568,7 @@ function buildKeeperGrid(){
 
   const roster=currentRosterNumbers();
 
-  // v4.88：守門員與進球者 / 助攻者共用相同球員資格規則。
+  // v4.87：守門員與進球者 / 助攻者共用相同球員資格規則。
   const available=eligibleOurPlayerNumbers();
 
   const sourceLabel=byId('keeperSourceLabel');
@@ -10868,9 +10712,52 @@ function buildNumberGrid(){
 }
 
 
+
+let quickNoticeTimer=null;
+function showQuickNotice(title,text,duration=3200){
+  const box=byId('quickNotice');
+  if(!box) return;
+
+  clearTimeout(quickNoticeTimer);
+  byId('quickNoticeTitle').textContent=String(title||'');
+  byId('quickNoticeText').textContent=String(text||'');
+
+  box.classList.remove('show');
+  void box.offsetWidth;
+  box.classList.add('show');
+
+  quickNoticeTimer=setTimeout(()=>{
+    box.classList.remove('show');
+  }, Math.max(1200,Number(duration)||3200));
+}
+
 function validateTeamNameValue(value, label, required=false){
-  const result=validatePlainTextValue(value,{label,required,maxLength:SECURITY_LIMITS.ourTeam,rejectNumericOnly:true});
-  if(!result.ok){ alert(result.message); return false; }
+  const name=String(value||'').trim();
+
+  if(required && !name){
+    alert(`請先輸入${label}`);
+    return false;
+  }
+
+  if(!name) return true;
+
+  if(name.length>15){
+    alert(`${label}最多 15 字`);
+    return false;
+  }
+
+  if(/[<>\r\n]/.test(name)){
+    alert(`${label}不可包含 <、> 或換行`);
+    return false;
+  }
+
+  // 隊伍名稱不可全部為數字；只要包含至少一個非數字字元即可。
+  // 例如 U12忠義、FC123、2026忠義皆允許；12345、001 則不允許。
+  if(/^\d+$/.test(name)){
+    alert(`${label}不可全部為數字`);
+    return false;
+  }
+
   return true;
 }
 
@@ -10885,7 +10772,7 @@ function startMatch(){
 
   const ourName=byId('ourTeam').value.trim();
   const oppName=byId('oppTeam').value.trim();
-  if(!validateTeamNameValue(ourName,'我方隊伍名稱',true)){
+  if(!validateTeamNameValue(ourName,'我方隊伍名稱',false)){
     byId('ourTeam').classList.add('inputError');
     focusMatchRequiredField('ourTeam');
     return;
@@ -10898,7 +10785,12 @@ function startMatch(){
   state.ourTeam=ourName;
   state.oppTeam=byId('oppTeam').value.trim();
   state.venue=byId('venue').value.trim();
-  localStorage.setItem(LAST_OUR_TEAM_KEY, ourName);
+
+  // 只有真的有輸入名稱才更新「最近我方隊名」。
+  // 留白開賽時畫面先顯示「我方」，不會把空白覆蓋掉使用者之前的常用隊名。
+  if(ourName){
+    localStorage.setItem(LAST_OUR_TEAM_KEY, ourName);
+  }
 
   // 只有第一次按下「開始比賽」才正式寫入最近場地。
   // 開始下半場 / 延長賽不需要再次更新排序。
@@ -10927,6 +10819,11 @@ function startMatch(){
   state.periodStartOppScore=state.oppScore;
   saveState();
   render();
+
+  // v4.93：先記時間最重要。若尚未填我方名稱，只做非阻斷提示。
+  if(!ourName){
+    showQuickNotice('⏱ 已開始計時', '我方球隊名稱可稍後點「我方」補充');
+  }
 }
 
 function finishMatch(){
@@ -11259,10 +11156,10 @@ function renderPenaltyModal(){
 
       if(side==='our' && hasOurRoster){
         const numberText=kick.number?`#${escapeHtml(kick.number)}`:'#';
-        return `<div class="penaltyKickCard"><button id="pk_${side}_${i}" type="button" class="penaltyNumberPickBtn${kick.number?' hasNumber':''} cardEvent yellow" onclick="openPenaltyRosterPicker(${i})" aria-label="${escapeAttr(ourName)} 第${i+1}點選擇球員背號">${numberText}</button>${resultBtn}</div>`;
+        return `<div class="penaltyKickCard"><button id="pk_${side}_${i}" type="button" class="penaltyNumberPickBtn${kick.number?' hasNumber':''} cardEvent yellow" onclick="openPenaltyRosterPicker(${i})" aria-label="${ourName} 第${i+1}點選擇球員背號">${numberText}</button>${resultBtn}</div>`;
       }
 
-      return `<div class="penaltyKickCard"><input id="pk_${side}_${i}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="#" value="${escapeHtml(kick.number||'')}" oninput="sanitizePenaltyNumberInput(this)" onblur="commitPenaltyNumber('${side}',${i},this)" aria-label="${escapeAttr(side==='our'?ourName:oppName)} 第${i+1}點背號">${resultBtn}</div>`;
+      return `<div class="penaltyKickCard"><input id="pk_${side}_${i}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="#" value="${escapeHtml(kick.number||'')}" oninput="sanitizePenaltyNumberInput(this)" onblur="commitPenaltyNumber('${side}',${i},this)" aria-label="${side==='our'?ourName:oppName} 第${i+1}點背號">${resultBtn}</div>`;
     };
 
     html+=`<div class="penaltyRound"><div class="penaltyRoundNo">${i+1}</div>${card('our',ok)}${card('opp',op)}</div>`;
@@ -11358,19 +11255,22 @@ function newMatch(){
   ).trim();
 
   state={
-    ...createDefaultState(),
-    ourTeam:sanitizeStoredText(rememberedOurTeam,SECURITY_LIMITS.ourTeam)||'忠義',
-    venue:sanitizeStoredText(rememberedVenue,SECURITY_LIMITS.venue),
-    competition:sanitizeStoredText(currentCompetition,SECURITY_LIMITS.competition)
+    ourTeam:rememberedOurTeam, oppTeam:'', venue:rememberedVenue, competition:currentCompetition,
+    started:false, finished:false, startEpoch:null, endEpoch:null, finalElapsed:0,
+    regulationMinutes:null, ourScore:0, oppScore:0, markers:[],
+    currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
+    periodStartOurScore:0, periodStartOppScore:0, periods:[],
+    nextPeriodType:null, extraTime:false, extraTimeMinutes:null, penalty:null,
+    goalkeeperNumber:'', rosterNumbers:[], halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0
   };
 
-  byId('ourTeam').value=state.ourTeam;
+  byId('ourTeam').value=rememberedOurTeam;
   byId('ourTeam').classList.remove('requiredError');
   byId('oppTeam').value='';
   byId('ourTeamBox')?.classList.remove('editing');
   byId('oppTeamBox')?.classList.remove('editing');
-  byId('venue').value=state.venue;
-  byId('competition').value=state.competition;
+  byId('venue').value=rememberedVenue;
+  byId('competition').value=currentCompetition;
   syncRegulationInputsFromState();
   timeExpanded=false;
   regulationEditorExpanded=false;
@@ -12124,26 +12024,28 @@ function saveEditMarker(){
 function deleteMarker(i){
   hideMarkerUndo();
   const m=state.markers[i];
+  if(!m) return false;
   if((state.penalty?.active || state.penalty?.completed) && m?.event==='GOAL'){
     alert('已進入 PK，正規賽比分已鎖定；進球紀錄不可再刪除。');
-    return;
+    return false;
   }
-  const label=m?eventLabel(m.event):'事件';
+  const label=eventLabel(m.event);
   const ok=window.confirm(`確定要刪除第${i+1}筆「${label}」紀錄嗎？
 刪除後無法復原。`);
-  if(!ok) return;
+  if(!ok) return false;
   state.markers.splice(i,1);
-  if(m && m.event==='RED_CARD' && m.keeper_before_red && !state.goalkeeperNumber){
+  if(m.event==='RED_CARD' && m.keeper_before_red && !state.goalkeeperNumber){
     state.goalkeeperNumber=String(m.keeper_before_red);
     closeKeeperModal();
   }
-  if(m && m.event==='GOAL'){
+  if(m.event==='GOAL'){
     if(m.team==='OUR') state.ourScore=Math.max(0, state.ourScore-1);
     if(m.team==='OPP') state.oppScore=Math.max(0, state.oppScore-1);
   }
   saveState();
   render();
   renderLogModal();
+  return true;
 }
 function toggleLog(){ byId('logWrap').classList.toggle('open'); }
 
@@ -12190,6 +12092,65 @@ function saveScoreModal(){
 
 let currentLogFilter=null;
 
+
+let managingMarkerIndex=null;
+let managingMarkerShownSeq=null;
+
+function markerManageSummaryText(marker,shownSeq){
+  if(!marker) return '';
+  const parts=[];
+  parts.push(`第${shownSeq||''}筆`);
+  if(state.multiPeriod) parts.push(periodLabel(marker.period||1));
+  parts.push(fmtMMSS(marker.seconds||0));
+
+  const label=marker.second_yellow?'紅牌（兩黃）':eventLabel(marker.event);
+  const player=marker.player_number?`#${marker.player_number}`:'';
+  const team=teamDisplay(marker.team)||'未指定球隊';
+
+  let eventText=[eventIcon(marker.event),player,label].filter(Boolean).join(' ');
+  if(marker.event==='GOAL' && marker.score_after){
+    eventText+=` · ${marker.score_after}`;
+  }
+  parts.push(eventText);
+  parts.push(team);
+  return parts.filter(Boolean).join(' · ');
+}
+
+function openMarkerManage(index,shownSeq){
+  const marker=state.markers[index];
+  if(!marker) return;
+
+  managingMarkerIndex=index;
+  managingMarkerShownSeq=shownSeq;
+
+  const summary=byId('markerManageSummary');
+  if(summary) summary.textContent=markerManageSummaryText(marker,shownSeq);
+
+  syncVisualViewport();
+  byId('markerManageModal')?.classList.add('open');
+}
+
+function closeMarkerManage(){
+  byId('markerManageModal')?.classList.remove('open');
+  managingMarkerIndex=null;
+  managingMarkerShownSeq=null;
+}
+
+function editManagedMarker(){
+  const index=managingMarkerIndex;
+  if(index===null || !state.markers[index]) return;
+  closeMarkerManage();
+  openEditMarker(index);
+}
+
+function deleteManagedMarker(){
+  const index=managingMarkerIndex;
+  if(index===null || !state.markers[index]) return;
+  const deleted=deleteMarker(index);
+  if(deleted) closeMarkerManage();
+}
+
+
 function renderLogTo(container, filterEvent=null){
   if(!container) return;
   container.innerHTML='';
@@ -12219,9 +12180,15 @@ function renderLogTo(container, filterEvent=null){
     const score=m.score_after||'';
     const prevMarker=i>0 ? state.markers[i-1] : null;
     const showScore=shouldShowLogScore(m, prevMarker);
-    const scoreBlock=showScore
+    const scoreBlock=showScore && m.event!=='GOAL'
       ? `<div class="scoreSnap">${escapeHtml(score)}</div>`
       : `<div class="scoreSnap scoreSnapEmpty" aria-hidden="true"></div>`;
+
+    // v4.93：進球比分跟事件本身屬於同一組資訊，
+    // 放在原本「關鍵事件」標籤的位置；右側只保留維護操作。
+    const goalScoreInline=(m.event==='GOAL' && score)
+      ? `<span class="goalScoreInline" aria-label="進球後比分 ${escapeHtml(score)}">${escapeHtml(score)}</span>`
+      : '';
 
     // 本場事件統計 drill-down 維持原本唯讀列表，不放編輯 / 刪除。
     if(readOnlyDetail){
@@ -12250,21 +12217,19 @@ function renderLogTo(container, filterEvent=null){
           ${num}
           ${num?'<span class="logDot">·</span>':''}
           <b>${escapeHtml(label)}</b>
-          ${m.event==='GOAL' ? '<span class="priorityBadge priorityBadge-goal">關鍵事件</span>' : ''}
-          ${m.event==='RED_CARD' ? '<span class="priorityBadge priorityBadge-red">關鍵事件</span>' : ''}
+          ${goalScoreInline}
           ${assist}
         </div>
 
         ${safeTeam
-          ? `<div class="logEventTeam" title="${escapeAttr(team)}">${safeTeam}</div>`
+          ? `<div class="logEventTeam" title="${safeTeam}">${safeTeam}</div>`
           : `<div class="logEventTeam logEventTeamMuted">未指定球隊</div>`}
       </div>
 
       <div class="logRowSide">
         ${scoreBlock}
         <div class="logRowActions">
-          <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${shownSeq}筆事件紀錄">✎</button>
-          <button class="del logDeleteBtn" onclick="deleteMarker(${i})" aria-label="刪除第${shownSeq}筆事件紀錄">✕</button>
+          <button class="logManageBtn" onclick="openMarkerManage(${i},${shownSeq})" aria-label="管理第${shownSeq}筆事件紀錄">⋯</button>
         </div>
       </div>
     `;
@@ -12349,6 +12314,7 @@ function openQuickResultDetail(event){
 }
 
 function closeLogModal(){
+  closeMarkerManage();
   byId('logModal').classList.remove('open');
   document.body.style.overflow='';
   currentLogFilter=null;
@@ -12378,14 +12344,7 @@ function updateTeamNameDisplays(){
     if(shouldSplitFootballTeam){
       const first=clean.slice(0,footballIdx).trim();
       const second=clean.slice(footballIdx).trim();
-      el.replaceChildren();
-      const firstLine=document.createElement('span');
-      firstLine.className='teamNameLine';
-      firstLine.textContent=first;
-      const secondLine=document.createElement('span');
-      secondLine.className='teamNameLine';
-      secondLine.textContent=second;
-      el.append(firstLine,secondLine);
+      el.innerHTML=`<span class="teamNameLine">${escapeHtml(first)}</span><span class="teamNameLine">${escapeHtml(second)}</span>`;
       el.classList.add('suffixSplit');
       return;
     }
@@ -12417,8 +12376,8 @@ function finishTeamNameEdit(id){
   if(!box || !input) return;
 
   const label=id==='ourTeam'?'我方隊伍名稱':'對手隊伍名稱';
-  const required=id==='ourTeam';
-  const value=validateTextField(id,label,required,15);
+  // v4.93：兩邊隊名皆可稍後補充；空白時使用「我方 / 對手」暫代顯示。
+  const value=validateTextField(id,label,false,15);
 
   if(value===null){
     box.classList.add('editing');
@@ -12456,17 +12415,7 @@ function renderLiveFocusUI(){
 
   if(isResult){
     const label=meta.length ? meta.join(' · ') : '🏆 未填賽事 · 🏟️ 未填場地';
-    strip.replaceChildren();
-    const metaText=document.createElement('span');
-    metaText.className='resultMetaText';
-    metaText.textContent=label;
-    const editBtn=document.createElement('button');
-    editBtn.type='button';
-    editBtn.className='resultMetaEditBtn';
-    editBtn.setAttribute('aria-label','編輯賽事名稱與場地');
-    editBtn.textContent='✎';
-    editBtn.addEventListener('click',openResultMetaEdit);
-    strip.append(metaText,editBtn);
+    strip.innerHTML=`<span class="resultMetaText">${escapeHtml(label)}</span><button type="button" class="resultMetaEditBtn" onclick="openResultMetaEdit()" aria-label="編輯賽事名稱與場地">✎</button>`;
     strip.classList.add('show');
   }else{
     strip.textContent=meta.join(' · ');
@@ -12488,7 +12437,7 @@ function openResultMetaEdit(){
   const comp=byId('resultCompetitionInput');
   const venue=byId('resultVenueInput');
 
-  // v4.88：全場編輯一律以目前 state 為唯一來源。
+  // v4.87：全場編輯一律以目前 state 為唯一來源。
   if(comp) comp.value=state.competition||'';
   if(venue) venue.value=state.venue||'';
 
@@ -12507,25 +12456,26 @@ function closeResultMetaEdit(){
 function saveResultMetaEdit(){
   if(!state.finished) return;
 
-  const compResult=validatePlainTextValue(byId('resultCompetitionInput')?.value,{label:'賽事名稱',required:false,maxLength:SECURITY_LIMITS.competition});
-  const venueResult=validatePlainTextValue(byId('resultVenueInput')?.value,{label:'場地',required:false,maxLength:SECURITY_LIMITS.venue});
-  if(!compResult.ok){
-    alert(compResult.message);
+  const comp=String(byId('resultCompetitionInput')?.value||'').trim();
+  const venue=String(byId('resultVenueInput')?.value||'').trim();
+  const invalid=/[<>\r\n]/;
+
+  if(comp.length>15 || invalid.test(comp)){
+    alert('賽事名稱請控制在 15 字內，且不可包含 <、> 或換行。');
     byId('resultCompetitionInput')?.focus();
     return;
   }
-  if(!venueResult.ok){
-    alert(venueResult.message);
+
+  if(venue.length>15 || invalid.test(venue)){
+    alert('場地請控制在 15 字內，且不可包含 <、> 或換行。');
     byId('resultVenueInput')?.focus();
     return;
   }
-  const comp=compResult.value;
-  const venue=venueResult.value;
 
   state.competition=comp;
   state.venue=venue;
 
-  // v4.88：同步回主畫面的原始欄位，再存 state。
+  // v4.87：同步回主畫面的原始欄位，再存 state。
   // 否則 saveState() 會從舊的 competition / venue input 讀值，
   // 把剛剛在全場編輯視窗輸入的新內容覆蓋掉。
   if(byId('competition')) byId('competition').value=comp;
@@ -13027,11 +12977,11 @@ function reportEventHTML(m, goalIndex=null){
   return `<div class="reportEvent${assist?' hasAssist':''}">
     <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
     <div class="goalOrdinal">${ordinal}</div>
-    <div class="reportGoalActor" title="${escapeAttr(actor+(assist?`｜${assist}`:''))}">
+    <div class="reportGoalActor" title="${escapeHtml(actor+(assist?`｜${assist}`:''))}">
       <div class="reportGoalMain">${escapeHtml(actor)}</div>
       ${assist?`<div class="reportAssist">${escapeHtml(assist)}</div>`:''}
     </div>
-    <div class="rscore">${escapeHtml(m.score_after||'')}</div>
+    <div class="rscore">${m.score_after||''}</div>
   </div>`;
 }
 function reportTypeHTML(event){
@@ -13051,9 +13001,9 @@ function reportOtherEventHTML(m){
   const actor=`${team}${num}`;
   return `<div class="reportEvent">
     <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
-    <div class="reportLabel" title="${escapeAttr(actor)}">${escapeHtml(actor)}</div>
+    <div class="reportLabel" title="${escapeHtml(actor)}">${escapeHtml(actor)}</div>
     <div class="reportType">${reportTypeHTML(m.event)}</div>
-    <div class="rscore">${escapeHtml(m.score_after||'')}</div>
+    <div class="rscore">${m.score_after||''}</div>
   </div>`;
 }
 
@@ -13081,7 +13031,6 @@ function buildReportDOM(){
   }else if(reportRoster){
     reportRoster.style.display='none';
   }
-  byId('reportDuration').textContent=`⏱ ${fmtDurationReadable(totalElapsed)}`;
   byId('reportStart').textContent=fmtReportBoundary(reportStartEpoch,reportStartEpoch,reportEndEpoch);
   byId('reportEnd').textContent=fmtReportBoundary(reportEndEpoch,reportStartEpoch,reportEndEpoch);
   byId('reportActual').innerHTML=durationReportHTML(totalElapsed);
@@ -13184,7 +13133,7 @@ function reportLines(){
   const pngStart=matchStartEpoch();
   const pngEnd=matchEndEpoch();
   const pngCrossDay=isCrossDay(pngStart,pngEnd);
-  lines.push({type:'meta', text:`實際比賽時間：${fmtDurationReadable(pngTotal)}${pngTotal>=3600?`（總計 ${fmtMMSS(pngTotal)}）`:''}`});
+  lines.push({type:'meta', text:`實際比賽時間：${fmtDurationReadable(pngTotal)}`});
   if(pngStart) lines.push({type:'meta', text:`開始：${pngCrossDay?fmtMonthDayClock(pngStart):fmtClock(pngStart)}`});
   if(pngEnd) lines.push({type:'meta', text:`結束：${pngCrossDay?fmtMonthDayClock(pngEnd):fmtClock(pngEnd)}${pngCrossDay?'｜跨日':''}`});
   if(state.multiPeriod){
@@ -13508,30 +13457,11 @@ function stamp(){
   const d=new Date();
   return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
 }
-function safeFilenamePart(value,fallback='file',maxLength=60){
-  let s=String(value??'');
-  try{ s=s.normalize('NFC'); }catch(e){}
-  s=s.replace(/[\u0000-\u001F\u007F-\u009F]/g,'')
-     .replace(/[\\/:*?"<>|]/g,'_')
-     .replace(/\s+/g,'_')
-     .replace(/_+/g,'_')
-     .replace(/^[._\s]+|[._\s]+$/g,'')
-     .slice(0,maxLength);
-  if(!s) s=fallback;
-  if(/^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$/i.test(s)) s='_'+s;
-  return s;
-}
 function safeName(){
-  return `${safeFilenamePart(state.ourTeam,'OurTeam',36)}_VS_${safeFilenamePart(state.oppTeam,'Opponent',36)}`;
-}
-function safeDownloadFilename(name){
-  let s=String(name??'').replace(/[\u0000-\u001F\u007F-\u009F]/g,'').replace(/[\\/:*?"<>|]/g,'_').trim();
-  s=s.replace(/^\.+/,'').slice(0,140);
-  return s || 'football_marker_export';
+  return `${state.ourTeam||'OurTeam'}_VS_${state.oppTeam||'Opponent'}`.replace(/[\\/:*?"<>|]/g,'_');
 }
 function reportFilename(ext){
-  const safeExt=String(ext||'txt').replace(/[^a-z0-9]/gi,'').toLowerCase()||'txt';
-  return safeDownloadFilename(`${stamp()}_${safeName()}_${state.ourScore}-${state.oppScore}_summary.${safeExt}`);
+  return `${stamp()}_${safeName()}_${state.ourScore}-${state.oppScore}_summary.${ext}`;
 }
 function blobToObjectUrl(blob){ return URL.createObjectURL(blob); }
 
@@ -13611,7 +13541,6 @@ function saveReportImage(){
 function escapeHtml(s){
   return String(s??'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 }
-function escapeAttr(s){ return escapeHtml(s); }
 function reportHTMLText(){
   const goals=state.markers.filter(m=>m.event==='GOAL');
   const others=state.markers.filter(m=>m.event!=='GOAL');
@@ -13638,7 +13567,7 @@ h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams
 </style></head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">${state.competition?`🏆 ${escapeHtml(state.competition)}　`:''}📍 ${escapeHtml(state.venue||'未填場地')}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
-<div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}${totalMatchElapsed()>=3600?`　<span class="note">總計 ${fmtMMSS(totalMatchElapsed())}</span>`:''}</p>${state.halftimeStartEpoch?`<p><b>中場開始：</b>${escapeHtml(fmtClock(state.halftimeStartEpoch))}<br><b>中場結束：</b>${escapeHtml(state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--')}<br><b>中場休息：</b>${escapeHtml(fmtMMSS(halftimeElapsed()))}</p>`:''}${diff}</div>
+<div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</p>${state.halftimeStartEpoch?`<p><b>中場開始：</b>${escapeHtml(fmtClock(state.halftimeStartEpoch))}<br><b>中場結束：</b>${escapeHtml(state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--')}<br><b>中場休息：</b>${escapeHtml(fmtMMSS(halftimeElapsed()))}</p>`:''}${diff}</div>
 <div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
 <div class="card"><h2>其他精彩標記事件</h2><ul>${otherHtml}</ul></div>
@@ -13651,12 +13580,8 @@ function downloadReportHTML(){
 
 /* Export data */
 function csvEscape(v){
-  const wasString=typeof v==='string';
-  let s=String(v??'').replace(/\u0000/g,'');
-  // Excel / LibreOffice formula injection defense for user-controlled text cells.
-  // Prefixing with apostrophe preserves visible content while preventing formula execution.
-  if(wasString && /^[=+\-@\t\r\n]/.test(s)) s="'"+s;
-  return /[",\r\n]/.test(s) ? '"' + s.replaceAll('"','""') + '"' : s;
+  const s=String(v??'');
+  return /[",\n]/.test(s) ? '"' + s.replaceAll('"','""') + '"' : s;
 }
 function diffSecondsExport(){
   if(!state.regulationMinutes || !state.finished) return '';
@@ -13720,14 +13645,14 @@ function csvText(){
   return '\ufeff'+rows.map(r=>r.map(csvEscape).join(',')).join('\n');
 }
 function csvFilename(){
-  return safeDownloadFilename(`${stamp()}_${safeName()}_${state.ourScore}-${state.oppScore}_markers.csv`);
+  return `${stamp()}_${safeName()}_${state.ourScore}-${state.oppScore}_markers.csv`;
 }
 function downloadBlob(content, type, name){
   const blob = content instanceof Blob ? content : new Blob([content], {type});
   const url = URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;
-  a.download=safeDownloadFilename(name);
+  a.download=name;
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -13736,7 +13661,7 @@ function downloadBlob(content, type, name){
 function downloadCSV(){ downloadBlob(csvText(), 'text/csv;charset=utf-8', csvFilename()); }
 function downloadJSON(){
   saveState();
-  downloadBlob(JSON.stringify(state, null, 2), 'application/json', safeDownloadFilename(`${stamp()}_${safeName()}_backup.json`));
+  downloadBlob(JSON.stringify(state, null, 2), 'application/json', `${stamp()}_${safeName()}_backup.json`);
 }
 async function shareCSV(){
   const file=new File([csvText()], csvFilename(), {type:'text/csv'});
@@ -13805,14 +13730,8 @@ function advanceGuidedSetup(from){
   if(guidedSetupStep!==from) return false;
 
   if(from==='our'){
-    const raw=String(byId('ourTeam')?.value||'').trim();
-    if(!raw){
-      guidedSetupStep='our';
-      focusMatchRequiredField('ourTeam');
-      return false;
-    }
-
-    const value=validateTextField('ourTeam','我方隊伍名稱',true,15);
+    // v4.93：我方名稱為選填；空白也可繼續設定其他賽前資料。
+    const value=validateTextField('ourTeam','我方隊伍名稱',false,15);
     if(value===null){
       guidedSetupStep='our';
       focusMatchRequiredField('ourTeam');
@@ -13967,7 +13886,7 @@ byId('ourTeam').addEventListener('blur', ()=>{
   }
 
   const value=byId('ourTeam').value.trim();
-  if(value) validateTextField('ourTeam','我方隊伍名稱',true,15);
+  if(value) validateTextField('ourTeam','我方隊伍名稱',false,15);
   byId('ourTeamBox').classList.remove('editing');
   updateTeamNameDisplays();
 });
@@ -14148,6 +14067,12 @@ setInterval(renderRegulationTimeAlert,1000);
 
 
 </script>
+
+<div id="quickNotice" class="quickNotice" role="status" aria-live="polite" aria-atomic="true">
+  <div class="quickNoticeTitle" id="quickNoticeTitle"></div>
+  <div class="quickNoticeText" id="quickNoticeText"></div>
+</div>
+
 </body>
 </html>
 
@@ -14488,4 +14413,353 @@ setInterval(renderRegulationTimeAlert,1000);
   .aboutScroll::before,.aboutScroll::after{display:none}
   .aboutStatement{margin-top:7px;min-height:80px}
 }
+
+/* =========================================================
+   v4.93 Team Selection Design System
+   進球 / 黃牌 / 紅牌「選擇球隊」顏色完全統一
+   ========================================================= */
+:root{
+  --team-pick-our-top:#3b5878;
+  --team-pick-our-bottom:#2d4562;
+  --team-pick-our-border:rgba(91,155,220,.52);
+
+  --team-pick-opp-top:#4b596c;
+  --team-pick-opp-bottom:#3b4859;
+  --team-pick-opp-border:rgba(148,163,184,.46);
+
+  --team-pick-text:#f8fafc;
+}
+
+/* Goal modal and card-team modal use the exact same button language. */
+#goalModal .choice button,
+#cardTeamModal .cardTeamChoice{
+  min-height:78px!important;
+  border-radius:17px!important;
+  color:var(--team-pick-text)!important;
+  font-size:20px!important;
+  font-weight:900!important;
+  letter-spacing:.05px!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 5px 13px rgba(17,39,67,.18)!important;
+  transition:
+    transform .12s ease,
+    filter .12s ease,
+    border-color .12s ease!important;
+}
+
+/* 我方：固定深藍，不再因「進球」使用綠色。 */
+#goalModal .choice .our,
+#cardTeamModal .cardTeamChoice:not(.oppNeutral){
+  background:linear-gradient(
+    180deg,
+    var(--team-pick-our-top) 0%,
+    var(--team-pick-our-bottom) 100%
+  )!important;
+  border:1px solid var(--team-pick-our-border)!important;
+}
+
+/* 對手：固定石板灰藍，不再因「進球」使用紅色。 */
+#goalModal .choice .opp,
+#cardTeamModal .cardTeamChoice.oppNeutral{
+  background:linear-gradient(
+    180deg,
+    var(--team-pick-opp-top) 0%,
+    var(--team-pick-opp-bottom) 100%
+  )!important;
+  border:1px solid var(--team-pick-opp-border)!important;
+}
+
+/* 觸控回饋一致 */
+#goalModal .choice button:active,
+#cardTeamModal .cardTeamChoice:active{
+  transform:scale(.985)!important;
+  filter:brightness(1.08)!important;
+}
+
+/* Goal modal 的取消鍵也與牌卡選隊視窗一致。 */
+#goalModal .cancel,
+#cardTeamModal .cancel{
+  min-height:46px!important;
+  margin-top:14px!important;
+  border-radius:15px!important;
+  background:linear-gradient(180deg,#e9edf2 0%,#dde3ea 100%)!important;
+  color:#586576!important;
+  border:1px solid rgba(133,146,164,.28)!important;
+  font-size:14px!important;
+  font-weight:800!important;
+  opacity:1!important;
+}
+
+/* 小尺寸 iPhone：保持一致但避免按鈕過高。 */
+@media(max-height:760px){
+  #goalModal .choice button,
+  #cardTeamModal .cardTeamChoice{
+    min-height:72px!important;
+    font-size:19px!important;
+  }
+}
+
+
+/* =========================================================
+   v4.93 Event Log Management
+   一個管理按鈕 → 編輯 / 刪除 Action Sheet
+   ========================================================= */
+
+/* 單一管理入口後，右欄可以縮窄，事件內容得到更多可讀空間。 */
+#logModal .logModalBody .item.logTimelineItem{
+  grid-template-columns:48px minmax(0,1fr) 56px!important;
+}
+#logModal .logRowActions{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+}
+
+/* 44px+ 觸控目標，符合手機操作直覺。 */
+#logModal .logTimelineItem .logManageBtn{
+  position:relative;
+  z-index:2;
+  width:46px!important;
+  height:46px!important;
+  min-width:46px!important;
+  min-height:46px!important;
+  padding:0!important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:14px!important;
+  background:linear-gradient(180deg,#173a56 0%,#123149 100%)!important;
+  border:1px solid rgba(125,211,252,.25)!important;
+  color:#c9e9fb!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:24px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:1px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.07),
+    0 4px 12px rgba(0,0,0,.12)!important;
+  transition:transform .12s ease,filter .12s ease,border-color .12s ease!important;
+}
+#logModal .logTimelineItem .logManageBtn:active{
+  transform:scale(.96)!important;
+  filter:brightness(1.12);
+  border-color:rgba(125,211,252,.48)!important;
+}
+
+/* 舊的直接編輯 / 刪除控制不再出現在完整事件紀錄。 */
+#logModal .logTimelineItem .editMarkerBtn,
+#logModal .logTimelineItem .logDeleteBtn{
+  display:none!important;
+}
+
+/* 管理 Action Sheet */
+#markerManageModal{
+  z-index:1090;
+  align-items:flex-end;
+  padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px));
+}
+#markerManageModal .markerManageSheet{
+  width:min(520px,100%);
+  max-height:min(560px,calc(var(--vv-height,100dvh) - 32px));
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 92% 0%,rgba(37,99,235,.08),transparent 30%),
+    #f6f7fb;
+  color:#111827;
+  border:1px solid rgba(255,255,255,.82);
+  box-shadow:0 22px 60px rgba(0,0,0,.42);
+}
+.markerManageHead{
+  padding:19px 18px 13px;
+  border-bottom:1px solid #d9e0e8;
+}
+.markerManageEyebrow{
+  margin-bottom:4px;
+  color:#5f7187;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1.4px;
+}
+.markerManageHead h2{
+  margin:0;
+  color:#111827;
+  font-size:23px;
+  font-weight:950;
+  letter-spacing:-.2px;
+}
+.markerManageSummary{
+  margin-top:8px;
+  min-height:42px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  border-radius:13px;
+  background:#e9f1fb;
+  color:#38516d;
+  font-size:13px;
+  font-weight:800;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+}
+.markerManageActions{
+  display:grid;
+  gap:9px;
+  padding:13px 14px 14px;
+}
+.markerManageEdit,
+.markerManageDelete{
+  width:100%;
+  min-height:64px;
+  padding:10px 14px!important;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-align:left;
+  border-radius:16px!important;
+  box-shadow:none!important;
+}
+.markerManageActionIcon{
+  flex:0 0 38px;
+  width:38px;
+  height:38px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  font-size:21px;
+  font-weight:900;
+}
+.markerManageEdit{
+  background:linear-gradient(180deg,#315d89 0%,#294f74 100%)!important;
+  border:1px solid rgba(42,100,157,.35)!important;
+  color:#fff!important;
+}
+.markerManageEdit .markerManageActionIcon{
+  background:rgba(255,255,255,.12);
+  color:#e3f3ff;
+}
+.markerManageDelete{
+  background:#fff!important;
+  border:1px solid rgba(220,38,38,.22)!important;
+  color:#b4232c!important;
+}
+.markerManageDelete .markerManageActionIcon{
+  background:#fff0f0;
+  color:#dc2626;
+}
+.markerManageEdit span:last-child,
+.markerManageDelete span:last-child{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.markerManageEdit b,
+.markerManageDelete b{
+  font-size:16px;
+  font-weight:950;
+  line-height:1.2;
+}
+.markerManageEdit small,
+.markerManageDelete small{
+  font-size:11.5px;
+  font-weight:750;
+  line-height:1.25;
+}
+.markerManageEdit small{color:#d6e6f4}
+.markerManageDelete small{color:#9b6670}
+.markerManageCancel{
+  width:100%;
+  min-height:48px;
+  border-radius:15px!important;
+  background:linear-gradient(180deg,#e6ebf1 0%,#dce3eb 100%)!important;
+  border:1px solid #cdd6e0!important;
+  color:#536172!important;
+  font-size:15px!important;
+  font-weight:900!important;
+  box-shadow:none!important;
+}
+.markerManageEdit:active,
+.markerManageDelete:active,
+.markerManageCancel:active{
+  transform:scale(.985);
+  filter:brightness(.98);
+}
+
+@media(max-width:390px){
+  #logModal .logModalBody .item.logTimelineItem{
+    grid-template-columns:44px minmax(0,1fr) 52px!important;
+  }
+  #logModal .logTimelineItem .logManageBtn{
+    width:44px!important;
+    height:44px!important;
+    min-width:44px!important;
+    min-height:44px!important;
+    border-radius:13px!important;
+  }
+  .markerManageHead{padding:17px 16px 12px}
+  .markerManageHead h2{font-size:21px}
+  .markerManageActions{padding:12px}
+}
+
+
+/* =========================================================
+   v4.93 Quick Start Notice
+   開賽優先，不用 Modal 阻斷現場操作。
+   ========================================================= */
+.quickNotice{
+  position:fixed;
+  z-index:1200;
+  left:50%;
+  top:calc(14px + env(safe-area-inset-top,0px));
+  width:min(360px,calc(100vw - 32px));
+  padding:11px 14px 12px;
+  transform:translate(-50%,-18px) scale(.98);
+  opacity:0;
+  pointer-events:none;
+  border-radius:16px;
+  background:rgba(9,25,39,.94);
+  border:1px solid rgba(64,199,255,.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 12px 30px rgba(0,0,0,.30);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  transition:
+    opacity .18s ease,
+    transform .22s cubic-bezier(.22,.8,.24,1);
+}
+.quickNotice.show{
+  opacity:1;
+  transform:translate(-50%,0) scale(1);
+}
+.quickNoticeTitle{
+  color:#eaf8ff;
+  font-size:14px;
+  font-weight:950;
+  line-height:1.2;
+}
+.quickNoticeText{
+  margin-top:3px;
+  color:#9fb6ca;
+  font-size:11.5px;
+  font-weight:800;
+  line-height:1.35;
+}
+@media(max-width:390px){
+  .quickNotice{
+    top:calc(10px + env(safe-area-inset-top,0px));
+    width:calc(100vw - 24px);
+    padding:10px 12px 11px;
+    border-radius:15px;
+  }
+  .quickNoticeTitle{font-size:13.5px}
+  .quickNoticeText{font-size:11px}
+}
+
 </style>

@@ -1,66 +1,173 @@
-# SECURITY CHECKLIST — football-marker v4.88
+# SECURITY_CHECKLIST.md
+# 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## 1. Input validation
+> 目的：每次更新版本時，除了功能與 UI/UX，也固定檢查資料安全、輸入驗證、
+> 瀏覽器儲存、匯出內容與版本檔案是否同步，避免新版只更新 index.html 而漏掉相關說明或安全項目。
 
-- [x] 我方隊名：必填、15 字、非純數字、禁止 `< >` / 控制字元 / 換行
-- [x] 對手隊名：選填、15 字、非純數字、禁止 `< >` / 控制字元 / 換行
-- [x] 賽事名稱：選填、20 字、禁止 `< >` / 控制字元 / 換行
-- [x] 場地：選填、15 字、禁止 `< >` / 控制字元 / 換行
-- [x] 背號：1–99 整數
-- [x] 比分：0–99 整數
-- [x] 規定時間 / 延長賽：1–45 分鐘
+---
 
-## 2. DOM XSS
+## 1. 發版檔案同步
 
-- [x] 一般文字輸出使用 `textContent`
-- [x] 必須使用 HTML template 的文字使用 `escapeHtml()`
-- [x] 動態 Attribute 使用 `escapeAttr()`
-- [x] PK aria-label 的隊名已做 Attribute Encoding
-- [x] 事件紀錄 / 摘要 title 屬性已做 Attribute Encoding
-- [x] 不使用 `eval()` / `new Function()` / `document.write()`
+每次 ZIP 發版必須至少包含：
 
-## 3. Persisted state / localStorage
+- [ ] `index.html`
+- [ ] `README.md`
+- [ ] `SECURITY_CHECKLIST.md`
 
-- [x] `loadState()` 不直接 merge 任意 JSON
-- [x] 僅允許已知 state 欄位
-- [x] Boolean / integer / epoch / array / enum 全部重新驗證
-- [x] Marker event 僅允許 GOAL / SAVE / SHOT / DEFENSE / YELLOW_CARD / RED_CARD
-- [x] Team 僅允許 OUR / OPP
-- [x] 背號重新限制 1–99
-- [x] 比分 snapshot 只接受 `0:0`～`99:99` 格式
-- [x] Marker 最多載入 2000 筆；PK 最多 50 輪；period 最多 10 筆
+版本更新時同步確認：
 
-## 4. CSV / file export
+- [ ] `index.html` 畫面顯示版本號已更新
+- [ ] `README.md` 版本與本次異動內容已更新
+- [ ] `SECURITY_CHECKLIST.md` 若有新增安全規則或資料處理方式，已同步更新
+- [ ] ZIP 內三個檔案皆為本次最新版本，不混入舊檔
+- [ ] ZIP 檔名版本與網頁版本一致
 
-- [x] CSV 對以 `= + - @ TAB CR LF` 開頭的**文字值**加上安全文字前綴，避免 Formula Injection
-- [x] 數值欄位仍維持數值，不會因負數 diff 被錯誤轉成文字公式防護
-- [x] CSV quote / CR / LF 正確 escape
-- [x] 檔名移除 C0/C1 control characters
-- [x] 檔名移除 `\ / : * ? " < > |`
-- [x] 防 Windows reserved filename (`CON`, `NUL`, `COM1`...)
-- [x] `downloadBlob()` 再做一次最終檔名 sanitize
+---
 
-## 5. Architecture / attack surface
+## 2. 使用者輸入驗證
 
-- [x] 純 GitHub Pages 前端工具
-- [x] 無後端 SQL / OS command execution surface
-- [x] 無登入 / Session / Cookie 權限流程
-- [x] 無 API key / password / secret
-- [x] 無第三方 JavaScript CDN dependency
-- [x] 無 `fetch()` / XHR / WebSocket 外傳賽事資料
+- [ ] 我方球隊名稱長度限制正常
+- [ ] 對手球隊名稱長度限制正常
+- [ ] 賽事名稱長度限制正常
+- [ ] 場地長度限制正常
+- [ ] 球員背號僅接受合理整數範圍
+- [ ] 比分僅接受合理整數範圍
+- [ ] 規定時間僅接受合理分鐘數
+- [ ] 不接受 `<`、`>`、換行等不必要字元
+- [ ] 使用者輸入內容顯示到畫面時不直接當成 HTML 執行
+- [ ] 編輯既有資料時套用與新增相同的驗證規則
 
-## 6. Known residual risks
+---
 
-- [ ] CSP 尚未升級為 `script-src 'self'`：目前 HTML 仍有既有 inline `onclick` 等 handler。若下一階段要導入嚴格 CSP，需先將所有 inline handler 搬到 `addEventListener()`。
-- [ ] GitHub Pages 同一 hostname 下不同 path 共用同一 Origin / localStorage。若未來同 hostname 放置不可信 JS 專案，建議將 football-marker 部署到獨立子網域。
-- [ ] 純前端工具無法保證使用者裝置、瀏覽器擴充套件或同 Origin 其他程式沒有被入侵。
+## 3. LocalStorage / 本機資料
 
-## 7. Release QA
+- [ ] 不儲存密碼、Token、帳號憑證等敏感資訊
+- [ ] LocalStorage 僅保存比賽必要資料與使用偏好
+- [ ] 新比賽重設時不誤刪應保留的常用設定
+- [ ] 新比賽重設時會清掉上一場不應延續的比賽狀態
+- [ ] 空白欄位不會意外覆蓋使用者原本的常用設定
+- [ ] 網頁重新整理後，比賽進行中資料可正確恢復
+- [ ] 已結束比賽重新整理後不會被舊設定覆蓋
 
-- [x] JavaScript syntax check (`node --check`)
-- [x] 所有靜態 input 欄位已盤點
-- [x] `innerHTML` / dynamic attribute / localStorage / export sink 已重新盤點
-- [x] 惡意文字測試字串：`"><img src=x onerror=alert(1)>`
-- [x] Attribute 測試字串：`" autofocus onfocus=alert(1) x="`
-- [x] CSV 測試字串：`=1+1`, `+cmd`, `-1+2`, `@SUM(A1:A2)`
-- [x] Filename 測試字串：`../AUX\test:<bad>?*.csv`
+---
+
+## 4. 比賽狀態與資料完整性
+
+依序檢查：
+
+- [ ] 賽前
+- [ ] 上半場 / 比賽中
+- [ ] 中場
+- [ ] 下半場
+- [ ] 全場
+
+並確認：
+
+- [ ] 開始時間只在正確操作時寫入
+- [ ] 結束時間只在確認結束時寫入
+- [ ] 中場開始 / 結束紀錄不重複
+- [ ] 下半場重新計時邏輯正確
+- [ ] 全場後事件按鈕不能再新增紀錄
+- [ ] 比分與進球事件保持一致
+- [ ] 編輯 / 刪除進球事件時比分同步正確
+- [ ] 紅牌、黃牌、射門、撲救、防守等事件不影響比分
+- [ ] 守門員設定變更不破壞既有事件資料
+- [ ] 賽後補填賽事名稱 / 場地可立即更新所有相關顯示
+
+---
+
+## 5. 事件紀錄操作
+
+- [ ] 單一「管理」入口可正常開啟
+- [ ] 編輯事件可正常進入
+- [ ] 刪除事件有二次確認
+- [ ] 取消刪除不會誤刪資料
+- [ ] 刪除後事件序號重新顯示正確
+- [ ] 本場事件統計的唯讀細節不顯示編輯 / 刪除控制
+- [ ] 進球事件顯示比分但不重複顯示得分變化
+- [ ] 黃牌 / 紅牌使用長方形卡片圖示
+- [ ] 關鍵事件視覺不影響文字可讀性
+
+---
+
+## 6. CSV / 摘要 / 圖片輸出
+
+- [ ] CSV 內容不含未預期的 HTML 或腳本內容
+- [ ] 使用者輸入欄位在 CSV 中有妥善處理
+- [ ] 摘要內容與主畫面比分一致
+- [ ] 摘要進球助攻資訊不被截斷
+- [ ] 摘要時間資訊沒有重複
+- [ ] 場地圖示與場地文字顯示正確
+- [ ] 分享 / 儲存圖片可正常完成
+- [ ] 圖片內容沒有被 Safari 工具列截住
+
+---
+
+## 7. iPhone Safari / 行動裝置 QA
+
+至少檢查：
+
+- [ ] 一般 iPhone 寬度
+- [ ] 小螢幕 iPhone
+- [ ] Dynamic Island 機型
+- [ ] Safari 上下工具列展開狀態
+- [ ] Safari 上下工具列收合狀態
+
+確認：
+
+- [ ] Modal 不超出 viewport
+- [ ] 底部按鈕不被 Safari 工具列遮住
+- [ ] `＋ 新比賽` 滑到底後完整可見
+- [ ] 底部保留 safe-area 空間
+- [ ] 鍵盤彈出時輸入欄位仍可看到
+- [ ] Modal 捲動不會帶動背景頁面
+- [ ] 44px 以上主要觸控區域容易點擊
+- [ ] 橫向或縮放不造成主要版面破壞
+
+---
+
+## 8. JavaScript / 基本程式檢查
+
+每次產出新版至少執行：
+
+- [ ] JavaScript syntax check PASS
+- [ ] 沒有重複 function 定義造成新版邏輯被舊版覆蓋
+- [ ] 沒有殘留舊版版本號
+- [ ] 新增 DOM id 沒有重複
+- [ ] 事件 handler 對應 function 存在
+- [ ] 不使用 `eval()` 或動態執行不可信字串
+- [ ] 不將使用者輸入直接拼接成可執行 script
+- [ ] Console 無明顯 runtime error
+
+---
+
+## 9. 發版前最後確認
+
+- [ ] 實際建立一場測試比賽
+- [ ] 我方隊名空白也可立即開始計時
+- [ ] 空白我方顯示為「我方」
+- [ ] 稍後補隊名可正確更新
+- [ ] 至少建立進球、射門、撲救、防守、黃牌、紅牌各一筆
+- [ ] 開啟事件紀錄確認版面
+- [ ] 測試編輯一筆事件
+- [ ] 測試刪除一筆事件
+- [ ] 結束上半場 → 中場 → 下半場 → 全場
+- [ ] 開啟摘要確認資料正確
+- [ ] 匯出 CSV
+- [ ] 儲存 / 分享圖片
+- [ ] 建立新比賽後上一場資料不殘留
+- [ ] ZIP 解壓後可直接使用
+
+---
+
+## 固定發版結構
+
+```text
+football_marker_vX_XX.zip
+├── index.html
+├── README.md
+└── SECURITY_CHECKLIST.md
+```
+
+如本次更新涉及新的資料欄位、儲存方式、輸出格式、外部資源或安全行為，
+必須同步更新此清單。
