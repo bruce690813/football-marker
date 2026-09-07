@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.78</title>
+<title>足球場邊記錄器 v4.79</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -7222,7 +7222,7 @@ body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
 
 
 /* =========================
-   v4.78 iPhone Safari 全場底部 Safe Area QA
+   v4.79 iPhone Safari 全場底部 Safe Area QA
    目的：
    1. 滑到頁面最底時，「＋ 新比賽」可完整露出
    2. 按鈕底部與 Safari 工具列至少保留約 16px 的視覺安全距離
@@ -7285,7 +7285,7 @@ html{
 }
 
 
-/* v4.78 QA 補強：iPhone SE / 4.7 吋級 320～375px */
+/* v4.79 QA 補強：iPhone SE / 4.7 吋級 320～375px */
 @media(max-width:375px){
   body.resultMode.finalOutputVisible{
     --result-bottom-safe-tail:
@@ -7295,7 +7295,7 @@ html{
 
 
 /* =========================
-   v4.78 全場「＋ 新比賽」Safari 可視區修正
+   v4.79 全場「＋ 新比賽」Safari 可視區修正
    這版不只增加頁尾空間，而是：
    1. 全場工具區稍微 compact，減少垂直佔用
    2. 保留可捲動 Safe Area
@@ -7360,13 +7360,13 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn{
 
 
 /* =========================
-   v4.78 全場 viewport 校正
+   v4.79 全場 viewport 校正
    =========================
    v4.70 的問題：
    為了讓「＋ 新比賽」立即露出，會自動 scrollBy，
    因此全場一進入就把標題 / 賽事名稱 / 場地往上推掉。
 
-   v4.78：
+   v4.79：
    - 完全取消全場自動捲動。
    - 進入全場時維持使用者原本畫面位置。
    - 「＋ 新比賽」的 Safari 防遮蔽只靠真實文件流 Safe Area。
@@ -7413,7 +7413,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.78 About：線上工具 / 免下載 App
+   v4.79 About：線上工具 / 免下載 App
    設計原則：
    「線上工具」是產品使用方式，不是第 4 個功能，
    因此放在 Hero 內做 compact badge，而不增加功能卡。
@@ -7494,7 +7494,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.78 About 最後視覺 polish
+   v4.79 About 最後視覺 polish
    1. 線上工具 badge 降低按鈕感
    2. badge 與介紹文字增加呼吸距離
    3. 底部 CTA 收斂高光與藍色漸層
@@ -7560,7 +7560,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.78 時間紀錄 UI/UX 收尾
+   v4.79 時間紀錄 UI/UX 收尾
    ========================= */
 
 /* 日期只出現一次，降低每列重複 YYYY/MM/DD 的視覺噪音。 */
@@ -7706,7 +7706,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.78 本場名單 / 守門員 Design System 一致化
+   v4.79 本場名單 / 守門員 Design System 一致化
    ========================= */
 
 /* A. 本場名單：主流 iPhone 統一 6 欄快捷背號。 */
@@ -7924,7 +7924,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.78 進球流程 Player Picker Design System
+   v4.79 進球流程 Player Picker Design System
    ========================= */
 .playerPickerSourceRow{
   display:flex;align-items:center;justify-content:space-between;
@@ -8009,7 +8009,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.78 射門 / 防守 Player Picker 收尾
+   v4.79 射門 / 防守 Player Picker 收尾
    ========================= */
 /* 射門與防守與進球流程共用同一個視覺層級：事件標題 → 簡短提示 → 名單來源 → 6欄背號。 */
 #numberModal:not(.cardFlow) .numberTitle{
@@ -8046,7 +8046,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.78 黃 / 紅牌 Player Picker Design System 收尾
+   v4.79 黃 / 紅牌 Player Picker Design System 收尾
    ========================= */
 
 /* Step 1「選擇球隊」與 Step 2「選擇球員」使用同一張真實牌卡。
@@ -8130,6 +8130,257 @@ body.resultMode.finalOutputVisible{
   }
 }
 
+
+/* =========================
+   v4.79 事件紀錄 Timeline UI
+   - 球隊名稱固定單行，避免「足球 / 隊」破碎換行
+   - 恢復事件 icon，沿用首頁事件語言
+   - 第幾筆降權重，時間與事件成為主要資訊
+   - 編輯 / 刪除縮小為 secondary actions
+   ========================= */
+
+/* 完整事件紀錄使用三欄：序號 / 事件主體 / 比分與操作 */
+#logModal .logModalBody .item.logTimelineItem{
+  position:relative;
+  display:grid!important;
+  grid-template-columns:48px minmax(0,1fr) 66px!important;
+  gap:8px!important;
+  align-items:center!important;
+  min-height:90px;
+  margin:0 0 7px;
+  padding:10px 9px 10px 11px!important;
+  border:1px solid rgba(80,105,132,.28)!important;
+  border-bottom:1px solid rgba(80,105,132,.28)!important;
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(22,34,47,.78) 0%,rgba(15,25,36,.88) 100%);
+  overflow:hidden;
+}
+
+/* 事件只用一條細 accent，不把整張卡染色。 */
+#logModal .logTimelineItem::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:9px;
+  bottom:9px;
+  width:3px;
+  border-radius:0 4px 4px 0;
+  background:#64748b;
+  opacity:.92;
+}
+#logModal .logEvent-goal::before{background:#34c759}
+#logModal .logEvent-shot::before{background:#e0a11b}
+#logModal .logEvent-save::before{background:#3b82f6}
+#logModal .logEvent-defense::before{background:#8b5cf6}
+#logModal .logEvent-yellow_card::before{background:#facc15}
+#logModal .logEvent-red_card::before{background:#ef4444}
+
+/* 第幾筆變成定位資訊，而不是第一視覺焦點。 */
+#logModal .logTimelineItem .logSeq{
+  align-self:start;
+  padding-top:4px;
+  color:#71849a!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  line-height:1.2;
+  letter-spacing:-.15px;
+}
+
+/* 中央事件主體 */
+#logModal .logEventCore{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+#logModal .logEventMeta{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+#logModal .logEventMeta .periodBadge{
+  margin:0!important;
+  padding:3px 8px!important;
+  font-size:10px!important;
+  line-height:1.15;
+}
+#logModal .logEventMeta .time{
+  color:#facc15!important;
+  font-size:17px!important;
+  font-weight:950!important;
+  line-height:1;
+  letter-spacing:.1px;
+  white-space:nowrap;
+}
+
+#logModal .logEventPrimary{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  line-height:1.25;
+}
+#logModal .logEventIcon{
+  flex:0 0 auto;
+  width:23px;
+  text-align:center;
+  font-size:18px;
+  line-height:1;
+}
+#logModal .logEventPrimary .numberTag{
+  margin-left:0!important;
+  color:#7ee787!important;
+  font-size:16px;
+  font-weight:950!important;
+  white-space:nowrap;
+}
+#logModal .logEventPrimary b{
+  min-width:0;
+  color:#f8fafc;
+  font-size:16px!important;
+  font-weight:950;
+  white-space:nowrap;
+}
+#logModal .logDot{
+  color:#66788d;
+  font-weight:900;
+}
+#logModal .logAssistTag{
+  flex:0 1 auto;
+  min-width:0;
+  margin-left:4px;
+  color:#fbbf24;
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* 球隊名稱一定維持單行；過長才省略，不再任意斷字。 */
+#logModal .logEventTeam{
+  min-width:0;
+  max-width:100%;
+  color:#91a0b6;
+  font-size:13px;
+  font-weight:800;
+  line-height:1.25;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  word-break:keep-all!important;
+}
+#logModal .logEventTeamMuted{color:#66788d}
+
+/* 右欄：比分第一、維護操作第二。 */
+#logModal .logRowSide{
+  align-self:stretch;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:8px;
+}
+#logModal .logTimelineItem .scoreSnap{
+  min-width:42px!important;
+  padding:0!important;
+  color:#91a0b6!important;
+  font-size:15px!important;
+  font-weight:950!important;
+  text-align:right;
+  line-height:1.1;
+}
+#logModal .logRowActions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:4px;
+}
+
+/* 編輯 / 刪除降權重，但仍保留直接操作，不增加層級。 */
+#logModal .logTimelineItem .editMarkerBtn{
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+  border-radius:10px!important;
+  background:#173a56!important;
+  border:1px solid rgba(125,211,252,.20)!important;
+  color:#b9ddf5!important;
+  font-size:15px!important;
+  box-shadow:none!important;
+}
+#logModal .logTimelineItem .logDeleteBtn{
+  width:28px!important;
+  height:34px!important;
+  min-width:28px!important;
+  padding:0!important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  background:transparent!important;
+  color:#d66a67!important;
+  border:1px solid transparent!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  opacity:.82;
+}
+#logModal .logTimelineItem .logDeleteBtn:active{
+  background:rgba(239,68,68,.10)!important;
+  opacity:1;
+}
+
+/* 完整事件列表最後一筆不要留下多餘底線 / margin。 */
+#logModal .logModalBody .logTimelineItem:last-child{
+  margin-bottom:2px;
+}
+
+/* filtered quick detail 保持既有唯讀結構，不套 Timeline。 */
+#logModal .logModalBody .quickDetailItem{
+  border-radius:0;
+  background:transparent;
+}
+
+/* iPhone Safari 實機寬度 */
+@media(max-width:430px){
+  #logModal .logModalBody .item.logTimelineItem{
+    grid-template-columns:44px minmax(0,1fr) 62px!important;
+    gap:7px!important;
+    min-height:86px;
+    padding:9px 7px 9px 10px!important;
+    margin-bottom:6px;
+    border-radius:13px;
+  }
+  #logModal .logTimelineItem .logSeq{font-size:11.5px!important}
+  #logModal .logEventMeta{gap:6px}
+  #logModal .logEventMeta .time{font-size:16px!important}
+  #logModal .logEventPrimary{gap:4px}
+  #logModal .logEventIcon{width:21px;font-size:17px}
+  #logModal .logEventPrimary .numberTag{font-size:15px}
+  #logModal .logEventPrimary b{font-size:15px!important}
+  #logModal .logEventTeam{font-size:12.5px}
+  #logModal .logTimelineItem .editMarkerBtn{
+    width:32px!important;height:32px!important;min-width:32px!important;
+  }
+  #logModal .logTimelineItem .logDeleteBtn{
+    width:26px!important;height:32px!important;min-width:26px!important;
+  }
+}
+
+@media(max-width:365px){
+  #logModal .logModalBody .item.logTimelineItem{
+    grid-template-columns:40px minmax(0,1fr) 58px!important;
+    gap:5px!important;
+    padding-left:9px!important;
+  }
+  #logModal .logEventPrimary .numberTag,
+  #logModal .logEventPrimary b{font-size:14px!important}
+  #logModal .logEventTeam{font-size:12px}
+  #logModal .logAssistTag{font-size:10px}
+}
+
 </style>
 </head>
 <body>
@@ -8138,7 +8389,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.78</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.79</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8417,7 +8668,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.78</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.79</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -9837,7 +10088,7 @@ function preferredOurNumbers(){
   return roster.length ? roster : allCommonNumbers();
 }
 
-// v4.78：我方背號 picker 共用資格邏輯。
+// v4.79：我方背號 picker 共用資格邏輯。
 // 有本場名單時優先只顯示本場球員；無名單才 fallback 常用背號。
 // 已紅牌退場者排除；可額外排除指定球員（例如助攻不能等於進球者）。
 function eligibleOurPlayerNumbers({excludeNumber='', beforeIndex=null}={}){
@@ -10191,7 +10442,7 @@ function buildKeeperGrid(){
 
   const roster=currentRosterNumbers();
 
-  // v4.78：守門員與進球者 / 助攻者共用相同球員資格規則。
+  // v4.79：守門員與進球者 / 助攻者共用相同球員資格規則。
   const available=eligibleOurPlayerNumbers();
 
   const sourceLabel=byId('keeperSourceLabel');
@@ -11696,23 +11947,63 @@ function renderLogTo(container, filterEvent=null){
     shownSeq++;
 
     const row=document.createElement('div');
-    row.className=readOnlyDetail?'item quickDetailItem':'item';
+    const eventKey=String(m.event||'event').toLowerCase().replace(/[^a-z0-9_-]/g,'');
+    row.className=readOnlyDetail
+      ? 'item quickDetailItem'
+      : `item logTimelineItem logEvent-${eventKey}`;
 
     const team=teamDisplay(m.team);
-    const num=m.player_number?`<span class="numberTag">#${m.player_number}</span>`:'';
-    const assist=(m.event==='GOAL' && m.assist_number)?`<span class="numberTag" style="color:#fbbf24">助攻 #${m.assist_number}</span>`:'';
+    const safeTeam=team ? escapeHtml(team) : '';
+    const num=m.player_number?`<span class="numberTag">#${escapeHtml(String(m.player_number))}</span>`:'';
+    const assist=(m.event==='GOAL' && m.assist_number)
+      ? `<span class="logAssistTag">助攻 #${escapeHtml(String(m.assist_number))}</span>`
+      : '';
+    const label=m.second_yellow?'紅牌（兩黃）':eventLabel(m.event);
+    const period=state.multiPeriod?periodLabel(m.period||1):'';
+    const score=m.score_after||'';
 
-    const controls=readOnlyDetail?'':`
-      <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${shownSeq}筆事件紀錄">✎</button>
-      <button class="del" onclick="deleteMarker(${i})" aria-label="刪除第${shownSeq}筆事件紀錄">✕</button>
-    `;
+    // 本場事件統計 drill-down 維持原本唯讀列表，不放編輯 / 刪除。
+    if(readOnlyDetail){
+      row.innerHTML=`
+        <div class="logSeq">第${shownSeq}筆</div>
+        <div class="time">${fmtMMSS(m.seconds)}</div>
+        <div class="logDetailLine"><span class="logMainText">${period?`<span class="periodBadge">${escapeHtml(period)}</span>`:''}${safeTeam||m.player_number?`${safeTeam?`<span style="color:#91a0b6">${safeTeam}</span>`:''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${escapeHtml(label)}</b>${assist}</span></div>
+        <div class="scoreSnap">${escapeHtml(score)}</div>
+      `;
+      container.appendChild(row);
+      return;
+    }
 
+    // 完整事件紀錄：閱讀順序改為「時段/時間 → 事件 → 球隊 → 比分/操作」。
     row.innerHTML=`
-      <div class="logSeq">第${shownSeq}筆</div>
-      <div class="time">${fmtMMSS(m.seconds)}</div>
-      <div class="logDetailLine"><span class="logMainText">${state.multiPeriod?`<span class="periodBadge">${periodLabel(m.period||1)}</span>`:''}${team||m.player_number?`${team?'<span style="color:#91a0b6">'+team+'</span>':''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${m.second_yellow?'紅牌（兩黃）':eventLabel(m.event)}</b>${assist}</span></div>
-      <div class="scoreSnap">${m.score_after||''}</div>
-      ${controls}
+      <div class="logSeq" aria-label="第${shownSeq}筆">第${shownSeq}筆</div>
+
+      <div class="logEventCore">
+        <div class="logEventMeta">
+          ${period?`<span class="periodBadge">${escapeHtml(period)}</span>`:''}
+          <span class="time">${fmtMMSS(m.seconds)}</span>
+        </div>
+
+        <div class="logEventPrimary">
+          <span class="logEventIcon" aria-hidden="true">${eventIcon(m.event)}</span>
+          ${num}
+          ${num?'<span class="logDot">·</span>':''}
+          <b>${escapeHtml(label)}</b>
+          ${assist}
+        </div>
+
+        ${safeTeam
+          ? `<div class="logEventTeam" title="${safeTeam}">${safeTeam}</div>`
+          : `<div class="logEventTeam logEventTeamMuted">未指定球隊</div>`}
+      </div>
+
+      <div class="logRowSide">
+        <div class="scoreSnap">${escapeHtml(score)}</div>
+        <div class="logRowActions">
+          <button class="editMarkerBtn" onclick="openEditMarker(${i})" aria-label="編輯第${shownSeq}筆事件紀錄">✎</button>
+          <button class="del logDeleteBtn" onclick="deleteMarker(${i})" aria-label="刪除第${shownSeq}筆事件紀錄">✕</button>
+        </div>
+      </div>
     `;
     container.appendChild(row);
   });
