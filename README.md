@@ -1,39 +1,26 @@
-# 足球場邊記錄器 v4.87
+# 足球場邊記錄器 v4.88 — Security Hardening
 
-## 本版主要修正
+本版以 v4.87 為基礎，只進行資安強化與資料驗證收斂，**不調整既有 UI 配色、尺寸、版面與操作流程**。
 
-### 1. 修正「全場後補填賽事名稱 / 場地，儲存後沒有更新」
-問題原因已確認：
+## 本版資安強化
 
-1. 使用者在「編輯賽事資料」視窗輸入新的賽事名稱或場地。
-2. 程式先把新內容寫入 `state.competition` / `state.venue`。
-3. 接著呼叫 `saveState()`。
-4. 但 `saveState()` 會重新從主畫面的 `competition` / `venue` input 讀值。
-5. 因為這兩個 input 還是舊資料，所以又把剛剛輸入的新值覆蓋掉。
+1. 所有自由文字欄位共用 `validatePlainTextValue()` 驗證器。
+2. 動態 HTML Attribute 使用 `escapeAttr()` 進行 context encoding。
+3. CSV 加入 Formula Injection 防護。
+4. `loadState()` 改為白名單 schema/type/length sanitize，不再直接 merge localStorage。
+5. 匯出檔名增加控制字元、路徑字元、Windows 保留名稱處理。
+6. 可安全改用 DOM / `textContent` 的簡單 `innerHTML` 已移除；複雜結構保留 template，但所有使用者資料均經 output encoding。
+7. localStorage 陣列設合理上限，避免被竄改資料造成前端 DOM / 記憶體 DoS。
+8. 新增 `SECURITY_CHECKLIST.md`。
 
-### v4.87 修正方式
-- 儲存全場編輯資料時，先同步更新主畫面的原始 input。
-- 再執行 `saveState()`。
-- 儲存後立即重新渲染全場頂部賽事資訊。
-- 重新開啟編輯視窗時，會直接顯示最新 state 值。
+## 相容性
 
-### 2. 摘要總時間資訊收斂
-延續前一版 UI 收斂方向：
-- 比分摘要區不再重複顯示總時間。
-- 總時間集中在「時間紀錄」區呈現。
-- 分享 / 儲存摘要資訊也避免重複塞入總時間。
-
-## 驗證情境
-已針對以下流程檢查程式邏輯：
-1. 賽前未填賽事名稱。
-2. 比賽進行。
-3. 全場結束。
-4. 點右上角鉛筆編輯。
-5. 新增賽事名稱。
-6. 儲存修改。
-7. 全場頂部立即顯示新的賽事名稱。
-8. 重新開啟編輯視窗仍可看到剛剛儲存的內容。
+- 舊版 v4.x localStorage 會在載入時自動正規化為 v4.88 schema。
+- 不影響既有比賽資料、比分、事件、球員名單、PK、摘要與 CSV 操作。
+- 賽事名稱上限統一為 20 字；場地 15 字；隊名 15 字。
 
 ## 檔案
-- index.html
-- README.md
+
+- `index.html`
+- `README.md`
+- `SECURITY_CHECKLIST.md`
