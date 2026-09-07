@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.94</title>
+<title>足球場邊記錄器 v4.96</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.94</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.96</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8776,7 +8776,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.94</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.96</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -12202,11 +12202,17 @@ function renderLogTo(container, filterEvent=null){
       return;
     }
 
-    // v4.94 完整事件紀錄：固定最多兩列。
-    // 第一列：時段 / 時間 / 球隊；第二列：事件 / 背號 / 比分 / 助攻。
+    // v4.95 完整事件紀錄：固定最多兩列。
+    // 第一列：時段 / 時間 / 球隊 / 球員背號。
+    // 第二列：事件圖示 / 事件名稱 / 比分 / 助攻。
+    // 閱讀邏輯：WHEN → WHO → WHAT。
     const teamInline=safeTeam
       ? `<span class="logTeamInline" title="${safeTeam}">${safeTeam}</span>`
       : `<span class="logTeamInline logEventTeamMuted">未指定球隊</span>`;
+
+    const playerInline=m.player_number
+      ? `<span class="logPlayerInline">#${escapeHtml(String(m.player_number))}</span>`
+      : '';
 
     const nonGoalScoreInline=(showScore && m.event!=='GOAL' && score)
       ? `<span class="logScoreInline" aria-label="當下比分 ${escapeHtml(score)}">${escapeHtml(score)}</span>`
@@ -12220,12 +12226,11 @@ function renderLogTo(container, filterEvent=null){
           ${period?`<span class="periodBadge">${escapeHtml(period)}</span>`:''}
           <span class="time">${fmtMMSS(m.seconds)}</span>
           ${teamInline}
+          ${playerInline}
         </div>
 
         <div class="logEventPrimary">
           <span class="logEventIcon" aria-hidden="true">${eventIcon(m.event)}</span>
-          ${num}
-          ${num?'<span class="logDot">·</span>':''}
           <b>${escapeHtml(label)}</b>
           ${goalScoreInline}
           ${nonGoalScoreInline}
@@ -14998,6 +15003,199 @@ setInterval(renderRegulationTimeAlert,1000);
   #logModal .logTeamInline{font-size:10.5px}
   #logModal .logEventPrimary .numberTag,
   #logModal .logEventPrimary b{font-size:14px!important}
+}
+
+
+/* =========================================================
+   v4.95 Event Log Information Hierarchy
+   第一列：時間 → 球隊 → 球員背號
+   第二列：事件圖示 → 事件名稱 → 比分 / 助攻
+   ========================================================= */
+
+/* 第一列：時間固定、背號固定，隊名吃中間剩餘空間。 */
+#logModal .logTimelineItem .logEventMeta{
+  display:flex!important;
+  align-items:center!important;
+  min-width:0!important;
+  width:100%!important;
+  gap:6px!important;
+  flex-wrap:nowrap!important;
+  overflow:hidden!important;
+}
+
+#logModal .logTimelineItem .logEventMeta .time{
+  flex:0 0 auto!important;
+}
+
+#logModal .logTimelineItem .logTeamInline{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  color:#91a0b6!important;
+  font-size:11.5px!important;
+  font-weight:850!important;
+  line-height:1.15!important;
+}
+
+/* 球員背號永遠保留，不被長隊名擠掉。 */
+#logModal .logTimelineItem .logPlayerInline{
+  flex:0 0 auto;
+  color:#6ee789;
+  font-size:14px;
+  font-weight:950;
+  line-height:1;
+  letter-spacing:-.15px;
+  white-space:nowrap;
+}
+
+/* 第二列只呈現「發生什麼」，事件 icon 可上下快速掃描。 */
+#logModal .logTimelineItem .logEventPrimary{
+  display:flex!important;
+  align-items:center!important;
+  min-width:0!important;
+  width:100%!important;
+  gap:6px!important;
+  flex-wrap:nowrap!important;
+  overflow:hidden!important;
+}
+
+#logModal .logTimelineItem .logEventPrimary .numberTag,
+#logModal .logTimelineItem .logEventPrimary .logDot{
+  display:none!important;
+}
+
+#logModal .logTimelineItem .logEventPrimary b{
+  flex:0 0 auto!important;
+}
+
+#logModal .logTimelineItem .logEventIcon{
+  flex:0 0 auto!important;
+  margin-right:0!important;
+}
+
+/* 進球資訊較多，比分與助攻仍留在第二列。 */
+#logModal .logTimelineItem .goalScoreInline{
+  flex:0 0 auto!important;
+  margin-left:1px!important;
+}
+
+#logModal .logTimelineItem .logAssistTag{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  margin-left:2px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+/* 微調 Compact 高度，保持兩列清楚但不浪費垂直空間。 */
+#logModal .logModalBody .item.logTimelineItem{
+  min-height:70px!important;
+  padding-top:7px!important;
+  padding-bottom:7px!important;
+}
+
+@media(max-width:390px){
+  #logModal .logTimelineItem .logTeamInline{
+    font-size:11px!important;
+  }
+  #logModal .logTimelineItem .logPlayerInline{
+    font-size:13.5px!important;
+  }
+}
+
+@media(max-width:350px){
+  #logModal .logTimelineItem .logEventMeta{
+    gap:5px!important;
+  }
+  #logModal .logTimelineItem .logTeamInline{
+    font-size:10.5px!important;
+  }
+  #logModal .logTimelineItem .logPlayerInline{
+    font-size:13px!important;
+  }
+  #logModal .logTimelineItem .logEventPrimary{
+    gap:5px!important;
+  }
+}
+
+
+/* =========================================================
+   v4.96 Event Log Card Color Saturation
+   黃牌 / 紅牌提高飽和度，但不改變事件紀錄資訊架構。
+   ========================================================= */
+
+/* 左側事件色條：改成更純、更飽滿的黃 / 紅。 */
+#logModal .logEvent-yellow_card::before{
+  background:#ffd400!important;
+  opacity:1!important;
+  box-shadow:0 0 8px rgba(255,212,0,.24);
+}
+#logModal .logEvent-red_card::before{
+  background:#ff3131!important;
+  opacity:1!important;
+  box-shadow:0 0 9px rgba(255,49,49,.26);
+}
+
+/* 黃牌：降低奶油黃感，改成高飽和足球裁判牌色。 */
+#logModal .logEvent-yellow_card .logEventIcon{
+  background:linear-gradient(
+    180deg,
+    #ffe600 0%,
+    #ffd400 55%,
+    #f6bd00 100%
+  )!important;
+  border:1px solid #b98500!important;
+  box-shadow:
+    0 2px 7px rgba(0,0,0,.20),
+    0 0 9px rgba(255,212,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.42)!important;
+}
+
+/* 紅牌：移除偏粉紅的上緣，改為更直接的鮮紅。 */
+#logModal .logEvent-red_card .logEventIcon{
+  background:linear-gradient(
+    180deg,
+    #ff4545 0%,
+    #ff2d2d 55%,
+    #dc1818 100%
+  )!important;
+  border:1px solid #991b1b!important;
+  box-shadow:
+    0 2px 7px rgba(0,0,0,.20),
+    0 0 10px rgba(255,45,45,.24),
+    inset 0 1px 0 rgba(255,255,255,.28)!important;
+}
+
+/* 黃牌事件時間維持黃色系，但提高亮度與飽和度。 */
+#logModal .logEvent-yellow_card .logEventMeta .time{
+  color:#ffd60a!important;
+  text-shadow:0 0 10px rgba(255,214,10,.16);
+}
+
+/* 紅牌事件時間不再偏淡粉，改成更明確的紅色。 */
+#logModal .logEvent-red_card .logEventMeta .time{
+  color:#ff625c!important;
+  text-shadow:0 0 12px rgba(255,49,49,.22)!important;
+}
+
+/* 紅牌高優先級卡片邊框也稍微提升紅色存在感。 */
+#logModal .logEvent-red_card{
+  border-color:rgba(255,49,49,.54)!important;
+  background:
+    radial-gradient(circle at 88% 14%,rgba(255,49,49,.055),transparent 25%),
+    linear-gradient(180deg,rgba(55,18,22,.92) 0%,rgba(34,13,17,.97) 100%)!important;
+  box-shadow:
+    0 0 0 1px rgba(255,49,49,.11) inset,
+    0 8px 18px rgba(0,0,0,.16)!important;
+}
+
+/* 黃牌不做整張強烈染色，只給極淡的黃色邊框提示，避免搶過進球 / 紅牌。 */
+#logModal .logEvent-yellow_card{
+  border-color:rgba(255,212,0,.22)!important;
 }
 
 </style>
