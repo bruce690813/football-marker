@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.95</title>
+<title>足球場邊記錄器 v4.94</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -2000,9 +2000,7 @@ body.matchStateLive .liveMetaStrip.show{
   border-color:rgba(96,165,250,.24);
 }
 
-/* v4.94：第二列與賽前保持同一閱讀順序：
-   左＝👕 名單，右＝🧤 守門員。
-   兩者提升一級，但不超過主計時與比分。 */
+/* 守門員 / 本場球員人數：提升一級，不超過主計時與比分。 */
 body.matchStateLive .liveQuickSetup{
   gap:7px;
   margin-bottom:7px;
@@ -8499,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.95</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.94</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8533,11 +8531,11 @@ body.resultMode.finalOutputVisible{
 
     <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
     <div class="liveQuickSetup" id="liveQuickSetup">
-      <button class="liveRosterBtn" type="button" onclick="openRosterModal()" aria-label="查看或編輯本場球員名單">
-        <span aria-hidden="true">👕</span><span id="liveRosterQuickText">名單 0人</span>
-      </button>
-      <button class="liveKeeperBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
+      <button type="button" onclick="openKeeperModal()" aria-label="比賽中快速設定守門員">
         <span aria-hidden="true">🧤</span><span id="liveKeeperQuickText">守門員 未設定</span>
+      </button>
+      <button type="button" onclick="openRosterModal()" aria-label="比賽中查看本場球員名單">
+        <span aria-hidden="true">👕</span><span id="liveRosterQuickText">0人</span>
       </button>
     </div>
 
@@ -8778,7 +8776,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.95</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.94</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -12204,7 +12202,16 @@ function renderLogTo(container, filterEvent=null){
       return;
     }
 
-    // 完整事件紀錄：閱讀順序改為「時段/時間 → 事件 → 球隊 → 比分/操作」。
+    // v4.94 完整事件紀錄：固定最多兩列。
+    // 第一列：時段 / 時間 / 球隊；第二列：事件 / 背號 / 比分 / 助攻。
+    const teamInline=safeTeam
+      ? `<span class="logTeamInline" title="${safeTeam}">${safeTeam}</span>`
+      : `<span class="logTeamInline logEventTeamMuted">未指定球隊</span>`;
+
+    const nonGoalScoreInline=(showScore && m.event!=='GOAL' && score)
+      ? `<span class="logScoreInline" aria-label="當下比分 ${escapeHtml(score)}">${escapeHtml(score)}</span>`
+      : '';
+
     row.innerHTML=`
       <div class="logSeq" aria-label="第${shownSeq}筆">第${shownSeq}筆</div>
 
@@ -12212,6 +12219,7 @@ function renderLogTo(container, filterEvent=null){
         <div class="logEventMeta">
           ${period?`<span class="periodBadge">${escapeHtml(period)}</span>`:''}
           <span class="time">${fmtMMSS(m.seconds)}</span>
+          ${teamInline}
         </div>
 
         <div class="logEventPrimary">
@@ -12220,18 +12228,14 @@ function renderLogTo(container, filterEvent=null){
           ${num?'<span class="logDot">·</span>':''}
           <b>${escapeHtml(label)}</b>
           ${goalScoreInline}
+          ${nonGoalScoreInline}
           ${assist}
         </div>
-
-        ${safeTeam
-          ? `<div class="logEventTeam" title="${safeTeam}">${safeTeam}</div>`
-          : `<div class="logEventTeam logEventTeamMuted">未指定球隊</div>`}
       </div>
 
       <div class="logRowSide">
-        ${scoreBlock}
         <div class="logRowActions">
-          <button class="logManageBtn" onclick="openMarkerManage(${i},${shownSeq})" aria-label="管理第${shownSeq}筆事件紀錄">⋯</button>
+          <button class="logManageBtn" onclick="openMarkerManage(${i},${shownSeq})" aria-label="管理第${shownSeq}筆事件紀錄"><span aria-hidden="true">•••</span></button>
         </div>
       </div>
     `;
@@ -12406,10 +12410,9 @@ function renderLiveFocusUI(){
   const rosterText=byId('liveRosterQuickText');
   if(!strip) return;
 
-  const isPenalty=!!state.penalty?.active && !state.finished;
-  const isLive=!!state.started && !state.finished && !state.awaitingNextPeriod && !isPenalty;
-  const isHalftime=!!state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF' && !state.finished && !isPenalty;
-  const isExtraWait=!!state.awaitingNextPeriod && state.nextPeriodType==='EXTRA_TIME' && !state.finished && !isPenalty;
+  const isLive=!!state.started && !state.finished && !state.awaitingNextPeriod && !state.penalty?.active;
+  const isHalftime=!!state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF' && !state.finished && !state.penalty?.active;
+  const isExtraWait=!!state.awaitingNextPeriod && state.nextPeriodType==='EXTRA_TIME' && !state.finished && !state.penalty?.active;
   const isResult=!!state.finished;
 
   const meta=[];
@@ -12422,15 +12425,14 @@ function renderLiveFocusUI(){
     strip.classList.add('show');
   }else{
     strip.textContent=meta.join(' · ');
-    // v4.95：PK 仍屬於同一場比賽，沿用比賽中的單行賽事 / 場地 Header。
-    strip.classList.toggle('show', (isLive || isHalftime || isExtraWait || isPenalty) && meta.length>0);
+    strip.classList.toggle('show', (isLive || isHalftime || isExtraWait) && meta.length>0);
   }
 
   if(keeperText){
     keeperText.textContent=state.goalkeeperNumber ? `守門員 #${state.goalkeeperNumber}` : '守門員 未設定';
   }
   if(rosterText){
-    rosterText.textContent=`名單 ${currentRosterNumbers().length}人`;
+    rosterText.textContent=`${currentRosterNumbers().length}人`;
   }
 }
 
@@ -12725,7 +12727,6 @@ function renderMatchStateUI(){
   document.body.classList.toggle('matchStateLive', isLive);
   document.body.classList.toggle('matchStateHalftime', isHalftime);
   document.body.classList.toggle('matchStateExtraWait', isExtraWait);
-  document.body.classList.toggle('matchStatePenalty', isPenalty);
   document.body.classList.toggle('matchStateBreak', isBreak || isPenalty);
   document.body.classList.toggle('resultMode', isFinished);
 }
@@ -14768,58 +14769,235 @@ setInterval(renderRegulationTimeAlert,1000);
 }
 
 
-
 /* =========================================================
-   v4.95 PK Header consistency
-   PK 仍是同一場比賽的決勝階段，不回到大型表單型 Header。
+   v4.94 Event Log Compact Two-line Layout
+   - 每筆最多兩列
+   - 第一列：時間 + 球隊
+   - 第二列：事件資訊
+   - 管理按鈕視覺較小，實際觸控區仍為 44px
    ========================================================= */
 
-/* PK 時隱藏原本賽前才需要的大型賽事名稱 / 場地輸入欄。 */
-body.matchStatePenalty .matchMetaRow,
-body.matchStatePenalty .venueRow{
-  display:none!important;
+#logModal .logModalBody .item.logTimelineItem{
+  grid-template-columns:44px minmax(0,1fr) 48px!important;
+  gap:7px!important;
+  min-height:74px!important;
+  padding:8px 7px 8px 10px!important;
+  margin-bottom:6px!important;
+  border-radius:13px!important;
 }
 
-/* PK 不需要再顯示名單 / 守門員快捷列；
-   將焦點留給「PK 點球 → 正規比分 → PK 比分」。 */
-body.matchStatePenalty .liveQuickSetup{
-  display:none!important;
+#logModal .logTimelineItem::before{
+  top:8px!important;
+  bottom:8px!important;
 }
 
-/* 延續比賽中 / 中場 / 延長賽的單行 Header 語言。 */
-body.matchStatePenalty .liveMetaStrip.show{
-  display:flex!important;
-  align-items:center;
+#logModal .logTimelineItem .logSeq{
+  align-self:center!important;
+  padding-top:0!important;
+  font-size:11.5px!important;
+}
+
+#logModal .logEventCore{
+  gap:6px!important;
   justify-content:center;
-  min-height:34px!important;
-  margin:0 1px 8px!important;
-  padding:6px 12px!important;
-  border-radius:11px!important;
-  background:rgba(15,23,42,.70)!important;
-  border:1px solid rgba(96,165,250,.25)!important;
-  color:#eef6fb!important;
-  font-size:clamp(14px,3.75vw,16.5px)!important;
-  font-weight:950!important;
-  line-height:1.2!important;
-  letter-spacing:.1px!important;
+}
+
+#logModal .logEventMeta{
+  min-width:0;
+  width:100%;
+  gap:6px!important;
+  flex-wrap:nowrap!important;
+}
+
+#logModal .logEventMeta .periodBadge{
+  flex:0 0 auto;
+}
+
+#logModal .logEventMeta .time{
+  flex:0 0 auto;
+  font-size:16px!important;
+}
+
+#logModal .logEvent-goal .logEventMeta .time,
+#logModal .logEvent-red_card .logEventMeta .time{
+  font-size:17px!important;
+}
+
+/* 球隊名稱移到時間後面；只佔剩餘空間，過長以省略號處理。 */
+#logModal .logTeamInline{
+  min-width:0;
+  flex:1 1 auto;
+  color:#91a0b6;
+  font-size:11.5px;
+  font-weight:850;
+  line-height:1.15;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+  word-break:keep-all;
 }
 
-/* PK 紫色只留給「PK 點球」狀態本身，
-   Header 維持和前面比賽流程相同的中性深藍資訊層。 */
-body.matchStatePenalty .liveMetaStrip.show::first-letter{
+/* 完整事件紀錄不再使用第三列球隊名稱。 */
+#logModal .logTimelineItem .logEventTeam{
+  display:none!important;
+}
+
+#logModal .logEventPrimary{
+  min-width:0;
+  width:100%;
+  gap:4px!important;
+  flex-wrap:nowrap!important;
+  overflow:hidden;
+}
+
+#logModal .logEventPrimary .numberTag{
+  flex:0 0 auto;
+  font-size:15px!important;
+}
+#logModal .logEventPrimary b{
+  flex:0 0 auto;
+  font-size:15px!important;
+}
+#logModal .logEvent-goal .logEventPrimary b,
+#logModal .logEvent-red_card .logEventPrimary b{
+  font-size:16px!important;
+}
+#logModal .logEventIcon{
+  flex:0 0 auto;
+  width:21px!important;
+  font-size:17px!important;
+}
+#logModal .logEvent-yellow_card .logEventIcon,
+#logModal .logEvent-red_card .logEventIcon{
+  width:13px!important;
+  height:20px!important;
+}
+
+/* 非進球事件若因比分異動需要顯示比分，也放第二列，不佔右側第三層。 */
+#logModal .logScoreInline{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:34px;
+  height:19px;
+  padding:0 7px;
+  border-radius:999px;
+  background:rgba(71,85,105,.34);
+  border:1px solid rgba(148,163,184,.24);
+  color:#cbd5e1;
+  font-size:10.5px;
+  font-weight:950;
   line-height:1;
 }
 
+/* 助攻可省略，避免事件列被迫換成第三列。 */
+#logModal .logAssistTag{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  margin-left:3px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+/* 右欄只負責管理操作，不再堆比分。 */
+#logModal .logRowSide{
+  align-self:center!important;
+  justify-content:center!important;
+  gap:0!important;
+}
+#logModal .logRowActions{
+  width:44px!important;
+  height:44px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+/*
+  實際 button 仍維持 44×44 的可點範圍；
+  藍色視覺面積透過 ::before 縮成 34×34。
+*/
+#logModal .logTimelineItem .logManageBtn{
+  position:relative!important;
+  width:44px!important;
+  height:44px!important;
+  min-width:44px!important;
+  min-height:44px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:#c9e9fb!important;
+}
+
+#logModal .logTimelineItem .logManageBtn::before{
+  content:"";
+  position:absolute;
+  inset:5px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#173a56 0%,#123149 100%);
+  border:1px solid rgba(125,211,252,.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 3px 9px rgba(0,0,0,.10);
+  transition:transform .12s ease,filter .12s ease,border-color .12s ease;
+}
+
+#logModal .logTimelineItem .logManageBtn > span{
+  position:relative;
+  z-index:1;
+  transform:translateY(-2px);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14px;
+  font-weight:950;
+  line-height:1;
+  letter-spacing:1px;
+}
+
+#logModal .logTimelineItem .logManageBtn:active{
+  transform:none!important;
+  filter:none!important;
+}
+#logModal .logTimelineItem .logManageBtn:active::before{
+  transform:scale(.94);
+  filter:brightness(1.12);
+  border-color:rgba(125,211,252,.46);
+}
+
 @media(max-width:390px){
-  body.matchStatePenalty .liveMetaStrip.show{
-    min-height:32px!important;
-    margin-bottom:7px!important;
-    padding:5px 9px!important;
-    font-size:clamp(13.5px,3.65vw,15.5px)!important;
+  #logModal .logModalBody .item.logTimelineItem{
+    grid-template-columns:40px minmax(0,1fr) 46px!important;
+    min-height:72px!important;
+    gap:6px!important;
+    padding:7px 6px 7px 9px!important;
   }
+  #logModal .logTimelineItem .logSeq{font-size:11px!important}
+  #logModal .logEventMeta .time{font-size:15.5px!important}
+  #logModal .logEvent-goal .logEventMeta .time,
+  #logModal .logEvent-red_card .logEventMeta .time{font-size:16px!important}
+  #logModal .logTeamInline{font-size:11px}
+  #logModal .logEventPrimary .numberTag{font-size:14.5px!important}
+  #logModal .logEventPrimary b{font-size:14.5px!important}
+  #logModal .logEvent-goal .logEventPrimary b,
+  #logModal .logEvent-red_card .logEventPrimary b{font-size:15.5px!important}
+  #logModal .goalScoreInline{height:19px;min-width:34px;padding:0 6px;font-size:10.5px}
+  #logModal .logAssistTag{font-size:10px!important}
+}
+
+@media(max-width:350px){
+  #logModal .logModalBody .item.logTimelineItem{
+    grid-template-columns:38px minmax(0,1fr) 44px!important;
+    gap:5px!important;
+  }
+  #logModal .logTeamInline{font-size:10.5px}
+  #logModal .logEventPrimary .numberTag,
+  #logModal .logEventPrimary b{font-size:14px!important}
 }
 
 </style>
