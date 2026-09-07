@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.86</title>
+<title>足球場邊記錄器 v4.87</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -1411,6 +1411,14 @@ body.keyboardOpen .finalToolsCard{display:none}
 .reportTimeCard{border:1px solid #2b3744;border-radius:12px;padding:10px;background:#111b26;margin-bottom:14px}
 .reportTimeGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px}
 .reportActual{font-size:24px;font-weight:900;color:#38bdf8;text-align:center;margin-top:8px}
+.reportActual .rawDuration{
+  display:block;
+  margin-top:4px;
+  color:#8290a4;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.2px;
+}
 .crossDayBadge{
   display:none;
   width:max-content;
@@ -7225,7 +7233,7 @@ body.matchStateHalftime #eventHubSection.recordOnly #recordSection{
 
 
 /* =========================
-   v4.86 iPhone Safari 全場底部 Safe Area QA
+   v4.87 iPhone Safari 全場底部 Safe Area QA
    目的：
    1. 滑到頁面最底時，「＋ 新比賽」可完整露出
    2. 按鈕底部與 Safari 工具列至少保留約 16px 的視覺安全距離
@@ -7288,7 +7296,7 @@ html{
 }
 
 
-/* v4.86 QA 補強：iPhone SE / 4.7 吋級 320～375px */
+/* v4.87 QA 補強：iPhone SE / 4.7 吋級 320～375px */
 @media(max-width:375px){
   body.resultMode.finalOutputVisible{
     --result-bottom-safe-tail:
@@ -7298,7 +7306,7 @@ html{
 
 
 /* =========================
-   v4.86 全場「＋ 新比賽」Safari 可視區修正
+   v4.87 全場「＋ 新比賽」Safari 可視區修正
    這版不只增加頁尾空間，而是：
    1. 全場工具區稍微 compact，減少垂直佔用
    2. 保留可捲動 Safe Area
@@ -7363,13 +7371,13 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn{
 
 
 /* =========================
-   v4.86 全場 viewport 校正
+   v4.87 全場 viewport 校正
    =========================
    v4.70 的問題：
    為了讓「＋ 新比賽」立即露出，會自動 scrollBy，
    因此全場一進入就把標題 / 賽事名稱 / 場地往上推掉。
 
-   v4.86：
+   v4.87：
    - 完全取消全場自動捲動。
    - 進入全場時維持使用者原本畫面位置。
    - 「＋ 新比賽」的 Safari 防遮蔽只靠真實文件流 Safe Area。
@@ -7416,7 +7424,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.86 About：線上工具 / 免下載 App
+   v4.87 About：線上工具 / 免下載 App
    設計原則：
    「線上工具」是產品使用方式，不是第 4 個功能，
    因此放在 Hero 內做 compact badge，而不增加功能卡。
@@ -7497,7 +7505,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.86 About 最後視覺 polish
+   v4.87 About 最後視覺 polish
    1. 線上工具 badge 降低按鈕感
    2. badge 與介紹文字增加呼吸距離
    3. 底部 CTA 收斂高光與藍色漸層
@@ -7563,7 +7571,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.86 時間紀錄 UI/UX 收尾
+   v4.87 時間紀錄 UI/UX 收尾
    ========================= */
 
 /* 日期只出現一次，降低每列重複 YYYY/MM/DD 的視覺噪音。 */
@@ -7709,7 +7717,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.86 本場名單 / 守門員 Design System 一致化
+   v4.87 本場名單 / 守門員 Design System 一致化
    ========================= */
 
 /* A. 本場名單：主流 iPhone 統一 6 欄快捷背號。 */
@@ -7927,7 +7935,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.86 進球流程 Player Picker Design System
+   v4.87 進球流程 Player Picker Design System
    ========================= */
 .playerPickerSourceRow{
   display:flex;align-items:center;justify-content:space-between;
@@ -8012,7 +8020,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.86 射門 / 防守 Player Picker 收尾
+   v4.87 射門 / 防守 Player Picker 收尾
    ========================= */
 /* 射門與防守與進球流程共用同一個視覺層級：事件標題 → 簡短提示 → 名單來源 → 6欄背號。 */
 #numberModal:not(.cardFlow) .numberTitle{
@@ -8049,7 +8057,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.86 黃 / 紅牌 Player Picker Design System 收尾
+   v4.87 黃 / 紅牌 Player Picker Design System 收尾
    ========================= */
 
 /* Step 1「選擇球隊」與 Step 2「選擇球員」使用同一張真實牌卡。
@@ -8135,7 +8143,7 @@ body.resultMode.finalOutputVisible{
 
 
 /* =========================
-   v4.86 事件紀錄 Timeline UI
+   v4.87 事件紀錄 Timeline UI
    - 球隊名稱固定單行，避免「足球 / 隊」破碎換行
    - 恢復事件 icon，沿用首頁事件語言
    - 第幾筆降權重，時間與事件成為主要資訊
@@ -8506,7 +8514,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.86</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v4.87</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8785,7 +8793,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
-      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.86</div></div>
+      <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div><div class="aboutVersion">v4.87</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
       <div class="aboutHero">場邊一按，精彩片刻不漏接。</div>
       <div class="aboutOnlinePill" aria-label="線上工具，免下載 App，開啟網頁即可直接使用">
@@ -9172,6 +9180,7 @@ body.resultMode.finalOutputVisible{
         <span id="reportCompetition" style="display:none">🏆 賽事</span>
         <span id="reportVenue" class="reportVenueMeta"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText">未填場地</span></span>
         <span id="reportRoster" style="display:none">👕 本場名單</span>
+        <span id="reportDuration">⏱ 00:00</span>
       </div>
       <div class="reportStatusBadge idle" id="reportStatusBadge">尚未開始</div>
     </div>
@@ -9748,7 +9757,9 @@ function fmtDurationReadable(sec){
   return `${h}小時 ${m}分 ${s}秒`;
 }
 function durationReportHTML(sec){
-  return escapeHtml(fmtDurationReadable(sec));
+  const raw=fmtMMSS(sec);
+  if(Number(sec)<3600) return escapeHtml(raw);
+  return `${escapeHtml(fmtDurationReadable(sec))}<span class="rawDuration">總計 ${escapeHtml(raw)}</span>`;
 }
 function emoji(ev){
   return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', DEFENSE:'🛡️', YELLOW_CARD:'🟨', RED_CARD:'🟥'}[ev] || '•';
@@ -10202,7 +10213,7 @@ function preferredOurNumbers(){
   return roster.length ? roster : allCommonNumbers();
 }
 
-// v4.86：我方背號 picker 共用資格邏輯。
+// v4.87：我方背號 picker 共用資格邏輯。
 // 有本場名單時優先只顯示本場球員；無名單才 fallback 常用背號。
 // 已紅牌退場者排除；可額外排除指定球員（例如助攻不能等於進球者）。
 function eligibleOurPlayerNumbers({excludeNumber='', beforeIndex=null}={}){
@@ -10556,7 +10567,7 @@ function buildKeeperGrid(){
 
   const roster=currentRosterNumbers();
 
-  // v4.86：守門員與進球者 / 助攻者共用相同球員資格規則。
+  // v4.87：守門員與進球者 / 助攻者共用相同球員資格規則。
   const available=eligibleOurPlayerNumbers();
 
   const sourceLabel=byId('keeperSourceLabel');
@@ -12330,6 +12341,7 @@ function openResultMetaEdit(){
   const comp=byId('resultCompetitionInput');
   const venue=byId('resultVenueInput');
 
+  // v4.87：全場編輯一律以目前 state 為唯一來源。
   if(comp) comp.value=state.competition||'';
   if(venue) venue.value=state.venue||'';
 
@@ -12367,9 +12379,18 @@ function saveResultMetaEdit(){
   state.competition=comp;
   state.venue=venue;
 
+  // v4.87：同步回主畫面的原始欄位，再存 state。
+  // 否則 saveState() 會從舊的 competition / venue input 讀值，
+  // 把剛剛在全場編輯視窗輸入的新內容覆蓋掉。
+  if(byId('competition')) byId('competition').value=comp;
+  if(byId('venue')) byId('venue').value=venue;
+
   // 賽後修正只更新本場資料。
   // 最近場地仍以「實際開始比賽時的場地」為準。
   saveState();
+
+  // 儲存後立即刷新全場頂部資料與摘要相關顯示。
+  renderLiveFocusUI();
   closeResultMetaEdit();
   render();
 }
@@ -12914,6 +12935,7 @@ function buildReportDOM(){
   }else if(reportRoster){
     reportRoster.style.display='none';
   }
+  byId('reportDuration').textContent=`⏱ ${fmtDurationReadable(totalElapsed)}`;
   byId('reportStart').textContent=fmtReportBoundary(reportStartEpoch,reportStartEpoch,reportEndEpoch);
   byId('reportEnd').textContent=fmtReportBoundary(reportEndEpoch,reportStartEpoch,reportEndEpoch);
   byId('reportActual').innerHTML=durationReportHTML(totalElapsed);
@@ -13016,7 +13038,7 @@ function reportLines(){
   const pngStart=matchStartEpoch();
   const pngEnd=matchEndEpoch();
   const pngCrossDay=isCrossDay(pngStart,pngEnd);
-  lines.push({type:'meta', text:`實際比賽時間：${fmtDurationReadable(pngTotal)}`});
+  lines.push({type:'meta', text:`實際比賽時間：${fmtDurationReadable(pngTotal)}${pngTotal>=3600?`（總計 ${fmtMMSS(pngTotal)}）`:''}`});
   if(pngStart) lines.push({type:'meta', text:`開始：${pngCrossDay?fmtMonthDayClock(pngStart):fmtClock(pngStart)}`});
   if(pngEnd) lines.push({type:'meta', text:`結束：${pngCrossDay?fmtMonthDayClock(pngEnd):fmtClock(pngEnd)}${pngCrossDay?'｜跨日':''}`});
   if(state.multiPeriod){
@@ -13450,7 +13472,7 @@ h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams
 </style></head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">${state.competition?`🏆 ${escapeHtml(state.competition)}　`:''}📍 ${escapeHtml(state.venue||'未填場地')}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
-<div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</p>${state.halftimeStartEpoch?`<p><b>中場開始：</b>${escapeHtml(fmtClock(state.halftimeStartEpoch))}<br><b>中場結束：</b>${escapeHtml(state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--')}<br><b>中場休息：</b>${escapeHtml(fmtMMSS(halftimeElapsed()))}</p>`:''}${diff}</div>
+<div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}${totalMatchElapsed()>=3600?`　<span class="note">總計 ${fmtMMSS(totalMatchElapsed())}</span>`:''}</p>${state.halftimeStartEpoch?`<p><b>中場開始：</b>${escapeHtml(fmtClock(state.halftimeStartEpoch))}<br><b>中場結束：</b>${escapeHtml(state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--')}<br><b>中場休息：</b>${escapeHtml(fmtMMSS(halftimeElapsed()))}</p>`:''}${diff}</div>
 <div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
 <div class="card"><h2>其他精彩標記事件</h2><ul>${otherHtml}</ul></div>
