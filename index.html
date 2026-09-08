@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.14</title>
+<title>足球場邊記錄器 v5.17</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.14</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.17</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8518,7 +8518,7 @@ body.resultMode.finalOutputVisible{
 
     <div class="preQuickSetup" id="preQuickSetup">
       <button id="rosterQuickBtn" class="rosterQuickBtn" type="button" onclick="openRosterModal()" aria-label="設定本場球員名單">
-        <span class="preQuickIcon preRosterIcon" aria-hidden="true">👕</span>
+        <span class="preQuickIcon preRosterIcon" aria-hidden="true"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span></span>
         <span class="preQuickText"><span class="preQuickLabel">名單</span><span id="rosterQuickText">0人</span></span>
       </button>
       <button id="keeperQuickBtn" class="keeperQuickBtn" type="button" onclick="openKeeperModal()" aria-label="設定目前守門員背號">
@@ -8532,7 +8532,7 @@ body.resultMode.finalOutputVisible{
     <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
     <div class="liveQuickSetup" id="liveQuickSetup">
       <button type="button" onclick="openRosterModal()" aria-label="查看或編輯本場球員名單">
-        <span aria-hidden="true">👕</span><span id="liveRosterQuickText">名單 0人</span>
+        <span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="liveRosterQuickText">名單 0人</span>
       </button>
       <button type="button" onclick="openKeeperModal()" aria-label="快速設定目前守門員">
         <span aria-hidden="true">🧤</span><span id="liveKeeperQuickText">守門員 未設定</span>
@@ -8830,7 +8830,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.14">v5.14</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.17">v5.17</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -8960,7 +8960,7 @@ body.resultMode.finalOutputVisible{
 <!-- PK roster picker -->
 <div class="modalBack" id="penaltyRosterModal">
   <div class="modal penaltyRosterPicker">
-    <h2>👕 選擇 PK 球員背號</h2>
+    <h2 class="rosterIconHeading"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>選擇 PK 球員背號</span></h2>
     <div class="penaltyRosterHint" id="penaltyRosterHint">從本場球員名單點選背號。</div>
     <div class="penaltyRosterGrid" id="penaltyRosterGrid"></div>
     <div class="penaltyRosterActions">
@@ -9039,7 +9039,7 @@ body.resultMode.finalOutputVisible{
   <div class="modal rosterModalPanel">
     <div class="rosterModalHead rosterModalFixedHead">
       <div>
-        <h2 style="margin:0">👕 本場球員名單</h2>
+        <h2 class="rosterIconHeading" style="margin:0"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>本場球員名單</span></h2>
         <div class="rosterHeadHint">點一下加入，再點一次取消</div>
       </div>
       <span class="rosterCountBadge" id="rosterCountBadge">0 人</span>
@@ -9281,7 +9281,7 @@ body.resultMode.finalOutputVisible{
       <div class="reportMeta">
         <span id="reportCompetition" style="display:none">🏆 賽事</span>
         <span id="reportVenue" class="reportVenueMeta"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText">未填場地</span></span>
-        <span id="reportRoster" style="display:none">👕 本場名單</span>
+        <span id="reportRoster" class="reportRosterMeta" style="display:none"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="reportRosterText">本場名單</span></span>
       </div>
       <div class="reportStatusBadge idle" id="reportStatusBadge">尚未開始</div>
     </div>
@@ -13279,9 +13279,10 @@ function buildReportDOM(){
   }
   byId('reportVenueText').textContent=state.venue||'未填場地';
   const reportRoster=byId('reportRoster');
+  const reportRosterText=byId('reportRosterText');
   const rosterForReport=currentRosterNumbers();
-  if(reportRoster && rosterForReport.length){
-    reportRoster.textContent=`👕 ${rosterForReport.map(n=>'#'+n).join(' ')}`;
+  if(reportRoster && reportRosterText && rosterForReport.length){
+    reportRosterText.textContent=rosterForReport.map(n=>'#'+n).join(' ');
     reportRoster.style.display='';
   }else if(reportRoster){
     reportRoster.style.display='none';
@@ -17052,6 +17053,228 @@ body.matchStatePre #preRegulationSection .regCustomCard.open{
 @media(max-width:390px){
   body.matchStatePre #preRegulationSection .regRow{
     display:block!important;
+  }
+}
+
+
+/* =========================================================
+   v5.15 Pre-match Match Time Compact Height
+   目標：保留 44px 觸控高度，但降低外框視覺重量。
+   ========================================================= */
+
+/* 比賽時間外框縮成真正的單列設定條。 */
+body.matchStatePre .preRegulationSection{
+  grid-template-columns:auto minmax(0,1fr)!important;
+  align-items:center!important;
+  column-gap:9px!important;
+  row-gap:0!important;
+
+  min-height:0!important;
+  padding:6px 9px!important;
+  border-radius:12px!important;
+}
+
+/* 標題保持既有字級，只壓縮不必要的上下空間。 */
+body.matchStatePre .preRegulationInlineTitle{
+  min-height:44px!important;
+  display:flex!important;
+  align-items:center!important;
+  line-height:1!important;
+}
+
+/* 邏輯容器不額外產生高度。 */
+body.matchStatePre .preRegulationHost,
+body.matchStatePre #preRegulationSection .regBox,
+body.matchStatePre #preRegulationSection .regRow,
+body.matchStatePre #preRegulationSection .regChooser,
+body.matchStatePre #preRegulationSection .regSelectWrap{
+  min-height:0!important;
+}
+
+/*
+  下拉選單維持 44px：
+  - 低於原本 48px，視覺更俐落
+  - 仍符合手機操作所需的基本觸控高度
+*/
+body.matchStatePre #preRegulationSection .regSelect{
+  min-height:44px!important;
+  height:44px!important;
+  padding-top:7px!important;
+  padding-bottom:7px!important;
+  border-radius:10px!important;
+}
+
+/* 自訂分鐘展開時才允許卡片自然增加高度。 */
+body.matchStatePre #preRegulationSection .regCustomCard.open{
+  margin-top:6px!important;
+}
+
+/* 小螢幕不要再額外增加上下 padding。 */
+@media(max-width:390px){
+  body.matchStatePre .preRegulationSection{
+    column-gap:8px!important;
+    padding:5px 8px!important;
+  }
+
+  body.matchStatePre .preRegulationInlineTitle{
+    min-height:44px!important;
+  }
+
+  body.matchStatePre #preRegulationSection .regSelect{
+    min-height:44px!important;
+    height:44px!important;
+  }
+}
+
+@media(max-width:350px){
+  body.matchStatePre .preRegulationSection{
+    column-gap:6px!important;
+    padding-left:7px!important;
+    padding-right:7px!important;
+  }
+}
+
+
+/* =========================================================
+   v5.16 Roster Jersey Icon
+   參考實體球衣主色：珊瑚紅 / 粉橘紅。
+   避免直接使用 iOS 藍色 👕 emoji，改用可控色 SVG。
+   ========================================================= */
+
+:root{
+  --roster-jersey:#eb686c;
+  --roster-jersey-collar:rgba(255,255,255,.92);
+}
+
+.rosterJerseyIcon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  width:1.38em;
+  height:1.38em;
+  line-height:1;
+  vertical-align:-.18em;
+  color:var(--roster-jersey);
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.20));
+}
+
+.rosterJerseyIcon svg{
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:visible;
+}
+
+.rosterJerseyBody{
+  fill:currentColor;
+}
+
+.rosterJerseyCollar{
+  fill:var(--roster-jersey-collar);
+}
+
+/* 賽前名單：與原本 emoji 相同視覺尺寸，不放大卡片。 */
+body.matchStatePre .preRosterIcon .rosterJerseyIcon{
+  width:1.48em;
+  height:1.48em;
+}
+
+/* Live / 中場 / 下半場 / 延長 / PK：保持快捷資訊對齊。 */
+.liveQuickSetup .rosterJerseyIcon{
+  width:1.30em;
+  height:1.30em;
+  margin-right:6px;
+}
+
+/* Modal 標題同步使用同一支 icon。 */
+.rosterIconHeading{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.rosterIconHeading .rosterJerseyIcon{
+  width:1.20em;
+  height:1.20em;
+  vertical-align:0;
+}
+
+/* 摘要 meta icon 不搶比分層級。 */
+.reportRosterMeta{
+  align-items:center;
+  gap:5px;
+}
+
+.reportRosterMeta .rosterJerseyIcon{
+  width:1.08em;
+  height:1.08em;
+  vertical-align:-.12em;
+}
+
+/*
+  這個珊瑚紅與紅牌鮮紅 (#ff3131) 刻意保留色差：
+  roster = 柔和珊瑚紅；red card = 高飽和警示紅。
+*/
+
+
+/* =========================================================
+   v5.17 Full-time Action Group Spacing
+   Primary CTA 與 Secondary Tools 明確分層。
+   ========================================================= */
+
+/*
+  全場操作區：
+  1. ＋ 新比賽 = Primary CTA
+  2. 摘要 / 儲存圖片 / 匯出 CSV = Secondary Tools
+
+  兩組操作間加入固定 10px gap，
+  避免兩個外框視覺上黏成同一塊。
+*/
+body.resultMode.finalOutputVisible .finalToolsCard{
+  gap:10px!important;
+  padding:7px!important;
+}
+
+/* 由父層 gap 統一控制間距，不再混用 margin。 */
+body.resultMode.finalOutputVisible .resultNewMatchBtn{
+  margin:0!important;
+}
+
+body.resultMode.finalOutputVisible .toolGrid.finalTools{
+  margin:0!important;
+}
+
+/* 次要工具三欄內部仍維持較緊湊的 5px 水平間距。 */
+body.resultMode.finalOutputVisible .toolGrid.finalTools{
+  gap:5px!important;
+}
+
+/* iPhone：保持新比賽在上、三顆工具在下，並固定呼吸空間。 */
+@media(max-width:430px){
+  body.resultMode.finalOutputVisible .finalToolsCard{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:10px!important;
+    padding:7px!important;
+  }
+
+  body.resultMode.finalOutputVisible .resultNewMatchBtn{
+    order:1!important;
+    margin:0!important;
+  }
+
+  body.resultMode.finalOutputVisible .toolGrid.finalTools{
+    order:2!important;
+    margin:0!important;
+  }
+}
+
+/* 390px 以下仍保留 8px，避免窄螢幕底部過度拉長。 */
+@media(max-width:390px){
+  body.resultMode.finalOutputVisible .finalToolsCard{
+    gap:8px!important;
+    padding:6px!important;
   }
 }
 
