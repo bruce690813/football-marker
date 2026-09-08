@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v4.99</title>
+<title>足球場邊記錄器 v5.01</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v4.99</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.01</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8813,8 +8813,79 @@ body.resultMode.finalOutputVisible{
       </div>
       </div>
       <div class="aboutFooter">
-        <div class="aboutBuildVersion" aria-label="目前版本 v4.99">版本 v4.99</div>
+        <div class="aboutVersionFooter">版本 v5.01</div>
+        <button class="aboutGuideBtn" type="button" onclick="openQuickGuide()" aria-label="開啟快速使用指南">
+          <span aria-hidden="true">📖</span><span>快速使用指南</span>
+        </button>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick guide modal -->
+<div class="modalBack" id="quickGuideModal">
+  <div class="modal quickGuideModal" role="dialog" aria-modal="true" aria-labelledby="quickGuideTitle">
+    <div class="quickGuideTop">
+      <button class="quickGuideDismiss" type="button" onclick="closeQuickGuide()" aria-label="關閉快速使用指南">✕</button>
+      <div class="quickGuideEyebrow">QUICK GUIDE</div>
+      <div class="quickGuideTitle" id="quickGuideTitle">快速使用指南</div>
+      <div class="quickGuideHero">不用先學會，照著比賽流程走就好。</div>
+    </div>
+
+    <div class="quickGuideBody">
+      <div class="quickGuideScroll">
+        <div class="quickGuideSteps">
+          <div class="quickGuideStep">
+            <div class="quickGuideNum">1</div>
+            <div class="quickGuideStepText">
+              <b>賽前設定</b>
+              <span>賽事、場地、名單與守門員可先設定；隊名等資料也可稍後補。</span>
+            </div>
+          </div>
+
+          <div class="quickGuideStep">
+            <div class="quickGuideNum">2</div>
+            <div class="quickGuideStepText">
+              <b>裁判吹哨就開始</b>
+              <span>按下「開始比賽」立即計時，先把真正的開賽時間記準。</span>
+            </div>
+          </div>
+
+          <div class="quickGuideStep">
+            <div class="quickGuideNum">3</div>
+            <div class="quickGuideStepText">
+              <b>場邊一鍵標記</b>
+              <span>進球、撲救、射門、防守、黃牌與紅牌，看到就直接按。</span>
+            </div>
+          </div>
+
+          <div class="quickGuideStep">
+            <div class="quickGuideNum">4</div>
+            <div class="quickGuideStepText">
+              <b>依賽事流程切換</b>
+              <span>中場、下半場、延長賽與 PK 依畫面提示操作，計時與比分會接續整理。</span>
+            </div>
+          </div>
+
+          <div class="quickGuideStep">
+            <div class="quickGuideNum">5</div>
+            <div class="quickGuideStepText">
+              <b>賽後整理與分享</b>
+              <span>查看事件紀錄與摘要，也可儲存圖片或匯出 CSV 供後續剪輯使用。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="quickGuideTip">
+          <div class="quickGuideTipTitle">💡 場邊小技巧</div>
+          <div class="quickGuideTipText">時間與事件最重要。球隊名稱、賽事名稱或場地來不及輸入時，可以有空再補，不要錯過哨音與精彩片刻。</div>
+        </div>
+      </div>
+
+      <div class="quickGuideFooter">
+        <button class="quickGuideBack" type="button" onclick="backToAboutFromGuide()">← 返回介紹</button>
+        <button class="quickGuideStart" type="button" onclick="startFromQuickGuide()">開始記錄比賽</button>
       </div>
     </div>
   </div>
@@ -12418,9 +12489,10 @@ function renderLiveFocusUI(){
   const rosterText=byId('liveRosterQuickText');
   if(!strip) return;
 
-  const isLive=!!state.started && !state.finished && !state.awaitingNextPeriod && !state.penalty?.active;
-  const isHalftime=!!state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF' && !state.finished && !state.penalty?.active;
-  const isExtraWait=!!state.awaitingNextPeriod && state.nextPeriodType==='EXTRA_TIME' && !state.finished && !state.penalty?.active;
+  const isPenalty=!!state.penalty?.active;
+  const isLive=!!state.started && !state.finished && !state.awaitingNextPeriod && !isPenalty;
+  const isHalftime=!!state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF' && !state.finished && !isPenalty;
+  const isExtraWait=!!state.awaitingNextPeriod && state.nextPeriodType==='EXTRA_TIME' && !state.finished && !isPenalty;
   const isResult=!!state.finished;
 
   const meta=[];
@@ -12433,7 +12505,8 @@ function renderLiveFocusUI(){
     strip.classList.add('show');
   }else{
     strip.textContent=meta.join(' · ');
-    strip.classList.toggle('show', (isLive || isHalftime || isExtraWait) && meta.length>0);
+    // v5.00：PK 與其他比賽狀態使用完全相同的賽事 / 場地資訊列。
+    strip.classList.toggle('show', (isLive || isHalftime || isExtraWait || isPenalty) && meta.length>0);
   }
 
   if(keeperText){
@@ -12735,6 +12808,7 @@ function renderMatchStateUI(){
   document.body.classList.toggle('matchStateLive', isLive);
   document.body.classList.toggle('matchStateHalftime', isHalftime);
   document.body.classList.toggle('matchStateExtraWait', isExtraWait);
+  document.body.classList.toggle('matchStatePenalty', isPenalty);
   document.body.classList.toggle('matchStateBreak', isBreak || isPenalty);
   document.body.classList.toggle('resultMode', isFinished);
 }
@@ -12976,6 +13050,36 @@ function openAboutModal(){
 }
 function closeAboutModal(){
   byId('aboutModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function openQuickGuide(){
+  syncVisualViewport();
+  byId('aboutModal')?.classList.remove('open');
+  byId('quickGuideModal')?.classList.add('open');
+  document.body.style.overflow='hidden';
+  const body=byId('quickGuideModal')?.querySelector('.quickGuideBody');
+  if(body) body.scrollTop=0;
+  const scroll=byId('quickGuideModal')?.querySelector('.quickGuideScroll');
+  if(scroll) scroll.scrollTop=0;
+}
+
+function closeQuickGuide(){
+  byId('quickGuideModal')?.classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function backToAboutFromGuide(){
+  byId('quickGuideModal')?.classList.remove('open');
+  byId('aboutModal')?.classList.add('open');
+  document.body.style.overflow='hidden';
+  const body=byId('aboutModal')?.querySelector('.aboutBody');
+  if(body) body.scrollTop=0;
+}
+
+function startFromQuickGuide(){
+  byId('quickGuideModal')?.classList.remove('open');
+  byId('aboutModal')?.classList.remove('open');
   document.body.style.overflow='';
 }
 
@@ -15349,47 +15453,372 @@ body.matchStatePre .preQuickSetup .keeperQuickBtn{
 
 
 /* =========================================================
-   v4.99 Version Information Hierarchy
+   v5.00 Unified Match Meta / Roster / Keeper
+   賽前 → 比賽中 → 中場 → 下半場 → 延長賽 → PK
    ========================================================= */
 
-/* 主畫面版本號保留給快速確認部署 / cache，但降低視覺權重。 */
-.versionInfo > .sub{
-  font-size:10.5px!important;
-  color:#8190a5!important;
-  opacity:.78;
+:root{
+  --match-info-font-size:clamp(15px,3.85vw,16px);
+  --match-info-font-weight:950;
+  --match-info-line-height:1.15;
+}
+
+/* ---------- PK：不要再顯示賽前兩個獨立輸入框 ---------- */
+body.matchStatePenalty .matchMetaRow,
+body.matchStatePenalty .venueRow,
+body.matchStatePenalty .preQuickSetup{
+  display:none!important;
+}
+
+/* PK 與其他比賽狀態共用同一條 賽事 · 場地 資訊列。 */
+body.matchStatePenalty .liveMetaStrip.show{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:36px!important;
+  margin:0 1px 7px!important;
+  padding:7px 10px!important;
+  border-radius:10px!important;
+  background:rgba(15,23,42,.58)!important;
+  border:1px solid rgba(71,85,105,.30)!important;
+  color:#edf5ff!important;
+  font-size:var(--match-info-font-size)!important;
+  font-weight:var(--match-info-font-weight)!important;
+  line-height:var(--match-info-line-height)!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+/* PK 一定顯示名單 / 守門員，守門員可在點球前快速確認或更換。 */
+body.matchStatePenalty .liveQuickSetup{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:6px!important;
+  margin:0 0 7px!important;
+}
+
+/* ---------- 所有「已開始」狀態資訊列統一字體 ---------- */
+body.matchStateLive .liveMetaStrip.show,
+body.matchStateHalftime .liveMetaStrip.show,
+body.matchStateExtraWait .liveMetaStrip.show,
+body.matchStateExtraActive .liveMetaStrip.show,
+body.matchStateSecondHalf .liveMetaStrip.show,
+body.matchStatePenalty .liveMetaStrip.show{
+  font-size:var(--match-info-font-size)!important;
+  font-weight:var(--match-info-font-weight)!important;
+  line-height:var(--match-info-line-height)!important;
+}
+
+/* ---------- 賽前賽事 / 場地字體與開賽後一致 ---------- */
+body.matchStatePre #competition,
+body.matchStatePre #venue{
+  font-size:var(--match-info-font-size)!important;
+  font-weight:var(--match-info-font-weight)!important;
+  line-height:var(--match-info-line-height)!important;
+}
+
+/* ---------- 名單 / 守門員：賽前與所有比賽狀態一致 ---------- */
+body.matchStatePre .preQuickSetup > button,
+.liveQuickSetup > button{
+  font-size:var(--match-info-font-size)!important;
+  font-weight:var(--match-info-font-weight)!important;
+  line-height:var(--match-info-line-height)!important;
+}
+
+/* live 名單 / 守門員所有狀態固定：
+   左：名單；右：守門員。 */
+.liveQuickSetup > button:first-child{
+  grid-column:1!important;
+}
+.liveQuickSetup > button:last-child{
+  grid-column:2!important;
+}
+
+/* PK 的名單 / 守門員視覺也沿用同一套藍色卡片，不另外做紫色。 */
+body.matchStatePenalty .liveQuickSetup > button{
+  min-height:40px!important;
+  border-radius:11px!important;
+  border:1px solid rgba(96,165,250,.28)!important;
+  background:linear-gradient(180deg,#183551 0%,#10263d 100%)!important;
+  color:#eaf2ff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)!important;
+}
+
+/* 賽事 / 場地 icon 與文字基線保持一致，避免 PK 圖示上飄。 */
+body.matchStatePenalty .liveMetaStrip{
+  vertical-align:middle;
+}
+body.matchStatePenalty .liveMetaStrip .metaIcon,
+body.matchStatePenalty .liveMetaStrip span{
+  vertical-align:middle;
+}
+
+/* ---------- About 版本資訊降級 ---------- */
+.aboutVersion{
+  display:none!important;
+}
+.aboutVersionFooter{
+  margin:14px 0 8px;
+  color:#71849a;
+  font-size:11.5px;
   font-weight:800;
+  text-align:center;
+  letter-spacing:.2px;
+}
+
+/* 小螢幕仍使用完全相同字級規則。 */
+@media(max-width:390px){
+  :root{
+    --match-info-font-size:15px;
+  }
+
+  body.matchStatePenalty .liveMetaStrip.show{
+    min-height:34px!important;
+    padding-top:6px!important;
+    padding-bottom:6px!important;
+  }
+
+  body.matchStatePenalty .liveQuickSetup > button{
+    min-height:38px!important;
+  }
+}
+
+
+/* =========================================================
+   v5.01 Quick Guide
+   About 裡新增「快速使用指南」次要入口，不增加主畫面負擔。
+   ========================================================= */
+
+/* About：指南按鈕比「開始記錄比賽」低一個層級。 */
+.aboutGuideBtn{
+  width:100%;
+  min-height:40px;
+  margin:0 0 7px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  border-radius:13px;
+  background:rgba(16,38,58,.72);
+  border:1px solid rgba(91,164,214,.30);
+  color:#cfeaff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  font-size:12.8px;
+  font-weight:900;
   letter-spacing:.15px;
 }
-
-/* About Header 不再讓版本號與 MATCHDAY TOOL 並列搶視線。 */
-.aboutMetaRow{
-  margin-bottom:8px!important;
+.aboutGuideBtn:active{
+  transform:translateY(1px) scale(.995);
+  filter:brightness(1.08);
+}
+.aboutVersionFooter{
+  margin:0 0 6px!important;
 }
 
-/* About Footer 的版本僅作技術支援 / 問題回報確認。 */
-.aboutBuildVersion{
-  margin:0 0 7px;
-  text-align:center;
-  color:#66788c;
+/* Guide modal */
+.modal.quickGuideModal{
+  width:min(500px,calc(100vw - 16px));
+  height:min(calc(var(--vv-height,100dvh) - 14px),760px);
+  max-height:min(calc(var(--vv-height,100dvh) - 14px),760px);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 86% 2%,rgba(21,119,174,.15),transparent 31%),
+    linear-gradient(180deg,#0b1f31 0%,#06131f 34%,#040b14 100%);
+  border:1px solid rgba(89,176,225,.28);
+  box-shadow:0 26px 70px rgba(0,0,0,.48);
+}
+.quickGuideTop{
+  position:relative;
+  flex:0 0 auto;
+  padding:17px 52px 13px 16px;
+  border-bottom:1px solid rgba(112,190,231,.14);
+}
+.quickGuideDismiss{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:36px;
+  height:36px;
+  min-width:36px;
+  padding:0;
+  border-radius:999px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.09);
+  color:#c7d7e6;
+  font-size:15px;
+  font-weight:900;
+  box-shadow:none;
+}
+.quickGuideEyebrow{
+  color:#7dd3fc;
   font-size:10.5px;
-  font-weight:800;
-  line-height:1.2;
-  letter-spacing:.25px;
+  font-weight:950;
+  letter-spacing:3px;
 }
-
-/* CTA 仍是 Footer 唯一主視覺。 */
-.aboutFooter .aboutClose{
-  margin-top:0!important;
+.quickGuideTitle{
+  margin-top:7px;
+  color:#f7fbff;
+  font-size:23px;
+  font-weight:1000;
+  letter-spacing:-.25px;
+}
+.quickGuideHero{
+  margin-top:5px;
+  color:#b7c9da;
+  font-size:12px;
+  font-weight:800;
+  line-height:1.35;
+}
+.quickGuideBody{
+  min-height:0;
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+}
+.quickGuideScroll{
+  min-height:0;
+  flex:1 1 auto;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:10px 10px 8px;
+}
+.quickGuideSteps{
+  display:grid;
+  gap:7px;
+}
+.quickGuideStep{
+  display:grid;
+  grid-template-columns:33px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  min-height:66px;
+  padding:9px 11px 9px 9px;
+  border-radius:15px;
+  background:linear-gradient(180deg,rgba(17,35,52,.90),rgba(10,25,39,.92));
+  border:1px solid rgba(77,112,143,.26);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+}
+.quickGuideNum{
+  width:31px;
+  height:31px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:linear-gradient(180deg,#184f75,#103653);
+  border:1px solid rgba(74,190,246,.31);
+  color:#dff5ff;
+  font-size:14px;
+  font-weight:1000;
+}
+.quickGuideStepText{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.quickGuideStepText b{
+  color:#f4f8fc;
+  font-size:13.6px;
+  font-weight:1000;
+  line-height:1.2;
+}
+.quickGuideStepText span{
+  color:#9fb2c5;
+  font-size:10.7px;
+  font-weight:750;
+  line-height:1.42;
+}
+.quickGuideTip{
+  margin-top:8px;
+  padding:10px 12px;
+  border-radius:15px;
+  background:linear-gradient(180deg,rgba(64,47,10,.30),rgba(37,29,9,.25));
+  border:1px solid rgba(250,204,21,.20);
+}
+.quickGuideTipTitle{
+  color:#fde68a;
+  font-size:12.2px;
+  font-weight:1000;
+}
+.quickGuideTipText{
+  margin-top:4px;
+  color:#c7b980;
+  font-size:10.6px;
+  font-weight:750;
+  line-height:1.42;
+}
+.quickGuideFooter{
+  flex:0 0 auto;
+  display:grid;
+  grid-template-columns:.8fr 1.2fr;
+  gap:8px;
+  padding:8px 10px calc(9px + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(255,255,255,.055);
+  background:linear-gradient(180deg,rgba(4,11,20,.76),#040b14 28%);
+}
+.quickGuideBack,
+.quickGuideStart{
+  min-height:43px;
+  border-radius:14px;
+  font-size:12.7px;
+  font-weight:950;
+}
+.quickGuideBack{
+  background:rgba(20,38,55,.82);
+  border:1px solid rgba(116,145,171,.24);
+  color:#b9c9d7;
+  box-shadow:none;
+}
+.quickGuideStart{
+  background:linear-gradient(180deg,rgba(20,114,185,.98),rgba(8,57,108,1));
+  border:1px solid rgba(121,216,255,.46);
+  color:#f8fcff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 10px 20px rgba(0,0,0,.22);
 }
 
 @media(max-width:390px){
-  .versionInfo > .sub{
-    font-size:10px!important;
+  .aboutGuideBtn{min-height:38px;font-size:12.4px;margin-bottom:6px}
+  .modal.quickGuideModal{
+    width:min(500px,calc(100vw - 12px));
+    height:calc(var(--vv-height,100dvh) - 10px);
+    max-height:calc(var(--vv-height,100dvh) - 10px);
   }
-  .aboutBuildVersion{
-    margin-bottom:6px;
-    font-size:10px;
+  .quickGuideTop{padding:14px 46px 11px 13px}
+  .quickGuideDismiss{top:10px;right:10px;width:31px;height:31px;min-width:31px;font-size:13.5px}
+  .quickGuideEyebrow{font-size:10px;letter-spacing:2.6px}
+  .quickGuideTitle{font-size:20px;margin-top:5px}
+  .quickGuideHero{font-size:10.8px}
+  .quickGuideScroll{padding:8px}
+  .quickGuideSteps{gap:6px}
+  .quickGuideStep{
+    grid-template-columns:30px minmax(0,1fr);
+    gap:9px;
+    min-height:60px;
+    padding:8px 10px 8px 8px;
+    border-radius:14px;
   }
+  .quickGuideNum{width:29px;height:29px;font-size:13px}
+  .quickGuideStepText b{font-size:13px}
+  .quickGuideStepText span{font-size:10.1px;line-height:1.38}
+  .quickGuideTip{margin-top:7px;padding:9px 10px}
+  .quickGuideTipTitle{font-size:11.8px}
+  .quickGuideTipText{font-size:10.1px}
+  .quickGuideFooter{padding:7px 8px calc(8px + env(safe-area-inset-bottom));gap:7px}
+  .quickGuideBack,.quickGuideStart{min-height:41px;font-size:12.2px}
+}
+
+@media(max-height:690px){
+  .quickGuideTop{padding-top:11px;padding-bottom:9px}
+  .quickGuideHero{margin-top:4px}
+  .quickGuideScroll{padding-top:6px}
+  .quickGuideSteps{gap:5px}
+  .quickGuideStep{min-height:54px;padding-top:7px;padding-bottom:7px}
+  .quickGuideTip{padding-top:8px;padding-bottom:8px}
 }
 
 </style>
