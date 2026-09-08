@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.12</title>
+<title>足球場邊記錄器 v5.13</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.12</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.13</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8558,8 +8558,9 @@ body.resultMode.finalOutputVisible{
             <div class="regRow">
               <div class="regChooser">
                 <div class="regSelectWrap">
-                  <select id="regPreset" class="regSelect" aria-label="規定比賽時間選項" onchange="toggleRegCustomInput()">
+                  <select id="regPreset" class="regSelect" aria-label="比賽時間選項" onchange="toggleRegCustomInput()">
                     <option value="">請選擇分鐘</option>
+                    <option value="none">未設定</option>
                     <option value="15">15 分鐘</option>
                     <option value="20">20 分鐘</option>
                     <option value="25">25 分鐘</option>
@@ -8569,7 +8570,7 @@ body.resultMode.finalOutputVisible{
                 <div class="regCustomCard" id="regCustomCard">
                   <div class="regCustomLabel">自訂分鐘</div>
                   <div class="regCustomInputWrap">
-                    <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" placeholder="請輸入 1–45" aria-label="自訂規定比賽時間（分鐘）">
+                    <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" placeholder="請輸入 1–45" aria-label="自訂比賽時間（分鐘）">
                     <span class="regUnit">分鐘</span>
                   </div>
                   <div class="regCustomHint">可輸入 1–45 分鐘整數，預設不帶值</div>
@@ -8830,7 +8831,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.12">v5.12</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.13">v5.13</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -10121,7 +10122,9 @@ function syncRegulationPlacement(){
   }
 
   if(clearBtn){
-    clearBtn.hidden=!state.regulationMinutes;
+    // v5.13：賽前不再使用獨立「清除」。
+    // 賽前若要取消時間，改選「未設定」後按「套用」。
+    clearBtn.hidden=!hasBegun || !state.regulationMinutes;
   }
 
   if(timeBadge){
@@ -10302,12 +10305,13 @@ function syncRegulationInputsFromState(){
 function getRegulationMinutesInput(){
   const preset=byId('regPreset')?.value || '';
   if(!preset) return null;
+  if(preset==='none') return 0;
   if(preset==='custom'){
-    return validateIntegerField('regCustomMinutes','自訂規定比賽時間',1,45,true);
+    return validateIntegerField('regCustomMinutes','自訂比賽時間',1,45,true);
   }
   const value=Number(preset);
   if(!Number.isInteger(value) || value<1 || value>45){
-    alert('請選擇有效的規定比賽時間');
+    alert('請選擇有效的比賽時間');
     return undefined;
   }
   return value;
@@ -11429,6 +11433,10 @@ function saveRegulation(){
   if(n===undefined) return;
   if(n===null){
     alert('請先選擇比賽時間，或使用自訂分鐘');
+    return;
+  }
+  if(n===0){
+    clearRegulation();
     return;
   }
   state.regulationMinutes=n;
@@ -16759,6 +16767,169 @@ body.matchStatePre .preRegulationHead{
 
   body.matchStatePre #preRegulationSection .regSelect{
     font-size:12.5px!important;
+  }
+}
+
+
+/* =========================================================
+   v5.13 Pre-match Typography System + Regulation Clear Fix
+   ========================================================= */
+
+body.matchStatePre{
+  /* 設定類：賽事 / 場地 / 名單 / 守門員 */
+  --pre-setting-font:16px;
+  --pre-setting-weight:900;
+
+  /* 比賽時間：同層級但略收斂 */
+  --pre-time-font:16px;
+  --pre-time-weight:900;
+
+  /* 比分區 */
+  --pre-team-font:20px;
+  --pre-team-weight:950;
+  --pre-score-font:36px;
+
+  /* 狀態 / CTA */
+  --pre-stage-font:16px;
+  --pre-cta-font:17px;
+
+  /* 低頻 metadata */
+  --pre-secondary-font:11.5px;
+}
+
+/* ---------------------------------------------------------
+   1. 修正「清除」跑出卡片
+   --------------------------------------------------------- */
+
+/*
+  賽前完全不顯示獨立 Clear。
+  舊版 absolute top:52px 即使仍存在，也會被此規則完全關閉，
+  因此不會再落到「賽前」方框上。
+*/
+body.matchStatePre #preRegulationSection .regClear{
+  display:none!important;
+  position:static!important;
+  inset:auto!important;
+  margin:0!important;
+}
+
+/* 賽前仍維持真正單列：比賽時間 | 分鐘 | 套用 */
+body.matchStatePre #preRegulationSection .regRow{
+  align-items:center!important;
+}
+
+body.matchStatePre #preRegulationSection .regButtons{
+  height:48px!important;
+  min-height:48px!important;
+  position:static!important;
+  overflow:visible!important;
+}
+
+/* ---------------------------------------------------------
+   2. 賽前字體層級統一
+   --------------------------------------------------------- */
+
+/* A. 賽事名稱 / 場地 */
+body.matchStatePre #competition,
+body.matchStatePre #venue,
+body.matchStatePre #competition::placeholder,
+body.matchStatePre #venue::placeholder{
+  font-size:var(--pre-setting-font)!important;
+  font-weight:var(--pre-setting-weight)!important;
+  line-height:1.15!important;
+}
+
+/* B. 名單 / 守門員：Label 與 Value 同級 */
+body.matchStatePre .preQuickText,
+body.matchStatePre .preQuickLabel,
+body.matchStatePre #rosterQuickText,
+body.matchStatePre #keeperQuickText{
+  font-size:var(--pre-setting-font)!important;
+  font-weight:var(--pre-setting-weight)!important;
+  line-height:1.15!important;
+}
+
+/* C. 比賽時間：標題 / 選單 / 套用統一 16px */
+body.matchStatePre .preRegulationInlineTitle,
+body.matchStatePre #preRegulationSection .regSelect,
+body.matchStatePre #preRegulationSection .regApply{
+  font-size:var(--pre-time-font)!important;
+  font-weight:var(--pre-time-weight)!important;
+  line-height:1.1!important;
+}
+
+/* 選單值字重稍微收斂，避免比標題還重 */
+body.matchStatePre #preRegulationSection .regSelect{
+  font-weight:850!important;
+}
+
+/* D. 賽前狀態 */
+body.matchStatePre #broadcastStageLabel{
+  font-size:var(--pre-stage-font)!important;
+  font-weight:950!important;
+  line-height:1.1!important;
+}
+
+/* E. 隊伍名稱：刻意比設定欄大一階 */
+body.matchStatePre .teamNameDisplay{
+  font-size:var(--pre-team-font)!important;
+  font-weight:var(--pre-team-weight)!important;
+  line-height:1.1!important;
+}
+
+/* F. 比分：全頁最重要的數字 */
+body.matchStatePre .scoreTile{
+  font-size:var(--pre-score-font)!important;
+  font-weight:950!important;
+  line-height:1!important;
+}
+
+/* G. 開始 / 結束：Primary / Disabled 操作同尺寸 */
+body.matchStatePre .controls button,
+body.matchStatePre #startBtn,
+body.matchStatePre #finishBtn{
+  font-size:var(--pre-cta-font)!important;
+  font-weight:950!important;
+  line-height:1.1!important;
+}
+
+/* H. 重設保持低頻次要操作，不和主 CTA 搶層級 */
+body.matchStatePre .preResetBtn{
+  font-size:var(--pre-secondary-font)!important;
+  font-weight:850!important;
+}
+
+/* 390px 以下不再把不同設定欄各自縮成 12 / 13 / 14px；
+   設定資訊維持同一套 16px，避免再次出現有大有小。 */
+@media(max-width:390px){
+  body.matchStatePre{
+    --pre-setting-font:16px;
+    --pre-time-font:15.5px;
+    --pre-team-font:20px;
+    --pre-score-font:36px;
+    --pre-stage-font:16px;
+    --pre-cta-font:17px;
+    --pre-secondary-font:11px;
+  }
+
+  body.matchStatePre .preRegulationInlineTitle{
+    font-size:var(--pre-time-font)!important;
+  }
+
+  body.matchStatePre #preRegulationSection .regSelect,
+  body.matchStatePre #preRegulationSection .regApply{
+    font-size:var(--pre-time-font)!important;
+  }
+}
+
+@media(max-width:350px){
+  body.matchStatePre{
+    --pre-setting-font:15px;
+    --pre-time-font:14.5px;
+    --pre-team-font:18px;
+    --pre-score-font:34px;
+    --pre-stage-font:15px;
+    --pre-cta-font:16px;
   }
 }
 
