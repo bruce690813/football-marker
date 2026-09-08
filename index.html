@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.11</title>
+<title>足球場邊記錄器 v5.12</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.11</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.12</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8540,9 +8540,8 @@ body.resultMode.finalOutputVisible{
     </div>
 
     <div class="preRegulationSection" id="preRegulationSection">
-      <div class="preRegulationHead">
-        <div class="preRegulationTitle"><span aria-hidden="true">⏱</span><span>比賽時間</span></div>
-        <div class="preRegulationStatus" id="preRegulationStatus">選填・可賽後補填</div>
+      <div class="preRegulationInlineTitle" aria-label="比賽時間">
+        <span aria-hidden="true">⏱</span><span>比賽時間</span>
       </div>
       <div class="preRegulationHost" id="preRegulationHost">
 <div class="regBox" id="regBox">
@@ -8551,10 +8550,7 @@ body.resultMode.finalOutputVisible{
               <span class="regCompactLabel">比賽時間</span>
               <strong class="regCompactValue" id="regCompactValue">未設定</strong>
             </div>
-            <div class="regCompactActions">
-              <button class="regCompactEdit" id="regCompactEdit" type="button" onclick="toggleRegulationEditor()">修改</button>
-              <button class="regCompactClear" id="regCompactClear" type="button" onclick="clearRegulation()">清除</button>
-            </div>
+            <button class="regCompactEdit" id="regCompactEdit" type="button" onclick="toggleRegulationEditor()">編輯</button>
           </div>
 
           <div class="regEditor" id="regEditor">
@@ -8581,7 +8577,7 @@ body.resultMode.finalOutputVisible{
               </div>
               <div class="regButtons">
                 <button class="regApply" onclick="saveRegulation()">套用</button>
-                <button class="regClear" onclick="clearRegulation()">清除</button>
+                <button class="regClear" id="regClearBtn" onclick="clearRegulation()" hidden>清除</button>
               </div>
             </div>
             <div class="diff" id="diffText">未設定比賽時間</div>
@@ -8834,7 +8830,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.11">v5.11</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.12">v5.12</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -10088,7 +10084,7 @@ function toggleTimeBox(){
   renderTimeBox();
 }
 function toggleRegulationEditor(){
-  // v5.11：賽前已設定比賽時間後，也可直接切換「修改」。
+  if(!matchStartEpoch()) return;
   regulationEditorExpanded=!regulationEditorExpanded;
   renderTimeBox();
 }
@@ -10106,8 +10102,8 @@ function syncRegulationPlacement(){
   const timeHost=byId('timeRegulationHost');
   const preSection=byId('preRegulationSection');
   const regTitle=byId('regTitle');
-  const preStatus=byId('preRegulationStatus');
   const timeBadge=byId('timeRegulationBadge');
+  const clearBtn=byId('regClearBtn');
 
   const hasBegun=Boolean(matchStartEpoch());
   const target=hasBegun ? timeHost : preHost;
@@ -10124,10 +10120,8 @@ function syncRegulationPlacement(){
       : '比賽時間';
   }
 
-  if(preStatus){
-    preStatus.textContent=state.regulationMinutes
-      ? '已設定'
-      : '選填・可賽後補填';
+  if(clearBtn){
+    clearBtn.hidden=!state.regulationMinutes;
   }
 
   if(timeBadge){
@@ -10152,18 +10146,10 @@ function renderRegulationTimeBox(){
 
   if(value) value.textContent=regulationCompactText();
 
-  const hasValue=Boolean(state.regulationMinutes);
-  if(regBox) regBox.classList.toggle('hasValue',hasValue);
-
   if(!hasBegun){
-    const showCompact=hasValue && !regulationEditorExpanded;
-    if(compact) compact.hidden=!showCompact;
-    if(editor) editor.hidden=showCompact;
-    if(editBtn) editBtn.textContent='修改';
-    if(regBox){
-      regBox.classList.toggle('compactMode',showCompact);
-      regBox.classList.toggle('editingMode',!showCompact);
-    }
+    if(compact) compact.hidden=true;
+    if(editor) editor.hidden=false;
+    if(regBox) regBox.classList.remove('compactMode','editingMode');
     return;
   }
 
@@ -11446,14 +11432,14 @@ function saveRegulation(){
     return;
   }
   state.regulationMinutes=n;
-  regulationEditorExpanded=false;
+  if(matchStartEpoch()) regulationEditorExpanded=false;
   saveState();
   syncRegulationInputsFromState();
   render();
 }
 function clearRegulation(){
   state.regulationMinutes=null;
-  regulationEditorExpanded=false;
+  if(matchStartEpoch()) regulationEditorExpanded=false;
   syncRegulationInputsFromState();
   saveState();
   render();
@@ -16566,181 +16552,213 @@ body.matchStatePre .controls{
 
 
 /* =========================================================
-   v5.11 Pre-match Match Time Compact + Reset Readability
+   v5.11 Pre-match Match Time Compact One-line UI
+   預設：⏱ 比賽時間 | 請選擇分鐘 | 套用
    ========================================================= */
 
-/*
-  比賽時間是「選填」資訊，不應該比名單 / 守門員更重。
-  賽前未設定時：分鐘選單 + 小型套用，同一列完成。
-*/
+/* 整張卡改成三段式單列，不再有額外 header / helper row。 */
 body.matchStatePre .preRegulationSection{
-  padding:8px 10px 9px!important;
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr)!important;
+  align-items:center!important;
+  column-gap:10px!important;
+  row-gap:7px!important;
+
+  margin-top:0!important;
+  margin-bottom:var(--pre-group-gap)!important;
+  padding:10px 11px!important;
 }
 
-body.matchStatePre .preRegulationHead{
-  min-height:25px!important;
-  padding:0 2px 6px!important;
+/* 左：標題 */
+body.matchStatePre .preRegulationInlineTitle{
+  grid-column:1;
+  grid-row:1;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:max-content;
+  color:#f1f7fd;
+  font-size:14px;
+  font-weight:950;
+  line-height:1.1;
+  white-space:nowrap;
 }
 
+/* 右：選單 + 套用 */
+body.matchStatePre .preRegulationHost{
+  grid-column:2;
+  grid-row:1;
+  min-width:0;
+}
+
+/* 賽前 regBox 只作為邏輯容器，不再畫第二層卡片。 */
 body.matchStatePre #preRegulationSection .regBox{
-  padding:6px 0 0!important;
-}
-
-body.matchStatePre #preRegulationSection .regEditor{
   padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
 }
 
+/* 賽前不再顯示重複的 regTitle / diff。 */
+body.matchStatePre #preRegulationSection .regTitle,
+body.matchStatePre #preRegulationSection .diff{
+  display:none!important;
+}
+
+/* 單列核心：選擇分鐘 | 套用 */
 body.matchStatePre #preRegulationSection .regRow{
   display:grid!important;
-  grid-template-columns:minmax(0,1fr) 88px!important;
-  align-items:stretch!important;
+  grid-template-columns:minmax(0,1fr) 78px!important;
+  align-items:start!important;
   gap:8px!important;
+  width:100%!important;
 }
 
+/* 取消舊版 column 佈局造成的多行高度。 */
 body.matchStatePre #preRegulationSection .regChooser{
+  width:100%!important;
   min-width:0!important;
-  width:auto!important;
 }
 
 body.matchStatePre #preRegulationSection .regSelect{
   width:100%!important;
-  min-height:46px!important;
-  height:46px!important;
-  padding-top:9px!important;
-  padding-bottom:9px!important;
+  min-height:48px!important;
+  padding:10px 36px 10px 12px!important;
+  border-radius:11px!important;
   font-size:14px!important;
-  border-radius:11px!important;
 }
 
+body.matchStatePre #preRegulationSection .regSelectWrap::after{
+  right:12px!important;
+}
+
+/* 賽前按鈕容器只讓「套用」佔主列。 */
 body.matchStatePre #preRegulationSection .regButtons{
+  position:relative!important;
   display:block!important;
-  width:88px!important;
+  width:78px!important;
+  min-width:78px!important;
 }
 
-body.matchStatePre #preRegulationSection .regButtons .regApply{
-  width:100%!important;
-  min-height:46px!important;
-  height:46px!important;
-  padding:8px 6px!important;
+body.matchStatePre #preRegulationSection .regApply{
+  width:78px!important;
+  min-width:78px!important;
+  min-height:48px!important;
+  padding:10px 8px!important;
   border-radius:11px!important;
-  font-size:13.5px!important;
-}
-
-/* 賽前清除移到「已設定」compact row，不再占未設定畫面的半列。 */
-body.matchStatePre #preRegulationSection .regButtons .regClear{
-  display:none!important;
+  font-size:14px!important;
 }
 
 /*
-  自訂分鐘是少數例外：
-  選擇「自訂」後才自然展開第二層輸入，不為一般情境預留空間。
+  清除是低頻次要操作：
+  只有 state 已有時間時才顯示，而且不再跟「套用」競爭同一列。
 */
-body.matchStatePre #preRegulationSection .regCustomCard.open{
+body.matchStatePre #preRegulationSection .regClear{
+  position:absolute!important;
+  top:52px!important;
+  right:0!important;
+
+  width:auto!important;
+  min-width:0!important;
+  min-height:30px!important;
+  padding:4px 3px!important;
+
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+
+  color:#7f91a5!important;
+  font-size:10.5px!important;
+  font-weight:800!important;
+  line-height:1!important;
+}
+
+body.matchStatePre #preRegulationSection .regClear[hidden]{
+  display:none!important;
+}
+
+/* 自訂分鐘才向下展開；一般 15/20/25 分鐘維持真正單列。 */
+body.matchStatePre #preRegulationSection .regCustomCard{
   margin-top:7px!important;
 }
 
-/* 已設定後：單列顯示「20 分鐘｜修改｜清除」。 */
-body.matchStatePre #preRegulationSection .regCompact{
-  min-height:44px!important;
-  gap:10px!important;
+/* 自訂展開時，卡片允許第二列，但主標題仍保持固定。 */
+body.matchStatePre #preRegulationSection:has(.regCustomCard.open){
+  align-items:start!important;
 }
 
-body.matchStatePre #preRegulationSection .regCompactInfo{
-  flex:1 1 auto!important;
-  min-width:0!important;
-}
-
-body.matchStatePre #preRegulationSection .regCompactLabel{
+/* 不再需要舊版 helper status。 */
+body.matchStatePre .preRegulationStatus,
+body.matchStatePre .preRegulationHead{
   display:none!important;
 }
 
-body.matchStatePre #preRegulationSection .regCompactValue{
-  color:#eef7ff!important;
-  font-size:15px!important;
-  font-weight:950!important;
-}
-
-.regCompactActions{
-  flex:0 0 auto;
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-
-.regCompactClear{
-  display:none;
-  min-width:58px;
-  min-height:40px;
-  padding:7px 10px!important;
-  border-radius:10px!important;
-  background:rgba(71,85,105,.42)!important;
-  border:1px solid rgba(148,163,184,.18)!important;
-  color:#b8c5d3!important;
-  font-size:12px!important;
-  font-weight:900!important;
-  box-shadow:none!important;
-}
-
-body.matchStatePre #preRegulationSection .regCompactEdit{
-  min-width:58px!important;
-  min-height:40px!important;
-  padding:7px 10px!important;
-  border-radius:10px!important;
-  font-size:12px!important;
-}
-
-body.matchStatePre #preRegulationSection .regCompactClear{
-  display:inline-flex!important;
-  align-items:center;
-  justify-content:center;
-}
-
-/* 開賽後維持原本 compact 設計，只保留「編輯」，不額外增加清除按鈕。 */
-body:not(.matchStatePre) .regCompactClear{
-  display:none!important;
-}
-
-/*
-  「↻ 重設」仍是 tertiary action，但 v4.67 的 0.60 opacity 太接近看不見。
-  稍微提高可讀性，不讓它與主要 CTA 競爭。
-*/
-body.matchStatePre .preResetBtn{
-  background:rgba(30,41,59,.16)!important;
-  border-color:rgba(203,213,225,.12)!important;
-  color:rgba(226,232,240,.66)!important;
-  opacity:.82!important;
-  box-shadow:none!important;
-}
-
-body.matchStatePre .preResetBtn:active{
-  background:rgba(51,65,85,.28)!important;
-  border-color:rgba(203,213,225,.20)!important;
-  color:rgba(248,250,252,.92)!important;
-  opacity:1!important;
-}
-
+/* 小螢幕仍維持三元件同一列。 */
 @media(max-width:390px){
+  body.matchStatePre .preRegulationSection{
+    grid-template-columns:auto minmax(0,1fr)!important;
+    column-gap:8px!important;
+    padding:9px!important;
+  }
+
+  body.matchStatePre .preRegulationInlineTitle{
+    gap:5px;
+    font-size:13px;
+  }
+
   body.matchStatePre #preRegulationSection .regRow{
-    grid-template-columns:minmax(0,1fr) 80px!important;
-    gap:7px!important;
+    grid-template-columns:minmax(0,1fr) 70px!important;
+    gap:6px!important;
   }
 
-  body.matchStatePre #preRegulationSection .regButtons{
-    width:80px!important;
+  body.matchStatePre #preRegulationSection .regButtons,
+  body.matchStatePre #preRegulationSection .regApply{
+    width:70px!important;
+    min-width:70px!important;
   }
 
-  body.matchStatePre #preRegulationSection .regSelect,
-  body.matchStatePre #preRegulationSection .regButtons .regApply{
-    min-height:44px!important;
-    height:44px!important;
+  body.matchStatePre #preRegulationSection .regSelect{
+    font-size:13px!important;
+    padding-left:10px!important;
+    padding-right:31px!important;
   }
 
-  body.matchStatePre #preRegulationSection .regCompactEdit,
-  body.matchStatePre #preRegulationSection .regCompactClear{
-    min-width:54px!important;
-    min-height:40px!important;
+  body.matchStatePre #preRegulationSection .regClear{
+    top:51px!important;
+    font-size:10px!important;
+  }
+}
+
+@media(max-width:350px){
+  body.matchStatePre .preRegulationSection{
+    column-gap:6px!important;
     padding-left:8px!important;
     padding-right:8px!important;
+  }
+
+  body.matchStatePre .preRegulationInlineTitle{
+    font-size:12px;
+    gap:4px;
+  }
+
+  body.matchStatePre #preRegulationSection .regRow{
+    grid-template-columns:minmax(0,1fr) 64px!important;
+    gap:5px!important;
+  }
+
+  body.matchStatePre #preRegulationSection .regButtons,
+  body.matchStatePre #preRegulationSection .regApply{
+    width:64px!important;
+    min-width:64px!important;
+  }
+
+  body.matchStatePre #preRegulationSection .regApply{
+    font-size:13px!important;
+  }
+
+  body.matchStatePre #preRegulationSection .regSelect{
+    font-size:12.5px!important;
   }
 }
 
