@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.03</title>
+<title>足球場邊記錄器 v5.04</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.03</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.04</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8818,7 +8818,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.03">v5.03</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.04">v5.04</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -15982,6 +15982,90 @@ body.matchStatePenalty .liveMetaStrip span{
     font-size:16px!important;
     font-weight:950!important;
   }
+}
+
+
+/* =========================================================
+   v5.04 iPhone Safari Full-time Bottom Safe Area
+   修正「＋ 新比賽」被 Safari 動態底部工具列遮住。
+   ========================================================= */
+
+/*
+  新版 iOS Safari 在工具列完整展開時，
+  visualViewport 回報的 bottom gap 仍可能低估實際 UI 高度。
+  因此全場頁使用更保守的「實際文件流尾端」fallback。
+*/
+body.resultMode.finalOutputVisible{
+  --result-bottom-safe-tail:
+    max(260px, calc(var(--browser-bottom-gap,0px) + 104px))!important;
+}
+
+@media(max-width:430px){
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(288px, calc(var(--browser-bottom-gap,0px) + 116px))!important;
+  }
+}
+
+@media(max-width:390px){
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(304px, calc(var(--browser-bottom-gap,0px) + 124px))!important;
+  }
+}
+
+@media(max-width:375px){
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(316px, calc(var(--browser-bottom-gap,0px) + 132px))!important;
+  }
+}
+
+/* 真正存在文件流中的 spacer：使用者往下滑即可把按鈕完整滑到工具列上方。 */
+body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+  display:block!important;
+  width:100%!important;
+  height:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+  min-height:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+  flex:0 0 auto!important;
+  pointer-events:none!important;
+}
+
+/* wrap 只保留少量正常 padding；主要安全距離由 spacer 提供。 */
+body.resultMode.finalOutputVisible .wrap{
+  padding-bottom:calc(18px + env(safe-area-inset-bottom))!important;
+  scroll-padding-bottom:
+    calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+}
+
+/* 最後 CTA 自己也有相同捲動落點，處理 Safari toolbar 展開 / 收合。 */
+body.resultMode.finalOutputVisible .resultNewMatchBtn{
+  position:relative!important;
+  transform:none!important;
+  scroll-margin-bottom:
+    calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+}
+
+/* 工具卡與真正 spacer 之間保留正常呼吸，不靠負 margin 或位移。 */
+body.resultMode.finalOutputVisible .finalToolsCard{
+  margin-bottom:18px!important;
+}
+
+/* iOS WebKit 再加一個非常小的純文件流 fallback，
+   避免部分 Safari 對最後一個空 spacer 的可捲高度計算不足。 */
+@supports (-webkit-touch-callout:none){
+  body.resultMode.finalOutputVisible .fullTimeBottomSpacer::after{
+    content:"";
+    display:block;
+    width:100%;
+    height:24px;
+    pointer-events:none;
+  }
+}
+
+/* 不自動捲動；進入全場後仍維持自然位置。 */
+body.resultMode.finalOutputVisible{
+  scroll-behavior:auto!important;
 }
 
 </style>

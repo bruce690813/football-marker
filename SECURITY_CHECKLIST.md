@@ -323,3 +323,19 @@ football_marker_vX_XX.zip
 - [ ] 所有事件時間不使用 text-shadow
 - [ ] 上半場 / 下半場等時段 pill 顏色維持不變
 - [ ] 事件本身的 accent / icon / 比分視覺仍正常
+
+
+### v5.04 全場 Safari Bottom Safe Area QA
+
+- [ ] 全場頁進入時不自動向上捲動
+- [ ] 全場標題 / 賽事名稱 / 場地不因底部修正被往上拉
+- [ ] Safari 底部工具列完全展開時 `＋ 新比賽` 可完整滑出
+- [ ] `＋ 新比賽` 底部與 Safari 工具列保有可視安全距離
+- [ ] Safari 工具列收合後仍可正常捲到頁尾
+- [ ] `＋ 新比賽` 維持正常文件流，不使用 fixed
+- [ ] `＋ 新比賽` 不使用 transform 上移
+- [ ] 不使用自動 scrollIntoView / scrollBy 修正
+- [ ] iPhone 430px 以下寬度有額外 fallback
+- [ ] iPhone 390px 以下寬度有額外 fallback
+- [ ] iPhone 375px 以下寬度有額外 fallback
+- [ ] `env(safe-area-inset-bottom)` 仍保留
