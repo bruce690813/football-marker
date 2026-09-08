@@ -339,3 +339,19 @@ football_marker_vX_XX.zip
 - [ ] iPhone 390px 以下寬度有額外 fallback
 - [ ] iPhone 375px 以下寬度有額外 fallback
 - [ ] `env(safe-area-inset-bottom)` 仍保留
+
+
+### v5.05 Full-time Footer Root Cause QA
+
+- [ ] `.finalToolsCard` 在全場狀態不是 `position: fixed`
+- [ ] `.finalToolsCard` 在全場狀態為正常文件流
+- [ ] 全場工具卡沒有 `bottom` 定位
+- [ ] 全場工具卡沒有 `translateX`
+- [ ] `＋ 新比賽` 位於正常文件流
+- [ ] `fullTimeBottomSpacer` 位於工具卡之後
+- [ ] spacer 高度實際增加 document scroll height
+- [ ] Safari toolbar 展開時覆蓋的是 spacer，不是新比賽按鈕
+- [ ] Safari toolbar 收合時頁面仍能正常滑到最底
+- [ ] 不使用 fixed / sticky 抬高新比賽
+- [ ] 不使用自動捲動修正
+- [ ] 全場上方比分 / 統計位置不因 footer 修正而改變
