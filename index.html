@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.05</title>
+<title>足球場邊記錄器 v5.09</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -7627,7 +7627,7 @@ body.resultMode.finalOutputVisible{
   font-feature-settings:"tnum" 1;
 }
 
-/* 開賽後規定時間改成 compact row。
+/* 開賽後比賽時間改成 compact row。
    只有按「編輯」才展開大尺寸選單 / 套用 / 清除。 */
 .regCompact{
   display:flex;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.05</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.09</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8539,6 +8539,54 @@ body.resultMode.finalOutputVisible{
       </button>
     </div>
 
+    <div class="preRegulationSection" id="preRegulationSection">
+      <div class="preRegulationHead">
+        <div class="preRegulationTitle"><span aria-hidden="true">⏱</span><span>比賽時間</span></div>
+        <div class="preRegulationStatus" id="preRegulationStatus">選填・可賽後補填</div>
+      </div>
+      <div class="preRegulationHost" id="preRegulationHost">
+<div class="regBox" id="regBox">
+          <div class="regCompact" id="regCompact" hidden>
+            <div class="regCompactInfo">
+              <span class="regCompactLabel">比賽時間</span>
+              <strong class="regCompactValue" id="regCompactValue">未設定</strong>
+            </div>
+            <button class="regCompactEdit" id="regCompactEdit" type="button" onclick="toggleRegulationEditor()">編輯</button>
+          </div>
+
+          <div class="regEditor" id="regEditor">
+            <div class="regTitle" id="regTitle">比賽時間（可賽後補填）</div>
+            <div class="regRow">
+              <div class="regChooser">
+                <div class="regSelectWrap">
+                  <select id="regPreset" class="regSelect" aria-label="規定比賽時間選項" onchange="toggleRegCustomInput()">
+                    <option value="">請選擇分鐘</option>
+                    <option value="15">15 分鐘</option>
+                    <option value="20">20 分鐘</option>
+                    <option value="25">25 分鐘</option>
+                    <option value="custom">自訂分鐘</option>
+                  </select>
+                </div>
+                <div class="regCustomCard" id="regCustomCard">
+                  <div class="regCustomLabel">自訂分鐘</div>
+                  <div class="regCustomInputWrap">
+                    <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" placeholder="請輸入 1–45" aria-label="自訂規定比賽時間（分鐘）">
+                    <span class="regUnit">分鐘</span>
+                  </div>
+                  <div class="regCustomHint">可輸入 1–45 分鐘整數，預設不帶值</div>
+                </div>
+              </div>
+              <div class="regButtons">
+                <button class="regApply" onclick="saveRegulation()">套用</button>
+                <button class="regClear" onclick="clearRegulation()">清除</button>
+              </div>
+            </div>
+            <div class="diff" id="diffText">未設定比賽時間</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="broadcastScoreboard">
       <div class="broadcastBar">
         <div class="broadcastStatusTime">
@@ -8552,7 +8600,7 @@ body.resultMode.finalOutputVisible{
       </div>
       <div class="scoreRow">
         <div class="teamNameBox" id="ourTeamBox" onclick="editTeamName('ourTeam')">
-          <div class="teamNameDisplay" id="ourTeamDisplay">忠義</div>
+          <div class="teamNameDisplay" id="ourTeamDisplay">忠義國小</div>
           <input id="ourTeam" class="teamNameEditor" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱，可稍後補充">
         </div>
         <div class="scoreMid">
@@ -8574,7 +8622,10 @@ body.resultMode.finalOutputVisible{
     <div class="timeSummary" id="timeSummary">
       <div class="timeHead">
         <div class="timeTitle">⏱ 時間紀錄</div>
-        <button class="timeToggle" id="timeToggle" onclick="toggleTimeBox()">展開</button>
+        <div class="timeHeadActions">
+          <span class="timeRegulationBadge" id="timeRegulationBadge" hidden></span>
+          <button class="timeToggle" id="timeToggle" onclick="toggleTimeBox()">展開</button>
+        </div>
       </div>
       <div class="timeCompact">
         <div class="timeCell"><div class="label">開始時間</div><div class="value" id="compactStart">--:--:--</div></div>
@@ -8627,45 +8678,7 @@ body.resultMode.finalOutputVisible{
           <div class="value" id="fullTimeActualValue">00:00</div>
         </div>
 
-        <div class="regBox" id="regBox">
-          <div class="regCompact" id="regCompact" hidden>
-            <div class="regCompactInfo">
-              <span class="regCompactLabel">規定時間</span>
-              <strong class="regCompactValue" id="regCompactValue">未設定</strong>
-            </div>
-            <button class="regCompactEdit" id="regCompactEdit" type="button" onclick="toggleRegulationEditor()">編輯</button>
-          </div>
-
-          <div class="regEditor" id="regEditor">
-            <div class="regTitle">規定時間（可賽後補填）</div>
-            <div class="regRow">
-              <div class="regChooser">
-                <div class="regSelectWrap">
-                  <select id="regPreset" class="regSelect" aria-label="規定比賽時間選項" onchange="toggleRegCustomInput()">
-                    <option value="">請選擇分鐘</option>
-                    <option value="15">15 分鐘</option>
-                    <option value="20">20 分鐘</option>
-                    <option value="25">25 分鐘</option>
-                    <option value="custom">自訂分鐘</option>
-                  </select>
-                </div>
-                <div class="regCustomCard" id="regCustomCard">
-                  <div class="regCustomLabel">自訂分鐘</div>
-                  <div class="regCustomInputWrap">
-                    <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" placeholder="請輸入 1–45" aria-label="自訂規定比賽時間（分鐘）">
-                    <span class="regUnit">分鐘</span>
-                  </div>
-                  <div class="regCustomHint">可輸入 1–45 分鐘整數，預設不帶值</div>
-                </div>
-              </div>
-              <div class="regButtons">
-                <button class="regApply" onclick="saveRegulation()">套用</button>
-                <button class="regClear" onclick="clearRegulation()">清除</button>
-              </div>
-            </div>
-            <div class="diff" id="diffText">未設定規定時間</div>
-          </div>
-        </div>
+        <div id="timeRegulationHost"></div>
       </div>
     </div>
 
@@ -8818,7 +8831,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.05">v5.05</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.09">v5.09</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -9338,7 +9351,7 @@ let timeExpanded=false;
 let regulationEditorExpanded=false;
 
 let state={
-  ourTeam:'忠義', oppTeam:'', venue:'', competition:'',
+  ourTeam:'忠義國小', oppTeam:'', venue:'', competition:'',
   started:false, finished:false,
   startEpoch:null, endEpoch:null, finalElapsed:0,
   regulationMinutes:null,
@@ -9759,7 +9772,7 @@ function loadState(){
   // 比賽一旦已開始或已結束，就尊重本場保存的名稱；即使本場是空白，也維持「我方」暫代狀態。
   if(!state.started && !state.finished && !state.ourTeam){
     if(rememberedOurTeam) state.ourTeam=rememberedOurTeam;
-    else state.ourTeam='忠義';
+    else state.ourTeam='忠義國小';
   }
 
   if(!state.venue && rememberedVenue){
@@ -10084,8 +10097,50 @@ function regulationCompactText(){
   }
   return `${state.regulationMinutes} 分鐘`;
 }
+function syncRegulationPlacement(){
+  const regBox=byId('regBox');
+  const preHost=byId('preRegulationHost');
+  const timeHost=byId('timeRegulationHost');
+  const preSection=byId('preRegulationSection');
+  const regTitle=byId('regTitle');
+  const preStatus=byId('preRegulationStatus');
+  const timeBadge=byId('timeRegulationBadge');
+
+  const hasBegun=Boolean(matchStartEpoch());
+  const target=hasBegun ? timeHost : preHost;
+
+  if(regBox && target && regBox.parentElement!==target){
+    target.appendChild(regBox);
+  }
+
+  if(preSection) preSection.hidden=hasBegun;
+
+  if(regTitle){
+    regTitle.textContent=hasBegun
+      ? '比賽時間（可賽後補填）'
+      : '比賽時間';
+  }
+
+  if(preStatus){
+    preStatus.textContent=state.regulationMinutes
+      ? `已設定 ${regulationCompactText()}`
+      : '選填・可賽後補填';
+  }
+
+  if(timeBadge){
+    if(hasBegun && state.regulationMinutes){
+      timeBadge.hidden=false;
+      timeBadge.textContent=`${regulationCompactText()}`;
+    }else{
+      timeBadge.hidden=true;
+      timeBadge.textContent='';
+    }
+  }
+}
+
 function renderRegulationTimeBox(){
   const hasBegun=Boolean(matchStartEpoch());
+  syncRegulationPlacement();
   const compact=byId('regCompact');
   const editor=byId('regEditor');
   const regBox=byId('regBox');
@@ -10111,11 +10166,19 @@ function renderRegulationTimeBox(){
 }
 function renderTimeBox(){
   const box=byId('timeSummary');
+  const matchStart=matchStartEpoch();
+  const hasBegun=Boolean(matchStart);
+
+  // v5.08：賽前沒有任何「紀錄」可看，因此完全不顯示時間紀錄。
+  // 賽前只顯示獨立的「比賽時間（選填）」設定。
+  if(box) box.hidden=!hasBegun;
+
+  syncRegulationPlacement();
+
   box.classList.toggle('open', timeExpanded);
   byId('timeToggle').textContent=timeExpanded?'收合':'展開';
 
   // 整場邊界必須取自 periods 的第一段 / 最後一段，而不是目前段落 startEpoch。
-  const matchStart=matchStartEpoch();
   const matchEnd=matchEndEpoch();
 
   byId('compactStart').textContent=fmtClock(matchStart);
@@ -10193,7 +10256,7 @@ function regulationDisplayText(){
 function renderDiff(el){
   el.className='diff';
   if(!state.regulationMinutes){
-    el.textContent='未設定規定時間';
+    el.textContent='未設定比賽時間';
     return;
   }
   const target=regulationTargetSeconds();
@@ -10827,7 +10890,7 @@ function validateTeamNameValue(value, label, required=false){
   }
 
   // 隊伍名稱不可全部為數字；只要包含至少一個非數字字元即可。
-  // 例如 U12忠義、FC123、2026忠義皆允許；12345、001 則不允許。
+  // 例如 U12忠義國小、FC123、2026忠義皆允許；12345、001 則不允許。
   if(/^\d+$/.test(name)){
     alert(`${label}不可全部為數字`);
     return false;
@@ -11314,7 +11377,7 @@ function newMatch(){
   if((state.started || state.markers.length) && !confirm('建立新比賽會清空目前資料，確定嗎？')) return;
 
   rememberCurrentRosterAsPrevious();
-  const rememberedOurTeam=(byId('ourTeam').value.trim() || localStorage.getItem(LAST_OUR_TEAM_KEY) || '忠義').trim();
+  const rememberedOurTeam=(byId('ourTeam').value.trim() || localStorage.getItem(LAST_OUR_TEAM_KEY) || '忠義國小').trim();
   const currentVenue=byId('venue').value.trim();
   const currentCompetition=byId('competition').value.trim();
   const currentVenueChineseCount=(currentVenue.match(/[\u3400-\u4DBF\u4E00-\u9FFF]/g)||[]).length;
@@ -11368,7 +11431,7 @@ function saveRegulation(){
   const n=getRegulationMinutesInput();
   if(n===undefined) return;
   if(n===null){
-    alert('請先選擇規定時間，或使用自訂分鐘');
+    alert('請先選擇比賽時間，或使用自訂分鐘');
     return;
   }
   state.regulationMinutes=n;
@@ -12658,7 +12721,7 @@ function renderQuickResult(){
 function hasMeaningfulPreMatchSetup(){
   if(state.started || state.finished || state.awaitingNextPeriod || state.penalty?.active) return false;
 
-  const rememberedOur=String(localStorage.getItem(LAST_OUR_TEAM_KEY)||'忠義').trim();
+  const rememberedOur=String(localStorage.getItem(LAST_OUR_TEAM_KEY)||'忠義國小').trim();
   const currentOur=String(byId('ourTeam')?.value||state.ourTeam||'').trim();
   const currentOpp=String(byId('oppTeam')?.value||state.oppTeam||'').trim();
   const currentCompetition=String(byId('competition')?.value||state.competition||'').trim();
@@ -12728,7 +12791,7 @@ function renderPreResetUI(){
 function resetPreMatchSetup(){
   if(state.started || state.finished || state.awaitingNextPeriod || state.penalty?.active) return;
 
-  if(!confirm('重新設定會清除本場賽事名稱、場地、對手、名單、守門員、規定時間與其他賽前設定，確定嗎？')) return;
+  if(!confirm('重新設定會清除本場賽事名稱、場地、對手、名單、守門員、比賽時間與其他賽前設定，確定嗎？')) return;
 
   hideMarkerUndo();
 
@@ -12736,8 +12799,8 @@ function resetPreMatchSetup(){
     localStorage.getItem(LAST_OUR_TEAM_KEY) ||
     byId('ourTeam')?.value ||
     state.ourTeam ||
-    '忠義'
-  ).trim() || '忠義';
+    '忠義國小'
+  ).trim() || '忠義國小';
 
   state.ourTeam=rememberedOur;
   state.oppTeam='';
@@ -12837,13 +12900,13 @@ function renderRegulationTimeAlert(){
   hint.classList.add('show');
   if(diff>30){
     stage.classList.add('regulationSoon'); hint.classList.add('soon');
-    hint.textContent=`距規定時間 ${fmtMMSS(diff)}`;
+    hint.textContent=`距比賽時間 ${fmtMMSS(diff)}`;
   }else if(diff>0){
     stage.classList.add('regulationCritical'); hint.classList.add('critical');
-    hint.textContent=`距規定時間 ${fmtMMSS(diff)}`;
+    hint.textContent=`距比賽時間 ${fmtMMSS(diff)}`;
   }else if(diff===0){
     stage.classList.add('regulationReached'); hint.classList.add('reached');
-    hint.textContent='規定時間到';
+    hint.textContent='比賽時間到';
   }else{
     stage.classList.add('regulationReached'); hint.classList.add('reached');
     hint.textContent=`超時 +${fmtMMSS(Math.abs(diff))}`;
@@ -13288,9 +13351,9 @@ function reportLines(){
   if(state.regulationMinutes){
     const diff=Math.round((state.finished?state.finalElapsed:totalMatchElapsed()) - regulationTargetSeconds());
     if(state.finished){
-      lines.push({type:'meta', text:`規定時間：${regulationDisplayText()}｜${diff<0?'提前':'超過'} ${fmtMMSS(Math.abs(diff))}`});
+      lines.push({type:'meta', text:`比賽時間：${regulationDisplayText()}｜${diff<0?'提前':'超過'} ${fmtMMSS(Math.abs(diff))}`});
     }else{
-      lines.push({type:'meta', text:`規定時間：${regulationDisplayText()}`});
+      lines.push({type:'meta', text:`比賽時間：${regulationDisplayText()}`});
     }
   }
   lines.push({type:'section', text:'球員進球統計'});
@@ -13678,7 +13741,7 @@ function reportHTMLText(){
   let diff='';
   if(state.regulationMinutes && state.finished){
     const d=Math.round(state.finalElapsed-regulationTargetSeconds());
-    diff=`<p><b>規定時間：</b>${escapeHtml(regulationDisplayText())}　<b>${d<0?'提前':'超過'}：</b>${fmtMMSS(Math.abs(d))}</p>`;
+    diff=`<p><b>比賽時間：</b>${escapeHtml(regulationDisplayText())}　<b>${d<0?'提前':'超過'}：</b>${fmtMMSS(Math.abs(d))}</p>`;
   }
   return `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>足球比賽摘要</title><style>
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;background:#0f1720;color:#f8fafc;margin:0;padding:24px}
@@ -16172,6 +16235,257 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn{
 /* 不做任何自動跳動。 */
 body.resultMode.finalOutputVisible{
   scroll-behavior:auto!important;
+}
+
+
+/* =========================================================
+   v5.06 iPhone Safari Full-time Primary CTA Safe Position
+   不再只依賴 spacer；直接讓「＋ 新比賽」在手機全場頁
+   位於三顆輸出工具上方，實際抬高約一整列。
+   ========================================================= */
+
+@media(max-width:430px){
+
+  /* 全場底部區塊稍微收斂，不動上方比分與統計內容。 */
+  body.resultMode.finalOutputVisible .quickResultCard{
+    margin-bottom:4px!important;
+  }
+
+  body.resultMode.finalOutputVisible #eventHubSection{
+    margin-bottom:0!important;
+  }
+
+  /*
+    手機全場工具卡改為 flex column。
+    Primary CTA = 新比賽
+    Secondary tools = 摘要 / 圖片 / CSV
+  */
+  body.resultMode.finalOutputVisible .finalToolsCard{
+    display:flex!important;
+    flex-direction:column!important;
+    margin:0!important;
+    padding:5px!important;
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    transform:none!important;
+    width:100%!important;
+  }
+
+  /* 新比賽直接排第一層，確保它高於 Safari 底部工具列。 */
+  body.resultMode.finalOutputVisible .resultNewMatchBtn{
+    order:1!important;
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    transform:none!important;
+
+    width:100%!important;
+    min-height:48px!important;
+    margin:0 0 5px!important;
+    padding:8px 14px!important;
+  }
+
+  /* 三顆輸出工具排第二層，維持 >= 44px 觸控高度。 */
+  body.resultMode.finalOutputVisible .toolGrid.finalTools{
+    order:2!important;
+    width:100%!important;
+    gap:5px!important;
+  }
+
+  body.resultMode.finalOutputVisible .toolGrid.finalTools button{
+    min-height:44px!important;
+    padding:6px 4px!important;
+  }
+
+  /*
+    下方仍保留真實文件流安全區。
+    即使 Safari 工具列高度再變化，也只會壓到最後的 spacer，
+    不會重新壓住 Primary CTA。
+  */
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(196px, calc(var(--browser-bottom-gap,0px) + 84px))!important;
+  }
+
+  body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    display:block!important;
+    height:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+    min-height:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+  }
+}
+
+@media(max-width:390px){
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(212px, calc(var(--browser-bottom-gap,0px) + 92px))!important;
+  }
+}
+
+@media(max-width:375px){
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(224px, calc(var(--browser-bottom-gap,0px) + 100px))!important;
+  }
+}
+
+
+/* =========================================================
+   v5.09 Pre-match Match Time / Time Record Hierarchy
+   賽前 = 設定資訊
+   開賽後 = 紀錄資訊
+   ========================================================= */
+
+/* 賽前完全不顯示「時間紀錄」。 */
+body.matchStatePre #timeSummary{
+  display:none!important;
+}
+
+/* 一旦離開賽前，賽前比賽時間卡不再佔空間。 */
+.preRegulationSection[hidden]{
+  display:none!important;
+}
+
+/* 賽前比賽時間：直接可發現，但不做成另一個大型時間紀錄面板。 */
+.preRegulationSection{
+  display:block;
+  margin:0 0 8px;
+  padding:9px 11px 10px;
+  border-radius:14px;
+  border:1px solid rgba(78,125,170,.34);
+  background:
+    linear-gradient(180deg,rgba(17,38,58,.92) 0%,rgba(9,24,38,.96) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 5px 14px rgba(0,0,0,.10);
+}
+
+.preRegulationHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:28px;
+  padding:0 2px 7px;
+}
+
+.preRegulationTitle{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#f1f7fd;
+  font-size:14px;
+  font-weight:950;
+  line-height:1.15;
+  white-space:nowrap;
+}
+
+.preRegulationStatus{
+  min-width:0;
+  color:#8fa2b7;
+  font-size:10.5px;
+  font-weight:800;
+  line-height:1.2;
+  text-align:right;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* 同一個 regBox 賽前放在獨立卡中：去掉重複的外框與標題。 */
+#preRegulationSection .regBox{
+  padding:7px 0 0!important;
+  border:0!important;
+  border-top:1px solid rgba(148,163,184,.12)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+#preRegulationSection .regTitle{
+  display:none!important;
+}
+
+#preRegulationSection .diff{
+  display:none!important;
+}
+
+/* 賽前選單稍微 compact，仍保有清楚的 48px 觸控區。 */
+#preRegulationSection .regSelect{
+  min-height:48px!important;
+}
+
+#preRegulationSection .regButtons button{
+  min-height:48px!important;
+}
+
+/* 開賽後時間紀錄標題列可輕量帶出已設定的比賽時間。 */
+.timeHeadActions{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:7px;
+}
+
+.timeRegulationBadge{
+  max-width:150px;
+  min-height:25px;
+  padding:5px 8px;
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  background:rgba(30,64,98,.56);
+  border:1px solid rgba(96,165,250,.22);
+  color:#a9cbe6;
+  font-size:10px;
+  font-weight:850;
+  line-height:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.timeRegulationBadge[hidden]{
+  display:none!important;
+}
+
+/* 開賽後時間紀錄正常顯示。 */
+body:not(.matchStatePre) #timeSummary:not([hidden]){
+  display:block;
+}
+
+@media(max-width:390px){
+  .preRegulationSection{
+    margin-bottom:7px;
+    padding:8px 9px 9px;
+  }
+
+  .preRegulationHead{
+    gap:7px;
+    padding-bottom:6px;
+  }
+
+  .preRegulationTitle{
+    font-size:13.5px;
+  }
+
+  .preRegulationStatus{
+    font-size:10px;
+  }
+
+  .timeHeadActions{
+    gap:5px;
+  }
+
+  .timeRegulationBadge{
+    max-width:112px;
+    padding-left:7px;
+    padding-right:7px;
+    font-size:9.5px;
+  }
 }
 
 </style>
