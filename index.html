@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.13</title>
+<title>足球場邊記錄器 v5.14</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.13</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.14</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8558,8 +8558,7 @@ body.resultMode.finalOutputVisible{
             <div class="regRow">
               <div class="regChooser">
                 <div class="regSelectWrap">
-                  <select id="regPreset" class="regSelect" aria-label="比賽時間選項" onchange="toggleRegCustomInput()">
-                    <option value="">請選擇分鐘</option>
+                  <select id="regPreset" class="regSelect" aria-label="比賽時間選項" onchange="handleRegulationPresetChange()">
                     <option value="none">未設定</option>
                     <option value="15">15 分鐘</option>
                     <option value="20">20 分鐘</option>
@@ -8570,7 +8569,7 @@ body.resultMode.finalOutputVisible{
                 <div class="regCustomCard" id="regCustomCard">
                   <div class="regCustomLabel">自訂分鐘</div>
                   <div class="regCustomInputWrap">
-                    <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" placeholder="請輸入 1–45" aria-label="自訂比賽時間（分鐘）">
+                    <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" placeholder="請輸入 1–45" aria-label="自訂比賽時間（分鐘）" onchange="handleRegulationCustomChange()" onkeydown="if(event.key==='Enter'){event.preventDefault();handleRegulationCustomChange();this.blur();}">
                     <span class="regUnit">分鐘</span>
                   </div>
                   <div class="regCustomHint">可輸入 1–45 分鐘整數，預設不帶值</div>
@@ -8831,7 +8830,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.13">v5.13</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.14">v5.14</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -10122,8 +10121,8 @@ function syncRegulationPlacement(){
   }
 
   if(clearBtn){
-    // v5.13：賽前不再使用獨立「清除」。
-    // 賽前若要取消時間，改選「未設定」後按「套用」。
+    // v5.14：賽前不顯示獨立「清除」或「套用」。
+    // 選擇「未設定」立即清除；選擇固定分鐘立即生效。
     clearBtn.hidden=!hasBegun || !state.regulationMinutes;
   }
 
@@ -10284,13 +10283,81 @@ function toggleRegCustomInput(){
   if(customInput && !isCustom) customInput.value='';
 }
 
+/*
+  v5.14：
+  賽前不再需要「選擇 → 套用」兩步驟。
+  15 / 20 / 25 / 未設定都在選取後立即生效。
+  比賽已開始後則仍維持原本編輯器的「套用 / 清除」確認流程，
+  避免進行中誤改時間。
+*/
+function handleRegulationPresetChange(){
+  toggleRegCustomInput();
+
+  const preset=byId('regPreset');
+  if(!preset) return;
+
+  // 開賽後維持手動套用流程。
+  if(matchStartEpoch()) return;
+
+  const value=preset.value;
+
+  if(value==='custom'){
+    const customInput=byId('regCustomMinutes');
+    if(customInput){
+      setTimeout(()=>{ try{ customInput.focus(); }catch(e){} },30);
+    }
+    return;
+  }
+
+  if(value==='none'){
+    if(state.regulationMinutes!==null){
+      state.regulationMinutes=null;
+      saveState();
+      render();
+    }
+    return;
+  }
+
+  const n=Number(value);
+  if(Number.isInteger(n) && n>=1 && n<=45){
+    state.regulationMinutes=n;
+    saveState();
+    render();
+  }
+}
+
+function handleRegulationCustomChange(){
+  // 開賽後仍由既有「套用」按鈕確認。
+  if(matchStartEpoch()) return;
+
+  const preset=byId('regPreset');
+  if(!preset || preset.value!=='custom') return;
+
+  const input=byId('regCustomMinutes');
+  if(!input) return;
+
+  const raw=String(input.value||'').trim();
+  if(!raw) return;
+
+  const n=Number(raw);
+  if(!Number.isInteger(n) || n<1 || n>45){
+    alert('自訂比賽時間請輸入 1–45 分鐘整數');
+    try{ input.focus(); input.select(); }catch(e){}
+    return;
+  }
+
+  state.regulationMinutes=n;
+  saveState();
+  render();
+}
+
 function syncRegulationInputsFromState(){
   const preset=byId('regPreset');
   const customInput=byId('regCustomMinutes');
   if(!preset || !customInput) return;
   const value=Number(state.regulationMinutes);
   if(!state.regulationMinutes){
-    preset.value='';
+    preset.value='none';
     customInput.value='';
   }else if([15,20,25].includes(value)){
     preset.value=String(value);
@@ -10303,8 +10370,7 @@ function syncRegulationInputsFromState(){
 }
 
 function getRegulationMinutesInput(){
-  const preset=byId('regPreset')?.value || '';
-  if(!preset) return null;
+  const preset=byId('regPreset')?.value || 'none';
   if(preset==='none') return 0;
   if(preset==='custom'){
     return validateIntegerField('regCustomMinutes','自訂比賽時間',1,45,true);
@@ -16930,6 +16996,62 @@ body.matchStatePre .preResetBtn{
     --pre-score-font:34px;
     --pre-stage-font:15px;
     --pre-cta-font:16px;
+  }
+}
+
+
+/* =========================================================
+   v5.14 Pre-match Match Time Instant Apply
+   賽前：⏱ 比賽時間 | 未設定 / 15 / 20 / 25 / 自訂
+   不再顯示藍色「套用」，避免搶過「開始比賽」Primary CTA。
+   ========================================================= */
+
+/* 賽前的 regRow 只剩選單；按鈕欄完全不佔空間。 */
+body.matchStatePre #preRegulationSection .regRow{
+  display:block!important;
+  width:100%!important;
+}
+
+body.matchStatePre #preRegulationSection .regButtons{
+  display:none!important;
+  width:0!important;
+  min-width:0!important;
+  height:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+
+/* 避免舊版 regApply / regClear 規則殘留視覺或 hit-area。 */
+body.matchStatePre #preRegulationSection .regApply,
+body.matchStatePre #preRegulationSection .regClear{
+  display:none!important;
+  pointer-events:none!important;
+}
+
+/* 選單吃滿右側可用寬度，視覺權重低於「開始比賽」。 */
+body.matchStatePre #preRegulationSection .regChooser,
+body.matchStatePre #preRegulationSection .regSelectWrap,
+body.matchStatePre #preRegulationSection .regSelect{
+  width:100%!important;
+  min-width:0!important;
+}
+
+body.matchStatePre #preRegulationSection .regSelect{
+  min-height:48px!important;
+  background:#0b1626!important;
+  border-color:rgba(71,118,165,.52)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+
+/* 自訂分鐘是唯一會向下展開的第二列。 */
+body.matchStatePre #preRegulationSection .regCustomCard.open{
+  margin-top:8px!important;
+}
+
+/* 390px 以下仍維持：標題 | 選單。 */
+@media(max-width:390px){
+  body.matchStatePre #preRegulationSection .regRow{
+    display:block!important;
   }
 }
 
