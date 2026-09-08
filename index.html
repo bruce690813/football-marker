@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.10</title>
+<title>足球場邊記錄器 v5.11</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.10</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.11</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8551,7 +8551,10 @@ body.resultMode.finalOutputVisible{
               <span class="regCompactLabel">比賽時間</span>
               <strong class="regCompactValue" id="regCompactValue">未設定</strong>
             </div>
-            <button class="regCompactEdit" id="regCompactEdit" type="button" onclick="toggleRegulationEditor()">編輯</button>
+            <div class="regCompactActions">
+              <button class="regCompactEdit" id="regCompactEdit" type="button" onclick="toggleRegulationEditor()">修改</button>
+              <button class="regCompactClear" id="regCompactClear" type="button" onclick="clearRegulation()">清除</button>
+            </div>
           </div>
 
           <div class="regEditor" id="regEditor">
@@ -8831,7 +8834,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.10">v5.10</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.11">v5.11</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -10085,7 +10088,7 @@ function toggleTimeBox(){
   renderTimeBox();
 }
 function toggleRegulationEditor(){
-  if(!matchStartEpoch()) return;
+  // v5.11：賽前已設定比賽時間後，也可直接切換「修改」。
   regulationEditorExpanded=!regulationEditorExpanded;
   renderTimeBox();
 }
@@ -10123,7 +10126,7 @@ function syncRegulationPlacement(){
 
   if(preStatus){
     preStatus.textContent=state.regulationMinutes
-      ? `已設定 ${regulationCompactText()}`
+      ? '已設定'
       : '選填・可賽後補填';
   }
 
@@ -10149,10 +10152,18 @@ function renderRegulationTimeBox(){
 
   if(value) value.textContent=regulationCompactText();
 
+  const hasValue=Boolean(state.regulationMinutes);
+  if(regBox) regBox.classList.toggle('hasValue',hasValue);
+
   if(!hasBegun){
-    if(compact) compact.hidden=true;
-    if(editor) editor.hidden=false;
-    if(regBox) regBox.classList.remove('compactMode','editingMode');
+    const showCompact=hasValue && !regulationEditorExpanded;
+    if(compact) compact.hidden=!showCompact;
+    if(editor) editor.hidden=showCompact;
+    if(editBtn) editBtn.textContent='修改';
+    if(regBox){
+      regBox.classList.toggle('compactMode',showCompact);
+      regBox.classList.toggle('editingMode',!showCompact);
+    }
     return;
   }
 
@@ -11435,14 +11446,14 @@ function saveRegulation(){
     return;
   }
   state.regulationMinutes=n;
-  if(matchStartEpoch()) regulationEditorExpanded=false;
+  regulationEditorExpanded=false;
   saveState();
   syncRegulationInputsFromState();
   render();
 }
 function clearRegulation(){
   state.regulationMinutes=null;
-  if(matchStartEpoch()) regulationEditorExpanded=false;
+  regulationEditorExpanded=false;
   syncRegulationInputsFromState();
   saveState();
   render();
@@ -16550,6 +16561,186 @@ body.matchStatePre .controls{
 @media(max-width:390px){
   body.matchStatePre{
     --pre-group-gap:10px;
+  }
+}
+
+
+/* =========================================================
+   v5.11 Pre-match Match Time Compact + Reset Readability
+   ========================================================= */
+
+/*
+  比賽時間是「選填」資訊，不應該比名單 / 守門員更重。
+  賽前未設定時：分鐘選單 + 小型套用，同一列完成。
+*/
+body.matchStatePre .preRegulationSection{
+  padding:8px 10px 9px!important;
+}
+
+body.matchStatePre .preRegulationHead{
+  min-height:25px!important;
+  padding:0 2px 6px!important;
+}
+
+body.matchStatePre #preRegulationSection .regBox{
+  padding:6px 0 0!important;
+}
+
+body.matchStatePre #preRegulationSection .regEditor{
+  padding:0!important;
+}
+
+body.matchStatePre #preRegulationSection .regRow{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 88px!important;
+  align-items:stretch!important;
+  gap:8px!important;
+}
+
+body.matchStatePre #preRegulationSection .regChooser{
+  min-width:0!important;
+  width:auto!important;
+}
+
+body.matchStatePre #preRegulationSection .regSelect{
+  width:100%!important;
+  min-height:46px!important;
+  height:46px!important;
+  padding-top:9px!important;
+  padding-bottom:9px!important;
+  font-size:14px!important;
+  border-radius:11px!important;
+}
+
+body.matchStatePre #preRegulationSection .regButtons{
+  display:block!important;
+  width:88px!important;
+}
+
+body.matchStatePre #preRegulationSection .regButtons .regApply{
+  width:100%!important;
+  min-height:46px!important;
+  height:46px!important;
+  padding:8px 6px!important;
+  border-radius:11px!important;
+  font-size:13.5px!important;
+}
+
+/* 賽前清除移到「已設定」compact row，不再占未設定畫面的半列。 */
+body.matchStatePre #preRegulationSection .regButtons .regClear{
+  display:none!important;
+}
+
+/*
+  自訂分鐘是少數例外：
+  選擇「自訂」後才自然展開第二層輸入，不為一般情境預留空間。
+*/
+body.matchStatePre #preRegulationSection .regCustomCard.open{
+  margin-top:7px!important;
+}
+
+/* 已設定後：單列顯示「20 分鐘｜修改｜清除」。 */
+body.matchStatePre #preRegulationSection .regCompact{
+  min-height:44px!important;
+  gap:10px!important;
+}
+
+body.matchStatePre #preRegulationSection .regCompactInfo{
+  flex:1 1 auto!important;
+  min-width:0!important;
+}
+
+body.matchStatePre #preRegulationSection .regCompactLabel{
+  display:none!important;
+}
+
+body.matchStatePre #preRegulationSection .regCompactValue{
+  color:#eef7ff!important;
+  font-size:15px!important;
+  font-weight:950!important;
+}
+
+.regCompactActions{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.regCompactClear{
+  display:none;
+  min-width:58px;
+  min-height:40px;
+  padding:7px 10px!important;
+  border-radius:10px!important;
+  background:rgba(71,85,105,.42)!important;
+  border:1px solid rgba(148,163,184,.18)!important;
+  color:#b8c5d3!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  box-shadow:none!important;
+}
+
+body.matchStatePre #preRegulationSection .regCompactEdit{
+  min-width:58px!important;
+  min-height:40px!important;
+  padding:7px 10px!important;
+  border-radius:10px!important;
+  font-size:12px!important;
+}
+
+body.matchStatePre #preRegulationSection .regCompactClear{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+}
+
+/* 開賽後維持原本 compact 設計，只保留「編輯」，不額外增加清除按鈕。 */
+body:not(.matchStatePre) .regCompactClear{
+  display:none!important;
+}
+
+/*
+  「↻ 重設」仍是 tertiary action，但 v4.67 的 0.60 opacity 太接近看不見。
+  稍微提高可讀性，不讓它與主要 CTA 競爭。
+*/
+body.matchStatePre .preResetBtn{
+  background:rgba(30,41,59,.16)!important;
+  border-color:rgba(203,213,225,.12)!important;
+  color:rgba(226,232,240,.66)!important;
+  opacity:.82!important;
+  box-shadow:none!important;
+}
+
+body.matchStatePre .preResetBtn:active{
+  background:rgba(51,65,85,.28)!important;
+  border-color:rgba(203,213,225,.20)!important;
+  color:rgba(248,250,252,.92)!important;
+  opacity:1!important;
+}
+
+@media(max-width:390px){
+  body.matchStatePre #preRegulationSection .regRow{
+    grid-template-columns:minmax(0,1fr) 80px!important;
+    gap:7px!important;
+  }
+
+  body.matchStatePre #preRegulationSection .regButtons{
+    width:80px!important;
+  }
+
+  body.matchStatePre #preRegulationSection .regSelect,
+  body.matchStatePre #preRegulationSection .regButtons .regApply{
+    min-height:44px!important;
+    height:44px!important;
+  }
+
+  body.matchStatePre #preRegulationSection .regCompactEdit,
+  body.matchStatePre #preRegulationSection .regCompactClear{
+    min-width:54px!important;
+    min-height:40px!important;
+    padding-left:8px!important;
+    padding-right:8px!important;
   }
 }
 
