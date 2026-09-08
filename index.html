@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.09</title>
+<title>足球場邊記錄器 v5.10</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.09</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.10</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8831,7 +8831,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.09">v5.09</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.10">v5.10</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -16485,6 +16485,71 @@ body:not(.matchStatePre) #timeSummary:not([hidden]){
     padding-left:7px;
     padding-right:7px;
     font-size:9.5px;
+  }
+}
+
+
+/* =========================================================
+   v5.10 Pre-match Vertical Rhythm
+   讓賽前設定區塊有清楚的「群組間距」，避免卡片黏在一起。
+   ========================================================= */
+
+body.matchStatePre{
+  --pre-group-gap:12px;
+}
+
+/*
+  賽前資訊層級：
+  1. 賽事 / 場地
+  2. 名單 / 守門員
+  3. 比賽時間
+  4. 賽前狀態 / 隊伍 / 比分
+  5. 開始 / 結束
+
+  每一個「主要群組」之間固定留白。
+*/
+
+/* 第一列 → 第二列 */
+body.matchStatePre .matchMetaRow{
+  margin-bottom:var(--pre-group-gap)!important;
+}
+
+/* 第二列本身不再用 margin-top 製造距離，避免雙重累加。 */
+body.matchStatePre .preQuickSetup{
+  margin-top:0!important;
+  margin-bottom:var(--pre-group-gap)!important;
+}
+
+/* 名單 / 守門員 → 比賽時間 */
+body.matchStatePre .preRegulationSection{
+  margin-top:0!important;
+  margin-bottom:var(--pre-group-gap)!important;
+}
+
+/* 比賽時間 → 賽前 / 隊伍 / 比分 */
+body.matchStatePre .broadcastScoreboard{
+  margin-top:0!important;
+  margin-bottom:var(--pre-group-gap)!important;
+}
+
+/* 隊伍 / 比分 → 開始比賽 */
+body.matchStatePre .controls{
+  margin-top:0!important;
+}
+
+/*
+  外層留白由群組 margin 負責，
+  不增加卡片內部 padding，避免畫面變得鬆散。
+*/
+body.matchStatePre .preRegulationSection,
+body.matchStatePre .broadcastScoreboard,
+body.matchStatePre .controls{
+  scroll-margin-top:10px;
+}
+
+@media(max-width:390px){
+  body.matchStatePre{
+    --pre-group-gap:10px;
   }
 }
 
