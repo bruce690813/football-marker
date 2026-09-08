@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.01</title>
+<title>足球場邊記錄器 v5.03</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.01</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.03</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8813,10 +8813,13 @@ body.resultMode.finalOutputVisible{
       </div>
       </div>
       <div class="aboutFooter">
-        <div class="aboutVersionFooter">版本 v5.01</div>
-        <button class="aboutGuideBtn" type="button" onclick="openQuickGuide()" aria-label="開啟快速使用指南">
-          <span aria-hidden="true">📖</span><span>快速使用指南</span>
-        </button>
+        <div class="aboutUtilityRow">
+          <button class="aboutGuideBtn" type="button" onclick="openQuickGuide()" aria-label="開啟快速使用指南">
+            <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
+            <span class="aboutGuideChevron" aria-hidden="true">›</span>
+          </button>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.03">v5.03</div>
+        </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
     </div>
@@ -15819,6 +15822,166 @@ body.matchStatePenalty .liveMetaStrip span{
   .quickGuideSteps{gap:5px}
   .quickGuideStep{min-height:54px;padding-top:7px;padding-bottom:7px}
   .quickGuideTip{padding-top:8px;padding-bottom:8px}
+}
+
+
+/* =========================================================
+   v5.02 About Footer Hierarchy
+   次要資訊列 + 唯一主要 CTA
+   ========================================================= */
+
+/* Footer 分為「輔助資訊」與「主要動作」兩層。 */
+.aboutFooter{
+  padding-top:9px!important;
+}
+
+/* 快速指南 + 版本資訊共用一列，不再各自佔滿一行。 */
+.aboutUtilityRow{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  min-height:44px;
+  margin:0 3px 14px;
+  padding:0 3px;
+}
+
+/*
+  快速指南：視覺上是輕量文字入口，
+  但實際觸控高度仍維持 44px。
+*/
+.aboutGuideBtn{
+  width:auto!important;
+  min-width:0;
+  min-height:44px!important;
+  margin:0!important;
+  padding:0 2px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:5px!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#9ed9fb!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  letter-spacing:.08px!important;
+  text-align:left;
+}
+.aboutGuideLabel{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+}
+.aboutGuideChevron{
+  flex:0 0 auto;
+  color:#6996b2;
+  font-size:20px;
+  font-weight:700;
+  line-height:1;
+  transform:translateY(-1px);
+}
+.aboutGuideBtn:active{
+  transform:none!important;
+  filter:none!important;
+  color:#ccefff!important;
+}
+.aboutGuideBtn:active .aboutGuideChevron{
+  transform:translate(2px,-1px);
+}
+
+/* 版本只是 metadata，不再寫「版本」，也不獨佔一列。 */
+.aboutVersionFooter{
+  margin:0!important;
+  padding:0!important;
+  color:#65798f!important;
+  font-size:11.5px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  letter-spacing:.2px;
+  text-align:right!important;
+  white-space:nowrap;
+}
+
+/* Primary CTA 與輔助列明顯分開，保持唯一焦點。 */
+.aboutClose{
+  margin-top:0!important;
+  min-height:46px!important;
+}
+
+/* 用很淡的分隔線增加結構，但不要像另一顆按鈕。 */
+.aboutUtilityRow::after{
+  content:"";
+  position:absolute;
+  left:13px;
+  right:13px;
+  height:1px;
+  background:rgba(128,164,190,.10);
+  transform:translateY(29px);
+  pointer-events:none;
+}
+.aboutUtilityRow{
+  position:relative;
+}
+
+@media(max-width:390px){
+  .aboutUtilityRow{
+    min-height:42px;
+    margin:0 2px 12px;
+    gap:10px;
+  }
+  .aboutGuideBtn{
+    min-height:42px!important;
+    font-size:12.6px!important;
+  }
+  .aboutGuideChevron{font-size:18px}
+  .aboutVersionFooter{font-size:11px!important}
+  .aboutClose{min-height:44px!important}
+}
+
+
+/* =========================================================
+   v5.03 Event Log Time Consistency
+   所有事件的「時間」只代表 WHEN，不再依事件種類變色或變大。
+   ========================================================= */
+
+#logModal .logTimelineItem .logEventMeta .time,
+#logModal .logEvent-goal .logEventMeta .time,
+#logModal .logEvent-save .logEventMeta .time,
+#logModal .logEvent-shot .logEventMeta .time,
+#logModal .logEvent-defense .logEventMeta .time,
+#logModal .logEvent-yellow_card .logEventMeta .time,
+#logModal .logEvent-red_card .logEventMeta .time{
+  color:#facc15!important;
+  font-size:16px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  letter-spacing:.1px!important;
+  text-shadow:none!important;
+}
+
+/* 時段標籤仍保留自身藍色，與時間角色分離。 */
+#logModal .logTimelineItem .periodBadge{
+  font-size:10.5px!important;
+  font-weight:900!important;
+}
+
+/* 小尺寸 iPhone 仍維持同一套時間字級與顏色。 */
+@media(max-width:390px){
+  #logModal .logTimelineItem .logEventMeta .time,
+  #logModal .logEvent-goal .logEventMeta .time,
+  #logModal .logEvent-save .logEventMeta .time,
+  #logModal .logEvent-shot .logEventMeta .time,
+  #logModal .logEvent-defense .logEventMeta .time,
+  #logModal .logEvent-yellow_card .logEventMeta .time,
+  #logModal .logEvent-red_card .logEventMeta .time{
+    color:#facc15!important;
+    font-size:16px!important;
+    font-weight:950!important;
+  }
 }
 
 </style>
