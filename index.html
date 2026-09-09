@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.27</title>
+<title>足球場邊記錄器 v5.29</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -12007,6 +12007,41 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
   }
 }
 
+/* v5.28：場地與比賽時間統一使用更醒目的下拉指示。 */
+.venueDropdownBtn,
+.regSelectWrap::after{
+  width:30px!important;
+  height:30px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:#8fbdff!important;
+  background:rgba(59,130,246,.13)!important;
+  border:1px solid rgba(96,165,250,.28)!important;
+  border-radius:9px!important;
+  font-size:18px!important;
+  font-weight:1000!important;
+  line-height:1!important;
+  text-shadow:0 0 8px rgba(96,165,250,.35)!important;
+}
+.venueDropdownBtn{
+  right:6px!important;
+  min-width:30px!important;
+}
+.regSelectWrap::after{
+  content:'▾'!important;
+  right:8px!important;
+  box-sizing:border-box!important;
+}
+body.matchStatePre .venueInputWrap input{padding-right:42px!important;}
+.regSelect{padding-right:48px!important;}
+.venueDropdownBtn.open,
+.venueDropdownBtn:active{
+  color:#e8f3ff!important;
+  background:rgba(59,130,246,.26)!important;
+  border-color:rgba(125,181,255,.48)!important;
+}
+
 </style>
 </head>
 <body>
@@ -12015,7 +12050,7 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.27</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.29</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -12028,7 +12063,7 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
         <span class="preMetaIcon preVenueIcon" aria-hidden="true">🏟️</span>
         <div class="venueInputWrap">
           <input id="venue" placeholder="場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地，可手動輸入或從最近場地選擇">
-          <button id="venueDropdownBtn" class="venueDropdownBtn" type="button" aria-label="選擇最近使用場地" aria-expanded="false" onclick="toggleVenueMenu(event)" onmousedown="event.preventDefault()">⌄</button>
+          <button id="venueDropdownBtn" class="venueDropdownBtn" type="button" aria-label="選擇最近使用場地" aria-expanded="false" onclick="toggleVenueMenu(event)" onmousedown="event.preventDefault()">▾</button>
         </div>
         <div id="venueMenu" class="venueMenu" role="menu" aria-label="最近使用場地"></div>
       </div>
@@ -12348,7 +12383,7 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.27">v5.27</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.29">v5.29</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -13277,6 +13312,10 @@ function loadState(){
   if(state.goalkeeperNumber!==''){
     const gk=Number(state.goalkeeperNumber);
     state.goalkeeperNumber=(Number.isInteger(gk) && gk>=1 && gk<=99) ? String(gk) : '';
+    // v5.29：守門員也屬於本場球員；舊版既有資料載入時同步補入名單。
+    if(state.goalkeeperNumber && !state.rosterNumbers.includes(gk)){
+      state.rosterNumbers=[...state.rosterNumbers,gk].sort((a,b)=>a-b);
+    }
   }
   if(state.penalty){
     if(!Array.isArray(state.penalty.our)) state.penalty.our=[];
@@ -14384,6 +14423,9 @@ function setKeeperNumber(number){
     return;
   }
   state.goalkeeperNumber=String(n);
+  // 守門員必須同步列入本場名單，開啟名單時會直接呈現已選取狀態。
+  const roster=currentRosterNumbers();
+  if(!roster.includes(n)) state.rosterNumbers=[...roster,n].sort((a,b)=>a-b);
   rememberPlayerNumber(n);
   buildNumberGrid();
   buildKeeperGrid();
