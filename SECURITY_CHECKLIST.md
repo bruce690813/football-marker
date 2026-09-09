@@ -546,3 +546,14 @@ football_marker_vX_XX.zip
 - [ ] v5.17 全場底部按鈕 spacing 沒有回退
 - [ ] v5.16 珊瑚紅名單球衣 icon 沒有回退
 - [ ] v5.15 比賽時間 Compact 沒有回退
+
+
+### v5.19 Header Pitch Detail QA
+
+- [ ] 標題 Header 可明顯看見中線
+- [ ] 標題 Header 可明顯看見中圈
+- [ ] 左右兩側可看見球門 / 禁區線條
+- [ ] Header 外框感比 v5.18 更弱
+- [ ] About 按鈕與版本資訊仍可清楚閱讀
+- [ ] 賽前 / 比賽中 / 全場 Header 樣式一致
+- [ ] 不影響原本深藍黑主操作區
