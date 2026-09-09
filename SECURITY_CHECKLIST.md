@@ -577,3 +577,16 @@ football_marker_vX_XX.zip
 - [ ] 頁面底部不會顯示 CSS 原始碼文字
 - [ ] Header 中圈維持正圓
 - [ ] 左右禁區各只有 2 組乾淨線條
+
+
+### v5.26 Header Proportion QA
+
+- [ ] Header 高度較 v5.25 縮小約 10–12%
+- [ ] 390px 以下 Header 仍可單行顯示標題 / 版本 / About
+- [ ] 左右大禁區與小禁區不再貼齊 Header 邊緣
+- [ ] 左右場線保留約 8–10px 呼吸空間
+- [ ] 中圈尺寸維持 v5.25
+- [ ] 中圈仍為正圓
+- [ ] 主操作區 UI / 字級 / 按鈕尺寸沒有回退
+- [ ] `</html>` 後沒有任何內容
+- [ ] JavaScript syntax check 通過

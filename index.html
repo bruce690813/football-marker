@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.25</title>
+<title>足球場邊記錄器 v5.26</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -11996,7 +11996,7 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.25</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.26</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -12329,7 +12329,7 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.25">v5.25</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.26">v5.26</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -17319,6 +17319,45 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;backg
 .wrap{max-width:720px;margin:auto}.card{background:#16202b;border:1px solid #334155;border-radius:18px;padding:22px;margin-bottom:16px}
 h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;text-align:center;font-weight:800}
 .meta{color:#aeb9c5;text-align:center;margin-top:10px}h2{font-size:16px;color:#38bdf8}ul{list-style:none;padding:0;margin:0}li{padding:10px 0;border-bottom:1px solid #334155}li span{display:inline-block;width:90px;color:#facc15}.note{font-size:12px;color:#64748b;text-align:center}
+
+
+/* =========================================================
+   v5.26 Header proportion refinement
+   - Header pitch height reduced about 10–12%.
+   - Side penalty / goal-area markings inset about 8–10px.
+   - Center circle size intentionally unchanged.
+   - No change to header typography or CTA hierarchy.
+   ========================================================= */
+.titleBlock{
+  min-height:52px!important;
+  padding:6px 10px!important;
+}
+
+.titleBlock::after{
+  background-image:
+    radial-gradient(circle at 50% 50%,rgba(238,248,241,.30) 0 2.4px,transparent 2.8px),
+    radial-gradient(circle at 50% 50%,transparent 0 25px,rgba(238,248,241,.18) 25px 27px,transparent 27.5px),
+    linear-gradient(90deg,transparent 0 calc(50% - 1px),rgba(238,248,241,.20) calc(50% - 1px) calc(50% + 1px),transparent calc(50% + 1px) 100%),
+    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDEyMCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+CiAgPGcgZmlsbD0nbm9uZScgc3Ryb2tlPScjZWVmOGYxJyBzdHJva2UtbGluZWNhcD0nc3F1YXJlJyBzdHJva2UtbGluZWpvaW49J21pdGVyJz4KICAgIDxwYXRoIGQ9J00xMiAxOCBIMTIwIFYxMDIgSDEyJyBzdHJva2Utb3BhY2l0eT0nLjE3JyBzdHJva2Utd2lkdGg9JzInIHZlY3Rvci1lZmZlY3Q9J25vbi1zY2FsaW5nLXN0cm9rZScvPgogICAgPHBhdGggZD0nTTEyIDQwIEg2MCBWODAgSDEyJyBzdHJva2Utb3BhY2l0eT0nLjIyJyBzdHJva2Utd2lkdGg9JzInIHZlY3Rvci1lZmZlY3Q9J25vbi1zY2FsaW5nLXN0cm9rZScvPgogICAgPHBhdGggZD0nTTk4OCAxOCBIODgwIFYxMDIgSDk4OCcgc3Ryb2tlLW9wYWNpdHk9Jy4xNycgc3Ryb2tlLXdpZHRoPScyJyB2ZWN0b3ItZWZmZWN0PSdub24tc2NhbGluZy1zdHJva2UnLz4KICAgIDxwYXRoIGQ9J005ODggNDAgSDk0MCBWODAgSDk4OCcgc3Ryb2tlLW9wYWNpdHk9Jy4yMicgc3Ryb2tlLXdpZHRoPScyJyB2ZWN0b3ItZWZmZWN0PSdub24tc2NhbGluZy1zdHJva2UnLz4KICA8L2c+Cjwvc3ZnPg==")!important;
+  background-position:center,center,center,center!important;
+  background-size:100% 100%,100% 100%,100% 100%,100% 100%!important;
+  background-repeat:no-repeat!important;
+}
+
+@media(max-width:390px){
+  .titleBlock{
+    min-height:50px!important;
+    padding:6px 8px!important;
+  }
+  .titleBlock::after{
+    background-image:
+      radial-gradient(circle at 50% 50%,rgba(238,248,241,.30) 0 2.2px,transparent 2.6px),
+      radial-gradient(circle at 50% 50%,transparent 0 23px,rgba(238,248,241,.18) 23px 25px,transparent 25.5px),
+      linear-gradient(90deg,transparent 0 calc(50% - .9px),rgba(238,248,241,.20) calc(50% - .9px) calc(50% + .9px),transparent calc(50% + .9px) 100%),
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDEyMCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+CiAgPGcgZmlsbD0nbm9uZScgc3Ryb2tlPScjZWVmOGYxJyBzdHJva2UtbGluZWNhcD0nc3F1YXJlJyBzdHJva2UtbGluZWpvaW49J21pdGVyJz4KICAgIDxwYXRoIGQ9J00xMiAxOCBIMTIwIFYxMDIgSDEyJyBzdHJva2Utb3BhY2l0eT0nLjE3JyBzdHJva2Utd2lkdGg9JzInIHZlY3Rvci1lZmZlY3Q9J25vbi1zY2FsaW5nLXN0cm9rZScvPgogICAgPHBhdGggZD0nTTEyIDQwIEg2MCBWODAgSDEyJyBzdHJva2Utb3BhY2l0eT0nLjIyJyBzdHJva2Utd2lkdGg9JzInIHZlY3Rvci1lZmZlY3Q9J25vbi1zY2FsaW5nLXN0cm9rZScvPgogICAgPHBhdGggZD0nTTk4OCAxOCBIODgwIFYxMDIgSDk4OCcgc3Ryb2tlLW9wYWNpdHk9Jy4xNycgc3Ryb2tlLXdpZHRoPScyJyB2ZWN0b3ItZWZmZWN0PSdub24tc2NhbGluZy1zdHJva2UnLz4KICAgIDxwYXRoIGQ9J005ODggNDAgSDk0MCBWODAgSDk4OCcgc3Ryb2tlLW9wYWNpdHk9Jy4yMicgc3Ryb2tlLXdpZHRoPScyJyB2ZWN0b3ItZWZmZWN0PSdub24tc2NhbGluZy1zdHJva2UnLz4KICA8L2c+Cjwvc3ZnPg==")!important;
+  }
+}
+
 </style></head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">${state.competition?`🏆 ${escapeHtml(state.competition)}　`:''}📍 ${escapeHtml(state.venue||'未填場地')}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
