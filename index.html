@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.26</title>
+<title>足球場邊記錄器 v5.27</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -11988,6 +11988,25 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
   }
 }
 
+/* v5.27：縮小中圈並縮短左右禁區，讓 Header 球場比例更接近實際場地。 */
+.titleBlock::after{
+  background-image:
+    radial-gradient(circle at 50% 50%,rgba(238,248,241,.30) 0 2.2px,transparent 2.6px),
+    radial-gradient(circle at 50% 50%,transparent 0 18px,rgba(238,248,241,.18) 18px 20px,transparent 20.5px),
+    linear-gradient(90deg,transparent 0 calc(50% - 1px),rgba(238,248,241,.20) calc(50% - 1px) calc(50% + 1px),transparent calc(50% + 1px) 100%),
+    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDEyMCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+PGcgZmlsbD0nbm9uZScgc3Ryb2tlPScjZWVmOGYxJyBzdHJva2UtbGluZWNhcD0nc3F1YXJlJyBzdHJva2UtbGluZWpvaW49J21pdGVyJz48cGF0aCBkPSdNMCAyMiBINzggVjk4IEgwJyBzdHJva2Utb3BhY2l0eT0nLjE3JyBzdHJva2Utd2lkdGg9JzInIHZlY3Rvci1lZmZlY3Q9J25vbi1zY2FsaW5nLXN0cm9rZScvPjxwYXRoIGQ9J00wIDQyIEgzNiBWNzggSDAnIHN0cm9rZS1vcGFjaXR5PScuMjInIHN0cm9rZS13aWR0aD0nMicgdmVjdG9yLWVmZmVjdD0nbm9uLXNjYWxpbmctc3Ryb2tlJy8+PHBhdGggZD0nTTEwMDAgMjIgSDkyMiBWOTggSDEwMDAnIHN0cm9rZS1vcGFjaXR5PScuMTcnIHN0cm9rZS13aWR0aD0nMicgdmVjdG9yLWVmZmVjdD0nbm9uLXNjYWxpbmctc3Ryb2tlJy8+PHBhdGggZD0nTTEwMDAgNDIgSDk2NCBWNzggSDEwMDAnIHN0cm9rZS1vcGFjaXR5PScuMjInIHN0cm9rZS13aWR0aD0nMicgdmVjdG9yLWVmZmVjdD0nbm9uLXNjYWxpbmctc3Ryb2tlJy8+PC9nPjwvc3ZnPg==")!important;
+}
+
+@media(max-width:390px){
+  .titleBlock::after{
+    background-image:
+      radial-gradient(circle at 50% 50%,rgba(238,248,241,.30) 0 2px,transparent 2.4px),
+      radial-gradient(circle at 50% 50%,transparent 0 16px,rgba(238,248,241,.18) 16px 18px,transparent 18.5px),
+      linear-gradient(90deg,transparent 0 calc(50% - .9px),rgba(238,248,241,.20) calc(50% - .9px) calc(50% + .9px),transparent calc(50% + .9px) 100%),
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDEyMCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+PGcgZmlsbD0nbm9uZScgc3Ryb2tlPScjZWVmOGYxJyBzdHJva2UtbGluZWNhcD0nc3F1YXJlJyBzdHJva2UtbGluZWpvaW49J21pdGVyJz48cGF0aCBkPSdNMCAyMiBINzggVjk4IEgwJyBzdHJva2Utb3BhY2l0eT0nLjE3JyBzdHJva2Utd2lkdGg9JzInIHZlY3Rvci1lZmZlY3Q9J25vbi1zY2FsaW5nLXN0cm9rZScvPjxwYXRoIGQ9J00wIDQyIEgzNiBWNzggSDAnIHN0cm9rZS1vcGFjaXR5PScuMjInIHN0cm9rZS13aWR0aD0nMicgdmVjdG9yLWVmZmVjdD0nbm9uLXNjYWxpbmctc3Ryb2tlJy8+PHBhdGggZD0nTTEwMDAgMjIgSDkyMiBWOTggSDEwMDAnIHN0cm9rZS1vcGFjaXR5PScuMTcnIHN0cm9rZS13aWR0aD0nMicgdmVjdG9yLWVmZmVjdD0nbm9uLXNjYWxpbmctc3Ryb2tlJy8+PHBhdGggZD0nTTEwMDAgNDIgSDk2NCBWNzggSDEwMDAnIHN0cm9rZS1vcGFjaXR5PScuMjInIHN0cm9rZS13aWR0aD0nMicgdmVjdG9yLWVmZmVjdD0nbm9uLXNjYWxpbmctc3Ryb2tlJy8+PC9nPjwvc3ZnPg==")!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -11996,7 +12015,7 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.26</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.27</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -12329,7 +12348,7 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.26">v5.26</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.27">v5.27</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>

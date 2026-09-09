@@ -590,3 +590,12 @@ football_marker_vX_XX.zip
 - [ ] 主操作區 UI / 字級 / 按鈕尺寸沒有回退
 - [ ] `</html>` 後沒有任何內容
 - [ ] JavaScript syntax check 通過
+
+
+### v5.27 Header Pitch Proportion QA
+
+- [ ] 中圈較 v5.26 明顯縮小且維持正圓
+- [ ] 左右大禁區與小禁區的水平長度同步縮短
+- [ ] 左右球場線條完全對稱，沒有重複線段
+- [ ] 標題、版本及 About 按鈕仍維持單行與正常可讀性
+- [ ] 主操作區 UI、資料與功能沒有回退
