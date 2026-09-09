@@ -569,44 +569,11 @@ football_marker_vX_XX.zip
 - [ ] 賽前 / 比賽中 / 全場狀態下皆正常顯示
 
 
-### v5.21 Header Pitch Cleanup QA
-
-- [ ] 標題區左右兩側球門 / 禁區線條乾淨
-- [ ] 不再出現凌亂、不像球門的雜線
-- [ ] 中線與中圈仍清楚可辨識
-- [ ] 標題文字與按鈕可讀性正常
-
-
-### v5.22 Header Geometry / Cascade QA
-
-- [ ] 最終 Header override 位於最後一個 `</style>` 前
-- [ ] 左右各只有 1 個大禁區矩形
-- [ ] 左右各只有 1 個小禁區矩形
-- [ ] 不再繪製額外外側球門框
-- [ ] 不再出現重複水平雜線
-- [ ] 中線 / 中圈 / 中點保留
-- [ ] v5.21 以前的 legacy CSS 不會覆蓋 v5.22 最終 Header geometry
-
-
-### v5.23 Header Center Circle QA
-
-- [ ] 中圈明顯比 v5.22 大
-- [ ] 中圈在不同 Header 寬度下仍為正圓
-- [ ] 中圈線寬清楚但不搶標題文字
-- [ ] 中線穿過中圈中心
-- [ ] 中點位於中圈中心
-- [ ] 左右禁區 / 小禁區仍正常顯示
-- [ ] v5.22 球門線條簡化沒有回退
-
-
-### v5.24 Header Pitch Geometry QA
-
-- [ ] `titleBlock::after` 已完全停用，不再載入舊版 geometry
-- [ ] 每側只顯示 1 個大禁區 U 形
-- [ ] 每側只顯示 1 個小禁區 U 形
-- [ ] 不顯示額外外側球門框 / 重複水平線
-- [ ] 左右禁區比例比 v5.23 更寬、更接近參考圖
-- [ ] 中圈維持正圓且尺寸正常
-- [ ] 中線與中點正常
-- [ ] Header 文字 / 版本 / About 按鈕不受影響
-- [ ] 賽前 / 比賽中 / 中場 / 下半場 / 延長 / PK / 全場 Header 一致
+### v5.25 HTML / Render Regression QA
+- [ ] 外層 document 結束後沒有任何非空白內容
+- [ ] CSS 註解內不得含會提前關閉 style raw-text 的 HTML closing-tag 字串
+- [ ] JavaScript syntax 通過
+- [ ] 實際 Chromium browser render：Header 不換行、主 UI 不變形
+- [ ] 頁面底部不會顯示 CSS 原始碼文字
+- [ ] Header 中圈維持正圓
+- [ ] 左右禁區各只有 2 組乾淨線條
