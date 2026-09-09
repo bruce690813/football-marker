@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.23</title>
+<title>足球場邊記錄器 v5.24</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8565,10 +8565,21 @@ body.resultMode.finalOutputVisible{
 <body>
 <div class="wrap">
   <div class="top titleBlock">
+    <svg class="headerPitchSideLines" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <g fill="none" stroke="#eef8f1" stroke-linecap="square" stroke-linejoin="miter">
+        <!-- 左側：只畫兩個開口 U 形，左邊界由 Header 邊緣自然形成，避免重複直線 -->
+        <path class="pitchPenaltyArea" d="M0 14 H118 V106 H0" vector-effect="non-scaling-stroke"/>
+        <path class="pitchGoalArea" d="M0 38 H52 V82 H0" vector-effect="non-scaling-stroke"/>
+        <!-- 右側鏡像 -->
+        <path class="pitchPenaltyArea" d="M1000 14 H882 V106 H1000" vector-effect="non-scaling-stroke"/>
+        <path class="pitchGoalArea" d="M1000 38 H948 V82 H1000" vector-effect="non-scaling-stroke"/>
+      </g>
+    </svg>
+    <span class="headerPitchCenter" aria-hidden="true"></span>
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.23</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.24</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8901,7 +8912,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.23">v5.23</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.24">v5.24</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -17930,6 +17941,112 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
       radial-gradient(circle at 50% 50%, transparent 0 23px, rgba(238,248,241,.18) 23px 25px, transparent 25.5px),
       linear-gradient(90deg, transparent 0 calc(50% - .9px), rgba(238,248,241,.20) calc(50% - .9px) calc(50% + .9px), transparent calc(50% + .9px) 100%),
       url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDEyMCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+CiAgPGcgZmlsbD0nbm9uZScgc3Ryb2tlPScjZWVmOGYxJyBzdHJva2UtbGluZWNhcD0nc3F1YXJlJyBzdHJva2UtbGluZWpvaW49J21pdGVyJz4KICAgIDxyZWN0IHg9JzAnIHk9JzIyJyB3aWR0aD0nNzgnIGhlaWdodD0nNzYnIHN0cm9rZS1vcGFjaXR5PScuMTcnIHN0cm9rZS13aWR0aD0nMicvPgogICAgPHJlY3QgeD0nMCcgeT0nNDEnIHdpZHRoPScyOScgaGVpZ2h0PSczOCcgc3Ryb2tlLW9wYWNpdHk9Jy4yMScgc3Ryb2tlLXdpZHRoPScyJy8+CiAgICA8cmVjdCB4PSc5MjInIHk9JzIyJyB3aWR0aD0nNzgnIGhlaWdodD0nNzYnIHN0cm9rZS1vcGFjaXR5PScuMTcnIHN0cm9rZS13aWR0aD0nMicvPgogICAgPHJlY3QgeD0nOTcxJyB5PSc0MScgd2lkdGg9JzI5JyBoZWlnaHQ9JzM4JyBzdHJva2Utb3BhY2l0eT0nLjIxJyBzdHJva2Utd2lkdGg9JzInLz4KICA8L2c+Cjwvc3ZnPg==")!important;
+  }
+}
+
+
+
+/* =========================================================
+   v5.24 FINAL Header Pitch Geometry — canonical layers
+
+   修正原因：v5.23 只把「中圈」改成 CSS，但左右禁區仍沿用 v5.22
+   的窄版 SVG 矩形。兩個矩形都從邊界 x=0 / x=1000 開始，
+   實機縮放後線條靠得太近，看起來像之前的亂線。
+
+   本版不再疊加 background-image 幾何：
+   - ::after 完全關閉，杜絕 v5.18~v5.23 舊 geometry 再出現
+   - 左右禁區改成 dedicated SVG，僅保留 2 個乾淨的開口 U 形
+   - 中線 / 中圈 / 中點改成獨立 CSS layer，永遠維持正圓
+   ========================================================= */
+
+/* 舊版所有 ::after 足球場線條一律停用。 */
+.titleBlock::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+  background-image:none!important;
+}
+
+/* Header 草皮層仍使用既有 titleBlock / ::before。 */
+.titleBlock{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+}
+
+/* 左右禁區：只保留 reference 圖中的兩個 U 形，不畫額外球門框。 */
+.headerPitchSideLines{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:1!important;
+  pointer-events:none!important;
+  overflow:hidden!important;
+}
+.headerPitchSideLines .pitchPenaltyArea{
+  stroke-opacity:.18;
+  stroke-width:1.55px;
+}
+.headerPitchSideLines .pitchGoalArea{
+  stroke-opacity:.23;
+  stroke-width:1.55px;
+}
+
+/* 中圈：獨立 rendered-pixel 圓形，不受 SVG 橫向 stretch 影響。 */
+.headerPitchCenter{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:54px!important;
+  height:54px!important;
+  transform:translate(-50%,-50%)!important;
+  border:2px solid rgba(238,248,241,.18)!important;
+  border-radius:50%!important;
+  box-sizing:border-box!important;
+  z-index:1!important;
+  pointer-events:none!important;
+}
+
+/* 中線 */
+.headerPitchCenter::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:2px;
+  height:120px;
+  transform:translate(-50%,-50%);
+  background:rgba(238,248,241,.20);
+}
+
+/* 中點 */
+.headerPitchCenter::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:5px;
+  height:5px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:rgba(238,248,241,.30);
+}
+
+/* Header 的實際內容永遠壓在球場線上方。 */
+.titleBlock > :not(.headerPitchSideLines):not(.headerPitchCenter){
+  position:relative!important;
+  z-index:2!important;
+}
+
+@media(max-width:390px){
+  .headerPitchCenter{
+    width:50px!important;
+    height:50px!important;
+  }
+  .headerPitchSideLines .pitchPenaltyArea,
+  .headerPitchSideLines .pitchGoalArea{
+    stroke-width:1.45px;
   }
 }
 
