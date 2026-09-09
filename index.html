@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.19</title>
+<title>足球場邊記錄器 v5.20</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.19</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.20</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8830,7 +8830,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.19">v5.19</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.20">v5.20</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -17584,6 +17584,172 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
   .titleBlock{
     padding-left:7px;
     padding-right:7px;
+  }
+}
+
+
+
+/* =========================================================
+   v5.20 Header Strip Refinement
+   依回饋調整：
+   1) 移除標題區橢圓形外框 / 邊界感
+   2) 足球場背景改成較自然草皮條紋
+   3) 中線 / 中圈 / 球門與禁區更清楚
+   4) 保留文字與操作資訊的高可讀性
+   ========================================================= */
+
+:root{
+  --header-strip-green-a:#184a31;
+  --header-strip-green-b:#123d29;
+  --header-strip-green-c:#0d311f;
+  --header-strip-green-d:#0a2619;
+  --header-strip-line:rgba(231,247,236,.22);
+  --header-strip-line-soft:rgba(231,247,236,.15);
+  --header-strip-line-faint:rgba(231,247,236,.09);
+}
+
+.titleBlock{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:58px;
+  padding:8px 10px;
+  margin-bottom:10px!important;
+  border:none!important;
+  border-radius:0!important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0) 22%),
+    repeating-linear-gradient(90deg,
+      rgba(33,104,69,.20) 0 9%,
+      rgba(14,59,37,.06) 9% 18%,
+      rgba(39,115,74,.16) 18% 27%,
+      rgba(12,48,31,.06) 27% 36%),
+    linear-gradient(180deg,
+      var(--header-strip-green-a) 0%,
+      var(--header-strip-green-b) 38%,
+      var(--header-strip-green-c) 72%,
+      var(--header-strip-green-d) 100%);
+  box-shadow:none!important;
+}
+
+/* 草皮紋理與低調暗角 */
+.titleBlock::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.028), rgba(255,255,255,0) 22%),
+    linear-gradient(90deg,
+      rgba(0,0,0,.18) 0%,
+      rgba(0,0,0,0) 12%,
+      rgba(0,0,0,.06) 50%,
+      rgba(0,0,0,0) 88%,
+      rgba(0,0,0,.18) 100%),
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,.010) 0 2px,
+      rgba(255,255,255,0) 2px 6px,
+      rgba(0,0,0,.015) 6px 8px,
+      rgba(255,255,255,0) 8px 12px);
+  opacity:.95;
+}
+
+/* 足球場線條：中線、中圈、球門、大/小禁區 */
+.titleBlock::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    /* 中點 */
+    radial-gradient(circle at 50% 50%, rgba(231,247,236,.30) 0 2px, transparent 2.3px),
+    /* 中圈 */
+    radial-gradient(circle at 50% 50%, transparent 0 24px, var(--header-strip-line-soft) 24px 25.6px, transparent 26.3px),
+    /* 中線 */
+    linear-gradient(90deg,
+      transparent 0 calc(50% - 1.1px),
+      var(--header-strip-line) calc(50% - 1.1px) calc(50% + 1.1px),
+      transparent calc(50% + 1.1px) 100%),
+
+    /* 左大禁區 */
+    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 0 top calc(50% - 25px) / 40px 1.2px no-repeat,
+    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 0 top calc(50% + 25px) / 40px 1.2px no-repeat,
+    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 40px top calc(50% - 25px) / 1.2px 50px no-repeat,
+    /* 左小禁區 */
+    linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 0 top calc(50% - 15px) / 16px 1.2px no-repeat,
+    linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 0 top calc(50% + 15px) / 16px 1.2px no-repeat,
+    linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 16px top calc(50% - 15px) / 1.2px 30px no-repeat,
+    /* 左球門外框 */
+    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 0 top calc(50% - 11px) / 5px 1px no-repeat,
+    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 0 top calc(50% + 11px) / 5px 1px no-repeat,
+    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 5px top calc(50% - 11px) / 1px 22px no-repeat,
+
+    /* 右大禁區 */
+    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 0 top calc(50% - 25px) / 40px 1.2px no-repeat,
+    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 0 top calc(50% + 25px) / 40px 1.2px no-repeat,
+    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 40px top calc(50% - 25px) / 1.2px 50px no-repeat,
+    /* 右小禁區 */
+    linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 0 top calc(50% - 15px) / 16px 1.2px no-repeat,
+    linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 0 top calc(50% + 15px) / 16px 1.2px no-repeat,
+    linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 16px top calc(50% - 15px) / 1.2px 30px no-repeat,
+    /* 右球門外框 */
+    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 0 top calc(50% - 11px) / 5px 1px no-repeat,
+    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 0 top calc(50% + 11px) / 5px 1px no-repeat,
+    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 5px top calc(50% - 11px) / 1px 22px no-repeat;
+  opacity:.98;
+}
+
+.titleBlock > *{ position:relative; z-index:2; }
+
+.titleBlock h1{
+  color:#fbfffc;
+  text-shadow:0 2px 7px rgba(0,0,0,.55), 0 1px 0 rgba(0,0,0,.28);
+}
+
+.titleBlock .sub{ color:rgba(238,247,241,.80); }
+
+.titleBlock .aboutInfoBtn{
+  background:linear-gradient(180deg,rgba(56,79,107,.96),rgba(34,50,71,.98));
+  border-color:rgba(154,195,225,.24);
+}
+
+body.matchStatePre .titleBlock{ margin-bottom:10px!important; }
+body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
+
+@media(max-width:390px){
+  .titleBlock{
+    min-height:54px;
+    padding:7px 8px;
+    border-radius:0!important;
+  }
+  .titleBlock::after{
+    background:
+      radial-gradient(circle at 50% 50%, rgba(231,247,236,.30) 0 1.7px, transparent 2px),
+      radial-gradient(circle at 50% 50%, transparent 0 20px, var(--header-strip-line-soft) 20px 21.3px, transparent 22px),
+      linear-gradient(90deg,
+        transparent 0 calc(50% - 1px),
+        var(--header-strip-line) calc(50% - 1px) calc(50% + 1px),
+        transparent calc(50% + 1px) 100%),
+      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 0 top calc(50% - 22px) / 32px 1.1px no-repeat,
+      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 0 top calc(50% + 22px) / 32px 1.1px no-repeat,
+      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 32px top calc(50% - 22px) / 1.1px 44px no-repeat,
+      linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 0 top calc(50% - 13px) / 13px 1.1px no-repeat,
+      linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 0 top calc(50% + 13px) / 13px 1.1px no-repeat,
+      linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 13px top calc(50% - 13px) / 1.1px 26px no-repeat,
+      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 0 top calc(50% - 10px) / 4px 1px no-repeat,
+      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 0 top calc(50% + 10px) / 4px 1px no-repeat,
+      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 4px top calc(50% - 10px) / 1px 20px no-repeat,
+      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 0 top calc(50% - 22px) / 32px 1.1px no-repeat,
+      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 0 top calc(50% + 22px) / 32px 1.1px no-repeat,
+      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 32px top calc(50% - 22px) / 1.1px 44px no-repeat,
+      linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 0 top calc(50% - 13px) / 13px 1.1px no-repeat,
+      linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 0 top calc(50% + 13px) / 13px 1.1px no-repeat,
+      linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 13px top calc(50% - 13px) / 1.1px 26px no-repeat,
+      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 0 top calc(50% - 10px) / 4px 1px no-repeat,
+      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 0 top calc(50% + 10px) / 4px 1px no-repeat,
+      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 4px top calc(50% - 10px) / 1px 20px no-repeat;
   }
 }
 
