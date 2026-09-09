@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.20</title>
+<title>足球場邊記錄器 v5.21</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8489,6 +8489,77 @@ body.resultMode.finalOutputVisible{
   #logModal .logAssistTag{font-size:10px}
 }
 
+
+
+/* =========================================================
+   v5.21 Header Pitch Cleanup
+   依回饋調整：
+   1) 球門 / 禁區圖形改為更乾淨的標準矩形結構
+   2) 減少左右端雜線，避免看起來凌亂
+   3) 保留中線與中圈辨識度
+   ========================================================= */
+
+.titleBlock{
+  min-height:58px;
+  padding:8px 10px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.028), rgba(255,255,255,0) 22%),
+    repeating-linear-gradient(90deg,
+      rgba(40,118,72,.17) 0 12.5%,
+      rgba(15,66,42,.04) 12.5% 25%,
+      rgba(36,108,68,.14) 25% 37.5%,
+      rgba(14,58,39,.04) 37.5% 50%),
+    linear-gradient(180deg,
+      #195033 0%,
+      #123e29 38%,
+      #0d311f 72%,
+      #0b281a 100%);
+  box-shadow:none!important;
+  border:none!important;
+  border-radius:0!important;
+}
+
+.titleBlock::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.026), rgba(255,255,255,0) 23%),
+    linear-gradient(90deg,
+      rgba(0,0,0,.13) 0%,
+      rgba(0,0,0,0) 15%,
+      rgba(0,0,0,.04) 50%,
+      rgba(0,0,0,0) 85%,
+      rgba(0,0,0,.13) 100%),
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,.008) 0 2px,
+      rgba(255,255,255,0) 2px 5px,
+      rgba(0,0,0,.012) 5px 7px,
+      rgba(255,255,255,0) 7px 10px);
+  opacity:.92;
+}
+
+.titleBlock::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDEyMCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+CiAgPGcgZmlsbD0nbm9uZScgc3Ryb2tlPScjZWVmOGYxJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnPgogICAgPGxpbmUgeDE9JzUwMCcgeTE9JzAnIHgyPSc1MDAnIHkyPScxMjAnIHN0cm9rZS1vcGFjaXR5PScuMTknIHN0cm9rZS13aWR0aD0nMicvPgogICAgPGNpcmNsZSBjeD0nNTAwJyBjeT0nNjAnIHI9JzIzJyBzdHJva2Utb3BhY2l0eT0nLjE2JyBzdHJva2Utd2lkdGg9JzInLz4KICAgIDxjaXJjbGUgY3g9JzUwMCcgY3k9JzYwJyByPScyLjInIGZpbGw9JyNlZWY4ZjEnIGZpbGwtb3BhY2l0eT0nLjIyJyBzdHJva2U9J25vbmUnLz4KCiAgICA8cmVjdCB4PScwJyB5PScyMScgd2lkdGg9JzgyJyBoZWlnaHQ9Jzc4JyBzdHJva2Utb3BhY2l0eT0nLjE0JyBzdHJva2Utd2lkdGg9JzInLz4KICAgIDxyZWN0IHg9JzAnIHk9JzM5JyB3aWR0aD0nMjgnIGhlaWdodD0nNDInIHN0cm9rZS1vcGFjaXR5PScuMTknIHN0cm9rZS13aWR0aD0nMicvPgogICAgPHJlY3QgeD0nMCcgeT0nNDcnIHdpZHRoPSc4JyBoZWlnaHQ9JzI2JyBzdHJva2Utb3BhY2l0eT0nLjEyJyBzdHJva2Utd2lkdGg9JzEuOCcvPgoKICAgIDxyZWN0IHg9JzkxOCcgeT0nMjEnIHdpZHRoPSc4MicgaGVpZ2h0PSc3OCcgc3Ryb2tlLW9wYWNpdHk9Jy4xNCcgc3Ryb2tlLXdpZHRoPScyJy8+CiAgICA8cmVjdCB4PSc5NzInIHk9JzM5JyB3aWR0aD0nMjgnIGhlaWdodD0nNDInIHN0cm9rZS1vcGFjaXR5PScuMTknIHN0cm9rZS13aWR0aD0nMicvPgogICAgPHJlY3QgeD0nOTkyJyB5PSc0Nycgd2lkdGg9JzgnIGhlaWdodD0nMjYnIHN0cm9rZS1vcGFjaXR5PScuMTInIHN0cm9rZS13aWR0aD0nMS44Jy8+CiAgPC9nPgo8L3N2Zz4=") center/100% 100% no-repeat;
+  opacity:.98;
+}
+
+.titleBlock > *{ position:relative; z-index:2; }
+
+@media(max-width:390px){
+  .titleBlock{
+    min-height:54px;
+    padding:7px 8px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -8497,7 +8568,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.20</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.21</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8830,7 +8901,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.20">v5.20</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.21">v5.21</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
