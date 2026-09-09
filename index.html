@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.17</title>
+<title>足球場邊記錄器 v5.18</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8497,7 +8497,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.17</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.18</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8830,7 +8830,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.17">v5.17</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.18">v5.18</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -17275,6 +17275,151 @@ body.resultMode.finalOutputVisible .toolGrid.finalTools{
   body.resultMode.finalOutputVisible .finalToolsCard{
     gap:8px!important;
     padding:6px!important;
+  }
+}
+
+
+/* =========================================================
+   v5.18 Header-only Dark Football Pitch
+   足球場只存在於品牌 Header；操作區仍維持深藍高對比。
+   ========================================================= */
+
+:root{
+  --header-pitch-green-1:#071b12;
+  --header-pitch-green-2:#0a2418;
+  --header-pitch-green-3:#0d2b1d;
+  --header-pitch-line:rgba(183,225,196,.10);
+  --header-pitch-line-soft:rgba(183,225,196,.065);
+}
+
+/*
+  Header 本身變成一條深墨綠足球場品牌條。
+  高度維持 compact，不做成大型 banner。
+*/
+.titleBlock{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+
+  min-height:54px;
+  padding:8px 10px;
+  margin-bottom:10px!important;
+
+  border-radius:17px;
+  border:1px solid rgba(77,151,112,.24);
+
+  background:
+    /* 中圈：非常淡，只讓人感覺到足球場 */
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0 20px,
+      var(--header-pitch-line-soft) 20px 21px,
+      transparent 21px 100%
+    ),
+    /* 中線 */
+    linear-gradient(
+      90deg,
+      transparent 0 calc(50% - .7px),
+      var(--header-pitch-line) calc(50% - .7px) calc(50% + .7px),
+      transparent calc(50% + .7px) 100%
+    ),
+    /* 草皮條紋 */
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.018) 0 13%,
+      rgba(255,255,255,0) 13% 26%
+    ),
+    /* 深色草地 */
+    linear-gradient(
+      180deg,
+      var(--header-pitch-green-3) 0%,
+      var(--header-pitch-green-2) 48%,
+      var(--header-pitch-green-1) 100%
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    inset 0 -1px 0 rgba(0,0,0,.26),
+    0 5px 14px rgba(0,0,0,.12);
+}
+
+/*
+  再加一層暗色遮罩，把草地壓回氣氛層。
+  戶外操作時，即使草地細節看不清楚也不影響任何資訊。
+*/
+.titleBlock::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 14% 50%,rgba(0,0,0,.04),rgba(0,0,0,0) 34%),
+    linear-gradient(90deg,rgba(3,13,10,.18),rgba(3,13,10,.04) 46%,rgba(3,13,10,.20));
+}
+
+/* 品牌內容保持在最上層。 */
+.titleBlock > *{
+  position:relative;
+  z-index:1;
+}
+
+/* 標題在綠色背景上加極輕的陰影，提高戶外辨識。 */
+.titleBlock h1{
+  color:#f7fbf9;
+  text-shadow:
+    0 2px 7px rgba(0,0,0,.70),
+    0 0 14px rgba(0,0,0,.18);
+}
+
+/* 版本資訊在品牌條上略提高對比，但仍保持 metadata 層級。 */
+.titleBlock .sub{
+  color:rgba(222,238,228,.64);
+}
+
+/*
+  About 按鈕仍維持原本 navy，不跟著變綠。
+  這可以避免整個 UI 色彩系統被草地背景帶走。
+*/
+.titleBlock .aboutInfoBtn{
+  background:linear-gradient(180deg,rgba(47,70,96,.96),rgba(30,47,66,.97));
+  border-color:rgba(139,184,215,.30);
+}
+
+/* 賽前原本 titleBlock margin 規則改由 v5.18 統一管理。 */
+body.matchStatePre .titleBlock{
+  margin-bottom:10px!important;
+}
+
+/* 比賽中 / 中場 / 延長 / PK / 全場也使用相同品牌 Header。 */
+body:not(.matchStatePre) .titleBlock{
+  margin-bottom:8px!important;
+}
+
+/* 小螢幕縮一點，但維持完整的品牌背景。 */
+@media(max-width:390px){
+  .titleBlock{
+    min-height:50px;
+    padding:7px 8px;
+    border-radius:15px;
+  }
+
+  body.matchStatePre .titleBlock{
+    margin-bottom:9px!important;
+  }
+
+  body:not(.matchStatePre) .titleBlock{
+    margin-bottom:7px!important;
+  }
+}
+
+/*
+  極窄螢幕：草地線維持背景效果，但不要因此壓縮右側 About 按鈕。
+*/
+@media(max-width:350px){
+  .titleBlock{
+    padding-left:7px;
+    padding-right:7px;
   }
 }
 

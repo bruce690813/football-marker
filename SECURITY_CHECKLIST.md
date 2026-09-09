@@ -530,3 +530,19 @@ football_marker_vX_XX.zip
 - [ ] Safari 全場底部安全區修正沒有回退
 - [ ] v5.16 珊瑚紅名單球衣 icon 沒有回退
 - [ ] v5.15 比賽時間 Compact 沒有回退
+
+
+### v5.18 Header Football Pitch QA
+
+- [ ] 只有 `titleBlock` 使用足球場草地背景
+- [ ] App 主內容背景仍維持原本深藍黑
+- [ ] Header 草地亮度低，不影響白色標題閱讀
+- [ ] Header 場線透明度低，不與 UI 邊框競爭
+- [ ] Header 中圈不遮住標題 / 版本 / About
+- [ ] About 按鈕仍維持 navy 色系
+- [ ] 賽前 / 比賽中 / 中場 / 下半場 / 延長 / PK / 全場 Header 一致
+- [ ] 390px 以下 Header 不產生文字擠壓
+- [ ] 不使用外部圖片或網路資源
+- [ ] v5.17 全場底部按鈕 spacing 沒有回退
+- [ ] v5.16 珊瑚紅名單球衣 icon 沒有回退
+- [ ] v5.15 比賽時間 Compact 沒有回退
