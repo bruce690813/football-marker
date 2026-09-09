@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.21</title>
+<title>足球場邊記錄器 v5.22</title>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -8491,74 +8491,6 @@ body.resultMode.finalOutputVisible{
 
 
 
-/* =========================================================
-   v5.21 Header Pitch Cleanup
-   依回饋調整：
-   1) 球門 / 禁區圖形改為更乾淨的標準矩形結構
-   2) 減少左右端雜線，避免看起來凌亂
-   3) 保留中線與中圈辨識度
-   ========================================================= */
-
-.titleBlock{
-  min-height:58px;
-  padding:8px 10px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.028), rgba(255,255,255,0) 22%),
-    repeating-linear-gradient(90deg,
-      rgba(40,118,72,.17) 0 12.5%,
-      rgba(15,66,42,.04) 12.5% 25%,
-      rgba(36,108,68,.14) 25% 37.5%,
-      rgba(14,58,39,.04) 37.5% 50%),
-    linear-gradient(180deg,
-      #195033 0%,
-      #123e29 38%,
-      #0d311f 72%,
-      #0b281a 100%);
-  box-shadow:none!important;
-  border:none!important;
-  border-radius:0!important;
-}
-
-.titleBlock::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.026), rgba(255,255,255,0) 23%),
-    linear-gradient(90deg,
-      rgba(0,0,0,.13) 0%,
-      rgba(0,0,0,0) 15%,
-      rgba(0,0,0,.04) 50%,
-      rgba(0,0,0,0) 85%,
-      rgba(0,0,0,.13) 100%),
-    repeating-linear-gradient(0deg,
-      rgba(255,255,255,.008) 0 2px,
-      rgba(255,255,255,0) 2px 5px,
-      rgba(0,0,0,.012) 5px 7px,
-      rgba(255,255,255,0) 7px 10px);
-  opacity:.92;
-}
-
-.titleBlock::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:1;
-  pointer-events:none;
-  background:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDEyMCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+CiAgPGcgZmlsbD0nbm9uZScgc3Ryb2tlPScjZWVmOGYxJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnPgogICAgPGxpbmUgeDE9JzUwMCcgeTE9JzAnIHgyPSc1MDAnIHkyPScxMjAnIHN0cm9rZS1vcGFjaXR5PScuMTknIHN0cm9rZS13aWR0aD0nMicvPgogICAgPGNpcmNsZSBjeD0nNTAwJyBjeT0nNjAnIHI9JzIzJyBzdHJva2Utb3BhY2l0eT0nLjE2JyBzdHJva2Utd2lkdGg9JzInLz4KICAgIDxjaXJjbGUgY3g9JzUwMCcgY3k9JzYwJyByPScyLjInIGZpbGw9JyNlZWY4ZjEnIGZpbGwtb3BhY2l0eT0nLjIyJyBzdHJva2U9J25vbmUnLz4KCiAgICA8cmVjdCB4PScwJyB5PScyMScgd2lkdGg9JzgyJyBoZWlnaHQ9Jzc4JyBzdHJva2Utb3BhY2l0eT0nLjE0JyBzdHJva2Utd2lkdGg9JzInLz4KICAgIDxyZWN0IHg9JzAnIHk9JzM5JyB3aWR0aD0nMjgnIGhlaWdodD0nNDInIHN0cm9rZS1vcGFjaXR5PScuMTknIHN0cm9rZS13aWR0aD0nMicvPgogICAgPHJlY3QgeD0nMCcgeT0nNDcnIHdpZHRoPSc4JyBoZWlnaHQ9JzI2JyBzdHJva2Utb3BhY2l0eT0nLjEyJyBzdHJva2Utd2lkdGg9JzEuOCcvPgoKICAgIDxyZWN0IHg9JzkxOCcgeT0nMjEnIHdpZHRoPSc4MicgaGVpZ2h0PSc3OCcgc3Ryb2tlLW9wYWNpdHk9Jy4xNCcgc3Ryb2tlLXdpZHRoPScyJy8+CiAgICA8cmVjdCB4PSc5NzInIHk9JzM5JyB3aWR0aD0nMjgnIGhlaWdodD0nNDInIHN0cm9rZS1vcGFjaXR5PScuMTknIHN0cm9rZS13aWR0aD0nMicvPgogICAgPHJlY3QgeD0nOTkyJyB5PSc0Nycgd2lkdGg9JzgnIGhlaWdodD0nMjYnIHN0cm9rZS1vcGFjaXR5PScuMTInIHN0cm9rZS13aWR0aD0nMS44Jy8+CiAgPC9nPgo8L3N2Zz4=") center/100% 100% no-repeat;
-  opacity:.98;
-}
-
-.titleBlock > *{ position:relative; z-index:2; }
-
-@media(max-width:390px){
-  .titleBlock{
-    min-height:54px;
-    padding:7px 8px;
-  }
-}
 
 </style>
 </head>
@@ -8568,7 +8500,7 @@ body.resultMode.finalOutputVisible{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.21</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.22</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -8901,7 +8833,7 @@ body.resultMode.finalOutputVisible{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.21">v5.21</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.22">v5.22</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -17350,333 +17282,23 @@ body.resultMode.finalOutputVisible .toolGrid.finalTools{
 }
 
 
+
 /* =========================================================
-   v5.18 Header-only Dark Football Pitch
-   足球場只存在於品牌 Header；操作區仍維持深藍高對比。
+   v5.22 Header Football Pitch — Canonical
+   只保留一套 Header 足球場 CSS，避免多版規則疊加。
+
+   足球場線條：
+   - 中線 / 中圈
+   - 左右大禁區
+   - 左右球門區（小禁區）
+   不再畫第三層「球門框」，避免窄 Header 中出現雜線。
    ========================================================= */
 
 :root{
-  --header-pitch-green-1:#071b12;
-  --header-pitch-green-2:#0a2418;
-  --header-pitch-green-3:#0d2b1d;
-  --header-pitch-line:rgba(183,225,196,.10);
-  --header-pitch-line-soft:rgba(183,225,196,.065);
-}
-
-/*
-  Header 本身變成一條深墨綠足球場品牌條。
-  高度維持 compact，不做成大型 banner。
-*/
-.titleBlock{
-  position:relative;
-  isolation:isolate;
-  overflow:hidden;
-
-  min-height:54px;
-  padding:8px 10px;
-  margin-bottom:10px!important;
-
-  border-radius:17px;
-  border:1px solid rgba(77,151,112,.24);
-
-  background:
-    /* 中圈：非常淡，只讓人感覺到足球場 */
-    radial-gradient(
-      circle at 50% 50%,
-      transparent 0 20px,
-      var(--header-pitch-line-soft) 20px 21px,
-      transparent 21px 100%
-    ),
-    /* 中線 */
-    linear-gradient(
-      90deg,
-      transparent 0 calc(50% - .7px),
-      var(--header-pitch-line) calc(50% - .7px) calc(50% + .7px),
-      transparent calc(50% + .7px) 100%
-    ),
-    /* 草皮條紋 */
-    repeating-linear-gradient(
-      90deg,
-      rgba(255,255,255,.018) 0 13%,
-      rgba(255,255,255,0) 13% 26%
-    ),
-    /* 深色草地 */
-    linear-gradient(
-      180deg,
-      var(--header-pitch-green-3) 0%,
-      var(--header-pitch-green-2) 48%,
-      var(--header-pitch-green-1) 100%
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.035),
-    inset 0 -1px 0 rgba(0,0,0,.26),
-    0 5px 14px rgba(0,0,0,.12);
-}
-
-/*
-  再加一層暗色遮罩，把草地壓回氣氛層。
-  戶外操作時，即使草地細節看不清楚也不影響任何資訊。
-*/
-.titleBlock::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 14% 50%,rgba(0,0,0,.04),rgba(0,0,0,0) 34%),
-    linear-gradient(90deg,rgba(3,13,10,.18),rgba(3,13,10,.04) 46%,rgba(3,13,10,.20));
-}
-
-/* 品牌內容保持在最上層。 */
-.titleBlock > *{
-  position:relative;
-  z-index:1;
-}
-
-/* 標題在綠色背景上加極輕的陰影，提高戶外辨識。 */
-.titleBlock h1{
-  color:#f7fbf9;
-  text-shadow:
-    0 2px 7px rgba(0,0,0,.70),
-    0 0 14px rgba(0,0,0,.18);
-}
-
-/* 版本資訊在品牌條上略提高對比，但仍保持 metadata 層級。 */
-.titleBlock .sub{
-  color:rgba(222,238,228,.64);
-}
-
-/*
-  About 按鈕仍維持原本 navy，不跟著變綠。
-  這可以避免整個 UI 色彩系統被草地背景帶走。
-*/
-.titleBlock .aboutInfoBtn{
-  background:linear-gradient(180deg,rgba(47,70,96,.96),rgba(30,47,66,.97));
-  border-color:rgba(139,184,215,.30);
-}
-
-/* 賽前原本 titleBlock margin 規則改由 v5.18 統一管理。 */
-body.matchStatePre .titleBlock{
-  margin-bottom:10px!important;
-}
-
-/* 比賽中 / 中場 / 延長 / PK / 全場也使用相同品牌 Header。 */
-body:not(.matchStatePre) .titleBlock{
-  margin-bottom:8px!important;
-}
-
-/* 小螢幕縮一點，但維持完整的品牌背景。 */
-@media(max-width:390px){
-  .titleBlock{
-    min-height:50px;
-    padding:7px 8px;
-    border-radius:15px;
-  }
-
-  body.matchStatePre .titleBlock{
-    margin-bottom:9px!important;
-  }
-
-  body:not(.matchStatePre) .titleBlock{
-    margin-bottom:7px!important;
-  }
-}
-
-/*
-  極窄螢幕：草地線維持背景效果，但不要因此壓縮右側 About 按鈕。
-*/
-@media(max-width:350px){
-  .titleBlock{
-    padding-left:7px;
-    padding-right:7px;
-  }
-}
-
-
-
-/* =========================================================
-   v5.19 Header Football Pitch Refinement
-   依回饋調整：
-   1) 強化中線 / 中圈可見度
-   2) 補上左右球門 / 禁區線元素
-   3) 降低外框存在感，避免像被額外框住
-   4) 保留主內容區深藍黑高對比
-   ========================================================= */
-
-:root{
-  --header-pitch-green-0:#04140d;
-  --header-pitch-green-1:#082116;
-  --header-pitch-green-2:#0b2a1c;
-  --header-pitch-green-3:#123725;
-  --header-pitch-line-strong:rgba(220,245,226,.24);
-  --header-pitch-line:rgba(220,245,226,.18);
-  --header-pitch-line-soft:rgba(220,245,226,.12);
-}
-
-.titleBlock{
-  position:relative;
-  isolation:isolate;
-  overflow:hidden;
-  min-height:56px;
-  padding:8px 10px;
-  margin-bottom:10px!important;
-  border-radius:18px;
-  border:none!important;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.030), rgba(255,255,255,0) 24%),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255,255,255,.024) 0 11%,
-      rgba(255,255,255,0) 11% 22%
-    ),
-    linear-gradient(180deg,
-      var(--header-pitch-green-3) 0%,
-      var(--header-pitch-green-2) 30%,
-      var(--header-pitch-green-1) 72%,
-      var(--header-pitch-green-0) 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(92,156,117,.12),
-    inset 0 1px 0 rgba(255,255,255,.035),
-    inset 0 -1px 0 rgba(0,0,0,.20),
-    0 3px 10px rgba(0,0,0,.10)!important;
-}
-
-/* 草地明暗層，不再壓太深，避免看不見球場。 */
-.titleBlock::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(20,66,43,.20), rgba(0,0,0,0) 34%),
-    linear-gradient(90deg,
-      rgba(1,10,7,.06) 0%,
-      rgba(1,10,7,0) 12%,
-      rgba(1,10,7,.03) 50%,
-      rgba(1,10,7,0) 88%,
-      rgba(1,10,7,.06) 100%);
-}
-
-/* 球場線條層：中圈、中線、左右禁區 / 球門。 */
-.titleBlock::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:1;
-  pointer-events:none;
-  background:
-    /* 中點 */
-    radial-gradient(circle at 50% 50%, var(--header-pitch-line-strong) 0 1.8px, transparent 2.2px),
-    /* 中圈 */
-    radial-gradient(circle at 50% 50%, transparent 0 23px, var(--header-pitch-line-soft) 23px 24.5px, transparent 25.5px),
-    /* 中線 */
-    linear-gradient(90deg,
-      transparent 0 calc(50% - 1px),
-      var(--header-pitch-line) calc(50% - 1px) calc(50% + 1px),
-      transparent calc(50% + 1px) 100%),
-
-    /* 左側大禁區 */
-    linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) left 0 top calc(50% - 25px) / 38px 1.2px no-repeat,
-    linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) left 0 top calc(50% + 25px) / 38px 1.2px no-repeat,
-    linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) left 38px top calc(50% - 25px) / 1.2px 50px no-repeat,
-
-    /* 左側小禁區 / 球門框 */
-    linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) left 0 top calc(50% - 15px) / 15px 1.2px no-repeat,
-    linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) left 0 top calc(50% + 15px) / 15px 1.2px no-repeat,
-    linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) left 15px top calc(50% - 15px) / 1.2px 30px no-repeat,
-
-    /* 右側大禁區 */
-    linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) right 0 top calc(50% - 25px) / 38px 1.2px no-repeat,
-    linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) right 0 top calc(50% + 25px) / 38px 1.2px no-repeat,
-    linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) right 38px top calc(50% - 25px) / 1.2px 50px no-repeat,
-
-    /* 右側小禁區 / 球門框 */
-    linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) right 0 top calc(50% - 15px) / 15px 1.2px no-repeat,
-    linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) right 0 top calc(50% + 15px) / 15px 1.2px no-repeat,
-    linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) right 15px top calc(50% - 15px) / 1.2px 30px no-repeat;
-  opacity:1;
-}
-
-.titleBlock > *{
-  position:relative;
-  z-index:2;
-}
-
-.titleBlock h1{
-  color:#f7fbf9;
-  text-shadow:0 2px 7px rgba(0,0,0,.72), 0 0 14px rgba(0,0,0,.18);
-}
-
-.titleBlock .sub{
-  color:rgba(232,243,236,.72);
-}
-
-.titleBlock .aboutInfoBtn{
-  background:linear-gradient(180deg,rgba(47,70,96,.96),rgba(30,47,66,.97));
-  border-color:rgba(139,184,215,.30);
-}
-
-body.matchStatePre .titleBlock{ margin-bottom:10px!important; }
-body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
-
-@media(max-width:390px){
-  .titleBlock{
-    min-height:52px;
-    padding:7px 8px;
-    border-radius:16px;
-  }
-  .titleBlock::after{
-    background:
-      radial-gradient(circle at 50% 50%, var(--header-pitch-line-strong) 0 1.6px, transparent 2px),
-      radial-gradient(circle at 50% 50%, transparent 0 20px, var(--header-pitch-line-soft) 20px 21.2px, transparent 22.2px),
-      linear-gradient(90deg,
-        transparent 0 calc(50% - .9px),
-        var(--header-pitch-line) calc(50% - .9px) calc(50% + .9px),
-        transparent calc(50% + .9px) 100%),
-      linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) left 0 top calc(50% - 22px) / 31px 1.1px no-repeat,
-      linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) left 0 top calc(50% + 22px) / 31px 1.1px no-repeat,
-      linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) left 31px top calc(50% - 22px) / 1.1px 44px no-repeat,
-      linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) left 0 top calc(50% - 13px) / 12px 1.1px no-repeat,
-      linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) left 0 top calc(50% + 13px) / 12px 1.1px no-repeat,
-      linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) left 12px top calc(50% - 13px) / 1.1px 26px no-repeat,
-      linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) right 0 top calc(50% - 22px) / 31px 1.1px no-repeat,
-      linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) right 0 top calc(50% + 22px) / 31px 1.1px no-repeat,
-      linear-gradient(var(--header-pitch-line-soft), var(--header-pitch-line-soft)) right 31px top calc(50% - 22px) / 1.1px 44px no-repeat,
-      linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) right 0 top calc(50% - 13px) / 12px 1.1px no-repeat,
-      linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) right 0 top calc(50% + 13px) / 12px 1.1px no-repeat,
-      linear-gradient(var(--header-pitch-line), var(--header-pitch-line)) right 12px top calc(50% - 13px) / 1.1px 26px no-repeat;
-  }
-}
-
-@media(max-width:350px){
-  .titleBlock{
-    padding-left:7px;
-    padding-right:7px;
-  }
-}
-
-
-
-/* =========================================================
-   v5.20 Header Strip Refinement
-   依回饋調整：
-   1) 移除標題區橢圓形外框 / 邊界感
-   2) 足球場背景改成較自然草皮條紋
-   3) 中線 / 中圈 / 球門與禁區更清楚
-   4) 保留文字與操作資訊的高可讀性
-   ========================================================= */
-
-:root{
-  --header-strip-green-a:#184a31;
-  --header-strip-green-b:#123d29;
-  --header-strip-green-c:#0d311f;
-  --header-strip-green-d:#0a2619;
-  --header-strip-line:rgba(231,247,236,.22);
-  --header-strip-line-soft:rgba(231,247,236,.15);
-  --header-strip-line-faint:rgba(231,247,236,.09);
+  --header-pitch-green-a:#184d31;
+  --header-pitch-green-b:#123e28;
+  --header-pitch-green-c:#0d311f;
+  --header-pitch-green-d:#092619;
 }
 
 .titleBlock{
@@ -17686,24 +17308,28 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
   min-height:58px;
   padding:8px 10px;
   margin-bottom:10px!important;
+
   border:none!important;
   border-radius:0!important;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0) 22%),
-    repeating-linear-gradient(90deg,
-      rgba(33,104,69,.20) 0 9%,
-      rgba(14,59,37,.06) 9% 18%,
-      rgba(39,115,74,.16) 18% 27%,
-      rgba(12,48,31,.06) 27% 36%),
-    linear-gradient(180deg,
-      var(--header-strip-green-a) 0%,
-      var(--header-strip-green-b) 38%,
-      var(--header-strip-green-c) 72%,
-      var(--header-strip-green-d) 100%);
   box-shadow:none!important;
+
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 24%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(42,119,75,.16) 0 12.5%,
+      rgba(14,60,39,.035) 12.5% 25%
+    ),
+    linear-gradient(
+      180deg,
+      var(--header-pitch-green-a) 0%,
+      var(--header-pitch-green-b) 38%,
+      var(--header-pitch-green-c) 72%,
+      var(--header-pitch-green-d) 100%
+    );
 }
 
-/* 草皮紋理與低調暗角 */
+/* 草皮暗角 / 細微紋理，不參與球場幾何。 */
 .titleBlock::before{
   content:"";
   position:absolute;
@@ -17711,83 +17337,68 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
   z-index:0;
   pointer-events:none;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.028), rgba(255,255,255,0) 22%),
-    linear-gradient(90deg,
-      rgba(0,0,0,.18) 0%,
-      rgba(0,0,0,0) 12%,
-      rgba(0,0,0,.06) 50%,
-      rgba(0,0,0,0) 88%,
-      rgba(0,0,0,.18) 100%),
-    repeating-linear-gradient(0deg,
-      rgba(255,255,255,.010) 0 2px,
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.13) 0%,
+      rgba(0,0,0,0) 14%,
+      rgba(0,0,0,.035) 50%,
+      rgba(0,0,0,0) 86%,
+      rgba(0,0,0,.13) 100%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.008) 0 2px,
       rgba(255,255,255,0) 2px 6px,
-      rgba(0,0,0,.015) 6px 8px,
-      rgba(255,255,255,0) 8px 12px);
-  opacity:.95;
+      rgba(0,0,0,.010) 6px 8px,
+      rgba(255,255,255,0) 8px 12px
+    );
 }
 
-/* 足球場線條：中線、中圈、球門、大/小禁區 */
+/*
+  球場幾何全部由單一 SVG 負責。
+  好處：
+  - 同一座標系
+  - 線段不會互相錯位
+  - 不會因多個 gradient 疊加產生多餘交叉線
+*/
 .titleBlock::after{
   content:"";
   position:absolute;
   inset:0;
   z-index:1;
   pointer-events:none;
-  background:
-    /* 中點 */
-    radial-gradient(circle at 50% 50%, rgba(231,247,236,.30) 0 2px, transparent 2.3px),
-    /* 中圈 */
-    radial-gradient(circle at 50% 50%, transparent 0 24px, var(--header-strip-line-soft) 24px 25.6px, transparent 26.3px),
-    /* 中線 */
-    linear-gradient(90deg,
-      transparent 0 calc(50% - 1.1px),
-      var(--header-strip-line) calc(50% - 1.1px) calc(50% + 1.1px),
-      transparent calc(50% + 1.1px) 100%),
-
-    /* 左大禁區 */
-    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 0 top calc(50% - 25px) / 40px 1.2px no-repeat,
-    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 0 top calc(50% + 25px) / 40px 1.2px no-repeat,
-    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 40px top calc(50% - 25px) / 1.2px 50px no-repeat,
-    /* 左小禁區 */
-    linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 0 top calc(50% - 15px) / 16px 1.2px no-repeat,
-    linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 0 top calc(50% + 15px) / 16px 1.2px no-repeat,
-    linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 16px top calc(50% - 15px) / 1.2px 30px no-repeat,
-    /* 左球門外框 */
-    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 0 top calc(50% - 11px) / 5px 1px no-repeat,
-    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 0 top calc(50% + 11px) / 5px 1px no-repeat,
-    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 5px top calc(50% - 11px) / 1px 22px no-repeat,
-
-    /* 右大禁區 */
-    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 0 top calc(50% - 25px) / 40px 1.2px no-repeat,
-    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 0 top calc(50% + 25px) / 40px 1.2px no-repeat,
-    linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 40px top calc(50% - 25px) / 1.2px 50px no-repeat,
-    /* 右小禁區 */
-    linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 0 top calc(50% - 15px) / 16px 1.2px no-repeat,
-    linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 0 top calc(50% + 15px) / 16px 1.2px no-repeat,
-    linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 16px top calc(50% - 15px) / 1.2px 30px no-repeat,
-    /* 右球門外框 */
-    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 0 top calc(50% - 11px) / 5px 1px no-repeat,
-    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 0 top calc(50% + 11px) / 5px 1px no-repeat,
-    linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 5px top calc(50% - 11px) / 1px 22px no-repeat;
-  opacity:.98;
+  background:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAwIDEyMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZWVmOGYxIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbGluZWpvaW49Im1pdGVyIj4KICAgIDwhLS0g5Lit57eaIC8g5Lit5ZyIIC0tPgogICAgPGxpbmUgeDE9IjUwMCIgeTE9IjAiIHgyPSI1MDAiIHkyPSIxMjAiIHN0cm9rZS1vcGFjaXR5PSIuMjAiIHN0cm9rZS13aWR0aD0iMiIvPgogICAgPGNpcmNsZSBjeD0iNTAwIiBjeT0iNjAiIHI9IjI0IiBzdHJva2Utb3BhY2l0eT0iLjE4IiBzdHJva2Utd2lkdGg9IjIiLz4KICAgIDxjaXJjbGUgY3g9IjUwMCIgY3k9IjYwIiByPSIyLjIiIGZpbGw9IiNlZWY4ZjEiIGZpbGwtb3BhY2l0eT0iLjI0IiBzdHJva2U9Im5vbmUiLz4KCiAgICA8IS0tIOW3pu+8muemgeWNgCAtLT4KICAgIDxwYXRoIGQ9Ik0wIDE1IEg4MiBWMTA1IEgwIiBzdHJva2Utb3BhY2l0eT0iLjE3IiBzdHJva2Utd2lkdGg9IjIiLz4KICAgIDwhLS0g5bem77ya55CD6ZaA5Y2AIC0tPgogICAgPHBhdGggZD0iTTAgMzggSDM0IFY4MiBIMCIgc3Ryb2tlLW9wYWNpdHk9Ii4yMiIgc3Ryb2tlLXdpZHRoPSIyIi8+CgogICAgPCEtLSDlj7PvvJrnpoHljYAgLS0+CiAgICA8cGF0aCBkPSJNMTAwMCAxNSBIOTE4IFYxMDUgSDEwMDAiIHN0cm9rZS1vcGFjaXR5PSIuMTciIHN0cm9rZS13aWR0aD0iMiIvPgogICAgPCEtLSDlj7PvvJrnkIPploDljYAgLS0+CiAgICA8cGF0aCBkPSJNMTAwMCAzOCBIOTY2IFY4MiBIMTAwMCIgc3Ryb2tlLW9wYWNpdHk9Ii4yMiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPC9nPgo8L3N2Zz4=") center/100% 100% no-repeat;
+  opacity:1;
 }
 
-.titleBlock > *{ position:relative; z-index:2; }
+.titleBlock > *{
+  position:relative;
+  z-index:2;
+}
 
 .titleBlock h1{
   color:#fbfffc;
-  text-shadow:0 2px 7px rgba(0,0,0,.55), 0 1px 0 rgba(0,0,0,.28);
+  text-shadow:
+    0 2px 7px rgba(0,0,0,.56),
+    0 1px 0 rgba(0,0,0,.24);
 }
 
-.titleBlock .sub{ color:rgba(238,247,241,.80); }
+.titleBlock .sub{
+  color:rgba(238,247,241,.80);
+}
 
 .titleBlock .aboutInfoBtn{
   background:linear-gradient(180deg,rgba(56,79,107,.96),rgba(34,50,71,.98));
   border-color:rgba(154,195,225,.24);
 }
 
-body.matchStatePre .titleBlock{ margin-bottom:10px!important; }
-body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
+body.matchStatePre .titleBlock{
+  margin-bottom:10px!important;
+}
+
+body:not(.matchStatePre) .titleBlock{
+  margin-bottom:8px!important;
+}
 
 @media(max-width:390px){
   .titleBlock{
@@ -17795,32 +17406,12 @@ body:not(.matchStatePre) .titleBlock{ margin-bottom:8px!important; }
     padding:7px 8px;
     border-radius:0!important;
   }
-  .titleBlock::after{
-    background:
-      radial-gradient(circle at 50% 50%, rgba(231,247,236,.30) 0 1.7px, transparent 2px),
-      radial-gradient(circle at 50% 50%, transparent 0 20px, var(--header-strip-line-soft) 20px 21.3px, transparent 22px),
-      linear-gradient(90deg,
-        transparent 0 calc(50% - 1px),
-        var(--header-strip-line) calc(50% - 1px) calc(50% + 1px),
-        transparent calc(50% + 1px) 100%),
-      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 0 top calc(50% - 22px) / 32px 1.1px no-repeat,
-      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 0 top calc(50% + 22px) / 32px 1.1px no-repeat,
-      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) left 32px top calc(50% - 22px) / 1.1px 44px no-repeat,
-      linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 0 top calc(50% - 13px) / 13px 1.1px no-repeat,
-      linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 0 top calc(50% + 13px) / 13px 1.1px no-repeat,
-      linear-gradient(var(--header-strip-line), var(--header-strip-line)) left 13px top calc(50% - 13px) / 1.1px 26px no-repeat,
-      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 0 top calc(50% - 10px) / 4px 1px no-repeat,
-      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 0 top calc(50% + 10px) / 4px 1px no-repeat,
-      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) left 4px top calc(50% - 10px) / 1px 20px no-repeat,
-      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 0 top calc(50% - 22px) / 32px 1.1px no-repeat,
-      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 0 top calc(50% + 22px) / 32px 1.1px no-repeat,
-      linear-gradient(var(--header-strip-line-soft), var(--header-strip-line-soft)) right 32px top calc(50% - 22px) / 1.1px 44px no-repeat,
-      linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 0 top calc(50% - 13px) / 13px 1.1px no-repeat,
-      linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 0 top calc(50% + 13px) / 13px 1.1px no-repeat,
-      linear-gradient(var(--header-strip-line), var(--header-strip-line)) right 13px top calc(50% - 13px) / 1.1px 26px no-repeat,
-      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 0 top calc(50% - 10px) / 4px 1px no-repeat,
-      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 0 top calc(50% + 10px) / 4px 1px no-repeat,
-      linear-gradient(var(--header-strip-line-faint), var(--header-strip-line-faint)) right 4px top calc(50% - 10px) / 1px 20px no-repeat;
+}
+
+@media(max-width:350px){
+  .titleBlock{
+    padding-left:7px;
+    padding-right:7px;
   }
 }
 
