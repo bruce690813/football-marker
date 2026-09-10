@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.38</title>
+<title>足球場邊記錄器 v5.39</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -12439,6 +12439,74 @@ body.resultMode .matchCard.finishedState{
   }
 }
 
+/* =========================================================
+   v5.39 比賽區間距、延長賽定位與全場事件整合
+   ========================================================= */
+
+/* LIVE、下半場與延長賽：比分主卡和事件操作卡保留清楚的呼吸空間。 */
+body.matchStateLive .matchCard{
+  margin-bottom:10px!important;
+}
+
+/* 狀態切換期間暫停 Safari 捲動錨定，避免延長賽又被拉回原按鈕位置。 */
+html.stateTopLock,
+html.stateTopLock body{
+  scroll-behavior:auto!important;
+  overflow-anchor:none!important;
+}
+
+/* 一般狀態不改變原有 DOM 排版；全場時才成為共同外框。 */
+.resultEventsGroup{
+  display:contents;
+}
+body.resultMode.finalOutputVisible .resultEventsGroup{
+  display:block;
+  margin:0 0 8px!important;
+  padding:0;
+  overflow:hidden;
+  border:1px solid rgba(210,231,255,.20);
+  border-radius:22px;
+  background:linear-gradient(180deg,rgba(24,43,66,.72) 0%,rgba(10,23,39,.78) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 10px 26px rgba(0,0,0,.20);
+  -webkit-backdrop-filter:blur(14px) saturate(125%);
+  backdrop-filter:blur(14px) saturate(125%);
+}
+
+/* 統計與事件紀錄移除各自外框，由 resultEventsGroup 統一承接。 */
+body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard,
+body.resultMode.finalOutputVisible .resultEventsGroup > #eventHubSection{
+  width:100%!important;
+  margin:0!important;
+  border:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard{
+  border-radius:22px 22px 0 0!important;
+}
+body.resultMode.finalOutputVisible .resultEventsGroup > #eventHubSection.recordOnly{
+  border-top:1px solid rgba(188,214,243,.16)!important;
+  border-radius:0 0 22px 22px!important;
+}
+body.resultMode.finalOutputVisible .finalToolsCard{
+  margin-top:0!important;
+}
+
+@media(max-width:430px){
+  body.resultMode.finalOutputVisible .resultEventsGroup{
+    border-radius:20px;
+    margin-bottom:7px!important;
+  }
+  body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard{
+    border-radius:20px 20px 0 0!important;
+  }
+  body.resultMode.finalOutputVisible .resultEventsGroup > #eventHubSection.recordOnly{
+    border-radius:0 0 20px 20px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -12455,7 +12523,7 @@ body.resultMode .matchCard.finishedState{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.38</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.39</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -12647,6 +12715,7 @@ body.resultMode .matchCard.finishedState{
   </div>
 
 
+  <div class="resultEventsGroup" id="resultEventsGroup">
   <div class="card quickResultCard stateManaged stateHidden" id="quickResultSection" aria-hidden="true">
     <div class="quickResultTitle">本場事件統計</div>
     <div class="quickResultStats" aria-label="本場事件統計">
@@ -12699,6 +12768,7 @@ body.resultMode .matchCard.finishedState{
     <div class="eventSubsection stateManaged eventMinorSection" id="recordSection">
       <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">事件紀錄</span></span><span class="recordMeta"><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
     </div>
+  </div>
   </div>
 
 <div class="card finalToolsCard">
@@ -12788,7 +12858,7 @@ body.resultMode .matchCard.finishedState{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.38">v5.38</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.39">v5.39</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -14938,14 +15008,24 @@ function validateTeamNameValue(value, label, required=false){
 
 // v5.33：切換主要比賽狀態時從頁首呈現完整狀態，不再強制滑到功能區或輸出區。
 function showMatchStateFromTop(){
+  const root=document.documentElement;
+  root?.classList?.add('stateTopLock');
+  try{ document.activeElement?.blur?.(); }catch(e){}
   const goTop=()=>{
+    const scroller=document.scrollingElement || document.documentElement || document.body;
+    if(scroller){ scroller.scrollTop=0; scroller.scrollLeft=0; }
+    if(document.body){ document.body.scrollTop=0; document.body.scrollLeft=0; }
+    if(document.documentElement){ document.documentElement.scrollTop=0; document.documentElement.scrollLeft=0; }
     try{ window.scrollTo({top:0,left:0,behavior:'auto'}); }
-    catch(e){ window.scrollTo(0,0); }
+    catch(e){ try{ window.scrollTo(0,0); }catch(ignore){} }
   };
   goTop();
-  requestAnimationFrame(goTop);
-  // 等狀態區塊收合動畫完成後再校正一次，避免 iOS Safari 保留舊的捲動錨點。
-  setTimeout(goTop,220);
+  requestAnimationFrame(()=>requestAnimationFrame(goTop));
+  // iOS Safari 可能在按鈕／Modal 關閉後再次還原捲動錨點，因此分段校正。
+  setTimeout(goTop,90);
+  setTimeout(goTop,280);
+  setTimeout(goTop,650);
+  setTimeout(()=>root?.classList?.remove('stateTopLock'),760);
 }
 
 function startMatch(){
