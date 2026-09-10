@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.32</title>
+<title>足球場邊記錄器 v5.33</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -12119,31 +12119,35 @@ body.matchStatePre .venueInputWrap input{padding-right:42px!important;}
   border-color:rgba(125,181,255,.48)!important;
 }
 
-/* v5.31：四種統計明細共用固定列，避免行內換行造成資訊跳位。 */
+/* v5.33：四種統計明細的每筆資料固定在同一列。 */
 #logModal .logModalBody .item.quickDetailItem{
   display:grid!important;
-  grid-template-columns:minmax(0,1fr)!important;
-  grid-template-rows:auto auto 20px;
-  gap:7px!important;
-  padding:12px 0!important;
-  align-items:start!important;
+  grid-template-columns:42px 60px 58px minmax(0,1fr) 42px auto!important;
+  grid-template-rows:44px!important;
+  gap:5px!important;
+  padding:8px 0!important;
+  align-items:center!important;
+  min-height:60px!important;
 }
-#logModal .quickDetailItem .qdHeader{
-  display:grid;grid-template-columns:52px minmax(70px,1fr) 70px 50px;
-  gap:6px;align-items:center;min-height:24px;
-  font-variant-numeric:tabular-nums;
-}
-#logModal .quickDetailItem .qdSeq{font-size:13px;font-weight:900;color:#7dd3fc;white-space:nowrap}
-#logModal .quickDetailItem .qdTime{font-size:18px;font-weight:950;color:#facc15;white-space:nowrap}
-#logModal .quickDetailItem .qdPeriod{font-size:12px;font-weight:900;color:#7dd3fc;text-align:center;white-space:nowrap;background:#1e293b;border-radius:12px;padding:3px 4px}
-#logModal .quickDetailItem .qdScore{font-size:14px;color:#cbd5e1;text-align:right;white-space:nowrap}
-#logModal .quickDetailItem .qdActor{display:grid;grid-template-columns:minmax(0,1fr) 50px;gap:8px;align-items:start;min-height:24px}
-#logModal .quickDetailItem .qdTeam{font-size:16px;line-height:1.4;color:#cbd5e1;overflow-wrap:anywhere}
-#logModal .quickDetailItem .qdPlayer{font-size:18px;font-weight:950;color:#86efac;text-align:right;white-space:nowrap}
-#logModal .quickDetailItem .qdAssist{min-height:20px;line-height:20px;text-align:right}
-#logModal .quickDetailItem .qdAssist .logAssistTag{margin:0;font-size:13px;color:#fbbf24}
+#logModal .quickDetailItem > *{min-width:0}
+#logModal .quickDetailItem .qdSeq{font-size:12px;font-weight:900;color:#7dd3fc;white-space:nowrap}
+#logModal .quickDetailItem .qdTime{font-size:16px;font-weight:950;color:#facc15;white-space:nowrap;font-variant-numeric:tabular-nums}
+#logModal .quickDetailItem .qdPeriod{font-size:11px;font-weight:900;color:#7dd3fc;text-align:center;white-space:nowrap;background:#1e293b;border-radius:11px;padding:4px 3px}
+#logModal .quickDetailItem .qdTeam{font-size:14px;line-height:1.25;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#logModal .quickDetailItem .qdPlayer{font-size:16px;font-weight:950;color:#86efac;text-align:right;white-space:nowrap}
+#logModal .quickDetailItem .qdExtra{font-size:11.5px;font-weight:900;color:#fbbf24;text-align:right;white-space:nowrap}
+#logModal .quickDetailItem .qdScore{color:#cbd5e1}
 @media(max-width:350px){
-  #logModal .quickDetailItem .qdHeader{grid-template-columns:46px minmax(60px,1fr) 62px 40px;gap:4px}
+  #logModal .logModalBody .item.quickDetailItem{
+    grid-template-columns:38px 52px 50px minmax(30px,1fr) 34px auto!important;
+    gap:3px!important;
+  }
+  #logModal .quickDetailItem .qdSeq{font-size:11px}
+  #logModal .quickDetailItem .qdTime{font-size:14px}
+  #logModal .quickDetailItem .qdPeriod{font-size:10px}
+  #logModal .quickDetailItem .qdTeam{font-size:12px}
+  #logModal .quickDetailItem .qdPlayer{font-size:14px}
+  #logModal .quickDetailItem .qdExtra{font-size:10px}
 }
 
 /* v5.31：所有比賽狀態標題列共用相同位置、字級與垂直節奏。 */
@@ -12241,7 +12245,7 @@ body.resultMode .wrap{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.32</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.33</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -12574,7 +12578,7 @@ body.resultMode .wrap{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.32">v5.32</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.33">v5.33</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -14722,19 +14726,16 @@ function validateTeamNameValue(value, label, required=false){
   return true;
 }
 
-// v5.31：狀態切換後把當下主要功能帶到 Safari 工具列上方的可見區域。
-function revealPrimaryActions(mode='live'){
-  const target=mode==='result'
-    ? document.querySelector('.finalToolsCard')
-    : byId('eventHubSection');
-  if(!target) return;
-  setTimeout(()=>{
-    try{
-      target.scrollIntoView({behavior:'smooth',block:mode==='result'?'end':'start'});
-    }catch(e){
-      target.scrollIntoView();
-    }
-  },180);
+// v5.33：切換主要比賽狀態時從頁首呈現完整狀態，不再強制滑到功能區或輸出區。
+function showMatchStateFromTop(){
+  const goTop=()=>{
+    try{ window.scrollTo({top:0,left:0,behavior:'auto'}); }
+    catch(e){ window.scrollTo(0,0); }
+  };
+  goTop();
+  requestAnimationFrame(goTop);
+  // 等狀態區塊收合動畫完成後再校正一次，避免 iOS Safari 保留舊的捲動錨點。
+  setTimeout(goTop,220);
 }
 
 function startMatch(){
@@ -14795,7 +14796,7 @@ function startMatch(){
   state.periodStartOppScore=state.oppScore;
   saveState();
   render();
-  revealPrimaryActions('live');
+  showMatchStateFromTop();
 
   // v4.93：先記時間最重要。若尚未填我方名稱，只做非阻斷提示。
   if(!ourName){
@@ -15170,7 +15171,7 @@ function finishPenaltyShootout(){
   byId('penaltyModal').classList.remove('open');
   saveState();
   render();
-  revealPrimaryActions('result');
+  showMatchStateFromTop();
 }
 function penaltySummaryHTML(){
   if(!state.penalty) return '';
@@ -15211,7 +15212,7 @@ function confirmFinishFull(){
   byId('finishDecisionModal').classList.remove('open');
   saveState();
   render();
-  revealPrimaryActions('result');
+  showMatchStateFromTop();
 }
 function newMatch(){
   hideMarkerUndo();
@@ -16175,19 +16176,26 @@ function renderLogTo(container, filterEvent=null){
 
     // 本場事件統計 drill-down 維持原本唯讀列表，不放編輯 / 刪除。
     if(readOnlyDetail){
+      const playerText=m.player_number?'#'+escapeHtml(String(m.player_number)):'—';
+      const extraText=assist
+        ? `<span class="qdExtra">助攻 #${escapeHtml(String(m.assist_number))}</span>`
+        : (showScore && m.event!=='GOAL' && score
+          ? `<span class="qdExtra qdScore">${escapeHtml(score)}</span>`
+          : '');
+      const accessibleParts=[
+        `第${shownSeq}筆`,fmtMMSS(m.seconds),period||'全場',team||'未指定球隊',
+        m.player_number?`背號 ${m.player_number}`:'未填背號',
+        m.event==='GOAL' && m.assist_number?`助攻 ${m.assist_number}`:''
+      ].filter(Boolean).join('，');
       row.innerHTML=`
-        <div class="qdHeader">
-          <span class="qdSeq">第${shownSeq}筆</span>
-          <span class="qdTime">${fmtMMSS(m.seconds)}</span>
-          <span class="qdPeriod">${escapeHtml(period||'全場')}</span>
-          <span class="qdScore">${showScore && m.event!=='GOAL'?escapeHtml(score):''}</span>
-        </div>
-        <div class="qdActor">
-          <span class="qdTeam">${safeTeam||'未指定球隊'}</span>
-          <span class="qdPlayer">${m.player_number?'#'+escapeHtml(String(m.player_number)):'—'}</span>
-        </div>
-        <div class="qdAssist">${assist}</div>
+        <span class="qdSeq">第${shownSeq}筆</span>
+        <span class="qdTime">${fmtMMSS(m.seconds)}</span>
+        <span class="qdPeriod">${escapeHtml(period||'全場')}</span>
+        <span class="qdTeam" title="${safeTeam||'未指定球隊'}">${safeTeam||'未指定球隊'}</span>
+        <span class="qdPlayer">${playerText}</span>
+        ${extraText}
       `;
+      row.setAttribute('aria-label',accessibleParts);
       container.appendChild(row);
       return;
     }
