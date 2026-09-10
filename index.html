@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" class="appBooting appBootNoMotion">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
@@ -8,7 +8,84 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.29</title>
+<title>足球場邊記錄器 v5.32</title>
+<!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
+<style id="appBootStyles">
+html.appBooting{background:#0b1220}
+html.appBooting body > :not(#appBootStatus):not(script){
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+html.appBootNoMotion *,
+html.appBootNoMotion *::before,
+html.appBootNoMotion *::after{
+  transition:none!important;
+  animation:none!important;
+  scroll-behavior:auto!important;
+}
+#appBootStatus{display:none}
+html.appBooting #appBootStatus{
+  position:fixed;
+  inset:0;
+  z-index:2147483647;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:#0b1220;
+  color:#e6edf3;
+  text-align:center;
+  font:600 16px/1.6 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+}
+#appBootError{display:none}
+html.appBootFailed #appBootLoading{display:none}
+html.appBootFailed #appBootError{display:block}
+#appBootError p{max-width:28em;margin:12px 0 20px}
+#appBootRetry{
+  min-height:48px;
+  padding:10px 24px;
+  border:2px solid #8eb7ff;
+  border-radius:12px;
+  background:#1d4ed8;
+  color:#fff;
+  font:inherit;
+  cursor:pointer;
+}
+</style>
+<script>
+// 保護必須在主程式之前建立；即使主程式載入失敗，也不開放未還原的比賽操作。
+(()=>{
+  const root=document.documentElement;
+  let initialized=false;
+  let failed=false;
+  function showBootError(){
+    if(!root.classList.contains('appBooting')) return;
+    failed=true;
+    root.classList.add('appBootFailed');
+  }
+  window.addEventListener('error',showBootError);
+  window.addEventListener('load',()=>{
+    if(!initialized) showBootError();
+  },{once:true});
+  window.finishAppBoot=()=>{
+    if(initialized || failed) return;
+    initialized=true;
+    requestAnimationFrame(()=>{
+      if(failed) return;
+      // 保留版面尺寸供字級計算及瀏覽器還原捲動位置；不以 display:none 隱藏主畫面。
+      // 首次排版時仍停用動畫，避免結果卡與按鈕從預設狀態滑入。
+      void document.body.offsetHeight;
+      const app=document.getElementById('appContent');
+      app.removeAttribute('inert');
+      app.removeAttribute('aria-busy');
+      root.classList.remove('appBooting');
+      window.removeEventListener('error',showBootError);
+      requestAnimationFrame(()=>root.classList.remove('appBootNoMotion'));
+    });
+  };
+})();
+</script>
 <style>
 :root{
   --bg:#0b1220;--card:#121a26;--line:#283344;--text:#eef4ff;--muted:#91a0b6;
@@ -12042,15 +12119,129 @@ body.matchStatePre .venueInputWrap input{padding-right:42px!important;}
   border-color:rgba(125,181,255,.48)!important;
 }
 
+/* v5.31：四種統計明細共用固定列，避免行內換行造成資訊跳位。 */
+#logModal .logModalBody .item.quickDetailItem{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:auto auto 20px;
+  gap:7px!important;
+  padding:12px 0!important;
+  align-items:start!important;
+}
+#logModal .quickDetailItem .qdHeader{
+  display:grid;grid-template-columns:52px minmax(70px,1fr) 70px 50px;
+  gap:6px;align-items:center;min-height:24px;
+  font-variant-numeric:tabular-nums;
+}
+#logModal .quickDetailItem .qdSeq{font-size:13px;font-weight:900;color:#7dd3fc;white-space:nowrap}
+#logModal .quickDetailItem .qdTime{font-size:18px;font-weight:950;color:#facc15;white-space:nowrap}
+#logModal .quickDetailItem .qdPeriod{font-size:12px;font-weight:900;color:#7dd3fc;text-align:center;white-space:nowrap;background:#1e293b;border-radius:12px;padding:3px 4px}
+#logModal .quickDetailItem .qdScore{font-size:14px;color:#cbd5e1;text-align:right;white-space:nowrap}
+#logModal .quickDetailItem .qdActor{display:grid;grid-template-columns:minmax(0,1fr) 50px;gap:8px;align-items:start;min-height:24px}
+#logModal .quickDetailItem .qdTeam{font-size:16px;line-height:1.4;color:#cbd5e1;overflow-wrap:anywhere}
+#logModal .quickDetailItem .qdPlayer{font-size:18px;font-weight:950;color:#86efac;text-align:right;white-space:nowrap}
+#logModal .quickDetailItem .qdAssist{min-height:20px;line-height:20px;text-align:right}
+#logModal .quickDetailItem .qdAssist .logAssistTag{margin:0;font-size:13px;color:#fbbf24}
+@media(max-width:350px){
+  #logModal .quickDetailItem .qdHeader{grid-template-columns:46px minmax(60px,1fr) 62px 40px;gap:4px}
+}
+
+/* v5.31：所有比賽狀態標題列共用相同位置、字級與垂直節奏。 */
+.broadcastStage.pre,
+.broadcastStage.live,
+.broadcastStage.halftime,
+.broadcastStage.penalty,
+.broadcastStage.full{
+  min-height:50px!important;
+  padding:7px 14px!important;
+  align-items:center!important;
+}
+.broadcastStage .stageLabel,
+.broadcastStage.pre .stageLabel,
+.broadcastStage.live .stageLabel,
+.broadcastStage.halftime .stageLabel,
+.broadcastStage.penalty .stageLabel,
+.broadcastStage.full .stageLabel{
+  font-family:inherit!important;
+  font-size:18px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  letter-spacing:.2px!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+.broadcastStage.halftime,
+.broadcastStage.penalty,
+.broadcastStage.full{
+  justify-content:center!important;
+}
+.broadcastStage.halftime .stageTimer,
+.broadcastStage.full .stageTimer{
+  font-size:24px!important;
+  line-height:1!important;
+}
+
+/* 開賽後我方隊名改為純顯示，不再出現賽前專用的藍色輸入狀態。 */
+body:not(.matchStatePre) #ourTeamBox{
+  cursor:default!important;
+}
+body:not(.matchStatePre) #ourTeamBox .teamNameEditor{
+  display:none!important;
+}
+body:not(.matchStatePre) #ourTeamBox .teamNameDisplay{
+  display:block!important;
+}
+
+/* Safari 底部工具列展開時，主要操作區仍有足夠的安全捲動空間。 */
+body.matchStateLive .wrap,
+body.matchStateHalftime .wrap,
+body.matchStateExtraWait .wrap,
+body.matchStatePenalty .wrap,
+body.resultMode .wrap{
+  scroll-padding-bottom:calc(156px + env(safe-area-inset-bottom))!important;
+}
+#eventHubSection,
+.finalToolsCard{
+  scroll-margin-bottom:calc(150px + env(safe-area-inset-bottom))!important;
+}
+
+@media(max-width:390px){
+  .broadcastStage.pre,
+  .broadcastStage.live,
+  .broadcastStage.halftime,
+  .broadcastStage.penalty,
+  .broadcastStage.full{
+    min-height:48px!important;
+    padding:6px 11px!important;
+  }
+  .broadcastStage .stageLabel,
+  .broadcastStage.pre .stageLabel,
+  .broadcastStage.live .stageLabel,
+  .broadcastStage.halftime .stageLabel,
+  .broadcastStage.penalty .stageLabel,
+  .broadcastStage.full .stageLabel{
+    font-size:17px!important;
+  }
+}
+
 </style>
 </head>
 <body>
-<div class="wrap">
+<div id="appBootStatus" role="status" aria-live="polite">
+  <div id="appBootLoading">正在還原比賽資料…</div>
+  <div id="appBootError" role="alert">
+    <strong>暫時無法完成載入</strong>
+    <p>尚未開放比賽操作。請重新整理再試，勿清除瀏覽器內的比賽資料。</p>
+    <button id="appBootRetry" type="button" onclick="window.location.reload()">重新整理</button>
+  </div>
+  <noscript><style>#appBootLoading{display:none!important}</style>請啟用 JavaScript 後重新開啟，才能還原及記錄比賽。</noscript>
+</div>
+<div class="wrap" id="appContent" inert aria-busy="true">
   <div class="top titleBlock">
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.29</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.32</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -12383,7 +12574,7 @@ body.matchStatePre .venueInputWrap input{padding-right:42px!important;}
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.29">v5.29</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.32">v5.32</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -13273,10 +13464,15 @@ function saveState(){
   updateAllPreMetaFits();
 }
 function loadState(){
-  try{
-    const raw=localStorage.getItem(KEY);
-    if(raw) state={...state, ...JSON.parse(raw)};
-  }catch(e){}
+  // 還原失敗交由啟動保護顯示錯誤；不可默默以空白賽前資料開放操作。
+  const raw=localStorage.getItem(KEY);
+  if(raw){
+    const saved=JSON.parse(raw);
+    if(!saved || typeof saved!=='object' || Array.isArray(saved)){
+      throw new Error('Invalid saved match state');
+    }
+    state={...state, ...saved};
+  }
   if(!Array.isArray(state.periods)) state.periods=[];
   if(!Number.isInteger(state.currentPeriod) || state.currentPeriod<1) state.currentPeriod=1;
   if(typeof state.awaitingNextPeriod!=='boolean') state.awaitingNextPeriod=false;
@@ -14526,6 +14722,21 @@ function validateTeamNameValue(value, label, required=false){
   return true;
 }
 
+// v5.31：狀態切換後把當下主要功能帶到 Safari 工具列上方的可見區域。
+function revealPrimaryActions(mode='live'){
+  const target=mode==='result'
+    ? document.querySelector('.finalToolsCard')
+    : byId('eventHubSection');
+  if(!target) return;
+  setTimeout(()=>{
+    try{
+      target.scrollIntoView({behavior:'smooth',block:mode==='result'?'end':'start'});
+    }catch(e){
+      target.scrollIntoView();
+    }
+  },180);
+}
+
 function startMatch(){
   if(state.started && !state.finished) return;
   if(state.finished){
@@ -14584,6 +14795,7 @@ function startMatch(){
   state.periodStartOppScore=state.oppScore;
   saveState();
   render();
+  revealPrimaryActions('live');
 
   // v4.93：先記時間最重要。若尚未填我方名稱，只做非阻斷提示。
   if(!ourName){
@@ -14958,6 +15170,7 @@ function finishPenaltyShootout(){
   byId('penaltyModal').classList.remove('open');
   saveState();
   render();
+  revealPrimaryActions('result');
 }
 function penaltySummaryHTML(){
   if(!state.penalty) return '';
@@ -14998,6 +15211,7 @@ function confirmFinishFull(){
   byId('finishDecisionModal').classList.remove('open');
   saveState();
   render();
+  revealPrimaryActions('result');
 }
 function newMatch(){
   hideMarkerUndo();
@@ -15962,10 +16176,17 @@ function renderLogTo(container, filterEvent=null){
     // 本場事件統計 drill-down 維持原本唯讀列表，不放編輯 / 刪除。
     if(readOnlyDetail){
       row.innerHTML=`
-        <div class="logSeq">第${shownSeq}筆</div>
-        <div class="time">${fmtMMSS(m.seconds)}</div>
-        <div class="logDetailLine"><span class="logMainText">${period?`<span class="periodBadge">${escapeHtml(period)}</span>`:''}${safeTeam||m.player_number?`${safeTeam?`<span style="color:#91a0b6">${safeTeam}</span>`:''}${num}<span style="color:#91a0b6"> · </span>`:''}<b>${escapeHtml(label)}</b>${assist}</span></div>
-        ${scoreBlock}
+        <div class="qdHeader">
+          <span class="qdSeq">第${shownSeq}筆</span>
+          <span class="qdTime">${fmtMMSS(m.seconds)}</span>
+          <span class="qdPeriod">${escapeHtml(period||'全場')}</span>
+          <span class="qdScore">${showScore && m.event!=='GOAL'?escapeHtml(score):''}</span>
+        </div>
+        <div class="qdActor">
+          <span class="qdTeam">${safeTeam||'未指定球隊'}</span>
+          <span class="qdPlayer">${m.player_number?'#'+escapeHtml(String(m.player_number)):'—'}</span>
+        </div>
+        <div class="qdAssist">${assist}</div>
       `;
       container.appendChild(row);
       return;
@@ -16145,6 +16366,12 @@ function editTeamName(id){
   const box=byId(id+'Box');
   const input=byId(id);
   if(!box || !input) return;
+  // 我方隊名的藍色輸入狀態只屬於賽前；開賽後維持純文字顯示。
+  if(id==='ourTeam' && !document.body.classList.contains('matchStatePre')){
+    box.classList.remove('editing');
+    input.blur();
+    return;
+  }
   box.classList.add('editing');
   setTimeout(()=>{
     input.focus();
@@ -16508,6 +16735,12 @@ function renderMatchStateUI(){
   document.body.classList.toggle('matchStatePenalty', isPenalty);
   document.body.classList.toggle('matchStateBreak', isBreak || isPenalty);
   document.body.classList.toggle('resultMode', isFinished);
+
+  if(!isPre){
+    byId('ourTeamBox')?.classList.remove('editing');
+    byId('ourTeam')?.classList.remove('guidedInput','inputError','requiredError');
+    byId('ourTeam')?.blur();
+  }
 }
 
 
@@ -17916,6 +18149,8 @@ document.querySelectorAll('.finalTools button').forEach(btn=>{
 
 loadState();
 tick();
+syncVisualViewport();
+window.finishAppBoot();
 
 setInterval(renderRegulationTimeAlert,1000);
 
