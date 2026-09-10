@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.33</title>
+<title>足球場邊記錄器 v5.36</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -39,7 +39,6 @@ html.appBooting #appBootStatus{
   font:600 16px/1.6 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
 }
 #appBootError{display:none}
-html.appBootFailed #appBootLoading{display:none}
 html.appBootFailed #appBootError{display:block}
 #appBootError p{max-width:28em;margin:12px 0 20px}
 #appBootRetry{
@@ -12119,10 +12118,10 @@ body.matchStatePre .venueInputWrap input{padding-right:42px!important;}
   border-color:rgba(125,181,255,.48)!important;
 }
 
-/* v5.33：四種統計明細的每筆資料固定在同一列。 */
+/* v5.34：四種統計明細固定單列，背號使用固定欄寬並統一靠左。 */
 #logModal .logModalBody .item.quickDetailItem{
   display:grid!important;
-  grid-template-columns:42px 60px 58px minmax(0,1fr) 42px auto!important;
+  grid-template-columns:42px 60px 58px minmax(0,1fr) 42px 64px!important;
   grid-template-rows:44px!important;
   gap:5px!important;
   padding:8px 0!important;
@@ -12134,12 +12133,12 @@ body.matchStatePre .venueInputWrap input{padding-right:42px!important;}
 #logModal .quickDetailItem .qdTime{font-size:16px;font-weight:950;color:#facc15;white-space:nowrap;font-variant-numeric:tabular-nums}
 #logModal .quickDetailItem .qdPeriod{font-size:11px;font-weight:900;color:#7dd3fc;text-align:center;white-space:nowrap;background:#1e293b;border-radius:11px;padding:4px 3px}
 #logModal .quickDetailItem .qdTeam{font-size:14px;line-height:1.25;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#logModal .quickDetailItem .qdPlayer{font-size:16px;font-weight:950;color:#86efac;text-align:right;white-space:nowrap}
+#logModal .quickDetailItem .qdPlayer{font-size:16px;font-weight:950;color:#86efac;text-align:left;justify-self:start;white-space:nowrap}
 #logModal .quickDetailItem .qdExtra{font-size:11.5px;font-weight:900;color:#fbbf24;text-align:right;white-space:nowrap}
 #logModal .quickDetailItem .qdScore{color:#cbd5e1}
 @media(max-width:350px){
   #logModal .logModalBody .item.quickDetailItem{
-    grid-template-columns:38px 52px 50px minmax(30px,1fr) 34px auto!important;
+    grid-template-columns:38px 52px 50px minmax(30px,1fr) 34px 56px!important;
     gap:3px!important;
   }
   #logModal .quickDetailItem .qdSeq{font-size:11px}
@@ -12228,24 +12227,67 @@ body.resultMode .wrap{
   }
 }
 
+/* =========================================================
+   v5.36 全場操作順序
+   先完成摘要／圖片／CSV 輸出，再開始下一場比賽。
+   ========================================================= */
+body.resultMode.finalOutputVisible .finalToolsCard{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:16px!important;
+}
+body.resultMode.finalOutputVisible .toolGrid.finalTools{
+  order:1!important;
+  margin:0!important;
+}
+body.resultMode.finalOutputVisible .resultNewMatchBtn{
+  order:2!important;
+  min-height:48px!important;
+  margin:0!important;
+  padding:9px 14px!important;
+  border:1px solid rgba(148,163,184,.34)!important;
+  border-radius:13px!important;
+  background:linear-gradient(180deg,rgba(37,49,66,.82) 0%,rgba(27,39,55,.9) 100%)!important;
+  color:#cbd5e1!important;
+  font-size:15px!important;
+  font-weight:850!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 4px 10px rgba(0,0,0,.14)!important;
+  text-shadow:none!important;
+}
+body.resultMode.finalOutputVisible .resultNewMatchBtn::before{
+  display:none!important;
+}
+body.resultMode.finalOutputVisible .resultNewMatchBtn::first-letter{
+  color:#cbd5e1!important;
+}
+body.resultMode.finalOutputVisible .resultNewMatchBtn:active{
+  background:linear-gradient(180deg,rgba(48,63,84,.92) 0%,rgba(34,47,65,.96) 100%)!important;
+  border-color:rgba(148,163,184,.5)!important;
+}
+
+@media(max-width:390px){
+  body.resultMode.finalOutputVisible .finalToolsCard{
+    gap:14px!important;
+  }
+}
+
 </style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
-  <div id="appBootLoading">正在還原比賽資料…</div>
   <div id="appBootError" role="alert">
     <strong>暫時無法完成載入</strong>
     <p>尚未開放比賽操作。請重新整理再試，勿清除瀏覽器內的比賽資料。</p>
     <button id="appBootRetry" type="button" onclick="window.location.reload()">重新整理</button>
   </div>
-  <noscript><style>#appBootLoading{display:none!important}</style>請啟用 JavaScript 後重新開啟，才能還原及記錄比賽。</noscript>
+  <noscript>請啟用 JavaScript 後重新開啟，才能還原及記錄比賽。</noscript>
 </div>
 <div class="wrap" id="appContent" inert aria-busy="true">
   <div class="top titleBlock">
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.33</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.36</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -12578,7 +12620,7 @@ body.resultMode .wrap{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.33">v5.33</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.36">v5.36</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
