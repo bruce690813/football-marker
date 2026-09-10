@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.36</title>
+<title>足球場邊記錄器 v5.37</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -12271,6 +12271,84 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn:active{
   }
 }
 
+/* =========================================================
+   v5.37 狀態定位、Safari 底部安全區與全場配色
+   ========================================================= */
+
+/* 比賽中、下半場與延長賽共用 matchStateLive。實體尾端空間用來承接 Safari 動態工具列。 */
+body.matchStateLive .fullTimeBottomSpacer{
+  display:block!important;
+  position:relative!important;
+  width:100%!important;
+  height:calc(max(172px, calc(var(--browser-bottom-gap,0px) + 82px)) + env(safe-area-inset-bottom))!important;
+  min-height:calc(max(172px, calc(var(--browser-bottom-gap,0px) + 82px)) + env(safe-area-inset-bottom))!important;
+  flex:0 0 auto!important;
+  pointer-events:none!important;
+}
+body.matchStateLive .wrap{
+  padding-bottom:calc(14px + env(safe-area-inset-bottom))!important;
+  scroll-padding-bottom:calc(max(172px, calc(var(--browser-bottom-gap,0px) + 82px)) + env(safe-area-inset-bottom))!important;
+}
+body.matchStateLive #eventHubSection{
+  scroll-margin-bottom:calc(max(172px, calc(var(--browser-bottom-gap,0px) + 82px)) + env(safe-area-inset-bottom))!important;
+}
+
+/* 全場改用深藍灰底、珊瑚紅描邊：保留結束語意，但不冒充 LIVE。 */
+body.resultMode .broadcastStage.full{
+  background:linear-gradient(180deg,#172235 0%,#101925 100%)!important;
+  border-color:#ff5a67!important;
+  color:#fff7f8!important;
+  box-shadow:0 0 0 1px rgba(255,90,103,.12),0 0 12px rgba(255,90,103,.18),inset 0 1px 0 rgba(255,255,255,.07),0 6px 14px rgba(0,0,0,.18)!important;
+}
+body.resultMode .broadcastStage.full .stageLabel,
+body.resultMode .broadcastStage.full .stageTimer{
+  color:#fff7f8!important;
+}
+body.resultMode .matchCard.finishedState{
+  background:linear-gradient(180deg,rgba(29,43,65,.72) 0%,rgba(16,25,37,.91) 34%,rgba(8,18,29,.89) 100%)!important;
+  border-color:rgba(255,90,103,.34)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,90,103,.07),0 12px 30px rgba(0,0,0,.25),0 0 18px rgba(255,90,103,.10)!important;
+}
+
+/* 手機垂直節奏微幅收斂，維持至少 44px 的主要觸控高度。 */
+@media(max-width:430px){
+  body.matchStateLive .liveMetaStrip.show{
+    min-height:32px!important;
+    margin-bottom:5px!important;
+    padding-top:5px!important;
+    padding-bottom:5px!important;
+  }
+  body.matchStateLive .liveQuickSetup{margin-bottom:5px!important}
+  body.matchStateLive .liveQuickSetup > button{
+    min-height:38px!important;
+    padding-top:5px!important;
+    padding-bottom:5px!important;
+  }
+  body.matchStateLive .broadcastBar{min-height:54px!important;padding:7px 10px!important}
+  body.matchStateLive .scoreRow{padding-top:9px!important;padding-bottom:9px!important}
+  body.matchStateLive .teamNameBox{min-height:58px!important}
+  body.matchStateLive .timeSummary{margin-top:4px!important;margin-bottom:4px!important}
+  body.matchStateLive .controls button{min-height:44px!important;padding-top:8px!important;padding-bottom:8px!important}
+  body.matchStateLive #eventHubSection{padding-top:6px!important;padding-bottom:8px!important}
+  body.matchStateLive #eventHubSection .events{gap:5px!important}
+  body.matchStateLive #eventHubSection .event{min-height:48px!important}
+  body.matchStateLive #eventHubSection #disciplineSection,
+  body.matchStateLive #eventHubSection #recordSection{margin-top:6px!important;padding-top:6px!important}
+  body.matchStateLive #eventHubSection #recordSection .recordFullBtn{min-height:44px!important}
+
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:max(220px, calc(var(--browser-bottom-gap,0px) + 100px))!important;
+  }
+  body.resultMode.finalOutputVisible .quickResultCard{padding-top:9px!important;padding-bottom:10px!important;margin-bottom:3px!important}
+  body.resultMode.finalOutputVisible .quickResultTitle{margin-bottom:7px!important}
+  body.resultMode.finalOutputVisible .quickResultStat{min-height:78px!important}
+  body.resultMode.finalOutputVisible #eventHubSection.recordOnly{margin-bottom:4px!important;padding-top:5px!important;padding-bottom:6px!important}
+  body.resultMode.finalOutputVisible .finalToolsCard{gap:10px!important;padding:5px!important}
+  body.resultMode.finalOutputVisible .toolGrid.finalTools button,
+  body.resultMode.finalOutputVisible .resultNewMatchBtn{min-height:44px!important}
+  body.resultMode.finalOutputVisible .resultNewMatchBtn{padding-top:7px!important;padding-bottom:7px!important}
+}
+
 </style>
 </head>
 <body>
@@ -12287,7 +12365,7 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn:active{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.36</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.37</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -12620,7 +12698,7 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn:active{
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.36">v5.36</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.37">v5.37</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -14919,6 +14997,7 @@ function confirmFinishHalf(){
   byId('finishDecisionModal').classList.remove('open');
   saveState();
   render();
+  showMatchStateFromTop();
 }
 
 function openExtraTimeSetup(){
@@ -14949,6 +15028,7 @@ function confirmExtraTime(){
   byId('finishDecisionModal').classList.remove('open');
   saveState();
   render();
+  showMatchStateFromTop();
 }
 
 let pendingPenaltyRosterIndex=null;
