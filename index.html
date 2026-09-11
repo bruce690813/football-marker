@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.41</title>
+<title>足球場邊記錄器 v5.42</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -12529,6 +12529,55 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
   }
 }
 
+/* =========================================================
+   v5.42「這是什麼？」足球場主視覺
+   ========================================================= */
+
+/* 原創 SVG 球場場景內嵌於單一 HTML；深藍遮罩確保文字對比。 */
+.aboutTop{
+  isolation:isolate;
+  background:#071725!important;
+}
+.aboutStadiumScene{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  display:block;
+  width:100%;
+  height:100%;
+  opacity:.92;
+  pointer-events:none;
+}
+.aboutTop::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  width:auto;
+  height:auto;
+  border-radius:0;
+  background:
+    linear-gradient(90deg,rgba(4,17,30,.94) 0%,rgba(4,17,30,.84) 48%,rgba(4,17,30,.52) 76%,rgba(4,17,30,.36) 100%),
+    linear-gradient(180deg,rgba(5,18,31,.22) 0%,rgba(5,18,31,.28) 58%,rgba(3,13,23,.82) 100%);
+  filter:none;
+  pointer-events:none;
+}
+.aboutTop::after{z-index:3}
+.aboutTop > :not(.aboutStadiumScene){position:relative;z-index:2}
+.aboutTop > .aboutDismiss{z-index:4}
+
+@media(max-width:390px){
+  .aboutStadiumScene{
+    width:116%;
+    left:-16%;
+  }
+  .aboutTop::before{
+    background:
+      linear-gradient(90deg,rgba(4,17,30,.95) 0%,rgba(4,17,30,.86) 54%,rgba(4,17,30,.55) 82%,rgba(4,17,30,.42) 100%),
+      linear-gradient(180deg,rgba(5,18,31,.24) 0%,rgba(3,13,23,.84) 100%);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -12545,7 +12594,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.41</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.42</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -12837,6 +12886,47 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 <div class="modalBack" id="aboutModal">
   <div class="modal aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="aboutTop">
+      <svg class="aboutStadiumScene" viewBox="0 0 720 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="aboutSkyGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#18496a"/>
+            <stop offset=".58" stop-color="#0b3047"/>
+            <stop offset="1" stop-color="#092333"/>
+          </linearGradient>
+          <linearGradient id="aboutFieldGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1b7047"/>
+            <stop offset="1" stop-color="#073923"/>
+          </linearGradient>
+          <radialGradient id="aboutSunGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#ffd08a" stop-opacity=".86"/>
+            <stop offset=".34" stop-color="#ff9d59" stop-opacity=".42"/>
+            <stop offset="1" stop-color="#ff9d59" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="aboutReadabilityShade" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#04111e" stop-opacity=".32"/>
+            <stop offset=".68" stop-color="#04111e" stop-opacity="0"/>
+            <stop offset="1" stop-color="#04111e" stop-opacity=".12"/>
+          </linearGradient>
+        </defs>
+        <rect width="720" height="300" fill="url(#aboutSkyGradient)"/>
+        <ellipse cx="548" cy="116" rx="124" ry="92" fill="url(#aboutSunGlow)"/>
+        <path d="M0 72 Q118 140 260 150 L260 196 Q110 180 0 126Z" fill="#07131d" fill-opacity=".88"/>
+        <path d="M720 70 Q604 140 460 150 L460 196 Q610 178 720 122Z" fill="#07131d" fill-opacity=".88"/>
+        <path d="M0 116 Q126 166 270 170" fill="none" stroke="#6ea6bb" stroke-opacity=".30" stroke-width="4"/>
+        <path d="M720 114 Q594 164 450 170" fill="none" stroke="#6ea6bb" stroke-opacity=".30" stroke-width="4"/>
+        <g fill="#d9f5ff" fill-opacity=".72">
+          <circle cx="72" cy="105" r="3"/><circle cx="91" cy="114" r="2.5"/><circle cx="111" cy="121" r="2"/>
+          <circle cx="648" cy="103" r="3"/><circle cx="629" cy="112" r="2.5"/><circle cx="609" cy="120" r="2"/>
+        </g>
+        <path d="M244 166 L476 166 L648 300 L72 300Z" fill="url(#aboutFieldGradient)"/>
+        <path d="M244 166 L476 166 L648 300 L72 300Z" fill="none" stroke="#bcebd0" stroke-opacity=".48" stroke-width="2"/>
+        <path d="M360 166 L360 300" fill="none" stroke="#d8f6e5" stroke-opacity=".42" stroke-width="2"/>
+        <ellipse cx="360" cy="218" rx="45" ry="21" fill="none" stroke="#d8f6e5" stroke-opacity=".44" stroke-width="2"/>
+        <circle cx="360" cy="218" r="3" fill="#d8f6e5" fill-opacity=".50"/>
+        <path d="M103 275 L198 275 L228 300 M617 275 L522 275 L492 300" fill="none" stroke="#d8f6e5" stroke-opacity=".38" stroke-width="2"/>
+        <path d="M264 166 L207 300 M306 166 L282 300 M414 166 L438 300 M456 166 L513 300" fill="none" stroke="#8ed0aa" stroke-opacity=".10" stroke-width="38"/>
+        <rect width="720" height="300" fill="url(#aboutReadabilityShade)"/>
+      </svg>
       <button class="aboutDismiss" type="button" onclick="closeAboutModal()" aria-label="關閉說明視窗">✕</button>
       <div class="aboutMetaRow"><div class="aboutEyebrow">MATCHDAY TOOL</div></div>
       <div class="aboutTitle" id="aboutTitle">足球場邊記錄器</div>
@@ -12880,7 +12970,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.41">v5.41</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.42">v5.42</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
