@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.57</title>
+<title>足球場邊記錄器 v5.59</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -13775,6 +13775,40 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
   .aboutFieldBall::before{height:15px}
 }
 
+/* =========================================================
+   v5.58 角球線與中央場線等粗
+   - 僅校正角球邊界與圓弧的視覺線寬
+   - 保留 v5.57 的灰白色、低對比與草地顆粒感
+   ========================================================= */
+.aboutCornerBoundaryBase,
+.aboutCornerArcBase{
+  stroke-width:5.8;
+}
+.aboutCornerBoundary,
+.aboutCornerArc{
+  stroke-width:3.2;
+}
+.aboutCornerBoundaryTexture,
+.aboutCornerArcTexture{
+  stroke-width:1.05;
+}
+
+/* =========================================================
+   v5.59 快速使用指南內容同步
+   - 移除重複的英文眉題與教學副標
+   - 單一中文主標題，五步驟依目前實際操作流程排列
+   ========================================================= */
+.quickGuideTitle{margin-top:0}
+.quickGuideTop{padding-top:19px;padding-bottom:17px}
+
+@media(max-width:390px){
+  .quickGuideTop{padding-top:17px;padding-bottom:15px}
+}
+
+@media(max-height:690px){
+  .quickGuideTop{padding-top:14px;padding-bottom:12px}
+}
+
 </style>
 </head>
 <body>
@@ -13791,7 +13825,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.57</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.59</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -14169,7 +14203,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.57">v5.57</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.59">v5.59</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -14182,9 +14216,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
   <div class="modal quickGuideModal" role="dialog" aria-modal="true" aria-labelledby="quickGuideTitle">
     <div class="quickGuideTop">
       <button class="quickGuideDismiss" type="button" onclick="closeQuickGuide()" aria-label="關閉快速使用指南">✕</button>
-      <div class="quickGuideEyebrow">QUICK GUIDE</div>
       <div class="quickGuideTitle" id="quickGuideTitle">快速使用指南</div>
-      <div class="quickGuideHero">不用先學會，照著比賽流程走就好。</div>
     </div>
 
     <div class="quickGuideBody">
@@ -14193,47 +14225,47 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
           <div class="quickGuideStep">
             <div class="quickGuideNum">1</div>
             <div class="quickGuideStepText">
-              <b>賽前設定</b>
-              <span>賽事、場地、名單與守門員可先設定；隊名等資料也可稍後補。</span>
+              <b>設定比賽時間</b>
+              <span>選擇 15、20、25 分鐘或自訂分鐘後按「套用」；未確定可稍後補。</span>
             </div>
           </div>
 
           <div class="quickGuideStep">
             <div class="quickGuideNum">2</div>
             <div class="quickGuideStepText">
-              <b>裁判吹哨就開始</b>
-              <span>按下「開始比賽」立即計時，先把真正的開賽時間記準。</span>
+              <b>完成賽前資料</b>
+              <span>填寫隊伍、賽事與場地；本場名單及守門員可視需要設定。</span>
             </div>
           </div>
 
           <div class="quickGuideStep">
             <div class="quickGuideNum">3</div>
             <div class="quickGuideStepText">
-              <b>場邊一鍵標記</b>
-              <span>進球、撲救、射門、防守、黃牌與紅牌，看到就直接按。</span>
+              <b>吹哨後開始記錄</b>
+              <span>裁判吹哨時按「開始比賽」；進球、撲救、射門、防守及牌卡發生就按。</span>
             </div>
           </div>
 
           <div class="quickGuideStep">
             <div class="quickGuideNum">4</div>
             <div class="quickGuideStepText">
-              <b>依賽事流程切換</b>
-              <span>中場、下半場、延長賽與 PK 依畫面提示操作，計時與比分會接續整理。</span>
+              <b>依提示切換賽程</b>
+              <span>每段結束依提示選擇全場結束、下半場、延長賽或 PK，再開始下一段。</span>
             </div>
           </div>
 
           <div class="quickGuideStep">
             <div class="quickGuideNum">5</div>
             <div class="quickGuideStepText">
-              <b>賽後整理與分享</b>
-              <span>查看事件紀錄與摘要，也可儲存圖片或匯出 CSV 供後續剪輯使用。</span>
+              <b>全場後檢查與匯出</b>
+              <span>確認本場事件統計與事件紀錄，再開啟摘要、儲存圖片或匯出 CSV。</span>
             </div>
           </div>
         </div>
 
         <div class="quickGuideTip">
           <div class="quickGuideTipTitle">💡 場邊小技巧</div>
-          <div class="quickGuideTipText">時間與事件最重要。球隊名稱、賽事名稱或場地來不及輸入時，可以有空再補，不要錯過哨音與精彩片刻。</div>
+          <div class="quickGuideTipText">先記準哨音與事件；比賽時間、隊伍、賽事、場地、名單及守門員都能稍後補。</div>
         </div>
       </div>
 
