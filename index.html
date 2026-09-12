@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.46</title>
+<title>足球場邊記錄器 v5.47</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -12716,6 +12716,142 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
   .aboutStatement{margin-bottom:10px!important}
 }
 
+/* =========================================================
+   v5.47 品牌理念融入球場
+   - 理念文字不再使用第四張功能卡外觀
+   - 足球改為獨立內嵌 SVG，視覺上真正落在草皮
+   ========================================================= */
+.aboutStatement{
+  position:relative;
+  display:block;
+  flex:0 0 auto;
+  min-height:118px!important;
+  margin-top:auto!important;
+  margin-bottom:14px!important;
+  padding:0!important;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+
+/* 只在文字背後做無邊界的局部暗化，保留整片草地與中央場線。 */
+.aboutStatement::before{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;
+  right:auto!important;
+  top:9%!important;
+  width:68%!important;
+  height:82%!important;
+  opacity:1!important;
+  border:0!important;
+  border-radius:50%!important;
+  background:radial-gradient(ellipse at 38% 50%,rgba(2,13,24,.72) 0%,rgba(2,13,24,.46) 48%,rgba(2,13,24,0) 78%)!important;
+  filter:blur(8px)!important;
+  pointer-events:none;
+}
+.aboutStatement::after{content:none!important}
+
+.aboutStatementCopy{
+  position:relative;
+  z-index:2;
+  width:60%;
+  margin-left:7%;
+  padding:24px 0 25px;
+}
+.aboutStatementLead,
+.aboutStatementMain{
+  margin-left:0!important;
+  max-width:none!important;
+  text-align:left!important;
+  transform:rotate(-2.5deg)!important;
+  text-shadow:0 2px 12px rgba(0,0,0,.74),0 0 16px rgba(44,143,207,.18)!important;
+}
+.aboutStatementLead{
+  color:#f4fbff!important;
+  font-size:16.5px!important;
+  line-height:1.24!important;
+}
+.aboutStatementMain{
+  margin-top:5px!important;
+  color:#cbe8fb!important;
+  font-size:12.8px!important;
+  line-height:1.38!important;
+  letter-spacing:1.3px!important;
+  white-space:nowrap;
+}
+.aboutStatementSwoosh{
+  left:7%!important;
+  right:auto!important;
+  bottom:13px!important;
+  width:48%!important;
+  height:20px!important;
+  opacity:.58!important;
+  transform:rotate(-3deg)!important;
+}
+
+/* SVG 與文字為同層的獨立物件；橢圓陰影讓球落在草皮而非浮在卡片上。 */
+.aboutFieldBall{
+  position:absolute;
+  z-index:3;
+  right:9%;
+  bottom:17px;
+  display:block;
+  width:48px;
+  height:auto;
+  overflow:visible;
+  pointer-events:none;
+  transform:rotate(7deg);
+  filter:drop-shadow(0 7px 8px rgba(0,0,0,.32));
+}
+.aboutBallGroundShadow{fill:rgba(0,0,0,.34)}
+
+@media(max-width:390px){
+  .aboutStatement{
+    min-height:108px!important;
+    margin-bottom:12px!important;
+  }
+  .aboutStatement::before{
+    width:72%!important;
+  }
+  .aboutStatementCopy{
+    width:66%;
+    margin-left:5%;
+    padding:21px 0 23px;
+  }
+  .aboutStatementLead{font-size:15.2px!important}
+  .aboutStatementMain{
+    margin-top:4px!important;
+    font-size:11.7px!important;
+    letter-spacing:1px!important;
+  }
+  .aboutStatementSwoosh{
+    left:5%!important;
+    bottom:11px!important;
+    width:50%!important;
+    height:18px!important;
+  }
+  .aboutFieldBall{
+    right:7%;
+    bottom:16px;
+    width:43px;
+  }
+}
+
+@media(max-height:690px){
+  .aboutStatement{
+    min-height:94px!important;
+    margin-top:8px!important;
+    margin-bottom:8px!important;
+  }
+  .aboutStatementCopy{padding-top:16px;padding-bottom:20px}
+  .aboutFieldBall{width:39px;bottom:13px}
+}
+
 </style>
 </head>
 <body>
@@ -12732,7 +12868,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.46</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.47</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -13097,9 +13233,38 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
         </div>
       </div>
       <div class="aboutStatement" aria-label="工具理念">
-        <div class="aboutStatementLead">記錄每一場精彩</div>
-        <div class="aboutStatementMain">為孩子的足球時光留下回憶</div>
+        <div class="aboutStatementCopy">
+          <div class="aboutStatementLead">記錄每一場精彩</div>
+          <div class="aboutStatementMain">為孩子的足球時光留下回憶</div>
+        </div>
         <div class="aboutStatementSwoosh" aria-hidden="true"></div>
+        <svg class="aboutFieldBall" viewBox="0 0 80 68" aria-hidden="true" focusable="false">
+          <defs>
+            <radialGradient id="aboutBallSurface" cx="30%" cy="22%" r="82%">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset=".56" stop-color="#e8edf1"/>
+              <stop offset="1" stop-color="#9aa6af"/>
+            </radialGradient>
+            <linearGradient id="aboutBallPatch" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#24303a"/>
+              <stop offset="1" stop-color="#080d12"/>
+            </linearGradient>
+          </defs>
+          <ellipse class="aboutBallGroundShadow" cx="40" cy="62" rx="27" ry="4.8"/>
+          <g transform="translate(12 3)">
+            <circle cx="28" cy="28" r="25.5" fill="url(#aboutBallSurface)" stroke="#dce4ea" stroke-width="1.4"/>
+            <path d="M28 16.2l9.1 6.7-3.5 10.7H22.4l-3.5-10.7z" fill="url(#aboutBallPatch)"/>
+            <path d="M19.1 4.2L28 2.5l8.9 1.7 1.9 8.2-7 4.8h-7.6l-7-4.8z" fill="#1b252d"/>
+            <path d="M3.9 18.2l6.6-7.4 7.1 4.4 1.3 7.7-5 6.2-9.8-2.4z" fill="#111820"/>
+            <path d="M52.1 18.2l-6.6-7.4-7.1 4.4-1.3 7.7 5 6.2 9.8-2.4z" fill="#111820"/>
+            <path d="M8.2 42.8l5.7-6.8 8.5-2.4 5.6 6.2-3.4 10.9-9.8-.7z" fill="#18222a"/>
+            <path d="M47.8 42.8L42.1 36l-8.5-2.4-5.6 6.2 3.4 10.9 9.8-.7z" fill="#18222a"/>
+            <g fill="none" stroke="#687782" stroke-width="1.15" stroke-linecap="round" opacity=".78">
+              <path d="M24.2 17.2l-6.6-2M31.8 17.2l6.6-2M18.9 22.9l-5 6.2M37.1 22.9l5 6.2M22.4 33.6l-8.5 2.4M33.6 33.6l8.5 2.4M28 39.8v10.9"/>
+            </g>
+            <path d="M13.4 11.5c4.2-4.6 10-7.3 16.2-7.4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".58"/>
+          </g>
+        </svg>
       </div>
       </div>
       <div class="aboutFooter">
@@ -13108,7 +13273,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.46">v5.46</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.47">v5.47</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
