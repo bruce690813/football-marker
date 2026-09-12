@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.52</title>
+<title>足球場邊記錄器 v5.53</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -13470,6 +13470,68 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
   .aboutCardText{font-size:10.1px!important}
 }
 
+/* =========================================================
+   v5.53 角球落點與成長足跡文案
+   - 將足球與角球標線往右下微移，靠近角球區但保留安全邊距
+   - 理念文案加入「成長足跡」，以小型 Emoji 作情感提示
+   ========================================================= */
+.aboutStatementLead{
+  display:inline-flex!important;
+  align-items:baseline;
+  gap:5px;
+  white-space:nowrap;
+  letter-spacing:1.55px!important;
+}
+.aboutFootprints{
+  display:inline-block;
+  flex:0 0 auto;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  font-size:.78em;
+  line-height:1;
+  opacity:.82;
+  transform:translateY(1px) rotate(7deg);
+  filter:saturate(.78) brightness(.94) drop-shadow(0 2px 4px rgba(0,0,0,.28));
+}
+.aboutCornerMark{
+  right:-3.2%;
+  bottom:-17px;
+}
+.aboutFieldBall{
+  right:2.5%;
+  bottom:-8px;
+}
+.aboutScroll{padding-bottom:14px!important}
+
+@media(max-width:390px){
+  .aboutStatementLead{
+    gap:4px;
+    font-size:14.8px!important;
+    letter-spacing:1.15px!important;
+  }
+  .aboutCornerMark{
+    right:-3.6%;
+    bottom:-15px;
+  }
+  .aboutFieldBall{
+    right:2.4%;
+    bottom:-7px;
+  }
+  .aboutScroll{padding-bottom:13px!important}
+}
+
+@media(max-height:690px){
+  .aboutStatementLead{
+    font-size:14.2px!important;
+    letter-spacing:1px!important;
+  }
+  .aboutCornerMark{bottom:-11px}
+  .aboutFieldBall{
+    right:2.8%;
+    bottom:-4px;
+  }
+  .aboutScroll{padding-bottom:10px!important}
+}
+
 </style>
 </head>
 <body>
@@ -13486,7 +13548,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.52</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.53</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -13850,7 +13912,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
       </div>
       <div class="aboutStatement" aria-label="工具理念">
         <div class="aboutStatementCopy">
-          <div class="aboutStatementLead">記錄每一場精彩</div>
+          <div class="aboutStatementLead"><span>記錄每一場成長足跡</span><span class="aboutFootprints" aria-hidden="true">👣</span></div>
           <div class="aboutStatementMain">為孩子的足球時光留下回憶</div>
         </div>
         <div class="aboutStatementSwoosh" aria-hidden="true"></div>
@@ -13864,7 +13926,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.52">v5.52</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.53">v5.53</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
