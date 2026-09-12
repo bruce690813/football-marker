@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.60</title>
+<title>足球場邊記錄器 v5.61</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -13844,6 +13844,38 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
   }
 }
 
+/* =========================================================
+   v5.61 賽前設定文案與角球漆線融合校正
+   - 賽前資料改為並列資訊，不指定比賽時間的填寫優先順序
+   - 角球線依照片中央線的寬度、低平均亮度與草地斷續感重製
+   ========================================================= */
+.aboutCornerMark{
+  opacity:.88;
+  filter:drop-shadow(0 1px .6px rgba(1,12,8,.26));
+}
+.aboutCornerBoundaryBase,
+.aboutCornerArcBase{
+  stroke:rgba(188,202,193,.10);
+  stroke-width:12;
+}
+.aboutCornerBoundary,
+.aboutCornerArc{
+  stroke:rgba(211,220,213,.22);
+  stroke-width:7.2;
+  stroke-dasharray:18 .55 7 .4 13 .7;
+}
+.aboutCornerBoundaryTexture,
+.aboutCornerArcTexture{
+  stroke:rgba(232,236,230,.28);
+  stroke-width:2.4;
+  stroke-dasharray:4.8 .75 1.6 .55 7.4 .9 2.3 .65;
+  stroke-linecap:butt;
+}
+.aboutCornerArc,
+.aboutCornerArcTexture{
+  stroke-dashoffset:5.3;
+}
+
 </style>
 </head>
 <body>
@@ -13860,7 +13892,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.60</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.61</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -14239,7 +14271,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.60">v5.60</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.61">v5.61</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -14262,7 +14294,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <div class="quickGuideNum">1</div>
             <div class="quickGuideStepText">
               <b>完成賽前設定</b>
-              <span>先選比賽時間，再填隊伍、賽事與場地；名單、守門員可視需要設定。</span>
+              <span>隊伍、賽事與場地、名單、守門員及比賽時間，都是賽前設定資訊，可依現場狀況填寫。</span>
             </div>
           </div>
 
@@ -14301,7 +14333,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 
         <div class="quickGuideTip">
           <div class="quickGuideTipTitle">💡 場邊小技巧</div>
-          <div class="quickGuideTipText">比賽時間在賽前選取後立即生效；若來不及輸入其他資料，先記準哨音與事件。</div>
+          <div class="quickGuideTipText">賽前資訊可依現場狀況設定；若時間緊迫，先記準哨音與事件，其他資料可稍後補充。</div>
         </div>
       </div>
 
