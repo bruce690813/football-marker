@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.48</title>
+<title>足球場邊記錄器 v5.49</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -12915,6 +12915,138 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
   .aboutFieldBallGlyph{font-size:36px}
 }
 
+/* =========================================================
+   v5.49 說明視窗最終視覺平衡
+   - 足球縮小、降亮度並加入草皮遮覆，避免像後貼圖示
+   - 理念文字與足球下移，重新分配中下方留白
+   - 弱化關閉鍵與功能卡外框，讓標題及主要 CTA 保持主層級
+   ========================================================= */
+
+/* 44px 觸控區維持不變，視覺圓鈕縮為 36px，降低與主按鈕競爭。 */
+.aboutTop > .aboutDismiss{
+  width:44px!important;
+  height:44px!important;
+  min-width:44px!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  color:rgba(241,249,255,.84)!important;
+  font-size:15px!important;
+  isolation:isolate;
+}
+.aboutTop > .aboutDismiss::before{
+  content:"";
+  position:absolute;
+  inset:4px;
+  z-index:-1;
+  border-radius:50%;
+  background:rgba(2,18,32,.48);
+  border:1px solid rgba(125,211,252,.20);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 12px rgba(0,0,0,.18);
+  -webkit-backdrop-filter:blur(3px);
+  backdrop-filter:blur(3px);
+}
+
+/* 卡片仍保留玻璃層，但降低邊線及陰影強度，讓球場成為共同背景。 */
+.aboutCard{
+  background:linear-gradient(180deg,rgba(7,23,39,.70),rgba(3,14,26,.65))!important;
+  border-color:rgba(74,185,239,.17)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 6px 16px rgba(0,0,0,.18)!important;
+}
+.aboutCard::after{opacity:.48}
+.aboutCard::before{
+  opacity:.78;
+  box-shadow:0 0 8px rgba(56,189,248,.22)!important;
+}
+
+/* 理念群組往下落，保留球場空間感，同時消除頁尾上方的失衡留白。 */
+.aboutStatement{
+  min-height:112px!important;
+  margin-bottom:7px!important;
+}
+.aboutStatement::before{
+  top:20%!important;
+  height:76%!important;
+  opacity:.88!important;
+}
+.aboutStatementCopy{
+  padding:36px 0 8px!important;
+}
+.aboutStatementSwoosh{
+  bottom:2px!important;
+  opacity:.48!important;
+}
+
+/* 球體先與夜間草地調色，再由接地陰影及前景草色遮覆下緣。 */
+.aboutFieldBall{
+  right:10%;
+  bottom:5px;
+  width:50px;
+  height:47px;
+  transform:rotate(-4deg);
+}
+.aboutFieldBall::after{
+  left:9px;
+  right:8px;
+  bottom:0;
+  height:7px;
+  background:radial-gradient(ellipse,rgba(0,0,0,.44) 0%,rgba(0,0,0,.22) 46%,rgba(0,0,0,0) 76%);
+  filter:blur(3px);
+  transform:scaleX(1.18);
+}
+.aboutFieldBall::before{
+  content:"";
+  position:absolute;
+  z-index:2;
+  left:7px;
+  right:7px;
+  bottom:3px;
+  height:7px;
+  border-radius:50%;
+  background:linear-gradient(180deg,rgba(7,58,35,0),rgba(4,39,24,.54));
+  filter:blur(.45px);
+  pointer-events:none;
+}
+.aboutFieldBallGlyph{
+  font-size:39px;
+  opacity:.91;
+  filter:brightness(.86) saturate(.74) contrast(.96) drop-shadow(0 3px 3px rgba(0,0,0,.30));
+}
+
+@media(max-width:390px){
+  .aboutTop > .aboutDismiss::before{inset:5px}
+  .aboutStatement{
+    min-height:103px!important;
+    margin-bottom:6px!important;
+  }
+  .aboutStatementCopy{padding:31px 0 7px!important}
+  .aboutStatementSwoosh{bottom:1px!important}
+  .aboutFieldBall{
+    right:8%;
+    bottom:4px;
+    width:46px;
+    height:44px;
+  }
+  .aboutFieldBallGlyph{font-size:36px}
+}
+
+@media(max-height:690px){
+  .aboutStatement{
+    min-height:88px!important;
+    margin-top:7px!important;
+    margin-bottom:5px!important;
+  }
+  .aboutStatementCopy{padding:23px 0 6px!important}
+  .aboutFieldBall{
+    right:8%;
+    bottom:3px;
+    width:42px;
+    height:40px;
+  }
+  .aboutFieldBallGlyph{font-size:33px}
+}
+
 </style>
 </head>
 <body>
@@ -12931,7 +13063,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.48</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.49</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -13309,7 +13441,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.48">v5.48</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.49">v5.49</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
