@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.76</title>
+<title>足球場邊記錄器 v5.77</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14335,6 +14335,26 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
   .aboutGuideChevron{color:#b7e2f5!important}
 }
 
+/* v5.77 統一事件時間軸：隊伍色與事件圖示分離 */
+.matchTimelineLegend{display:flex;gap:18px;font-size:13px;margin:10px 0}
+.timelineOur{color:#59c8f1}.timelineOpp{color:#ffad83}
+.matchTimelineNote{font-size:12px;line-height:1.5;color:#b3c3d3;margin:8px 0 14px}
+.matchTimeline{list-style:none;padding:0;margin:0}
+.matchTimelinePhase{color:#b3c3d3;font-size:14px;font-weight:700;padding:16px 0 10px;border-top:1px solid #293c4e}
+.matchTimelineRow{display:grid;grid-template-columns:54px 16px minmax(0,1fr) 48px;gap:8px;position:relative;padding:10px 4px 16px;align-items:start}
+.matchTimelineTime{font-size:13px;color:#b3c3d3;font-variant-numeric:tabular-nums;padding-top:2px}
+.matchTimelineNode{position:relative;align-self:stretch}
+.matchTimelineNode:before{content:'';position:absolute;left:7px;top:9px;bottom:-26px;width:2px;background:#30465b}
+.matchTimelineNode:after{content:'';position:absolute;left:3px;top:5px;width:10px;height:10px;border-radius:50%;background:#aeb9c5}
+.isOur .matchTimelineNode:after{background:#59c8f1}.isOpp .matchTimelineNode:after{background:#ffad83}
+.matchTimelineRow:last-child .matchTimelineNode:before,.matchTimelineRow:has(+ .matchTimelinePhase) .matchTimelineNode:before{bottom:0}
+.matchTimelineContent{font-size:14px;line-height:1.5;min-width:0;overflow-wrap:anywhere;color:#eaf2fa}
+.matchTimelineActor{color:#c8d6e4}.matchTimelineAssist{font-size:12px;color:#b3c3d3;margin-top:3px}
+.matchTimelineScore{font-size:15px;color:#aebccc;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.matchTimelineRow.isGoal{background:rgba(89,200,241,.045);border-radius:8px}
+.isGoal .matchTimelineScore,.isGoal .matchTimelineContent{font-weight:800;color:#fff}
+.matchTimelineContent .reportCardShape{display:inline-block;width:10px;height:16px;vertical-align:middle}
+@media(max-width:350px){.matchTimelineRow{grid-template-columns:46px 12px minmax(0,1fr) 43px;gap:6px}.matchTimelineContent{font-size:13px}}
 </style>
 </head>
 <body>
@@ -14351,7 +14371,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.76</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.77</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15205,12 +15225,11 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
       <div class="reportSectionTitle">球員進球統計</div>
       <div class="scorerStats" id="reportScorers"></div>
 
-      <div class="reportSectionTitle">進球紀錄</div>
-      <div id="reportGoals"></div>
-
-      <div style="height:12px"></div>
-      <div class="reportSectionTitle">其他精彩標記事件</div>
-      <div id="reportOthers"></div>
+      <div class="reportSectionTitle">比賽事件時間軸</div>
+      <div class="matchTimelineLegend"><span class="timelineOur">● 我方</span><span class="timelineOpp">● 對手</span></div>
+      <p class="matchTimelineNote">依事件順序排列，間距不代表時間長度；右側為事件當時比分。</p>
+      <div id="reportTimeline"></div>
+      <div id="reportImageDownloads" hidden aria-live="polite"></div>
 
       
     </div>
@@ -19266,6 +19285,37 @@ function startFromQuickGuide(){
 }
 
 /* Report */
+// v5.77：摘要與圖片共用唯一事件來源；只排序副本，不改寫紀錄或比分。
+function reportTimelineEntries(){
+  return state.markers.map((m,index)=>({m,index}))
+    .sort((a,b)=>(Number(a.m.period)||1)-(Number(b.m.period)||1)
+      || (Number(a.m.seconds)||0)-(Number(b.m.seconds)||0) || a.index-b.index)
+    .map(({m,index})=>({
+      type:'timelineEvent', sourceIndex:index, event:m.event,
+      team:m.team==='OUR'?'OUR':m.team==='OPP'?'OPP':'UNKNOWN',
+      period:Number(m.period)||1,
+      phase:state.multiPeriod?periodLabel(Number(m.period)||1):'比賽',
+      time:fmtMMSS(Number(m.seconds)||0),
+      actor:`${m.team==='OUR'?'我方':m.team==='OPP'?'對手':'未指定'}${m.player_number?` #${m.player_number}`:''}`,
+      assist:m.event==='GOAL' && m.assist_number?`助攻 #${m.assist_number}`:'',
+      typeLabel:eventLabel(m.event)+(m.second_yellow?'（兩黃轉紅）':''),
+      score:String(m.score_after||'—')
+    }));
+}
+function reportTimelineHTML(){
+  const entries=reportTimelineEntries();
+  if(!entries.length) return '<div class="reportEmpty">尚未標記事件</div>';
+  let phase=null;
+  return '<ol class="matchTimeline">'+entries.map(e=>{
+    const heading=phase!==e.period?`<li class="matchTimelinePhase">${escapeHtml(e.phase)}</li>`:'';
+    phase=e.period;
+    return heading+`<li class="matchTimelineRow ${e.team==='OUR'?'isOur':e.team==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
+      <div class="matchTimelineTime">${escapeHtml(e.time)}</div><div class="matchTimelineNode" aria-hidden="true"></div>
+      <div class="matchTimelineContent"><div>${reportTypeHTML(e.event)}${e.typeLabel.includes('兩黃')?'（兩黃轉紅）':''}</div><div class="matchTimelineActor">${escapeHtml(e.actor)}</div>${e.assist?`<div class="matchTimelineAssist">${escapeHtml(e.assist)}</div>`:''}</div>
+      <div class="matchTimelineScore" aria-label="當時比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>
+    </li>`;
+  }).join('')+'</ol>';
+}
 function reportEventHTML(m, goalIndex=null){
   const team=teamDisplay(m.team) || '未指定';
   const num=m.player_number ? ` #${m.player_number}` : '';
@@ -19308,6 +19358,7 @@ function reportOtherEventHTML(m){
 }
 
 function buildReportDOM(){
+  byId('reportImageDownloads').hidden=true;
   byId('reportOurTeam').textContent=state.ourTeam||'我方';
   byId('reportOppTeam').textContent=state.oppTeam||'對手';
   byId('reportScore').textContent=`${state.ourScore} : ${state.oppScore}`;
@@ -19367,15 +19418,8 @@ function buildReportDOM(){
   badge.textContent=state.finished ? (state.penalty?.completed?`比賽結束｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:'比賽結束') : (state.penalty?.active?`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:(state.started ? (state.currentPeriod===3?'延長賽':state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?(state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':`中場 ${fmtMMSS(halftimeElapsed())}`):'尚未開始')));
   badge.style.display=state.finished?'none':'inline-flex';
   renderDiff(byId('reportDiff'));
-  const goals=state.markers.filter(m=>m.event==='GOAL');
-  const others=state.markers.filter(m=>m.event!=='GOAL');
   byId('reportScorers').innerHTML=scorerStatsHTML();
-  byId('reportGoals').innerHTML=goals.length
-    ? `<div class="reportTable goals"><div class="reportTableHead"><div>半場 / 時間</div><div>進球</div><div>球員 / 隊伍</div><div>比分</div></div><div class="reportTableBody">${goals.map((m,i)=>reportEventHTML(m,i)).join('')}</div></div>`
-    : '<div class="reportEmpty">尚未標記進球事件</div>';
-  byId('reportOthers').innerHTML=others.length
-    ? `<div class="reportTable others"><div class="reportTableHead"><div>半場 / 時間</div><div>球員 / 隊伍</div><div>類型</div><div>比分</div></div><div class="reportTableBody">${others.map(m=>reportOtherEventHTML(m)).join('')}</div></div>`
-    : '<div class="reportEmpty">尚未標記其他精彩事件</div>';
+  byId('reportTimeline').innerHTML=reportTimelineHTML();
 }
 
 function syncVisualViewport(){
@@ -19477,39 +19521,12 @@ function reportLines(){
   const stats=scorerStats();
   if(!stats.length) lines.push({type:'event', text:'— 尚無可統計的球員背號進球資料'});
   stats.forEach(s=>lines.push({type:'scorer', name:s.name, goals:s.goals}));
-  lines.push({type:'section', text:'進球紀錄'});
-  const goals=state.markers.filter(m=>m.event==='GOAL');
-  if(!goals.length) lines.push({type:'event', text:'— 尚未標記進球事件'});
-  if(goals.length) lines.push({type:'goalTableHeader'});
-  goals.forEach((m,i)=>{
-    const team=teamDisplay(m.team);
-    const num=m.player_number ? ` #${m.player_number}` : '';
-    const period=state.multiPeriod ? periodLabel(m.period||1) : '';
-    lines.push({
-      type:'goalEvent',
-      periodTime:period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds),
-      ordinal:`G${i+1}`,
-      actor:`${team}${num}`,
-      assist:m.assist_number?`助攻 #${m.assist_number}`:'',
-      score:m.score_after||''
-    });
-  });
-  lines.push({type:'section', text:'其他精彩標記事件'});
-  const others=state.markers.filter(m=>m.event!=='GOAL');
-  if(!others.length) lines.push({type:'event', text:'— 尚未標記其他精彩事件'});
-  if(others.length) lines.push({type:'otherTableHeader'});
-  others.forEach(m=>{
-    const team=teamDisplay(m.team) || '未指定';
-    const period=state.multiPeriod ? periodLabel(m.period||1) : '';
-    lines.push({
-      type:'otherEvent',
-      event:m.event,
-      typeLabel:eventLabel(m.event),
-      periodTime:period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds),
-      actor:`${team}${m.player_number ? ` #${m.player_number}` : ''}`,
-      score:m.score_after||''
-    });
-  });
+  lines.push({type:'section', text:'比賽事件時間軸'});
+  lines.push({type:'meta',text:'青藍點：我方｜柔橘點：對手｜比分為事件當時比分'});
+  lines.push({type:'meta',text:'依事件順序排列，間距不代表時間長度'});
+  const entries=reportTimelineEntries();
+  if(!entries.length) lines.push({type:'event',text:'— 尚未標記事件'});
+  lines.push(...entries);
   return lines;
 }
 
@@ -19574,12 +19591,13 @@ function drawTeamNameTwoLines(ctx, text, centerX, centerY, maxWidth, maxFont=48,
   ctx.fillText(line2,centerX,centerY+gap/2);
 }
 
-function makeReportCanvas(){
-  const lines=reportLines(), W=1080, pad=72;
+function makeReportCanvas(lines=reportLines(),page=1,pageCount=1){
+  const W=1080, pad=72;
   let dynamic=0;
   lines.forEach(line=>{
-    if(line.type==='title') dynamic+=90;
-    else if(line.type==='score') dynamic+=150;
+    if(line.type==='title') dynamic+=105;
+    else if(line.type==='score') dynamic+=186;
+    else if(line.type==='timelineEvent') dynamic+=line.assist?138:110;
     else if(line.type==='section') dynamic+=64;
     else if(line.type==='scorer') dynamic+=54;
     else if(line.type==='goalTableHeader') dynamic+=42;
@@ -19653,6 +19671,25 @@ function makeReportCanvas(){
       ctx.fillText('⚽'.repeat(line.goals), nameX + nameWidth + 14, y);
       ctx.strokeStyle='#263442'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pad,y+26); ctx.lineTo(W-pad,y+26); ctx.stroke();
       y+=54;
+    }else if(line.type==='timelineEvent'){
+      const rowH=line.assist?138:110, nodeX=pad+186, actorX=pad+222;
+      const isGoal=line.event==='GOAL';
+      ctx.textAlign='left';
+      if(isGoal){ctx.fillStyle='#142536';roundRect(ctx,pad,y-24,W-pad*2,rowH-8,10,true,false);}
+      ctx.strokeStyle='#30465b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(nodeX,y);ctx.lineTo(nodeX,y+rowH-12);ctx.stroke();
+      ctx.fillStyle=line.team==='OUR'?'#59c8f1':line.team==='OPP'?'#ffad83':'#aeb9c5';
+      ctx.beginPath();ctx.arc(nodeX,y,8,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#b3c3d3';ctx.font='500 25px -apple-system, sans-serif';
+      ctx.fillText(line.phase,pad+8,y);ctx.fillText(line.time,pad+8,y+35);
+      ctx.fillStyle='#eef4fb';ctx.font=`${isGoal?800:600} 29px -apple-system, Apple Color Emoji, sans-serif`;
+      if(line.event==='YELLOW_CARD'||line.event==='RED_CARD'){
+        ctx.fillStyle=line.event==='YELLOW_CARD'?'#ffd21f':'#ef3535';roundRect(ctx,actorX,y-16,18,28,2,true,false);
+        ctx.fillStyle='#eef4fb';ctx.fillText(line.typeLabel,actorX+30,y);
+      }else ctx.fillText(`${emoji(line.event)} ${line.typeLabel}`,actorX,y);
+      ctx.fillStyle='#c8d6e4';ctx.font='500 27px -apple-system, sans-serif';ctx.fillText(line.actor,actorX,y+36);
+      if(line.assist){ctx.fillStyle='#b3c3d3';ctx.font='500 24px -apple-system, sans-serif';ctx.fillText(line.assist,actorX,y+72);}
+      ctx.fillStyle=isGoal?'#ffffff':'#aebccc';ctx.font=`${isGoal?800:500} 31px -apple-system, sans-serif`;ctx.textAlign='right';ctx.fillText(line.score,W-pad-8,y);
+      ctx.textAlign='left';y+=rowH;
     }else if(line.type==='goalTableHeader'){
       ctx.fillStyle='#172435'; roundRect(ctx,pad,y-18,W-pad*2,34,10,true,false);
       ctx.fillStyle='#93c5fd'; ctx.font='800 20px -apple-system, sans-serif'; ctx.textAlign='left';
@@ -19745,7 +19782,7 @@ function makeReportCanvas(){
     }
   }
   ctx.fillStyle='#64748b'; ctx.font='500 20px -apple-system, sans-serif'; ctx.textAlign='center';
-  ctx.fillText('足球場邊記錄器',W/2,H-72);
+  ctx.fillText(`足球場邊記錄器 · 第 ${page} / ${pageCount} 頁`,W/2,H-72);
   return canvas;
 }
 function roundRect(ctx,x,y,w,h,r,fill,stroke){
@@ -19782,13 +19819,57 @@ function dataURLToBlob(dataUrl){
 // 預先讓瀏覽器完成字型量測；匯出時仍保持同步，以免 iOS Safari 遺失分享手勢權限。
 if(document.fonts && document.fonts.ready){ document.fonts.ready.catch(()=>{}); }
 
+function reportImagePages(){
+  const lines=reportLines(), prefix=lines.slice(0,2), pages=[];
+  let current=[...prefix], height=291;
+  const cost=l=>l.type==='timelineEvent'?(l.assist?138:110):l.type==='section'?64:l.type==='scorer'?54:l.type==='event'?52:46;
+  const rest=lines.slice(2);
+  rest.forEach((line,i)=>{
+    let reserve=0;
+    if(line.type==='section'){
+      for(let j=i+1;j<rest.length;j++){
+        reserve+=cost(rest[j]);
+        if(rest[j].type!=='meta') break;
+      }
+    }
+    if(height+cost(line)+reserve>2200 && current.length>2){
+      pages.push(current);current=[...prefix];height=291;
+      if(line.type==='timelineEvent'){
+        current.push({type:'section',text:'比賽事件時間軸（續）'},{type:'meta',text:'青藍點：我方｜柔橘點：對手｜比分為事件當時比分'});height+=110;
+      }
+    }
+    current.push(line);height+=cost(line);
+  });
+  pages.push(current);
+  return pages;
+}
 function buildReportImageFile(){
   // 同步完成 Canvas → File，避免 iOS Safari 因等待 toBlob()
   // 而失去使用者點擊所提供的 share user activation。
-  const canvas=makeReportCanvas();
-  const dataUrl=canvas.toDataURL('image/png');
-  const blob=dataURLToBlob(dataUrl);
-  return {canvas, file:new File([blob], reportFilename('png'), {type:'image/png'}), blob};
+  const pages=reportImagePages();
+  const images=pages.map((lines,i)=>{
+    const canvas=makeReportCanvas(lines,i+1,pages.length);
+    const blob=dataURLToBlob(canvas.toDataURL('image/png'));
+    const name=pages.length===1?reportFilename('png'):reportFilename('png').replace(/\.png$/,`_p${String(i+1).padStart(2,'0')}.png`);
+    return {file:new File([blob],name,{type:'image/png'}),blob};
+  });
+  return {...images[0],images};
+}
+
+let reportImageUrls=[];
+function showReportImageDownloads(images){
+  reportImageUrls.forEach(url=>URL.revokeObjectURL(url));reportImageUrls=[];
+  openReport();
+  const box=byId('reportImageDownloads');
+  box.replaceChildren();box.hidden=false;
+  const title=document.createElement('p');title.textContent=`已產生 ${images.length} 張圖片，請逐張下載：`;box.appendChild(title);
+  images.forEach(({file,blob},i)=>{
+    const url=URL.createObjectURL(blob);reportImageUrls.push(url);
+    const a=document.createElement('a');a.href=url;a.download=file.name;
+    a.textContent=`下載第 ${i+1} 張圖片`;a.style.cssText='display:block;padding:14px;margin:8px 0;color:#bce6ff;background:#15334c;border-radius:10px';
+    box.appendChild(a);
+  });
+  box.scrollIntoView({block:'nearest'});
 }
 
 async function shareImageFile(mode='share'){
@@ -19801,14 +19882,15 @@ async function shareImageFile(mode='share'){
     return;
   }
 
-  const {file,blob}=result;
+  const {images}=result;
+  const files=images.map(image=>image.file);
 
-  if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+  if(navigator.share && navigator.canShare && navigator.canShare({files})){
     try{
       // 必須在按鈕點擊後直接呼叫 navigator.share()
       const shareData={
         title:'足球比賽摘要',
-        files:[file]
+        files
       };
       // 儲存圖片模式不再附帶教學提示文字，避免訊息 App / 分享面板出現
       //「請選擇儲存影像 / 儲存到照片」等額外文字。
@@ -19822,15 +19904,7 @@ async function shareImageFile(mode='share'){
   }
 
   // 非 iOS / 不支援 Web Share files：改用一般下載。
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download=reportFilename('png');
-  a.style.display='none';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),2000);
+  showReportImageDownloads(images);
 }
 
 function shareReportImage(){
