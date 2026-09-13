@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.62</title>
+<title>足球場邊記錄器 v5.63</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -13930,19 +13930,19 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.62</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.63</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
     <div class="matchMetaRow">
       <div class="preMetaField">
         <span class="preMetaIcon preCompetitionIcon" aria-hidden="true">🏆</span>
-        <input id="competition" placeholder="賽事名稱" maxlength="20" enterkeyhint="next" autocomplete="off" aria-label="賽事名稱">
+        <input id="competition" type="text" inputmode="text" lang="zh-Hant" placeholder="賽事名稱" maxlength="20" enterkeyhint="next" autocomplete="off" autocapitalize="off" aria-label="賽事名稱">
       </div>
       <div class="preMetaField venueMetaField">
         <span class="preMetaIcon preVenueIcon" aria-hidden="true">🏟️</span>
         <div class="venueInputWrap">
-          <input id="venue" placeholder="場地" maxlength="15" enterkeyhint="done" autocomplete="off" aria-label="比賽場地，可手動輸入或從最近場地選擇">
+          <input id="venue" type="text" inputmode="text" lang="zh-Hant" placeholder="場地" maxlength="15" enterkeyhint="done" autocomplete="off" autocapitalize="off" aria-label="比賽場地，可手動輸入或從最近場地選擇">
           <button id="venueDropdownBtn" class="venueDropdownBtn" type="button" aria-label="選擇最近使用場地" aria-expanded="false" onclick="toggleVenueMenu(event)" onmousedown="event.preventDefault()">▾</button>
         </div>
         <div id="venueMenu" class="venueMenu" role="menu" aria-label="最近使用場地"></div>
@@ -14034,7 +14034,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
       <div class="scoreRow">
         <div class="teamNameBox" id="ourTeamBox" onclick="editTeamName('ourTeam')">
           <div class="teamNameDisplay" id="ourTeamDisplay">忠義國小</div>
-          <input id="ourTeam" class="teamNameEditor" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="我方隊伍名稱，可稍後補充">
+          <input id="ourTeam" class="teamNameEditor" type="text" inputmode="text" lang="zh-Hant" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" autocapitalize="off" aria-label="我方隊伍名稱，可稍後補充">
         </div>
         <div class="scoreMid">
           <div class="scoreText" aria-label="目前比分">
@@ -14047,7 +14047,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
         </div>
         <div class="teamNameBox" id="oppTeamBox" onclick="editTeamName('oppTeam')">
           <div class="teamNameDisplay empty" id="oppTeamDisplay">對手</div>
-          <input id="oppTeam" class="teamNameEditor" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" aria-label="對手隊伍名稱">
+          <input id="oppTeam" class="teamNameEditor" type="text" inputmode="text" lang="zh-Hant" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" autocapitalize="off" aria-label="對手隊伍名稱">
         </div>
       </div>
     </div>
@@ -14341,7 +14341,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span>快速使用指南</span></span>
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
-          <div class="aboutVersionFooter" aria-label="目前版本 v5.62">v5.62</div>
+          <div class="aboutVersionFooter" aria-label="目前版本 v5.63">v5.63</div>
         </div>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
@@ -14401,10 +14401,6 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
           </div>
         </div>
 
-        <div class="quickGuideTip">
-          <div class="quickGuideTipTitle">💡 場邊小技巧</div>
-          <div class="quickGuideTipText">賽前資訊可依現場狀況設定；若時間緊迫，先記準哨音與事件，其他資料可稍後補充。</div>
-        </div>
       </div>
 
       <div class="quickGuideFooter">
@@ -14884,6 +14880,11 @@ let state={
 
 function byId(id){ return document.getElementById(id); }
 
+function containsBopomofo(value){
+  // 注音符號、聲調符號與注音擴充區：ㄅ～ㄩ、ˊˇˋ˙、ㆠ～ㆺ。
+  return /[\u02C7\u02CA-\u02CB\u02D9\u3105-\u312F\u31A0-\u31BF]/u.test(String(value||''));
+}
+
 function validateTextField(id, label, required, maxLength){
   const el=byId(id);
   const value=el.value.trim();
@@ -14903,6 +14904,12 @@ function validateTextField(id, label, required, maxLength){
   if(/[<>\r\n]/.test(value)){
     el.classList.add('requiredError');
     alert(`${label}不可包含 <、> 或換行字元`);
+    el.focus();
+    return null;
+  }
+  if(containsBopomofo(value)){
+    el.classList.add('requiredError');
+    alert(`${label}不可使用注音符號，請完成選字或改為正式文字`);
     el.focus();
     return null;
   }
@@ -15214,10 +15221,15 @@ function rememberVenueIfEligible(value){
 }
 
 function saveState(){
-  state.ourTeam=byId('ourTeam').value.trim();
-  state.oppTeam=byId('oppTeam').value.trim();
-  state.venue=byId('venue').value.trim();
-  state.competition=byId('competition').value.trim();
+  const ourTeamValue=byId('ourTeam').value.trim();
+  const oppTeamValue=byId('oppTeam').value.trim();
+  const venueValue=byId('venue').value.trim();
+  const competitionValue=byId('competition').value.trim();
+  // 組字中的注音或直接輸入的注音符號不寫入本場資料與 LocalStorage。
+  if(!containsBopomofo(ourTeamValue)) state.ourTeam=ourTeamValue;
+  if(!containsBopomofo(oppTeamValue)) state.oppTeam=oppTeamValue;
+  if(!containsBopomofo(venueValue)) state.venue=venueValue;
+  if(!containsBopomofo(competitionValue)) state.competition=competitionValue;
   localStorage.setItem(KEY, JSON.stringify(state));
   if(state.ourTeam && !/[<>\r\n]/.test(state.ourTeam)){
     localStorage.setItem(LAST_OUR_TEAM_KEY, state.ourTeam);
@@ -16474,6 +16486,11 @@ function validateTeamNameValue(value, label, required=false){
 
   if(/[<>\r\n]/.test(name)){
     alert(`${label}不可包含 <、> 或換行`);
+    return false;
+  }
+
+  if(containsBopomofo(name)){
+    alert(`${label}不可使用注音符號，請完成選字或改為正式文字`);
     return false;
   }
 
@@ -19598,8 +19615,37 @@ async function shareCSV(){
   byId(id).addEventListener('click',e=>e.stopPropagation());
 });
 
+function isImeComposing(e){
+  return Boolean(e?.isComposing || e?.keyCode===229 || e?.target?.dataset?.composing==='true');
+}
+
+const matchTextInputIds=['ourTeam','oppTeam','venue','competition'];
+matchTextInputIds.forEach(id=>{
+  const el=byId(id);
+  if(!el) return;
+  el.addEventListener('compositionstart',()=>{
+    el.dataset.composing='true';
+  });
+  el.addEventListener('compositionend',()=>{
+    el.dataset.composing='false';
+    // 等注音候選字正式寫回 input 後再儲存，避免 render 中斷組字。
+    requestAnimationFrame(()=>{
+      if(containsBopomofo(el.value)) return;
+      saveState();
+      render();
+    });
+  });
+});
+
 ['ourTeam','oppTeam','venue','competition'].forEach(id=>{
-  byId(id).addEventListener('input', ()=>{
+  byId(id).addEventListener('input', e=>{
+    // 注音／倉頡等中文輸入法組字期間不重繪畫面。
+    if(isImeComposing(e)) return;
+    if(containsBopomofo(e.target.value)){
+      e.target.classList.add('requiredError');
+      return;
+    }
+    e.target.classList.remove('requiredError');
     if(id==='ourTeam' && byId('ourTeam').value.trim()){
       byId('ourTeam').classList.remove('requiredError');
     }
@@ -19728,6 +19774,7 @@ byId('venue').addEventListener('focus', ()=>{
 });
 
 byId('ourTeam').addEventListener('keydown', e=>{
+  if(isImeComposing(e)) return;
   if(e.key==='Enter'){
     e.preventDefault();
     if(isPreMatchGuidedSetup()){
@@ -19740,6 +19787,7 @@ byId('ourTeam').addEventListener('keydown', e=>{
 });
 
 byId('oppTeam').addEventListener('keydown', e=>{
+  if(isImeComposing(e)) return;
   if(e.key==='Enter'){
     e.preventDefault();
     if(isPreMatchGuidedSetup()){
@@ -19752,6 +19800,7 @@ byId('oppTeam').addEventListener('keydown', e=>{
 });
 
 byId('competition').addEventListener('keydown', e=>{
+  if(isImeComposing(e)) return;
   if(e.key==='Enter'){
     e.preventDefault();
     if(isPreMatchGuidedSetup()){
@@ -19769,6 +19818,7 @@ byId('competition').addEventListener('keydown', e=>{
 });
 
 byId('venue').addEventListener('keydown', e=>{
+  if(isImeComposing(e)) return;
   if(e.key==='Enter'){
     e.preventDefault();
     if(isPreMatchGuidedSetup()){
@@ -19797,8 +19847,11 @@ byId('ourTeam').addEventListener('blur', ()=>{
     return;
   }
 
-  const value=byId('ourTeam').value.trim();
-  if(value) validateTextField('ourTeam','我方隊伍名稱',false,15);
+  const value=validateTextField('ourTeam','我方隊伍名稱',false,15);
+  if(value===null){
+    byId('ourTeamBox').classList.add('editing');
+    return;
+  }
   byId('ourTeamBox').classList.remove('editing');
   updateTeamNameDisplays();
 });
@@ -19813,8 +19866,11 @@ byId('oppTeam').addEventListener('blur', ()=>{
     return;
   }
 
-  const value=byId('oppTeam').value.trim();
-  if(value) validateTextField('oppTeam','對手隊伍名稱',false,15);
+  const value=validateTextField('oppTeam','對手隊伍名稱',false,15);
+  if(value===null){
+    byId('oppTeamBox').classList.add('editing');
+    return;
+  }
   byId('oppTeamBox').classList.remove('editing');
   updateTeamNameDisplays();
 });
@@ -19879,6 +19935,7 @@ window.visualViewport?.addEventListener('scroll',()=>{
   });
 
   input.addEventListener('blur',()=>{
+    if(id==='venue') validateTextField('venue','場地',false,15);
     requestAnimationFrame(()=>updatePreMetaInputFit(input));
   });
 });
