@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.75</title>
+<title>足球場邊記錄器 v5.76</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14301,6 +14301,40 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
   .aboutFooterStatementSub{font-size:10.4px}
 }
 
+/* =========================================================
+   v5.76 指南層級與球員局部光影精修
+   - 快速指南文字與外框亮度降低約 8%，維持完整 44px 觸控範圍
+   - 僅在紅衣球員所在區域加入約 4% 的柔和日光，不改變整張照片
+   - 理念文字大小、頁尾高度、球員與球門構圖均維持不變
+   ========================================================= */
+.modal.aboutModal::before{
+  background:
+    radial-gradient(ellipse at 38% 76%,rgba(215,238,220,.045) 0%,rgba(215,238,220,.025) 13%,rgba(215,238,220,0) 29%),
+    linear-gradient(90deg,rgba(3,22,31,.38) 0%,rgba(3,22,31,.27) 58%,rgba(3,22,31,.13) 100%),
+    linear-gradient(180deg,rgba(3,20,31,.48) 0%,rgba(3,22,30,.34) 36%,rgba(3,24,27,.18) 61%,rgba(2,14,21,.60) 100%)!important;
+}
+.aboutGuideBtn{
+  border-color:rgba(111,205,244,.17)!important;
+  background:rgba(5,32,50,.28)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+  color:#9bcce4!important;
+}
+.aboutGuideChevron{color:#608aa4!important}
+.aboutGuideBtn:active{
+  border-color:rgba(128,217,252,.28)!important;
+  background:rgba(12,57,82,.40)!important;
+  color:#a8dcf4!important;
+}
+
+@media(prefers-contrast:more){
+  .aboutGuideBtn{
+    background:rgba(3,25,41,.82)!important;
+    border-color:rgba(152,224,255,.48)!important;
+    color:#d9f1fc!important;
+  }
+  .aboutGuideChevron{color:#b7e2f5!important}
+}
+
 </style>
 </head>
 <body>
@@ -14317,7 +14351,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.75</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.76</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
