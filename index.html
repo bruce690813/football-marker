@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.74</title>
+<title>足球場邊記錄器 v5.75</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14263,6 +14263,44 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
   }
 }
 
+/* =========================================================
+   v5.75 頁尾理念文字可讀性微調
+   - 第一行與第二行同步放大約 15%～18%，不再像註解文字
+   - 維持原有兩行層級、指南 44px 觸控範圍與頁尾總高度
+   - 窄螢幕與矮螢幕保留獨立字級，避免擠壓右側指南
+   ========================================================= */
+.aboutFooterStatementLead{
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:.5px;
+}
+.aboutFooterStatementSub{
+  color:#c9e3ef;
+  font-size:12px;
+  font-weight:720;
+  letter-spacing:.2px;
+}
+
+@media(max-width:390px){
+  .aboutFooterStatementLead{font-size:14.5px}
+  .aboutFooterStatementSub{font-size:11.4px}
+}
+
+@media(max-width:350px){
+  .aboutFooterStatementLead{font-size:13.4px;letter-spacing:.25px}
+  .aboutFooterStatementSub{font-size:10.6px;letter-spacing:0}
+}
+
+@media(max-height:690px){
+  .aboutFooterStatementLead{font-size:13.8px}
+  .aboutFooterStatementSub{font-size:10.9px}
+}
+
+@media(max-width:350px) and (max-height:690px){
+  .aboutFooterStatementLead{font-size:13.2px}
+  .aboutFooterStatementSub{font-size:10.4px}
+}
+
 </style>
 </head>
 <body>
@@ -14279,7 +14317,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.74</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.75</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
