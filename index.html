@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.78</title>
+<title>足球場邊記錄器 v5.79</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14366,6 +14366,57 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 .isGoal .matchTimelineScore,.isGoal .matchTimelineContent{font-weight:800;color:#fff}
 .matchTimelineContent .reportCardShape{display:inline-block;width:10px;height:16px;vertical-align:middle}
 @media(max-width:350px){.matchTimelineRow{grid-template-columns:46px 12px minmax(0,1fr) 43px;gap:6px}.matchTimelineContent{font-size:13px}}
+
+/* v5.79 摘要同步採用緊湊資訊架構，讓事件時間軸更早出現。 */
+.reportMeta{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:6px 10px;
+  width:100%;
+  margin-top:9px;
+  text-align:left;
+}
+.reportMeta > span{
+  min-width:0;
+  padding:6px 8px;
+  border-radius:8px;
+  background:rgba(20,39,57,.64);
+  overflow-wrap:anywhere;
+}
+.reportRosterMeta{grid-column:1/-1}
+.reportBody .reportSectionTitle{margin:5px 0 7px}
+.reportTimeCard{padding:8px;margin-bottom:9px}
+.reportOverviewGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.reportOverviewCell{
+  min-width:0;
+  min-height:54px;
+  padding:7px 9px;
+  border-radius:9px;
+  background:#162535;
+  color:#c6d4e2;
+  font-size:11px;
+  line-height:1.45;
+}
+.reportOverviewLabel{display:block;color:#7dd3fc;font-size:10px;font-weight:900;margin-bottom:2px}
+.reportOverviewValue{color:#eef5fc;font-size:12px;font-weight:750;font-variant-numeric:tabular-nums}
+.reportOverviewCell.primary .reportOverviewValue{font-size:19px;color:#38bdf8;font-weight:950}
+.reportHalftime[hidden]{display:none!important}
+.reportHalftime{margin:0;padding:7px 9px;background:#162535;border:0;border-radius:9px}
+.reportHalftimeTimes{color:#aebdcb;font-size:10px;line-height:1.35;margin-top:2px}
+.reportDiff{grid-column:1/-1;margin:0!important;padding:2px 4px 0;text-align:center}
+.periodSummary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:0;border:0;background:transparent;margin-bottom:9px}
+.periodSummaryRow{display:flex;flex-direction:column;gap:2px;padding:7px 8px;border:0;border-radius:9px;background:#162535;font-size:11px}
+.periodSummaryRow .ptime{font-size:11px}.periodSummaryRow .pscore{text-align:left;font-size:13px}
+.scorerStats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:0;border:0;background:transparent;margin-bottom:9px}
+.scorerRow{min-width:0;padding:7px 8px;border:0;border-radius:9px;background:#162535;font-size:11px}
+.scorerName{display:block;overflow-wrap:anywhere}.scorerBalls{display:block;margin-top:2px;font-size:12px;letter-spacing:0}
+.scorerStats > .reportEmpty{grid-column:1/-1;background:#111b26;border:1px solid #2b3744;border-radius:9px}
+.matchTimelineLegend{margin:6px 0}.matchTimelineNote{margin:5px 0 8px}
+@media(max-width:350px){
+  .reportMeta{gap:5px 7px}.reportMeta > span{padding:5px 6px}
+  .reportOverviewGrid{gap:5px}.reportOverviewCell{padding:6px 7px}
+  .periodSummary,.scorerStats{gap:5px}
+}
 </style>
 </head>
 <body>
@@ -14382,7 +14433,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.78</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.79</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15200,6 +15251,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
         <div class="reportTeam" id="reportOppTeam">對手</div>
       </div>
       <div class="reportMeta">
+        <span id="reportDate">📅 ----/--/--</span>
         <span id="reportCompetition" style="display:none">🏆 賽事</span>
         <span id="reportVenue" class="reportVenueMeta"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText">未填場地</span></span>
         <span id="reportRoster" class="reportRosterMeta" style="display:none"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="reportRosterText">本場名單</span></span>
@@ -15209,18 +15261,23 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div class="reportBody">
       <div class="reportSectionTitle">時間紀錄</div>
       <div class="reportTimeCard">
-        <div class="reportTimeGrid">
-          <div>開始：<span id="reportStart">--</span></div>
-          <div>結束：<span id="reportEnd">--</span></div>
+        <div class="reportOverviewGrid">
+          <div class="reportOverviewCell primary">
+            <span class="reportOverviewLabel">實際比賽時間</span>
+            <span class="reportOverviewValue" id="reportActual">00:00</span>
+          </div>
+          <div class="reportOverviewCell">
+            <span class="reportOverviewLabel">開始／結束</span>
+            <span class="reportOverviewValue"><span id="reportStart">--</span> → <span id="reportEnd">--</span></span>
+            <span class="crossDayBadge" id="reportCrossDayBadge">跨日</span>
+          </div>
+          <div class="reportHalftime" id="reportHalftime" hidden>
+            <span class="reportOverviewLabel">中場休息</span>
+            <span class="reportOverviewValue" id="reportHalftimeDuration">--</span>
+            <div class="reportHalftimeTimes"><span id="reportHalftimeStart">--</span> → <span id="reportHalftimeEnd">--</span></div>
+          </div>
+          <div class="diff reportDiff" id="reportDiff"></div>
         </div>
-        <div class="crossDayBadge" id="reportCrossDayBadge">跨日</div>
-        <div class="reportActual" id="reportActual">00:00</div>
-        <div class="reportHalftime" id="reportHalftime" hidden>
-          <div><b>中場開始：</b><span id="reportHalftimeStart">--</span></div>
-          <div><b>中場結束：</b><span id="reportHalftimeEnd">--</span></div>
-          <div><b>中場休息：</b><span id="reportHalftimeDuration">--</span></div>
-        </div>
-        <div class="diff" id="reportDiff"></div>
       </div>
 
       <div id="reportPeriodsWrap" style="display:none">
@@ -15758,6 +15815,10 @@ function fmtDateOnly(epoch){
   const d=new Date(epoch);
   return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');
 }
+function matchDateLabel(startEpoch=matchStartEpoch(),endEpoch=matchEndEpoch()){
+  const start=startEpoch || Date.now();
+  return isCrossDay(start,endEpoch) ? `${fmtDateOnly(start)} → ${fmtDateOnly(endEpoch)}` : fmtDateOnly(start);
+}
 function isSameCalendarDay(aEpoch,bEpoch){
   if(!aEpoch || !bEpoch) return true;
   const a=new Date(aEpoch), b=new Date(bEpoch);
@@ -15987,9 +16048,6 @@ function completedPeriodSummaryHTML(){
     const our=Math.max(0,(p.endOurScore??0)-(p.startOurScore??0));
     const opp=Math.max(0,(p.endOppScore??0)-(p.startOppScore??0));
     rows.push(`<div class="periodSummaryRow"><div class="pname">${escapeHtml(p.label||periodLabel(p.number))}</div><div class="ptime">${fmtMMSS(p.duration||0)}</div><div class="pscore">${our}:${opp}</div></div>`);
-    if(Number(p.number)===1 && state.halftimeStartEpoch){
-      rows.push(`<div class="periodSummaryRow"><div class="pname">中場休息</div><div class="ptime">${fmtMMSS(halftimeElapsed())}</div><div class="pscore">—</div></div>`);
-    }
   });
   return rows.join('');
 }
@@ -15997,7 +16055,7 @@ function completedPeriodSummaryHTML(){
 function scorerStats(){
   const counts=new Map();
   state.markers.filter(m=>m.event==='GOAL' && m.player_number).forEach(m=>{
-    const team=teamDisplay(m.team);
+    const team=m.team==='OUR'?'我方':m.team==='OPP'?'對手':'未指定';
     const key=`${team}#${m.player_number}`;
     counts.set(key,(counts.get(key)||0)+1);
   });
@@ -19377,6 +19435,7 @@ function buildReportDOM(){
   const reportStartEpoch=matchStartEpoch();
   const reportEndEpoch=matchEndEpoch();
   const crossedDay=isCrossDay(reportStartEpoch,reportEndEpoch);
+  byId('reportDate').textContent=`📅 ${matchDateLabel(reportStartEpoch,reportEndEpoch)}`;
   const reportCompetition=byId('reportCompetition');
   if(state.competition){
     reportCompetition.textContent=`🏆 ${state.competition}`;
@@ -19485,7 +19544,7 @@ function reportLines(){
   const lines=[{type:'title',text:'足球比賽摘要'},
     {type:'score',left:state.ourTeam||'我方',right:state.oppTeam||'對手',score:`${state.ourScore} : ${state.oppScore}`,status}];
   const cells=[
-    {label:'賽事',value:state.competition||'未填賽事'},
+    {label:'日期／賽事',value:`${matchDateLabel(start,end)}｜${state.competition||'未填賽事'}`},
     {label:'場地',value:state.venue||'未填場地'},
     {label:'實際比賽時間',value:fmtDurationReadable(totalMatchElapsed())},
     {label:'開始／結束',value:`${clock(start)} → ${clock(end)}${crossDay?'（跨日）':''}`}
