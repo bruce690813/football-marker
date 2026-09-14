@@ -52,8 +52,8 @@
     const box=document.getElementById("bootError");
     if(box){
       box.hidden=false;
-      box.textContent="載入失敗：\\n"+message+
-        "\\n\\n請確認網路連線後重新整理頁面。";
+      box.textContent="載入失敗：\n"+message+
+        "\n\n請確認網路連線後重新整理頁面。";
     }
   }
 
@@ -75,137 +75,144 @@
     throw lastError || new Error("無法取得 v5.79 基底程式");
   }
 
-  function replaceOnce(html, regex, replacement, label){
-    const before=html;
-    html=html.replace(regex,replacement);
-    if(html===before) throw new Error("找不到「"+label+"」區塊，為避免誤改已停止載入。");
-    return html;
+  function requireMarker(html, marker, label){
+    if(!html.includes(marker)){
+      throw new Error("找不到「"+label+"」；為避免誤改已停止載入。");
+    }
   }
 
   function applyV580Patch(html){
-    // 1) 顯示版本
+    /*
+      v5.80 修正版：
+      不再用舊版脆弱的整段 HTML Regex 去尋找按鈕。
+      先確認 v5.79 真實存在的元素 ID，再於 DOMContentLoaded 後移動 / 移除元素。
+      如此不受 class、空白或按鈕屬性微調影響。
+    */
+    requireMarker(html, 'id="saveImageBtn"', "主畫面儲存圖片按鈕");
+    requireMarker(html, 'id="reportCloseBtn"', "摘要關閉按鈕");
+    requireMarker(html, 'id="reportShareBtn"', "摘要分享按鈕");
+    requireMarker(html, 'class="toolGrid finalTools"', "主畫面輸出工具");
+    requireMarker(html, 'class="reportActions twoReportActions"', "摘要底部操作列");
+
     html=html.split(BASE_VERSION).join(NEW_VERSION);
 
-    // 2) 主畫面：移除重複的「儲存圖片」，只留摘要 / CSV；新比賽維持整排。
-    html=replaceOnce(
-      html,
-      /<div class="toolGrid finalTools">\s*<button class="btn teal" onclick="openReport\(\)">📋 摘要<\/button>\s*<button class="btn blue" onclick="saveReportImage\(\)">🖼️ 儲存圖片<\/button>\s*<button class="btn gray" onclick="exportCSV\(\)">📄 匯出 CSV<\/button>\s*<button class="btn ghost danger newGameBtn" onclick="resetGame\(\)">＋ 新比賽<\/button>\s*<\/div>/,
-      `<div class="toolGrid finalTools">
-            <button class="btn teal" onclick="openReport()">📋 摘要</button>
-            <button class="btn gray" onclick="exportCSV()">📄 匯出 CSV</button>
-            <button class="btn ghost danger newGameBtn" onclick="resetGame()">＋ 新比賽</button>
-          </div>`,
-      "主畫面輸出工具"
-    );
-
-    // 3) 摘要：底部只保留唯一的「分享 / 儲存圖片」。
-    html=replaceOnce(
-      html,
-      /<div class="reportActions twoReportActions">\s*<button id="reportCloseBottom" class="reportActionBtn reportCloseBtn reportActionClose" onclick="closeReport\(\)">關閉<\/button>\s*<button class="reportActionBtn reportShareBtn reportActionShare" onclick="shareReportImage\(\)">分享 \/ 儲存圖片<\/button>\s*<\/div>/,
-      `<div class="reportActions oneReportAction">
-      <button class="reportActionBtn reportShareBtn reportActionShare" onclick="shareReportImage()">分享 / 儲存圖片</button>
-    </div>`,
-      "摘要底部操作列"
-    );
-
-    // 4) 摘要：將關閉改為右上角 ×。
-    // 沿用 reportCloseBottom id，讓既有焦點 / 無障礙 JS 不需要改動。
-    html=replaceOnce(
-      html,
-      /(<div class="reportTop">\s*<div class="reportModalTitle">⚽ 比賽摘要｜本場事件統計<\/div>)/,
-      `$1
-        <button id="reportCloseBottom" class="reportCloseIcon" type="button"
-          onclick="closeReport()" aria-label="關閉摘要" title="關閉">×</button>`,
-      "摘要標題"
-    );
-
-    // 5) 快速指南同步新的操作流程。
-    html=html.replace(
-      "確認本場事件統計與事件紀錄，再開啟摘要、儲存圖片或匯出 CSV。",
-      "確認本場事件統計與事件紀錄，再開啟摘要進行分享 / 儲存圖片，或匯出 CSV。"
-    );
-
-    // 6) 最後載入的 CSS，覆蓋舊版三欄工具列 / 雙按鈕摘要樣式。
     const patchCss = `
 <style id="v580UxPatch">
-  /* v5.80：主畫面只留「摘要 / 匯出 CSV」 */
+  /* 主畫面：摘要 / CSV 兩欄，新比賽仍維持原本獨立整排 */
   .toolGrid.finalTools{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  }
-  .toolGrid.finalTools .newGameBtn{
-    grid-column:1 / -1 !important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
   }
 
-  /* v5.80：摘要右上角關閉 */
+  /* 摘要：右上角 × */
   #reportModal .reportTop{
-    position:sticky !important;
-    padding-right:62px !important;
+    position:relative!important;
+  }
+  #reportModal .reportTitle{
+    padding-right:48px!important;
   }
   #reportModal .reportCloseIcon{
-    position:absolute;
-    top:50%;
-    right:12px;
-    transform:translateY(-50%);
-    width:38px;
-    height:38px;
-    min-width:38px;
-    min-height:38px;
-    padding:0;
-    border:1px solid #33485f;
-    border-radius:12px;
-    background:#15263a;
-    color:#e8f2ff;
-    box-shadow:0 3px 12px rgba(0,0,0,.24);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font:800 28px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    cursor:pointer;
-    -webkit-tap-highlight-color:transparent;
-    touch-action:manipulation;
+    position:absolute!important;
+    top:10px!important;
+    right:10px!important;
+    width:38px!important;
+    height:38px!important;
+    min-width:38px!important;
+    min-height:38px!important;
+    margin:0!important;
+    padding:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    border:1px solid #33485f!important;
+    border-radius:12px!important;
+    background:#15263a!important;
+    color:#eef6ff!important;
+    box-shadow:0 3px 12px rgba(0,0,0,.24)!important;
+    font:800 28px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+    cursor:pointer!important;
+    z-index:6!important;
+    touch-action:manipulation!important;
+    -webkit-tap-highlight-color:transparent!important;
   }
   #reportModal .reportCloseIcon:active{
-    transform:translateY(-50%) scale(.96);
-    background:#1b3048;
+    transform:scale(.96)!important;
+    background:#1b3048!important;
   }
   #reportModal .reportCloseIcon:focus-visible{
-    outline:2px solid #60c7ff;
-    outline-offset:2px;
+    outline:2px solid #60c7ff!important;
+    outline-offset:2px!important;
   }
 
-  /* v5.80：摘要底部只有一個主要輸出 CTA */
+  /* 摘要底部只保留唯一圖片輸出 CTA */
   #reportModal .reportActions.oneReportAction{
-    grid-template-columns:1fr !important;
+    grid-template-columns:1fr!important;
   }
-  #reportModal .reportActions.oneReportAction .reportActionShare{
-    width:100%;
+  #reportModal .reportActions.oneReportAction #reportShareBtn{
+    width:100%!important;
   }
 
   @media(max-width:430px){
-    #reportModal .reportTop{
-      padding-right:56px !important;
-    }
+    #reportModal .reportTitle{padding-right:44px!important}
     #reportModal .reportCloseIcon{
-      right:10px;
-      width:36px;
-      height:36px;
-      min-width:36px;
-      min-height:36px;
-      border-radius:11px;
-      font-size:26px;
+      top:9px!important;
+      right:9px!important;
+      width:36px!important;
+      height:36px!important;
+      min-width:36px!important;
+      min-height:36px!important;
+      font-size:26px!important;
+      border-radius:11px!important;
     }
   }
 </style>`;
 
-    if(!html.includes("</head>")) throw new Error("HTML 缺少 </head>");
-    html=html.replace("</head>",patchCss+"\\n</head>");
+    const patchJs = `
+<script id="v580UxPatchScript">
+(function(){
+  function applyV580DomPatch(){
+    // 1. 主畫面移除重複的「儲存圖片」
+    const saveImageBtn=document.getElementById('saveImageBtn');
+    if(saveImageBtn) saveImageBtn.remove();
 
-    // 留下版本標記，方便之後確認實際載入的是哪一版。
-    html=html.replace(
-      "</body>",
-      `<!-- football-marker ${NEW_VERSION}: output UX consolidation patch -->\\n</body>`
-    );
+    // 2. 摘要關閉按鈕移到右上角，沿用原 ID，因此既有 click 綁定不會失效
+    const reportCloseBtn=document.getElementById('reportCloseBtn');
+    const reportTop=document.querySelector('#reportModal .reportTop');
+    if(reportCloseBtn && reportTop){
+      reportCloseBtn.className='reportCloseIcon';
+      reportCloseBtn.textContent='×';
+      reportCloseBtn.setAttribute('aria-label','關閉摘要');
+      reportCloseBtn.setAttribute('title','關閉');
+      reportTop.appendChild(reportCloseBtn);
+    }
 
+    // 3. 摘要底部只保留「分享／儲存圖片」
+    const reportActions=document.querySelector('#reportModal .reportActions');
+    if(reportActions){
+      reportActions.classList.remove('twoReportActions');
+      reportActions.classList.add('oneReportAction');
+    }
+
+    // 4. 快速指南同步新的資訊架構
+    document.querySelectorAll('.quickGuideStepText span').forEach(function(span){
+      if(span.textContent.includes('再開啟摘要、儲存圖片或匯出 CSV')){
+        span.textContent='確認本場事件統計與事件紀錄，再開啟摘要進行分享／儲存圖片，或匯出 CSV。';
+      }
+    });
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',applyV580DomPatch,{once:true});
+  }else{
+    applyV580DomPatch();
+  }
+})();
+<\/script>`;
+
+    if(!html.includes("</head>")) throw new Error("基底 HTML 缺少 </head>");
+    if(!html.includes("</body>")) throw new Error("基底 HTML 缺少 </body>");
+
+    html=html.replace("</head>",patchCss+"\n</head>");
+    html=html.replace("</body>",patchJs+"\n<!-- football-marker v5.80 corrected patch -->\n</body>");
     return html;
   }
 
@@ -213,7 +220,6 @@
     const baseHtml=await fetchBase();
     const patchedHtml=applyV580Patch(baseHtml);
 
-    // 以同一個 document 載入完整 App，localStorage origin 不變。
     document.open();
     document.write(patchedHtml);
     document.close();
