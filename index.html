@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.80</title>
+<title>足球場邊記錄器 v5.81</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14486,6 +14486,116 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 }
 </style>
 
+
+<style id="v581OwnGoalPatch">
+/* v5.81 烏龍球：主進球視窗維持兩個高頻大按鈕，烏龍球降為次要入口，降低誤觸。 */
+#goalModal .ownGoalEntry{
+  width:100%;
+  min-height:58px;
+  margin-top:11px;
+  padding:9px 14px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  background:linear-gradient(180deg,#f5f7fa 0%,#e8edf3 100%);
+  color:#405168;
+  border:1px solid #cbd5e1;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.88),0 3px 9px rgba(31,48,69,.08);
+  font-weight:900;
+}
+#goalModal .ownGoalEntry:active{transform:scale(.985);background:#e3e9f0}
+#goalModal .ownGoalEntryMain{font-size:16px;white-space:nowrap}
+#goalModal .ownGoalEntryHint{font-size:11px;color:#718096;font-weight:750}
+
+/* 第二步清楚說明「哪一隊烏龍」以及比分歸屬。 */
+#ownGoalTeamModal .ownGoalExplain{
+  margin:4px 0 13px;
+  line-height:1.5;
+  color:#64748b;
+}
+#ownGoalTeamModal .ownGoalChoice{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+#ownGoalTeamModal .ownGoalChoice button{
+  min-height:92px;
+  padding:12px 8px;
+  border-radius:17px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  color:#f8fafc;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 5px 13px rgba(17,39,67,.18);
+}
+#ownGoalTeamModal .ownGoalChoice strong{
+  font-size:18px;
+  line-height:1.2;
+}
+#ownGoalTeamModal .ownGoalChoice span{
+  font-size:12px;
+  font-weight:900;
+  opacity:.82;
+}
+#ownGoalTeamModal .ownGoalOur{
+  background:linear-gradient(180deg,var(--team-pick-our-top) 0%,var(--team-pick-our-bottom) 100%);
+  border:1px solid var(--team-pick-our-border);
+}
+#ownGoalTeamModal .ownGoalOpp{
+  background:linear-gradient(180deg,var(--team-pick-opp-top) 0%,var(--team-pick-opp-bottom) 100%);
+  border:1px solid var(--team-pick-opp-border);
+}
+#ownGoalTeamModal .ownGoalChoice button:active{transform:scale(.985);filter:brightness(1.08)}
+
+/* 烏龍球標籤 */
+.ownGoalBadge,
+.logOwnGoalBadge{
+  display:inline-flex;
+  align-items:center;
+  padding:2px 7px;
+  border-radius:999px;
+  background:#fff1e7;
+  border:1px solid #f4c89d;
+  color:#9a4e11;
+  font-size:11px;
+  font-weight:950;
+  white-space:nowrap;
+}
+
+/* 編輯事件：只有進球時顯示一般 / 烏龍球。 */
+#editMarkerModal .editGoalTypeGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+#editMarkerModal .editGoalTypeGrid button{
+  min-height:44px;
+  border-radius:12px;
+  background:#e9eef5;
+  color:#475569;
+  border:1px solid #cbd5e1;
+  font-weight:900;
+}
+#editMarkerModal .editGoalTypeGrid button.active{
+  background:#244a72;
+  color:#fff;
+  border-color:#3f78ae;
+}
+
+@media(max-width:390px){
+  #goalModal .ownGoalEntry{
+    min-height:54px;
+    flex-direction:column;
+    gap:2px;
+  }
+  #ownGoalTeamModal .ownGoalChoice button{min-height:84px}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -14501,7 +14611,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.80</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.81</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15011,13 +15121,36 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 
 <!-- Goal modal -->
 <div class="modalBack" id="goalModal">
-  <div class="modal">
+  <div class="modal goalModalPanel">
     <h2>⚽ 這是誰的進球？</h2>
     <div class="choice">
       <button class="our" onclick="chooseGoalTeam('OUR')"><span id="goalOurName">我方</span></button>
       <button class="opp" onclick="chooseGoalTeam('OPP')"><span id="goalOppName">對手</span></button>
     </div>
+    <button class="ownGoalEntry" type="button" onclick="openOwnGoalTeamModal()">
+      <span class="ownGoalEntryMain">↩ 烏龍球</span>
+      <span class="ownGoalEntryHint">同隊球員把球踢進自己球門</span>
+    </button>
     <button class="cancel" onclick="cancelGoal()">取消</button>
+  </div>
+</div>
+
+<!-- Own-goal team modal -->
+<div class="modalBack" id="ownGoalTeamModal">
+  <div class="modal ownGoalTeamPanel">
+    <h2>↩ 哪一隊發生烏龍球？</h2>
+    <p class="ownGoalExplain">選擇「踢進自己球門」的球員所屬球隊；比分會自動加給對方。</p>
+    <div class="ownGoalChoice">
+      <button type="button" class="ownGoalOur" onclick="chooseOwnGoalTeam('OUR')">
+        <strong id="ownGoalOurName">我方</strong>
+        <span id="ownGoalOurAward">對手 +1</span>
+      </button>
+      <button type="button" class="ownGoalOpp" onclick="chooseOwnGoalTeam('OPP')">
+        <strong id="ownGoalOppName">對手</strong>
+        <span id="ownGoalOppAward">我方 +1</span>
+      </button>
+    </div>
+    <button class="cancel" type="button" onclick="backFromOwnGoalTeam()">返回</button>
   </div>
 </div>
 
@@ -15273,8 +15406,16 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
       </div>
     </div>
 
+    <div class="editSection" id="editGoalTypeSection" style="display:none">
+      <div class="editSectionLabel">進球類型</div>
+      <div class="editGoalTypeGrid">
+        <button type="button" id="editGoalTypeNormal" onclick="setEditGoalType(false)">一般進球</button>
+        <button type="button" id="editGoalTypeOwn" onclick="setEditGoalType(true)">↩ 烏龍球</button>
+      </div>
+    </div>
+
     <div class="editSection">
-      <div class="editSectionLabel">球隊</div>
+      <div class="editSectionLabel" id="editTeamSectionLabel">球隊</div>
       <div class="editTeamGrid">
         <button type="button" id="editTeamOUR" onclick="setEditMarkerTeam('OUR')">我方</button>
         <button type="button" id="editTeamOPP" onclick="setEditMarkerTeam('OPP')">對手</button>
@@ -15384,8 +15525,8 @@ let guidedSetupStep=null; // 'our' -> 'opp' -> 'competition' -> 'venue' during p
 const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
 const LAST_ROSTER_KEY='football_marker_last_roster_v1';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
-let editingMarkerIndex=null, editingMarkerEvent=null, editingMarkerTeam='OUR';
-let pendingGoalTime=null, pendingGoalTeam=null;
+let editingMarkerIndex=null, editingMarkerEvent=null, editingMarkerTeam='OUR', editingMarkerOwnGoal=false;
+let pendingGoalTime=null, pendingGoalTeam=null, pendingOwnGoalTeam=null;
 let pendingAssistMarkerIndex=null;
 let pendingCardTime=null, pendingCardEvent=null;
 let pendingNumberEvent=null, pendingNumberTime=null, pendingNumberTeam=null;
@@ -15934,6 +16075,23 @@ function teamDisplay(code){
   if(code==='OPP') return state.oppTeam || '對手';
   return '';
 }
+function oppositeTeamCode(code){
+  return code==='OUR' ? 'OPP' : code==='OPP' ? 'OUR' : '';
+}
+function markerPlayerTeamCode(marker){
+  if(marker?.event==='GOAL' && marker?.own_goal){
+    return marker.own_goal_team || oppositeTeamCode(marker.team);
+  }
+  return marker?.team || '';
+}
+function markerPlayerTeamDisplay(marker){
+  return teamDisplay(markerPlayerTeamCode(marker)) || '未指定';
+}
+function markerEventLabel(marker){
+  if(marker?.event==='GOAL' && marker?.own_goal) return '烏龍球';
+  if(marker?.second_yellow) return '紅牌（兩黃）';
+  return eventLabel(marker?.event);
+}
 function redCardedPlayerNumbers(team, beforeIndex=null){
   const set=new Set();
   (state.markers||[]).forEach((m,i)=>{
@@ -16121,7 +16279,7 @@ function completedPeriodSummaryHTML(){
 
 function scorerStats(){
   const counts=new Map();
-  state.markers.filter(m=>m.event==='GOAL' && m.player_number).forEach(m=>{
+  state.markers.filter(m=>m.event==='GOAL' && !m.own_goal && m.player_number).forEach(m=>{
     const team=m.team==='OUR'?'我方':m.team==='OPP'?'對手':'未指定';
     const key=`${team}#${m.player_number}`;
     counts.set(key,(counts.get(key)||0)+1);
@@ -17630,13 +17788,37 @@ function openGoalModal(){
   if(state.finished){ alert('本場比賽已結束'); return; }
   pendingGoalTime=elapsed();
   pendingGoalTeam=null;
+  pendingOwnGoalTeam=null;
   byId('goalOurName').textContent=state.ourTeam||'我方';
   byId('goalOppName').textContent=state.oppTeam||'對手';
   byId('goalModal').classList.add('open');
 }
-function cancelGoal(){
-  pendingGoalTime=null; pendingGoalTeam=null;
+function openOwnGoalTeamModal(){
+  if(pendingGoalTime===null) return;
   byId('goalModal').classList.remove('open');
+  byId('ownGoalOurName').textContent=state.ourTeam||'我方';
+  byId('ownGoalOppName').textContent=state.oppTeam||'對手';
+  byId('ownGoalOurAward').textContent=`${state.oppTeam||'對手'} +1`;
+  byId('ownGoalOppAward').textContent=`${state.ourTeam||'我方'} +1`;
+  byId('ownGoalTeamModal').classList.add('open');
+}
+function backFromOwnGoalTeam(){
+  byId('ownGoalTeamModal').classList.remove('open');
+  byId('goalModal').classList.add('open');
+}
+function chooseOwnGoalTeam(team){
+  if(pendingGoalTime===null || !['OUR','OPP'].includes(team)) return;
+  pendingOwnGoalTeam=team;              // 烏龍球員所屬球隊
+  pendingGoalTeam=oppositeTeamCode(team); // 實際得分歸屬球隊
+  byId('ownGoalTeamModal').classList.remove('open');
+  openNumberSelection('GOAL', team, pendingGoalTime);
+}
+function cancelGoal(){
+  pendingGoalTime=null;
+  pendingGoalTeam=null;
+  pendingOwnGoalTeam=null;
+  byId('goalModal').classList.remove('open');
+  byId('ownGoalTeamModal').classList.remove('open');
 }
 function openCardModal(){
   if(!state.started){ alert('請先按「開始比賽」'); return; }
@@ -17919,8 +18101,15 @@ function openNumberSelection(event, team, sec){
     if(event==='RED_CARD') numberModalEl.classList.add('cardFlow','redFlow');
   }
   if(event==='GOAL'){
-    if(titleText) titleText.textContent=isOur?'選擇進球球員背號':'選擇對手進球背號';
-    byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：優先顯示本場球員名單；也可輸入其他背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。'):'選填：記錄對手進球球員背號；若看不清楚可直接略過。';
+    if(pendingOwnGoalTeam){
+      if(titleText) titleText.textContent='↩ 選擇烏龍球員背號';
+      byId('numberHint').textContent=isOur
+        ? (currentRosterNumbers().length?'選填：從本場名單選擇烏龍球員；比分會加給對手。':'選填：可輸入烏龍球員背號；比分會加給對手。')
+        : '選填：記錄對手烏龍球員背號；看不清楚可直接略過。';
+    }else{
+      if(titleText) titleText.textContent=isOur?'選擇進球球員背號':'選擇對手進球背號';
+      byId('numberHint').textContent=isOur?(currentRosterNumbers().length?'選填：優先顯示本場球員名單；也可輸入其他背號。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。'):'選填：記錄對手進球球員背號；若看不清楚可直接略過。';
+    }
   }else if(event==='YELLOW_CARD' || event==='RED_CARD'){
     if(titleText) titleText.textContent=`${label}｜選擇球員`;
     byId('numberHint').textContent=isOur
@@ -17945,6 +18134,7 @@ function openNumberSelection(event, team, sec){
 }
 
 function chooseGoalTeam(team){
+  pendingOwnGoalTeam=null;
   pendingGoalTeam=team;
   byId('goalModal').classList.remove('open');
   openNumberSelection('GOAL', team, pendingGoalTime);
@@ -17998,6 +18188,7 @@ function cancelNumber(){
   if(pendingNumberEvent==='GOAL'){
     pendingGoalTime=null;
     pendingGoalTeam=null;
+    pendingOwnGoalTeam=null;
   }
   resetPendingNumber();
   byId('numberModal').classList.remove('open');
@@ -18060,6 +18251,9 @@ function finishNumberSelection(playerNumber){
 
 function finishGoal(playerNumber){
   if(pendingGoalTime===null || !pendingGoalTeam) return;
+  const isOwnGoal=!!pendingOwnGoalTeam;
+  const ownGoalTeam=isOwnGoal ? pendingOwnGoalTeam : '';
+
   if(pendingGoalTeam==='OUR'){
     if(state.ourScore>=99){
       alert('我方比分已達上限 99，無法再增加');
@@ -18078,9 +18272,10 @@ function finishGoal(playerNumber){
     event:'GOAL',
     period:state.currentPeriod||1,
     period_label:state.multiPeriod ? periodLabel(state.currentPeriod||1) : '',
-    team:pendingGoalTeam,
-    player_number:playerNumber,
+    team:pendingGoalTeam,                 // 比分歸屬球隊
+    player_number:playerNumber,           // 烏龍球時為犯下烏龍的球員
     assist_number:'',
+    ...(isOwnGoal?{own_goal:true,own_goal_team:ownGoalTeam}:{}),
     seconds:pendingGoalTime,
     time:fmtMMSS(pendingGoalTime),
     score_after:`${state.ourScore}:${state.oppScore}`,
@@ -18090,13 +18285,15 @@ function finishGoal(playerNumber){
 
   pendingGoalTime=null;
   pendingGoalTeam=null;
+  pendingOwnGoalTeam=null;
   resetPendingNumber();
   byId('numberModal').classList.remove('open');
   saveState();
   render();
 
-  // 我方進球才詢問助攻；對手進球在進球者背號（選填）完成後直接結束流程。
-  if(state.markers[goalMarkerIndex]?.team==='OUR'){
+  // 烏龍球沒有助攻；一般我方進球才詢問助攻。
+  const savedGoal=state.markers[goalMarkerIndex];
+  if(savedGoal?.team==='OUR' && !savedGoal?.own_goal){
     setTimeout(()=>openAssistModal(goalMarkerIndex),80);
   }else{
     showMarkerUndo(goalMarkerIndex);
@@ -18141,9 +18338,26 @@ function setEditMarkerEvent(event){
     byId('editEvent'+ev)?.classList.toggle('active',ev===event);
   });
   byId('editNumberSection').style.display='block';
-  byId('editAssistSection').style.display=event==='GOAL'?'block':'none';
+  byId('editGoalTypeSection').style.display=event==='GOAL'?'block':'none';
+  if(event!=='GOAL') editingMarkerOwnGoal=false;
+  syncEditGoalTypeUI();
 }
-
+function syncEditGoalTypeUI(){
+  byId('editGoalTypeNormal')?.classList.toggle('active',!editingMarkerOwnGoal);
+  byId('editGoalTypeOwn')?.classList.toggle('active',editingMarkerOwnGoal);
+  const teamLabel=byId('editTeamSectionLabel');
+  if(teamLabel) teamLabel.textContent=(editingMarkerEvent==='GOAL' && editingMarkerOwnGoal)
+    ? '烏龍球員所屬球隊'
+    : '球隊';
+  byId('editAssistSection').style.display=
+    (editingMarkerEvent==='GOAL' && !editingMarkerOwnGoal)?'block':'none';
+}
+function setEditGoalType(isOwnGoal){
+  if(editingMarkerEvent!=='GOAL') return;
+  editingMarkerOwnGoal=!!isOwnGoal;
+  if(editingMarkerOwnGoal) byId('editAssistNumber').value='';
+  syncEditGoalTypeUI();
+}
 function setEditMarkerTeam(team){
   editingMarkerTeam=team;
   ['OUR','OPP'].forEach(code=>{
@@ -18156,7 +18370,10 @@ function openEditMarker(index){
   if(!marker) return;
   editingMarkerIndex=index;
   editingMarkerEvent=marker.event;
-  editingMarkerTeam=marker.team||'OUR';
+  editingMarkerOwnGoal=Boolean(marker.event==='GOAL' && marker.own_goal);
+  editingMarkerTeam=editingMarkerOwnGoal
+    ? (marker.own_goal_team || oppositeTeamCode(marker.team) || 'OUR')
+    : (marker.team||'OUR');
 
   byId('editTeamOUR').textContent=state.ourTeam||'我方';
   byId('editTeamOPP').textContent=state.oppTeam||'對手';
@@ -18182,6 +18399,7 @@ function closeEditMarker(){
   editingMarkerIndex=null;
   editingMarkerEvent=null;
   editingMarkerTeam='OUR';
+  editingMarkerOwnGoal=false;
 }
 
 function saveEditMarker(){
@@ -18222,7 +18440,7 @@ function saveEditMarker(){
   }
 
   let assistNumber='';
-  if(editingMarkerEvent==='GOAL'){
+  if(editingMarkerEvent==='GOAL' && !editingMarkerOwnGoal){
     const rawAssist=String(byId('editAssistNumber').value||'').trim();
     if(rawAssist){
       const a=Number(rawAssist);
@@ -18243,14 +18461,19 @@ function saveEditMarker(){
   }
 
   // 依「舊事件 → 新事件」計算對比分的淨影響。
+  // 烏龍球的 editingMarkerTeam 是「烏龍球員所屬球隊」，
+  // 實際比分要加給相反球隊。
+  const editedScoreTeam=(editingMarkerEvent==='GOAL' && editingMarkerOwnGoal)
+    ? oppositeTeamCode(editingMarkerTeam)
+    : editingMarkerTeam;
   let dOur=0,dOpp=0;
   if(marker.event==='GOAL'){
     if(marker.team==='OUR') dOur-=1;
     if(marker.team==='OPP') dOpp-=1;
   }
   if(editingMarkerEvent==='GOAL'){
-    if(editingMarkerTeam==='OUR') dOur+=1;
-    if(editingMarkerTeam==='OPP') dOpp+=1;
+    if(editedScoreTeam==='OUR') dOur+=1;
+    if(editedScoreTeam==='OPP') dOpp+=1;
   }
 
   const nextOur=state.ourScore+dOur;
@@ -18293,9 +18516,16 @@ function saveEditMarker(){
     String(playerNumber)===keeperBeforeEdit;
 
   marker.event=editingMarkerEvent;
-  marker.team=editingMarkerTeam;
+  marker.team=(editingMarkerEvent==='GOAL') ? editedScoreTeam : editingMarkerTeam;
   marker.player_number=playerNumber;
-  marker.assist_number=editingMarkerEvent==='GOAL'?assistNumber:'';
+  marker.assist_number=(editingMarkerEvent==='GOAL' && !editingMarkerOwnGoal)?assistNumber:'';
+  if(editingMarkerEvent==='GOAL' && editingMarkerOwnGoal){
+    marker.own_goal=true;
+    marker.own_goal_team=editingMarkerTeam;
+  }else{
+    delete marker.own_goal;
+    delete marker.own_goal_team;
+  }
   if(editSecondYellow){
     marker.second_yellow=true;
   }else if(!(marker.second_yellow && editingMarkerEvent==='RED_CARD')){
@@ -18311,7 +18541,7 @@ function saveEditMarker(){
   }
 
   // 時間 seconds / time / recorded_at 完全保留。
-  if(marker.team==='OUR' && marker.player_number){
+  if(editingMarkerTeam==='OUR' && marker.player_number){
     rememberPlayerNumber(marker.player_number);
     buildNumberGrid();
   }
@@ -18344,7 +18574,7 @@ function deleteMarker(i){
     alert('已進入 PK，正規賽比分已鎖定；進球紀錄不可再刪除。');
     return false;
   }
-  const label=eventLabel(m.event);
+  const label=markerEventLabel(m);
   const ok=window.confirm(`確定要刪除第${i+1}筆「${label}」紀錄嗎？
 刪除後無法復原。`);
   if(!ok) return false;
@@ -18418,9 +18648,9 @@ function markerManageSummaryText(marker,shownSeq){
   if(state.multiPeriod) parts.push(periodLabel(marker.period||1));
   parts.push(fmtMMSS(marker.seconds||0));
 
-  const label=marker.second_yellow?'紅牌（兩黃）':eventLabel(marker.event);
+  const label=markerEventLabel(marker);
   const player=marker.player_number?`#${marker.player_number}`:'';
-  const team=teamDisplay(marker.team)||'未指定球隊';
+  const team=markerPlayerTeamDisplay(marker);
 
   let eventText=[eventIcon(marker.event),player,label].filter(Boolean).join(' ');
   if(marker.event==='GOAL' && marker.score_after){
@@ -18484,13 +18714,13 @@ function renderLogTo(container, filterEvent=null){
       ? 'item quickDetailItem'
       : `item logTimelineItem logEvent-${eventKey}${criticalClass}`;
 
-    const team=teamDisplay(m.team);
+    const team=markerPlayerTeamDisplay(m);
     const safeTeam=team ? escapeHtml(team) : '';
     const num=m.player_number?`<span class="numberTag">#${escapeHtml(String(m.player_number))}</span>`:'';
     const assist=(m.event==='GOAL' && m.assist_number)
       ? `<span class="logAssistTag">助攻 #${escapeHtml(String(m.assist_number))}</span>`
       : '';
-    const label=m.second_yellow?'紅牌（兩黃）':eventLabel(m.event);
+    const label=markerEventLabel(m);
     const period=state.multiPeriod?periodLabel(m.period||1):'';
     const score=m.score_after||'';
     const prevMarker=i>0 ? state.markers[i-1] : null;
@@ -18563,6 +18793,7 @@ function renderLogTo(container, filterEvent=null){
         <div class="logEventPrimary">
           <span class="logEventIcon" aria-hidden="true">${eventIcon(m.event)}</span>
           <b>${escapeHtml(label)}</b>
+          ${m.own_goal?'<span class="logOwnGoalBadge">比分給對方</span>':''}
           ${goalScoreInline}
           ${nonGoalScoreInline}
           ${assist}
@@ -19428,13 +19659,13 @@ function reportTimelineEntries(){
       || (Number(a.m.seconds)||0)-(Number(b.m.seconds)||0) || a.index-b.index)
     .map(({m,index})=>({
       type:'timelineEvent', sourceIndex:index, event:m.event,
-      team:m.team==='OUR'?'OUR':m.team==='OPP'?'OPP':'UNKNOWN',
+      team:markerPlayerTeamCode(m)==='OUR'?'OUR':markerPlayerTeamCode(m)==='OPP'?'OPP':'UNKNOWN',
       period:Number(m.period)||1,
       phase:state.multiPeriod?periodLabel(Number(m.period)||1):'比賽',
       time:fmtMMSS(Number(m.seconds)||0),
-      actor:`${m.team==='OUR'?'我方':m.team==='OPP'?'對手':'未指定'}${m.player_number?` #${m.player_number}`:''}`,
-      assist:m.event==='GOAL' && m.assist_number?`助攻 #${m.assist_number}`:'',
-      typeLabel:eventLabel(m.event)+(m.second_yellow?'（兩黃轉紅）':''),
+      actor:`${markerPlayerTeamCode(m)==='OUR'?'我方':markerPlayerTeamCode(m)==='OPP'?'對手':'未指定'}${m.player_number?` #${m.player_number}`:''}`,
+      assist:m.event==='GOAL' && !m.own_goal && m.assist_number?`助攻 #${m.assist_number}`:'',
+      typeLabel:markerEventLabel(m),
       score:String(m.score_after||'—')
     }));
 }
@@ -19453,13 +19684,13 @@ function reportTimelineHTML(){
   }).join('')+'</ol>';
 }
 function reportEventHTML(m, goalIndex=null){
-  const team=teamDisplay(m.team) || '未指定';
+  const team=markerPlayerTeamDisplay(m);
   const num=m.player_number ? ` #${m.player_number}` : '';
   const ordinal=(m.event==='GOAL' && goalIndex!==null) ? `G${goalIndex+1}` : eventLabel(m.event);
   const period=state.multiPeriod ? periodLabel(m.period||1) : '';
   const periodTime=period ? `${period} ${fmtMMSS(m.seconds)}` : fmtMMSS(m.seconds);
-  const actor=`${team}${num}`;
-  const assist=m.assist_number ? `助攻 #${m.assist_number}` : '';
+  const actor=`${team}${num}${m.own_goal?'（烏龍）':''}`;
+  const assist=(!m.own_goal && m.assist_number) ? `助攻 #${m.assist_number}` : '';
   return `<div class="reportEvent${assist?' hasAssist':''}">
     <div class="reportPeriodTime">${escapeHtml(periodTime)}</div>
     <div class="goalOrdinal">${ordinal}</div>
@@ -20003,10 +20234,11 @@ function reportHTMLText(){
   const goals=state.markers.filter(m=>m.event==='GOAL');
   const others=state.markers.filter(m=>m.event!=='GOAL');
   const goalHtml=goals.length ? goals.map((m,i)=>{
-    const team=teamDisplay(m.team);
+    const team=markerPlayerTeamDisplay(m);
     const num=m.player_number?` #${m.player_number}`:'';
-    const assist=m.assist_number?`　助攻 #${escapeHtml(m.assist_number)}`:'';
-    return `<li><span>${fmtMMSS(m.seconds)}</span> 第${i+1}球　⚽ 進球 · ${escapeHtml(team+num)}${assist} <b>${escapeHtml(m.score_after||'')}</b></li>`;
+    const assist=(!m.own_goal && m.assist_number)?`　助攻 #${escapeHtml(m.assist_number)}`:'';
+    const goalLabel=m.own_goal?'烏龍球':'進球';
+    return `<li><span>${fmtMMSS(m.seconds)}</span> 第${i+1}球　⚽ ${goalLabel} · ${escapeHtml(team+num)}${m.own_goal?'（烏龍）':''}${assist} <b>${escapeHtml(m.score_after||'')}</b></li>`;
   }).join('') : '<li>尚未標記進球事件</li>';
   const otherHtml=others.length ? others.map(m=>{
     const team=teamDisplay(m.team);
