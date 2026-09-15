@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.81</title>
+<title>足球場邊記錄器 v5.82</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14596,6 +14596,25 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 }
 </style>
 
+
+<style id="v582OwnGoalSummaryPatch">
+/* v5.82：摘要時間軸明確標示烏龍球，讓多年後回看也能立即辨識。 */
+.reportOwnGoalType{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:#ffd09a;
+  font-weight:950;
+}
+.matchTimelineOwnGoal{
+  margin-top:3px;
+  color:#f2b27c;
+  font-size:12px;
+  font-weight:850;
+  line-height:1.35;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -14611,7 +14630,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.81</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.82</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15504,7 +15523,6 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 
       <div class="reportSectionTitle">比賽事件時間軸</div>
       <div class="matchTimelineLegend"><span class="timelineOur">● 我方</span><span class="timelineOpp">● 對手</span></div>
-      <p class="matchTimelineNote">依事件順序排列，間距不代表時間長度；右側為事件當時比分。</p>
       <div id="reportTimeline"></div>
       <div id="reportImageDownloads" hidden aria-live="polite"></div>
 
@@ -19663,8 +19681,12 @@ function reportTimelineEntries(){
       period:Number(m.period)||1,
       phase:state.multiPeriod?periodLabel(Number(m.period)||1):'比賽',
       time:fmtMMSS(Number(m.seconds)||0),
-      actor:`${markerPlayerTeamCode(m)==='OUR'?'我方':markerPlayerTeamCode(m)==='OPP'?'對手':'未指定'}${m.player_number?` #${m.player_number}`:''}`,
-      assist:m.event==='GOAL' && !m.own_goal && m.assist_number?`助攻 #${m.assist_number}`:'',
+      actor:`${markerPlayerTeamCode(m)==='OUR'?'我方':markerPlayerTeamCode(m)==='OPP'?'對手':'未指定'}${m.player_number?` #${m.player_number}`:''}${m.event==='GOAL' && m.own_goal?'（烏龍）':''}`,
+      assist:m.event==='GOAL'
+        ? (m.own_goal
+            ? `比分計入${teamDisplay(m.team)||'對方'}`
+            : (m.assist_number?`助攻 #${m.assist_number}`:''))
+        : '',
       typeLabel:markerEventLabel(m),
       score:String(m.score_after||'—')
     }));
@@ -19678,7 +19700,7 @@ function reportTimelineHTML(){
     phase=e.period;
     return heading+`<li class="matchTimelineRow ${e.team==='OUR'?'isOur':e.team==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
       <div class="matchTimelineTime">${escapeHtml(e.time)}</div><div class="matchTimelineNode" aria-hidden="true"></div>
-      <div class="matchTimelineContent"><div>${reportTypeHTML(e.event)}${e.typeLabel.includes('兩黃')?'（兩黃轉紅）':''}</div><div class="matchTimelineActor">${escapeHtml(e.actor)}</div>${e.assist?`<div class="matchTimelineAssist">${escapeHtml(e.assist)}</div>`:''}</div>
+      <div class="matchTimelineContent"><div>${reportTypeHTML(e.event,e.typeLabel)}${e.typeLabel.includes('兩黃')?'（兩黃轉紅）':''}</div><div class="matchTimelineActor">${escapeHtml(e.actor)}</div>${e.assist?`<div class="${e.typeLabel==='烏龍球'?'matchTimelineOwnGoal':'matchTimelineAssist'}">${escapeHtml(e.assist)}</div>`:''}</div>
       <div class="matchTimelineScore" aria-label="當時比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>
     </li>`;
   }).join('')+'</ol>';
@@ -19701,14 +19723,17 @@ function reportEventHTML(m, goalIndex=null){
     <div class="rscore">${m.score_after||''}</div>
   </div>`;
 }
-function reportTypeHTML(event){
+function reportTypeHTML(event,typeLabel=''){
+  if(event==='GOAL' && typeLabel==='烏龍球'){
+    return '<span class="reportOwnGoalType"><span aria-hidden="true">⚽</span><span>烏龍球</span></span>';
+  }
   if(event==='YELLOW_CARD'){
     return '<span class="reportCardType"><span class="reportCardShape yellow" aria-hidden="true"></span><span>黃牌</span></span>';
   }
   if(event==='RED_CARD'){
     return '<span class="reportCardType"><span class="reportCardShape red" aria-hidden="true"></span><span>紅牌</span></span>';
   }
-  return `${emoji(event)} ${escapeHtml(eventLabel(event))}`;
+  return `${emoji(event)} ${escapeHtml(typeLabel||eventLabel(event))}`;
 }
 function reportOtherEventHTML(m){
   const team=teamDisplay(m.team) || '未指定';
