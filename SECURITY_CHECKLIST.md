@@ -1,8 +1,46 @@
 # SECURITY_CHECKLIST.md
-# v5.82 驗證範圍：摘要烏龍球辨識、比分歸屬顯示與時間軸精簡。
+# v5.85 驗證範圍：賽後摘要 Primary CTA 視覺層級與操作回饋。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.82 本次驗證
+## v5.85 本次驗證
+
+- [x] 僅調整賽後工具區的視覺樣式，不修改任何比賽資料或事件邏輯。
+- [x] 「摘要」改為電光藍 Primary CTA。
+- [x] 「匯出 CSV」仍維持灰藍次要層級。
+- [x] 「＋ 新比賽」仍維持深色第三層級。
+- [x] 未改動進球綠、射門黃、撲救藍、防守紫、結束/警示紅等既有色彩語意。
+- [x] 摘要按鈕具備 active 與 focus-visible 狀態。
+- [x] 比分、計時、烏龍球、事件紀錄、摘要內容、CSV、LocalStorage 均未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 建議於實體 iPhone Safari 驗收亮度、日光下可讀性與按壓回饋。
+
+## v5.84 歷史驗證
+
+- [x] 事件紀錄已移除「比分給對方」提示。
+- [x] 事件紀錄仍保留「烏龍球」事件名稱。
+- [x] 事件紀錄仍保留事件當時比分。
+- [x] 比賽摘要中的烏龍球與比分歸屬資訊未修改。
+- [x] 本場事件統計中的烏龍球標籤未修改。
+- [x] 烏龍球比分計算、事件編輯、復原、刪除、CSV 與 LocalStorage 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+
+## v5.83 歷史驗證
+
+- [x] 「本場事件統計 → 進球細節」會讀取 `own_goal` 欄位。
+- [x] 烏龍球明細列會顯示「烏龍球」標籤。
+- [x] 烏龍球有背號時保留背號，沒有背號時維持 `—`。
+- [x] 烏龍球球隊顯示使用 `markerPlayerTeamDisplay()`，代表發生烏龍的球員所屬球隊。
+- [x] 無障礙文字包含「烏龍球」及實際比分歸屬球隊。
+- [x] 一般進球助攻顯示不受影響。
+- [x] 射門、撲救、防守細節不受影響。
+- [x] 摘要、事件紀錄、比分計算、事件編輯、CSV 與 LocalStorage 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 建議實機各測一筆：一般進球、我方烏龍、對手烏龍。
+
+## v5.82 歷史驗證
 
 - [x] 摘要時間軸不再只依 `event=GOAL` 顯示「進球」，改為使用 `typeLabel`。
 - [x] `own_goal=true` 的事件於摘要明確顯示「⚽ 烏龍球」。

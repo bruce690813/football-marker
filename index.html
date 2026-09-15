@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.82</title>
+<title>足球場邊記錄器 v5.85</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14552,8 +14552,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 #ownGoalTeamModal .ownGoalChoice button:active{transform:scale(.985);filter:brightness(1.08)}
 
 /* 烏龍球標籤 */
-.ownGoalBadge,
-.logOwnGoalBadge{
+.ownGoalBadge{
   display:inline-flex;
   align-items:center;
   padding:2px 7px;
@@ -14615,6 +14614,84 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 }
 </style>
 
+
+<style id="v583QuickResultOwnGoalPatch">
+/* v5.83：本場事件統計的「進球細節」也要能直接辨識烏龍球。 */
+#logModal .quickDetailItem .qdOwnGoal{
+  justify-self:end;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:58px;
+  padding:4px 7px;
+  border-radius:999px;
+  background:rgba(245,158,11,.14);
+  border:1px solid rgba(251,191,36,.38);
+  color:#fdba74;
+  font-size:10.5px;
+  line-height:1;
+  font-weight:950;
+  white-space:nowrap;
+}
+#logModal .quickDetailItem .qdTeamOwnGoal{
+  color:#f8d3ad;
+}
+@media(max-width:350px){
+  #logModal .quickDetailItem .qdOwnGoal{
+    min-width:52px;
+    padding:4px 5px;
+    font-size:9.5px;
+  }
+}
+</style>
+
+
+<style id="v585SummaryPrimaryCtaPatch">
+/* v5.85：賽後「摘要」提升為主要 CTA。
+   目的：
+   1. 在深藍灰介面上更醒目；
+   2. 與綠色進球、黃色射門、紅色結束狀態區隔；
+   3. 「匯出 CSV」與「＋ 新比賽」維持次要層級。 */
+.finalTools .reportBtn{
+  background:
+    linear-gradient(180deg,#2d7bff 0%,#1f63e9 55%,#194fc4 100%)!important;
+  border:1px solid rgba(142,190,255,.58)!important;
+  color:#ffffff!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.22),
+    0 8px 18px rgba(31,99,233,.30)!important;
+  text-shadow:0 1px 2px rgba(7,22,52,.45);
+}
+.finalTools .reportBtn:active{
+  transform:translateY(1px) scale(.99)!important;
+  background:
+    linear-gradient(180deg,#286fe8 0%,#1c5ad4 55%,#1748b1 100%)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 4px 10px rgba(31,99,233,.22)!important;
+}
+.finalTools .reportBtn:focus-visible{
+  outline:2px solid #9fc7ff;
+  outline-offset:2px;
+}
+
+/* CSV 維持灰藍次要操作，避免和摘要爭搶注意力。 */
+.finalTools .share{
+  background:linear-gradient(180deg,#536983 0%,#3b4d65 100%)!important;
+  border-color:rgba(173,190,214,.24)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 7px 14px rgba(22,30,43,.18)!important;
+}
+
+/* 新比賽仍為第三層級，保留深色輪廓，不使用高飽和主色。 */
+.resultNewMatchBtn{
+  background:linear-gradient(180deg,#27374a 0%,#1f2d3f 100%)!important;
+  border-color:rgba(159,181,208,.28)!important;
+  color:#e4edf7!important;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -14630,7 +14707,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.82</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.85</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -18756,21 +18833,27 @@ function renderLogTo(container, filterEvent=null){
     // 本場事件統計 drill-down 維持原本唯讀列表，不放編輯 / 刪除。
     if(readOnlyDetail){
       const playerText=m.player_number?'#'+escapeHtml(String(m.player_number)):'—';
-      const extraText=assist
-        ? `<span class="qdExtra">助攻 #${escapeHtml(String(m.assist_number))}</span>`
-        : (showScore && m.event!=='GOAL' && score
-          ? `<span class="qdExtra qdScore">${escapeHtml(score)}</span>`
-          : '');
+      const isOwnGoal=Boolean(m.event==='GOAL' && m.own_goal);
+      const ownGoalScoreTeam=isOwnGoal ? (teamDisplay(m.team)||'對方') : '';
+      const extraText=isOwnGoal
+        ? `<span class="qdExtra qdOwnGoal" title="比分計入${escapeHtml(ownGoalScoreTeam)}">烏龍球</span>`
+        : (assist
+          ? `<span class="qdExtra">助攻 #${escapeHtml(String(m.assist_number))}</span>`
+          : (showScore && m.event!=='GOAL' && score
+            ? `<span class="qdExtra qdScore">${escapeHtml(score)}</span>`
+            : ''));
       const accessibleParts=[
         `第${shownSeq}筆`,fmtMMSS(m.seconds),period||'全場',team||'未指定球隊',
         m.player_number?`背號 ${m.player_number}`:'未填背號',
-        m.event==='GOAL' && m.assist_number?`助攻 ${m.assist_number}`:''
+        isOwnGoal?'烏龍球':'',
+        isOwnGoal?`比分計入${ownGoalScoreTeam}`:'',
+        m.event==='GOAL' && !isOwnGoal && m.assist_number?`助攻 ${m.assist_number}`:''
       ].filter(Boolean).join('，');
       row.innerHTML=`
         <span class="qdSeq">第${shownSeq}筆</span>
         <span class="qdTime">${fmtMMSS(m.seconds)}</span>
         <span class="qdPeriod">${escapeHtml(period||'全場')}</span>
-        <span class="qdTeam" title="${safeTeam||'未指定球隊'}">${safeTeam||'未指定球隊'}</span>
+        <span class="qdTeam${isOwnGoal?' qdTeamOwnGoal':''}" title="${safeTeam||'未指定球隊'}${isOwnGoal?'（烏龍）':''}">${safeTeam||'未指定球隊'}</span>
         <span class="qdPlayer">${playerText}</span>
         ${extraText}
       `;
@@ -18811,7 +18894,6 @@ function renderLogTo(container, filterEvent=null){
         <div class="logEventPrimary">
           <span class="logEventIcon" aria-hidden="true">${eventIcon(m.event)}</span>
           <b>${escapeHtml(label)}</b>
-          ${m.own_goal?'<span class="logOwnGoalBadge">比分給對方</span>':''}
           ${goalScoreInline}
           ${nonGoalScoreInline}
           ${assist}
