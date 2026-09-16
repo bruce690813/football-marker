@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.89</title>
+<title>足球場邊記錄器 v5.90</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14955,6 +14955,73 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 }
 </style>
 
+
+<style id="v590ManualRecoveryPatch">
+/* v5.90：資料復原不再阻擋正常啟動，只藏在「這是什麼？」內。 */
+.aboutRecoveryBtn{
+  width:100%;
+  min-height:40px;
+  margin:0 0 8px;
+  padding:7px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  border-radius:11px;
+  background:rgba(22,38,56,.58);
+  border:1px solid rgba(113,148,184,.22);
+  color:#8fa8c0;
+  box-shadow:none;
+  font-size:11.5px;
+  font-weight:850;
+}
+.aboutRecoveryBtn[hidden]{
+  display:none!important;
+}
+.aboutRecoveryBtn:active{
+  transform:scale(.99);
+  color:#c6d7e7;
+  background:rgba(29,48,70,.72);
+}
+
+/* Recovery 視窗本身也從 Primary 降成工具型介面。 */
+.matchRecoveryModal{
+  position:relative;
+}
+.matchRecoveryDismiss{
+  position:absolute;
+  top:11px;
+  right:11px;
+  width:36px;
+  height:36px;
+  min-width:36px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  background:#17283a;
+  border:1px solid rgba(132,159,190,.28);
+  color:#dbe8f4;
+  font-size:18px;
+  font-weight:900;
+}
+.matchRecoveryHeader{
+  padding-right:42px!important;
+}
+.matchRecoveryClose{
+  width:100%;
+  min-height:44px;
+  margin-top:11px;
+  border-radius:14px;
+  background:linear-gradient(180deg,#43566d 0%,#33445a 100%);
+  border:1px solid rgba(172,190,213,.23);
+  color:#eef4fb;
+  font-size:14px;
+  font-weight:900;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -14970,7 +15037,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.89</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.90</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15241,19 +15308,20 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 </div>
 
 
-<!-- v5.89 Match recovery modal -->
+<!-- v5.90 Manual match recovery modal -->
 <div class="modalBack" id="matchRecoveryModal">
   <div class="modal matchRecoveryModal" role="dialog" aria-modal="true" aria-labelledby="matchRecoveryTitle">
+    <button class="matchRecoveryDismiss" type="button" onclick="closeMatchRecovery()" aria-label="關閉資料復原">✕</button>
     <div class="matchRecoveryHeader">
-      <div class="matchRecoveryIcon">⚽</div>
+      <div class="matchRecoveryIcon">↺</div>
       <div>
-        <h2 id="matchRecoveryTitle">發現尚未完成的比賽</h2>
-        <p>你可以繼續先前的比賽，或建立新的獨立比賽。</p>
+        <h2 id="matchRecoveryTitle">找回未完成的比賽</h2>
+        <p>只有需要找回舊場次時才使用。正常開啟網頁不會自動顯示這個視窗。</p>
       </div>
     </div>
     <div class="matchRecoveryList" id="matchRecoveryList"></div>
-    <button type="button" class="matchRecoveryNew" onclick="keepFreshMatchFromRecovery()">＋ 建立新比賽</button>
-    <div class="matchRecoveryFootnote">每場比賽會使用自己的網址 Match ID，互不覆蓋。</div>
+    <button type="button" class="matchRecoveryClose" onclick="closeMatchRecovery()">關閉</button>
+    <div class="matchRecoveryFootnote">每場比賽仍以網址 #match=... 作為正式身分，彼此不覆蓋。</div>
   </div>
 </div>
 
@@ -15363,6 +15431,10 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
         </div>
+        <button id="aboutRecoveryBtn" class="aboutRecoveryBtn" type="button" onclick="openMatchRecovery()" hidden aria-label="找回未完成的比賽">
+          <span aria-hidden="true">↺</span>
+          <span id="aboutRecoveryBtnText">找回未完成的比賽</span>
+        </button>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
     </div>
@@ -16037,6 +16109,7 @@ function writeMatchRegistry(list){
 
 function inferSavedUpdatedAt(saved){
   const values=[
+    Number(saved?._savedAt)||0,
     Number(saved?.endEpoch)||0,
     Number(saved?.startEpoch)||0,
     Number(saved?.halftimeEndEpoch)||0,
@@ -16053,7 +16126,7 @@ function inferSavedUpdatedAt(saved){
       if(Number.isFinite(t)) values.push(t);
     });
   }
-  return Math.max(Date.now()-1, ...values);
+  return Math.max(0, ...values);
 }
 
 function isMeaningfulMatchState(saved){
@@ -16116,11 +16189,15 @@ function upsertMatchRegistryEntry(entry){
 }
 
 function updateMatchRegistryFromState(){
-  const entry=registryEntryFromState(MATCH_ID,state,Date.now());
+  const entry=registryEntryFromState(MATCH_ID,state,Number(state?._savedAt)||Date.now());
   if(entry) upsertMatchRegistryEntry(entry);
 }
 
 function bootstrapMatchRegistry(){
+  // Registry 只是索引，不是比賽本體；每次啟動都從真正的 match state 重建。
+  // 這也會修復 v5.89 曾把多筆舊比賽顯示成相同「剛剛更新」時間的問題。
+  try{ localStorage.removeItem(MATCH_REGISTRY_KEY); }catch(e){}
+
   // 掃描 v5.89 Match key，以及 v5.87/v5.88 舊 Session key。
   // 舊資料只「複製」到新 key，不刪除來源，方便必要時回退版本。
   const keys=[];
@@ -16190,9 +16267,20 @@ function getRecoverableMatches(){
     .slice(0,6);
 }
 
+let recoverySwitchInProgress=false;
+
 function closeMatchRecovery(){
   byId('matchRecoveryModal')?.classList.remove('open');
   document.body.style.overflow='';
+}
+
+function syncAboutRecoveryButton(){
+  const btn=byId('aboutRecoveryBtn');
+  const text=byId('aboutRecoveryBtnText');
+  if(!btn) return;
+  const count=getRecoverableMatches().length;
+  btn.hidden=count===0;
+  if(text) text.textContent=count>0 ? `找回未完成的比賽（${count}）` : '找回未完成的比賽';
 }
 
 function continueRecoveredMatch(id){
@@ -16205,20 +16293,25 @@ function continueRecoveredMatch(id){
     showQuickNotice('找不到比賽資料','這場比賽的儲存內容目前不存在');
     return;
   }
-  activateMatchId(id,{writeUrl:true});
+
+  // 先保存「目前這場」，但不要把 KEY 切成目標場。
+  // v5.89 的 Bug 就是先切 KEY 再 reload，導致 pagehide 把目前 state 寫進目標場。
+  try{ saveState(); }catch(e){}
+  recoverySwitchInProgress=true;
+  closeMatchRecovery();
+  writeMatchIdToUrl(id);
   location.reload();
 }
 
-function keepFreshMatchFromRecovery(){
-  closeMatchRecovery();
-  saveState();
-}
-
-function openMatchRecoveryIfNeeded(){
-  if(MATCH_ENTRY_MODE!=='clean') return;
+function openMatchRecovery(){
   const matches=getRecoverableMatches();
-  if(!matches.length) return;
+  if(!matches.length){
+    showQuickNotice('沒有可復原的比賽','目前沒有偵測到其他尚未完成的場次');
+    syncAboutRecoveryButton();
+    return;
+  }
 
+  byId('aboutModal')?.classList.remove('open');
   const list=byId('matchRecoveryList');
   if(!list) return;
   list.innerHTML='';
@@ -16657,6 +16750,7 @@ function saveState(){
   if(!containsBopomofo(oppTeamValue)) state.oppTeam=oppTeamValue;
   if(!containsBopomofo(venueValue)) state.venue=venueValue;
   if(!containsBopomofo(competitionValue)) state.competition=competitionValue;
+  state._savedAt=Date.now();
   localStorage.setItem(KEY, JSON.stringify(state));
   updateMatchRegistryFromState();
   if(state.ourTeam && !/[<>\r\n]/.test(state.ourTeam)){
@@ -20338,6 +20432,7 @@ function focusAboutDismiss(){
 function openAboutModal(){
   aboutReturnFocus=document.activeElement instanceof HTMLElement ? document.activeElement : null;
   syncVisualViewport();
+  syncAboutRecoveryButton();
   document.body.style.overflow='hidden';
   byId('aboutModal').classList.add('open');
   const body=byId('aboutModal').querySelector('.aboutBody');
@@ -21607,6 +21702,7 @@ loadState();
 updateMatchRegistryFromState();
 
 function persistBeforeBackgroundSuspend(){
+  if(recoverySwitchInProgress) return;
   if(!byId('ourTeam')) return;
   try{ saveState(); }catch(e){}
 }
@@ -21619,7 +21715,6 @@ window.addEventListener('pagehide',persistBeforeBackgroundSuspend,{capture:true}
 tick();
 syncVisualViewport();
 window.finishAppBoot();
-setTimeout(openMatchRecoveryIfNeeded,120);
 
 setInterval(renderRegulationTimeAlert,1000);
 

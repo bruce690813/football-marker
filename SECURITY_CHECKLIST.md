@@ -1,8 +1,30 @@
 # SECURITY_CHECKLIST.md
-# v5.89 驗證範圍：URL Match ID、跨版本資料遷移、未完成比賽復原與背景存檔。
+# v5.90 驗證範圍：Recovery 自動彈窗移除、比賽切換覆蓋修正與 Registry 時間修復。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.89 本次驗證
+## v5.90 本次驗證
+
+- [x] 啟動流程不再自動呼叫 Recovery Modal。
+- [x] 根網址正常開啟時直接建立新的 URL Match ID。
+- [x] 既有 `#match=...` 仍直接載入指定比賽。
+- [x] Recovery 僅從「這是什麼？」次要入口手動開啟。
+- [x] 沒有其他未完成比賽時，不顯示 Recovery 入口。
+- [x] `continueRecoveredMatch()` 不再先切換全域 Match KEY。
+- [x] 切換舊場前會先保存目前場。
+- [x] Recovery reload 過程會暫停 `visibilitychange/pagehide` autosave。
+- [x] 修正 v5.89 可能把目前空白 state 覆蓋到目標比賽的競態。
+- [x] `saveState()` 新增 `_savedAt` 真實儲存時間。
+- [x] `inferSavedUpdatedAt()` 不再以 `Date.now()` 強迫舊資料顯示為最新。
+- [x] Match Registry 啟動時從真正 match state 重建。
+- [x] 舊比賽 LocalStorage 本體不因 Registry 重建而刪除。
+- [x] URL Match ID、比分、事件、烏龍球、摘要、圖片、CSV 與計時邏輯未改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：乾淨根網址開啟後確認不再自動出現 Recovery 視窗。
+- [ ] 實機：從「這是什麼？」手動找回舊比賽，確認比分與事件正確載入。
+- [ ] 實機：兩個不同 `#match=` 分頁長時間背景後，確認仍各自恢復。
+
+## v5.89 歷史驗證
 
 - [x] 比賽正式身分改為 URL `#match=<Match ID>`。
 - [x] 目前 Match key 改為 `football_marker_v218_match_<Match ID>`。

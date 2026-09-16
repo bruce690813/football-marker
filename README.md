@@ -1,10 +1,59 @@
-# 足球場邊記錄器 v5.89
+# 足球場邊記錄器 v5.90
 
 手機場邊即時記錄足球比賽事件的單頁工具。
 
-目前版本：**v5.89**
+目前版本：**v5.90**
 
-## v5.89 URL Match ID 與背景復原
+## v5.90 Recovery 流程修正與降級
+
+### 取消啟動時自動彈出
+
+v5.89 使用乾淨網址進入時，只要 Registry 偵測到未完成比賽，就會自動顯示「發現尚未完成的比賽」。
+
+v5.90 改為：
+
+- 正常開啟根網址：直接建立新的 URL Match ID
+- 開啟既有 `#match=...`：直接恢復該場
+- 不再自動出現 Recovery Modal
+- Recovery 能力保留，但改放在「這是什麼？」內的次要入口
+- 沒有可復原比賽時，該入口完全不顯示
+
+### 修正「繼續這場比賽」無法載入
+
+v5.89 先把全域 `KEY` 切到目標比賽，再執行 `location.reload()`。
+reload 期間的 `pagehide / visibilitychange` 又會自動執行 `saveState()`，因此有機會把目前畫面的 state 寫進目標比賽 key。
+
+v5.90 改為：
+
+1. 先保存目前場次
+2. 不切換目前 `KEY`
+3. 只更新 URL `#match=目標ID`
+4. reload 後由啟動流程重新解析 Match ID
+5. reload 切換期間暫停 background autosave
+
+因此不會再用目前 state 覆蓋要找回的比賽。
+
+### 修正舊比賽全部顯示相同更新時間
+
+v5.89 的 `inferSavedUpdatedAt()` 最低值錯誤使用接近 `Date.now()`，造成掃描舊資料時多筆場次看起來都是「剛剛更新」。
+
+v5.90：
+
+- `saveState()` 寫入 `_savedAt`
+- 舊資料依 start/end/period/marker 的真實 timestamp 推算
+- Match Registry 每次啟動都由真正的 match state 重建
+- Registry 只作索引，不是比賽本體
+
+### 使用原則
+
+平常完全不需要操作 Recovery：
+
+- `#match=A` 就是比賽 A
+- `#match=B` 就是比賽 B
+- Safari 背景重載時依 URL Match ID 找回原場
+- 只有真的需要找回過去未完成場次時，才從「這是什麼？」進入資料復原
+
+## v5.89 歷史：URL Match ID 與背景復原
 
 本版針對 iPhone Safari 長時間把分頁放在背景後，可能重新載入頁面而失去 v5.87 `sessionStorage` Session 身分的情境，重新設計比賽身分保存方式。
 
