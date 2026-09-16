@@ -1,8 +1,46 @@
 # SECURITY_CHECKLIST.md
-# v5.87 驗證範圍：同瀏覽器多分頁 Session 隔離、重新整理還原與舊資料遷移。
+# v5.89 驗證範圍：URL Match ID、跨版本資料遷移、未完成比賽復原與背景存檔。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.87 本次驗證
+## v5.89 本次驗證
+
+- [x] 比賽正式身分改為 URL `#match=<Match ID>`。
+- [x] 目前 Match key 改為 `football_marker_v218_match_<Match ID>`。
+- [x] `sessionStorage` 不再作為目前版本唯一的比賽身分來源。
+- [x] 從 v5.87 / v5.88 升級時，可沿用仍存在的舊 tab Session ID。
+- [x] 會掃描舊 `football_marker_v218_session_<id>` 並複製至新 Match key。
+- [x] 舊 Session key 不刪除。
+- [x] 更舊的 `football_marker_v218` 可進入復原清單。
+- [x] 建立 Match Registry，保存最近比賽的 Match ID、隊伍、比分、狀態與最後更新時間。
+- [x] 乾淨網址進入時，如存在未完成比賽，會先顯示復原選擇，而非直接覆蓋／遺忘舊場。
+- [x] 「＋ 新比賽」先保存舊場，再產生新的 Match ID。
+- [x] `visibilitychange` 切到背景時會再次保存 state。
+- [x] `pagehide` 時會再次保存 state。
+- [x] 原本以 timestamp 計算 elapsed time 的邏輯保持不變。
+- [x] 比分、事件、烏龍球、摘要、圖片與 CSV 內容邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實體 iPhone：同 Safari 開兩個不同 Match ID，各自記錄後長時間背景，再逐一返回確認仍是各自比賽。
+- [ ] 實體 iPhone：直接開乾淨根網址，確認能看到未完成比賽復原視窗。
+- [ ] 實體 iPhone：按「＋ 新比賽」後確認網址產生新 Match ID，舊網址重新開啟仍能找到舊場。
+
+## v5.88 歷史驗證
+
+- [x] 本版只修改摘要 Modal 的 CSS 與三個區塊標題 class，不修改資料邏輯。
+- [x] 摘要頁標題亮度與字重提高。
+- [x] 時間紀錄區塊標題降一級視覺權重。
+- [x] 時間資訊卡高度、padding 與字級略為壓縮。
+- [x] 球員進球統計與比賽事件時間軸標題提升視覺層級。
+- [x] 底部分享操作區由約 64px 壓縮至約 58px。
+- [x] 「分享／儲存圖片」按鈕仍維持至少 44px 觸控高度。
+- [x] 390px 以下具備額外空間收斂。
+- [x] 比分、計時、事件、烏龍球、Session、CSV、圖片產生與 LocalStorage 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 建議實體 iPhone 驗收：摘要首屏能比 v5.87 更早看到「球員進球統計」與「比賽事件時間軸」。
+- [ ] 建議實體 iPhone 驗收：底部分享按鈕按壓範圍仍自然、無誤觸。
+
+## v5.87 歷史驗證
 
 - [x] 比賽 state 不再使用固定 `football_marker_v218` 作為目前版本的寫入 key。
 - [x] 每個分頁以 `sessionStorage` 保存自己的 Match Session ID。

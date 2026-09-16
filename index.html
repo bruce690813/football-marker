@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.87</title>
+<title>足球場邊記錄器 v5.89</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14738,6 +14738,223 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 }
 </style>
 
+
+<style id="v588ReportPolishPatch">
+/* v5.88：摘要頁最後一輪視覺層級精修 */
+
+/* 頁面標題從輔助灰提升約一階亮度，但不超過比分主視覺。 */
+#reportModal .reportTitle{
+  color:#a1b2c3!important;
+  font-weight:780!important;
+  letter-spacing:.32px!important;
+}
+
+/* 時間紀錄：保留資訊，但降低視覺重量與高度。 */
+#reportModal .reportSectionTitleTime{
+  font-size:12.2px!important;
+  color:#c5d3e0!important;
+  font-weight:880!important;
+  margin:4px 0 6px!important;
+}
+#reportModal .reportSectionTitleTime::before{
+  width:2px!important;
+  background:rgba(56,189,248,.72)!important;
+  box-shadow:none!important;
+}
+#reportModal .reportTimeCard{
+  padding:6px 7px!important;
+  margin-bottom:8px!important;
+}
+#reportModal .reportOverviewGrid{
+  gap:6px!important;
+}
+#reportModal .reportOverviewCell{
+  min-height:48px!important;
+  padding:6px 8px!important;
+  font-size:10.5px!important;
+  line-height:1.38!important;
+}
+#reportModal .reportOverviewLabel{
+  font-size:9.5px!important;
+  margin-bottom:1px!important;
+}
+#reportModal .reportOverviewValue{
+  font-size:11.5px!important;
+}
+#reportModal .reportOverviewCell.primary .reportOverviewValue{
+  font-size:18px!important;
+}
+#reportModal .reportHalftime{
+  padding:6px 8px!important;
+}
+#reportModal .reportHalftimeTimes{
+  font-size:9.5px!important;
+}
+#reportModal .reportDiff{
+  padding-top:1px!important;
+}
+
+/* 進球統計 / 時間軸：提升為摘要內容的主要閱讀層級。 */
+#reportModal .reportSectionTitlePrimary{
+  font-size:13.6px!important;
+  color:#eef7ff!important;
+  font-weight:950!important;
+  margin:7px 0 8px!important;
+  letter-spacing:.38px!important;
+}
+#reportModal .reportSectionTitlePrimary::before{
+  width:4px!important;
+  background:#38bdf8!important;
+  box-shadow:0 0 8px rgba(56,189,248,.22)!important;
+}
+#reportModal .matchTimelineLegend{
+  margin:5px 0 8px!important;
+  font-weight:800!important;
+}
+
+/* 底部主要 CTA：縮短容器 6px，按鈕仍保留至少 44px 觸控高度。 */
+#reportModal .reportActions.oneReportAction{
+  flex:0 0 58px!important;
+  min-height:58px!important;
+  padding:7px 9px!important;
+}
+#reportModal .reportActions.oneReportAction #reportShareBtn{
+  min-height:44px!important;
+  padding:9px 4px!important;
+}
+
+/* 小型 iPhone 再微幅收斂時間卡，但不犧牲可讀性。 */
+@media(max-width:390px){
+  #reportModal .reportTimeCard{
+    padding:5px 6px!important;
+  }
+  #reportModal .reportOverviewGrid{
+    gap:5px!important;
+  }
+  #reportModal .reportOverviewCell{
+    min-height:46px!important;
+    padding:5px 7px!important;
+  }
+  #reportModal .reportActions.oneReportAction{
+    padding:7px 8px!important;
+  }
+}
+</style>
+
+
+<style id="v589MatchIdentityPatch">
+/* v5.89：未完成比賽復原視窗 */
+#matchRecoveryModal{
+  z-index:1550;
+}
+.matchRecoveryModal{
+  width:min(520px,calc(100vw - 20px));
+  max-height:min(760px,calc(var(--vv-height,100dvh) - 20px));
+  padding:15px;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  background:linear-gradient(180deg,#101d2c 0%,#09131f 100%);
+  border:1px solid rgba(116,151,195,.34);
+  border-radius:24px;
+  box-shadow:0 28px 80px rgba(0,0,0,.68),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.matchRecoveryHeader{
+  display:flex;
+  gap:11px;
+  align-items:flex-start;
+  padding:3px 3px 12px;
+}
+.matchRecoveryIcon{
+  flex:0 0 auto;
+  font-size:31px;
+  line-height:1;
+}
+.matchRecoveryHeader h2{
+  margin:0;
+  color:#f7fbff;
+  font-size:20px;
+  line-height:1.2;
+}
+.matchRecoveryHeader p{
+  margin:5px 0 0;
+  color:#9fb0c4;
+  font-size:12px;
+  line-height:1.5;
+}
+.matchRecoveryList{
+  display:grid;
+  gap:8px;
+}
+.matchRecoveryItem{
+  width:100%;
+  padding:12px 13px;
+  border-radius:16px;
+  text-align:left;
+  background:linear-gradient(180deg,#17283a 0%,#112030 100%);
+  border:1px solid rgba(96,165,250,.25);
+  color:#f2f7fd;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+}
+.matchRecoveryItem:active{
+  transform:scale(.99);
+  filter:brightness(1.08);
+}
+.matchRecoveryTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.matchRecoveryTop strong{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:15px;
+}
+.matchRecoveryScore{
+  flex:0 0 auto;
+  padding:3px 8px;
+  border-radius:999px;
+  background:#113e2d;
+  border:1px solid rgba(74,222,128,.28);
+  color:#a7f3d0;
+  font-size:13px;
+  font-weight:950;
+}
+.matchRecoveryMeta{
+  margin-top:5px;
+  color:#96a8bb;
+  font-size:10.5px;
+  line-height:1.45;
+}
+.matchRecoveryContinue{
+  margin-top:7px;
+  color:#69b9ff;
+  font-size:11px;
+  font-weight:900;
+}
+.matchRecoveryNew{
+  width:100%;
+  min-height:48px;
+  margin-top:11px;
+  border-radius:15px;
+  background:linear-gradient(180deg,#2d7bff 0%,#1f63e9 55%,#194fc4 100%);
+  border:1px solid rgba(142,190,255,.52);
+  color:#fff;
+  font-size:16px;
+  font-weight:950;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 7px 18px rgba(31,99,233,.22);
+}
+.matchRecoveryFootnote{
+  margin-top:9px;
+  text-align:center;
+  color:#70849a;
+  font-size:9.5px;
+  line-height:1.45;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -14753,7 +14970,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.87</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.89</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15021,6 +15238,23 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 <div class="undoSnackbar" id="undoSnackbar" role="status" aria-live="polite">
   <div class="undoSnackbarText" id="undoSnackbarText">已記錄事件</div>
   <button type="button" onclick="undoLastMarker()">復原</button>
+</div>
+
+
+<!-- v5.89 Match recovery modal -->
+<div class="modalBack" id="matchRecoveryModal">
+  <div class="modal matchRecoveryModal" role="dialog" aria-modal="true" aria-labelledby="matchRecoveryTitle">
+    <div class="matchRecoveryHeader">
+      <div class="matchRecoveryIcon">⚽</div>
+      <div>
+        <h2 id="matchRecoveryTitle">發現尚未完成的比賽</h2>
+        <p>你可以繼續先前的比賽，或建立新的獨立比賽。</p>
+      </div>
+    </div>
+    <div class="matchRecoveryList" id="matchRecoveryList"></div>
+    <button type="button" class="matchRecoveryNew" onclick="keepFreshMatchFromRecovery()">＋ 建立新比賽</button>
+    <div class="matchRecoveryFootnote">每場比賽會使用自己的網址 Match ID，互不覆蓋。</div>
+  </div>
 </div>
 
 <!-- Result metadata edit modal -->
@@ -15610,7 +15844,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
       <div class="reportStatusBadge idle" id="reportStatusBadge">尚未開始</div>
     </div>
     <div class="reportBody">
-      <div class="reportSectionTitle">時間紀錄</div>
+      <div class="reportSectionTitle reportSectionTitleTime">時間紀錄</div>
       <div class="reportTimeCard">
         <div class="reportOverviewGrid">
           <div class="reportOverviewCell primary">
@@ -15641,10 +15875,10 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
         <div class="penaltySummary" id="reportPenalty"></div>
       </div>
 
-      <div class="reportSectionTitle">球員進球統計</div>
+      <div class="reportSectionTitle reportSectionTitlePrimary">球員進球統計</div>
       <div class="scorerStats" id="reportScorers"></div>
 
-      <div class="reportSectionTitle">比賽事件時間軸</div>
+      <div class="reportSectionTitle reportSectionTitlePrimary">比賽事件時間軸</div>
       <div class="matchTimelineLegend"><span class="timelineOur">● 我方</span><span class="timelineOpp">● 對手</span></div>
       <div id="reportTimeline"></div>
       <div id="reportImageDownloads" hidden aria-live="polite"></div>
@@ -15658,79 +15892,377 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 </div>
 
 <script>
-// v5.87：比賽資料改為「每個分頁獨立 Session」。
-// - sessionStorage 只保存本分頁的 Session ID：不同分頁彼此隔離。
-// - 實際比賽 state 仍保存在 localStorage 的 Session 專屬 key：重新整理不會消失。
-// - 我方名稱、最近場地、常用背號等偏好資料仍維持跨分頁共享。
+// v5.89：比賽正式身分改由 URL #match=<Match ID> 保存。
+// URL fragment 會跟著 Safari 分頁本身保留；即使背景頁被系統回收並重新載入，
+// 仍能從網址找回同一場比賽，不再依賴 sessionStorage 作為唯一身分來源。
 const LEGACY_MATCH_KEY='football_marker_v218';
-const MATCH_KEY_PREFIX='football_marker_v218_session_';
-const TAB_SESSION_KEY='football_marker_tab_session_v1';
-const SESSION_MIGRATION_KEY='football_marker_session_migration_v587';
+const LEGACY_SESSION_KEY_PREFIX='football_marker_v218_session_';
+const LEGACY_TAB_SESSION_KEY='football_marker_tab_session_v1';
+const MATCH_KEY_PREFIX='football_marker_v218_match_';
+const MATCH_REGISTRY_KEY='football_marker_match_registry_v1';
+const MATCH_REGISTRY_LIMIT=12;
 
-function createMatchSessionId(){
+let MATCH_ID='';
+let KEY='';
+let MATCH_ENTRY_MODE='url'; // url / legacy-tab / clean
+
+function isValidMatchId(value){
+  return /^[a-z0-9][a-z0-9_-]{5,79}$/i.test(String(value||''));
+}
+
+function createMatchId(){
+  const d=new Date();
+  const datePart=
+    String(d.getFullYear())+
+    String(d.getMonth()+1).padStart(2,'0')+
+    String(d.getDate()).padStart(2,'0');
+
   let randomPart='';
   try{
     const bytes=new Uint32Array(2);
     crypto.getRandomValues(bytes);
-    randomPart=Array.from(bytes,n=>n.toString(36)).join('');
+    randomPart=Array.from(bytes,n=>n.toString(36)).join('').slice(0,10);
   }catch(e){
     randomPart=Math.random().toString(36).slice(2,12);
   }
-  return `${Date.now().toString(36)}_${randomPart}`;
+  return `${datePart}-${randomPart}`;
 }
 
-function getOrCreateTabSessionId(){
-  let id='';
-  try{
-    id=sessionStorage.getItem(TAB_SESSION_KEY)||'';
-  }catch(e){}
-
-  if(!/^[a-z0-9_-]{6,80}$/i.test(id)){
-    id=createMatchSessionId();
-    try{ sessionStorage.setItem(TAB_SESSION_KEY,id); }catch(e){}
+function createUniqueMatchId(){
+  for(let i=0;i<6;i++){
+    const id=createMatchId();
+    if(!localStorage.getItem(MATCH_KEY_PREFIX+id)) return id;
   }
-  return id;
+  return `${createMatchId()}-${Date.now().toString(36)}`;
 }
 
-const MATCH_SESSION_ID=getOrCreateTabSessionId();
-const KEY=MATCH_KEY_PREFIX+MATCH_SESSION_ID;
-document.documentElement.dataset.matchSession=MATCH_SESSION_ID;
-
-function migrateLegacyMatchStateOnce(){
-  // v5.86 以前所有分頁共用 LEGACY_MATCH_KEY。
-  // 升級後只允許第一個 v5.87 分頁承接一次舊資料，
-  // 避免每個新分頁都複製同一場比賽而再次造成「看起來同步」。
-  let migrated=false;
+function readMatchIdFromUrl(){
   try{
-    migrated=Boolean(localStorage.getItem(SESSION_MIGRATION_KEY));
+    const params=new URLSearchParams(location.hash.replace(/^#/,''));
+    const id=params.get('match')||'';
+    return isValidMatchId(id) ? id : '';
   }catch(e){
+    return '';
+  }
+}
+
+function writeMatchIdToUrl(id){
+  if(!isValidMatchId(id)) return;
+  const next=`${location.pathname}${location.search}#match=${encodeURIComponent(id)}`;
+  try{
+    history.replaceState(history.state,'',next);
+  }catch(e){
+    try{ location.hash=`match=${encodeURIComponent(id)}`; }catch(_e){}
+  }
+}
+
+function activateMatchId(id,{writeUrl=true}={}){
+  if(!isValidMatchId(id)) throw new Error('Invalid Match ID');
+  MATCH_ID=id;
+  KEY=MATCH_KEY_PREFIX+MATCH_ID;
+  document.documentElement.dataset.matchId=MATCH_ID;
+  if(writeUrl) writeMatchIdToUrl(MATCH_ID);
+}
+
+function copyLegacySessionToMatchId(id){
+  if(!isValidMatchId(id)) return false;
+  const target=MATCH_KEY_PREFIX+id;
+  if(localStorage.getItem(target)) return true;
+
+  const source=LEGACY_SESSION_KEY_PREFIX+id;
+  const raw=localStorage.getItem(source);
+  if(!raw) return false;
+
+  try{
+    const parsed=JSON.parse(raw);
+    if(parsed && typeof parsed==='object' && !Array.isArray(parsed)){
+      localStorage.setItem(target,raw);
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+
+function resolveInitialMatchIdentity(){
+  const urlId=readMatchIdFromUrl();
+  if(urlId){
+    MATCH_ENTRY_MODE='url';
+    copyLegacySessionToMatchId(urlId);
+    activateMatchId(urlId,{writeUrl:false});
     return;
   }
-  if(migrated) return;
 
+  // 從 v5.87 / v5.88 升級時，如果本分頁仍保有舊 sessionStorage 身分，
+  // 優先沿用該 ID 並搬到新的 URL Match ID，讓正在進行的比賽不中斷。
+  let oldTabId='';
   try{
-    const legacyRaw=localStorage.getItem(LEGACY_MATCH_KEY);
-    if(legacyRaw && !localStorage.getItem(KEY)){
-      const parsed=JSON.parse(legacyRaw);
-      if(parsed && typeof parsed==='object' && !Array.isArray(parsed)){
-        localStorage.setItem(KEY,legacyRaw);
-      }
+    oldTabId=sessionStorage.getItem(LEGACY_TAB_SESSION_KEY)||'';
+  }catch(e){}
+
+  if(isValidMatchId(oldTabId)){
+    const oldSessionRaw=localStorage.getItem(LEGACY_SESSION_KEY_PREFIX+oldTabId);
+    const alreadyNew=localStorage.getItem(MATCH_KEY_PREFIX+oldTabId);
+    if(oldSessionRaw || alreadyNew){
+      copyLegacySessionToMatchId(oldTabId);
+      MATCH_ENTRY_MODE='legacy-tab';
+      activateMatchId(oldTabId,{writeUrl:true});
+      return;
     }
-    localStorage.setItem(
-      SESSION_MIGRATION_KEY,
-      JSON.stringify({session:MATCH_SESSION_ID,at:Date.now()})
-    );
+  }
+
+  MATCH_ENTRY_MODE='clean';
+  activateMatchId(createUniqueMatchId(),{writeUrl:true});
+}
+
+function readMatchRegistry(){
+  try{
+    const raw=localStorage.getItem(MATCH_REGISTRY_KEY);
+    if(!raw) return [];
+    const list=JSON.parse(raw);
+    return Array.isArray(list) ? list.filter(x=>x && isValidMatchId(x.id)) : [];
   }catch(e){
-    // 舊資料損壞時不影響 v5.87 新 Session 啟動；
-    // 真正的 Session 資料仍由 loadState() 負責嚴格驗證。
-    try{
-      localStorage.setItem(
-        SESSION_MIGRATION_KEY,
-        JSON.stringify({session:MATCH_SESSION_ID,at:Date.now(),legacySkipped:true})
-      );
-    }catch(_e){}
+    return [];
   }
 }
+
+function writeMatchRegistry(list){
+  try{
+    const normalized=(Array.isArray(list)?list:[])
+      .filter(x=>x && isValidMatchId(x.id))
+      .sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0))
+      .slice(0,MATCH_REGISTRY_LIMIT);
+    localStorage.setItem(MATCH_REGISTRY_KEY,JSON.stringify(normalized));
+  }catch(e){}
+}
+
+function inferSavedUpdatedAt(saved){
+  const values=[
+    Number(saved?.endEpoch)||0,
+    Number(saved?.startEpoch)||0,
+    Number(saved?.halftimeEndEpoch)||0,
+    Number(saved?.halftimeStartEpoch)||0
+  ];
+  if(Array.isArray(saved?.periods)){
+    saved.periods.forEach(p=>{
+      values.push(Number(p?.endEpoch)||0,Number(p?.startEpoch)||0);
+    });
+  }
+  if(Array.isArray(saved?.markers)){
+    saved.markers.forEach(m=>{
+      const t=Date.parse(m?.recorded_at||'');
+      if(Number.isFinite(t)) values.push(t);
+    });
+  }
+  return Math.max(Date.now()-1, ...values);
+}
+
+function isMeaningfulMatchState(saved){
+  if(!saved || typeof saved!=='object' || Array.isArray(saved)) return false;
+  return Boolean(
+    saved.started ||
+    saved.finished ||
+    saved.awaitingNextPeriod ||
+    saved.startEpoch ||
+    saved.endEpoch ||
+    (Array.isArray(saved.periods) && saved.periods.length) ||
+    (Array.isArray(saved.markers) && saved.markers.length) ||
+    Number(saved.ourScore) ||
+    Number(saved.oppScore)
+  );
+}
+
+function registryEntryFromState(id,saved,updatedAt=Date.now()){
+  if(!isValidMatchId(id) || !isMeaningfulMatchState(saved)) return null;
+  const active=!saved.finished && Boolean(
+    saved.started ||
+    saved.awaitingNextPeriod ||
+    saved.startEpoch ||
+    (Array.isArray(saved.periods) && saved.periods.length) ||
+    (Array.isArray(saved.markers) && saved.markers.length) ||
+    Number(saved.ourScore) ||
+    Number(saved.oppScore)
+  );
+  return {
+    id,
+    updatedAt:Number(updatedAt)||Date.now(),
+    ourTeam:String(saved.ourTeam||'我方').slice(0,30),
+    oppTeam:String(saved.oppTeam||'對手').slice(0,30),
+    competition:String(saved.competition||'').slice(0,30),
+    venue:String(saved.venue||'').slice(0,30),
+    ourScore:Number(saved.ourScore)||0,
+    oppScore:Number(saved.oppScore)||0,
+    started:Boolean(saved.started),
+    finished:Boolean(saved.finished),
+    awaitingNextPeriod:Boolean(saved.awaitingNextPeriod),
+    active,
+    startEpoch:Number(saved.startEpoch)||null
+  };
+}
+
+function upsertMatchRegistryEntry(entry){
+  if(!entry) return;
+  const list=readMatchRegistry();
+  const index=list.findIndex(x=>x.id===entry.id);
+  if(index>=0){
+    // 已有較新的即時紀錄時，不讓舊版掃描資料把時間往回覆蓋。
+    if((Number(list[index].updatedAt)||0) > (Number(entry.updatedAt)||0)){
+      entry.updatedAt=list[index].updatedAt;
+    }
+    list[index]={...list[index],...entry};
+  }else{
+    list.push(entry);
+  }
+  writeMatchRegistry(list);
+}
+
+function updateMatchRegistryFromState(){
+  const entry=registryEntryFromState(MATCH_ID,state,Date.now());
+  if(entry) upsertMatchRegistryEntry(entry);
+}
+
+function bootstrapMatchRegistry(){
+  // 掃描 v5.89 Match key，以及 v5.87/v5.88 舊 Session key。
+  // 舊資料只「複製」到新 key，不刪除來源，方便必要時回退版本。
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k) keys.push(k);
+  }
+
+  keys.forEach(k=>{
+    let id='';
+    let targetKey='';
+    if(k.startsWith(MATCH_KEY_PREFIX)){
+      id=k.slice(MATCH_KEY_PREFIX.length);
+      targetKey=k;
+    }else if(k.startsWith(LEGACY_SESSION_KEY_PREFIX)){
+      id=k.slice(LEGACY_SESSION_KEY_PREFIX.length);
+      targetKey=MATCH_KEY_PREFIX+id;
+    }else{
+      return;
+    }
+
+    if(!isValidMatchId(id)) return;
+
+    try{
+      const raw=localStorage.getItem(k);
+      if(!raw) return;
+      const saved=JSON.parse(raw);
+      if(!isMeaningfulMatchState(saved)) return;
+
+      if(k.startsWith(LEGACY_SESSION_KEY_PREFIX) && !localStorage.getItem(targetKey)){
+        localStorage.setItem(targetKey,raw);
+      }
+      upsertMatchRegistryEntry(
+        registryEntryFromState(id,saved,inferSavedUpdatedAt(saved))
+      );
+    }catch(e){}
+  });
+
+  // 更舊的單一 football_marker_v218 也保留在復原清單中。
+  try{
+    const raw=localStorage.getItem(LEGACY_MATCH_KEY);
+    if(raw){
+      const saved=JSON.parse(raw);
+      if(isMeaningfulMatchState(saved)){
+        const id='legacy-v586';
+        const target=MATCH_KEY_PREFIX+id;
+        if(!localStorage.getItem(target)) localStorage.setItem(target,raw);
+        upsertMatchRegistryEntry(
+          registryEntryFromState(id,saved,inferSavedUpdatedAt(saved))
+        );
+      }
+    }
+  }catch(e){}
+}
+
+function recoveryDateText(epoch){
+  if(!epoch) return '';
+  const d=new Date(epoch);
+  if(Number.isNaN(d.getTime())) return '';
+  return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function getRecoverableMatches(){
+  return readMatchRegistry()
+    .filter(x=>x.id!==MATCH_ID && x.active && !x.finished)
+    .sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0))
+    .slice(0,6);
+}
+
+function closeMatchRecovery(){
+  byId('matchRecoveryModal')?.classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function continueRecoveredMatch(id){
+  if(!isValidMatchId(id)) return;
+  const key=MATCH_KEY_PREFIX+id;
+  if(!localStorage.getItem(key)){
+    copyLegacySessionToMatchId(id);
+  }
+  if(!localStorage.getItem(key)){
+    showQuickNotice('找不到比賽資料','這場比賽的儲存內容目前不存在');
+    return;
+  }
+  activateMatchId(id,{writeUrl:true});
+  location.reload();
+}
+
+function keepFreshMatchFromRecovery(){
+  closeMatchRecovery();
+  saveState();
+}
+
+function openMatchRecoveryIfNeeded(){
+  if(MATCH_ENTRY_MODE!=='clean') return;
+  const matches=getRecoverableMatches();
+  if(!matches.length) return;
+
+  const list=byId('matchRecoveryList');
+  if(!list) return;
+  list.innerHTML='';
+
+  matches.forEach(m=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='matchRecoveryItem';
+    button.addEventListener('click',()=>continueRecoveredMatch(m.id));
+
+    const top=document.createElement('div');
+    top.className='matchRecoveryTop';
+
+    const teams=document.createElement('strong');
+    teams.textContent=`${m.ourTeam||'我方'} vs ${m.oppTeam||'對手'}`;
+
+    const score=document.createElement('span');
+    score.className='matchRecoveryScore';
+    score.textContent=`${m.ourScore||0}:${m.oppScore||0}`;
+
+    top.appendChild(teams);
+    top.appendChild(score);
+
+    const meta=document.createElement('div');
+    meta.className='matchRecoveryMeta';
+    const status=m.awaitingNextPeriod?'中場／等待開賽':m.started?'比賽中':'未完成';
+    const detail=[recoveryDateText(m.updatedAt),status,m.competition,m.venue].filter(Boolean);
+    meta.textContent=detail.join(' · ');
+
+    const hint=document.createElement('div');
+    hint.className='matchRecoveryContinue';
+    hint.textContent='繼續這場比賽 ›';
+
+    button.appendChild(top);
+    button.appendChild(meta);
+    button.appendChild(hint);
+    list.appendChild(button);
+  });
+
+  document.body.style.overflow='hidden';
+  byId('matchRecoveryModal')?.classList.add('open');
+}
+
+resolveInitialMatchIdentity();
 
 const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const LAST_VENUE_KEY='football_marker_last_venue';
@@ -16126,6 +16658,7 @@ function saveState(){
   if(!containsBopomofo(venueValue)) state.venue=venueValue;
   if(!containsBopomofo(competitionValue)) state.competition=competitionValue;
   localStorage.setItem(KEY, JSON.stringify(state));
+  updateMatchRegistryFromState();
   if(state.ourTeam && !/[<>\r\n]/.test(state.ourTeam)){
     localStorage.setItem(LAST_OUR_TEAM_KEY, state.ourTeam);
   }
@@ -17919,7 +18452,11 @@ function confirmFinishFull(){
 }
 function newMatch(){
   hideMarkerUndo();
-  if((state.started || state.markers.length) && !confirm('建立新比賽會清空目前資料，確定嗎？')) return;
+  if((state.started || state.markers.length) && !confirm('建立新比賽會保留目前這場，並建立新的獨立比賽，確定嗎？')) return;
+
+  // v5.89：新比賽不再清除目前 Match ID 的資料。
+  // 先完整保存舊場，再建立新的 URL Match ID。
+  try{ saveState(); }catch(e){}
 
   rememberCurrentRosterAsPrevious();
   const rememberedOurTeam=(byId('ourTeam').value.trim() || localStorage.getItem(LAST_OUR_TEAM_KEY) || '忠義國小').trim();
@@ -17936,6 +18473,9 @@ function newMatch(){
     ? currentVenue
     : (localStorage.getItem(LAST_VENUE_KEY) || '')
   ).trim();
+
+  activateMatchId(createUniqueMatchId(),{writeUrl:true});
+  MATCH_ENTRY_MODE='url';
 
   state={
     ourTeam:rememberedOurTeam, oppTeam:'', venue:rememberedVenue, competition:currentCompetition,
@@ -21062,11 +21602,24 @@ document.querySelectorAll('.finalTools button').forEach(btn=>{
   btn.addEventListener('touchcancel',()=>{ btn.style.transform=''; },{passive:true});
 });
 
-migrateLegacyMatchStateOnce();
+bootstrapMatchRegistry();
 loadState();
+updateMatchRegistryFromState();
+
+function persistBeforeBackgroundSuspend(){
+  if(!byId('ourTeam')) return;
+  try{ saveState(); }catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden) persistBeforeBackgroundSuspend();
+});
+window.addEventListener('pagehide',persistBeforeBackgroundSuspend,{capture:true});
+
+
 tick();
 syncVisualViewport();
 window.finishAppBoot();
+setTimeout(openMatchRecoveryIfNeeded,120);
 
 setInterval(renderRegulationTimeAlert,1000);
 
