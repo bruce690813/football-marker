@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.85</title>
+<title>足球場邊記錄器 v5.87</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14692,6 +14692,52 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 }
 </style>
 
+
+<style id="v586FinalActionTypographyPatch">
+/* v5.86：賽後操作字級層級
+   摘要 19px、匯出 CSV 18px、新比賽 18px。
+   保留原按鈕高度，直接利用既有留白提升可讀性。 */
+
+.finalTools .reportBtn{
+  font-size:19px!important;
+  font-weight:900!important;
+  letter-spacing:.1px!important;
+  line-height:1.15!important;
+}
+.finalTools .share{
+  font-size:18px!important;
+  font-weight:900!important;
+  letter-spacing:.05px!important;
+  line-height:1.15!important;
+}
+.resultNewMatchBtn{
+  font-size:18px!important;
+  font-weight:850!important;
+  letter-spacing:.05px!important;
+  line-height:1.15!important;
+}
+
+/* 小型 iPhone 保留單行與左右呼吸空間。 */
+@media(max-width:390px){
+  .finalTools .reportBtn{
+    font-size:18px!important;
+  }
+  .finalTools .share,
+  .resultNewMatchBtn{
+    font-size:17px!important;
+  }
+}
+@media(max-width:350px){
+  .finalTools .reportBtn{
+    font-size:17px!important;
+  }
+  .finalTools .share,
+  .resultNewMatchBtn{
+    font-size:16px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -14707,7 +14753,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.85</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.87</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15612,7 +15658,80 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 </div>
 
 <script>
-const KEY='football_marker_v218';
+// v5.87：比賽資料改為「每個分頁獨立 Session」。
+// - sessionStorage 只保存本分頁的 Session ID：不同分頁彼此隔離。
+// - 實際比賽 state 仍保存在 localStorage 的 Session 專屬 key：重新整理不會消失。
+// - 我方名稱、最近場地、常用背號等偏好資料仍維持跨分頁共享。
+const LEGACY_MATCH_KEY='football_marker_v218';
+const MATCH_KEY_PREFIX='football_marker_v218_session_';
+const TAB_SESSION_KEY='football_marker_tab_session_v1';
+const SESSION_MIGRATION_KEY='football_marker_session_migration_v587';
+
+function createMatchSessionId(){
+  let randomPart='';
+  try{
+    const bytes=new Uint32Array(2);
+    crypto.getRandomValues(bytes);
+    randomPart=Array.from(bytes,n=>n.toString(36)).join('');
+  }catch(e){
+    randomPart=Math.random().toString(36).slice(2,12);
+  }
+  return `${Date.now().toString(36)}_${randomPart}`;
+}
+
+function getOrCreateTabSessionId(){
+  let id='';
+  try{
+    id=sessionStorage.getItem(TAB_SESSION_KEY)||'';
+  }catch(e){}
+
+  if(!/^[a-z0-9_-]{6,80}$/i.test(id)){
+    id=createMatchSessionId();
+    try{ sessionStorage.setItem(TAB_SESSION_KEY,id); }catch(e){}
+  }
+  return id;
+}
+
+const MATCH_SESSION_ID=getOrCreateTabSessionId();
+const KEY=MATCH_KEY_PREFIX+MATCH_SESSION_ID;
+document.documentElement.dataset.matchSession=MATCH_SESSION_ID;
+
+function migrateLegacyMatchStateOnce(){
+  // v5.86 以前所有分頁共用 LEGACY_MATCH_KEY。
+  // 升級後只允許第一個 v5.87 分頁承接一次舊資料，
+  // 避免每個新分頁都複製同一場比賽而再次造成「看起來同步」。
+  let migrated=false;
+  try{
+    migrated=Boolean(localStorage.getItem(SESSION_MIGRATION_KEY));
+  }catch(e){
+    return;
+  }
+  if(migrated) return;
+
+  try{
+    const legacyRaw=localStorage.getItem(LEGACY_MATCH_KEY);
+    if(legacyRaw && !localStorage.getItem(KEY)){
+      const parsed=JSON.parse(legacyRaw);
+      if(parsed && typeof parsed==='object' && !Array.isArray(parsed)){
+        localStorage.setItem(KEY,legacyRaw);
+      }
+    }
+    localStorage.setItem(
+      SESSION_MIGRATION_KEY,
+      JSON.stringify({session:MATCH_SESSION_ID,at:Date.now()})
+    );
+  }catch(e){
+    // 舊資料損壞時不影響 v5.87 新 Session 啟動；
+    // 真正的 Session 資料仍由 loadState() 負責嚴格驗證。
+    try{
+      localStorage.setItem(
+        SESSION_MIGRATION_KEY,
+        JSON.stringify({session:MATCH_SESSION_ID,at:Date.now(),legacySkipped:true})
+      );
+    }catch(_e){}
+  }
+}
+
 const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const LAST_VENUE_KEY='football_marker_last_venue';
 const RECENT_VENUES_KEY='football_marker_recent_venues_v1';
@@ -20943,6 +21062,7 @@ document.querySelectorAll('.finalTools button').forEach(btn=>{
   btn.addEventListener('touchcancel',()=>{ btn.style.transform=''; },{passive:true});
 });
 
+migrateLegacyMatchStateOnce();
 loadState();
 tick();
 syncVisualViewport();

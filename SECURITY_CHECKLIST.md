@@ -1,8 +1,38 @@
 # SECURITY_CHECKLIST.md
-# v5.85 驗證範圍：賽後摘要 Primary CTA 視覺層級與操作回饋。
+# v5.87 驗證範圍：同瀏覽器多分頁 Session 隔離、重新整理還原與舊資料遷移。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.85 本次驗證
+## v5.87 本次驗證
+
+- [x] 比賽 state 不再使用固定 `football_marker_v218` 作為目前版本的寫入 key。
+- [x] 每個分頁以 `sessionStorage` 保存自己的 Match Session ID。
+- [x] 比賽資料使用 `football_marker_v218_session_<Session ID>` 寫入 `localStorage`。
+- [x] 不同分頁產生不同 Session ID 時，比分、事件、計時、PK、烏龍球與賽事資訊互不覆寫。
+- [x] 同一分頁重新整理時，`sessionStorage` Session ID 不變，可還原同一場比賽。
+- [x] v5.86 舊 `football_marker_v218` 資料只遷移一次，避免每個新分頁都複製同一場比賽。
+- [x] 遷移不刪除舊 key，降低版本切換資料遺失風險。
+- [x] `LAST_OUR_TEAM_KEY`、最近場地、常用背號與上次名單等偏好資料仍維持跨分頁共用。
+- [x] 「＋ 新比賽」只重設目前 Session，不影響其他分頁。
+- [x] 比分、事件、烏龍球、摘要、圖片、CSV 與 UI 操作邏輯未改動。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機建議：同 Safari 開兩個分頁，各自開始不同比分，來回切換並各自重新整理確認不串場。
+- [ ] 實機建議：iOS 將其中一頁切到背景數分鐘後再返回，確認仍還原該分頁 Session。
+
+## v5.86 歷史驗證
+
+- [x] 僅調整賽後「摘要 / 匯出 CSV / 新比賽」字級與字重。
+- [x] 摘要一般尺寸為 19px。
+- [x] 匯出 CSV 與新比賽一般尺寸為 18px。
+- [x] 390px 以下自動降為 18px / 17px / 17px。
+- [x] 350px 以下自動降為 17px / 16px / 16px。
+- [x] 按鈕高度、排列、顏色與 click 事件未修改。
+- [x] 比分、計時、烏龍球、事件紀錄、摘要內容、CSV、LocalStorage 均未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 建議實體 iPhone 驗收「匯出 CSV」在較小螢幕仍維持單行。
+
+## v5.85 歷史驗證
 
 - [x] 僅調整賽後工具區的視覺樣式，不修改任何比賽資料或事件邏輯。
 - [x] 「摘要」改為電光藍 Primary CTA。
