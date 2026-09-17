@@ -1,8 +1,29 @@
 # SECURITY_CHECKLIST.md
-# v5.94 驗證範圍：Recovery 日常入口移除、真正 Match 遺失偵測與安全復原。
+# v5.95 驗證範圍：規定時間 / 超時資訊整併至時間紀錄與手機版面穩定性。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.94 本次驗證
+## v5.95 本次驗證
+
+- [x] 超時資訊不再以 scoreboard 下方獨立一列顯示。
+- [x] 「時間紀錄」標題列新增第二行狀態資訊。
+- [x] 正常狀態顯示「規定 X 分鐘」。
+- [x] 距規定時間 60 秒內顯示「剩 MM:SS」。
+- [x] 規定時間到顯示「時間到」。
+- [x] 超時顯示「超時 +MM:SS / +H:MM:SS」。
+- [x] 超時狀態文字使用紅色，不只依靠顏色外框判斷。
+- [x] scoreboard 原有 regulationHint DOM 保留，但永遠不佔視覺空間。
+- [x] v5.93 外框 Pulse 3 次提醒邏輯保留。
+- [x] v5.92 長時間 H:MM:SS 與防 overflow 邏輯保留。
+- [x] 主計時與超時仍共用同一幀整數秒，維持 v5.91 同步修正。
+- [x] 小螢幕優先保留超時狀態與「展開」控制。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、摘要、圖片、CSV 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：正常狀態確認顯示「規定 X 分鐘」且無額外 scoreboard 列。
+- [ ] 實機：00:30 → 00:00 → 超時，確認第二行狀態平順切換。
+- [ ] 實機：小型 iPhone 確認「超時 +xx:xx」與「展開」不互相擠壓。
+
+## v5.94 歷史驗證
 
 - [x] About /「這是什麼？」已完全移除 Recovery 按鈕。
 - [x] 正常根網址進入不顯示 Recovery。

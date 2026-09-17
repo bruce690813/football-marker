@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.94</title>
+<title>足球場邊記錄器 v5.95</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -15288,6 +15288,129 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 }
 </style>
 
+
+<style id="v595RegulationInTimeRecordPatch">
+/* =========================================================
+   v5.95：規定時間 / 超時資訊整併進「時間紀錄」
+   目的：避免超時後 scoreboard 額外長出一整列，節省垂直空間。
+   ========================================================= */
+
+.timeHead{
+  gap:10px;
+}
+.timeTitleBlock{
+  min-width:0;
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:3px;
+}
+.timeHeadActions{
+  flex:0 0 auto;
+}
+.timeStatusLine{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  line-height:1.15;
+  white-space:nowrap;
+}
+.timeStatusLine[hidden]{
+  display:none!important;
+}
+
+/* 原本右側藍色 pill 降級成標題下方的次要文字。 */
+.timeStatusLine .timeRegulationBadge{
+  flex:1 1 auto;
+  min-width:0;
+  max-width:none;
+  min-height:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#9eb6cc;
+  font-size:10px;
+  font-weight:800;
+  line-height:1.15;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.timeStatusDivider{
+  flex:0 0 auto;
+  color:#5e7287;
+  font-size:10px;
+  font-weight:800;
+}
+.timeRegulationState{
+  flex:0 0 auto;
+  font-size:10.5px;
+  font-weight:950;
+  line-height:1.15;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+.timeRegulationState.soon{
+  color:#f3c363;
+}
+.timeRegulationState.critical{
+  color:#fb923c;
+}
+.timeRegulationState.reached,
+.timeRegulationState.overtime{
+  color:#ff7d84;
+}
+
+/* 開賽中收合狀態仍維持 compact；第二行只增加少量高度。 */
+body.matchStateLive .timeSummary:not(.open) .timeHead{
+  min-height:48px;
+  padding-top:6px;
+  padding-bottom:6px;
+}
+
+/* v5.95：舊 scoreboard 規定時間提示不再作為視覺列。 */
+.broadcastStatusTime > .regulationHint,
+.broadcastStatusTime > .regulationHint.show{
+  display:none!important;
+}
+
+/* 防止舊 :has 規則因 class 殘留額外增加上下 padding。 */
+.broadcastBar:has(.regulationHint.show){
+  padding-top:10px!important;
+  padding-bottom:10px!important;
+}
+
+@media(max-width:390px){
+  .timeHead{
+    gap:7px;
+  }
+  .timeStatusLine{
+    gap:4px;
+  }
+  .timeStatusLine .timeRegulationBadge{
+    font-size:9.5px;
+  }
+  .timeRegulationState{
+    font-size:10px;
+  }
+  .timeToggle{
+    padding-left:11px;
+    padding-right:11px;
+  }
+}
+
+@media(max-width:350px){
+  .timeStatusLine .timeRegulationBadge{
+    max-width:105px;
+  }
+  .timeRegulationState{
+    font-size:9.5px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -15303,7 +15426,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.94</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.95</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15401,7 +15524,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <span class="stageLabel" id="broadcastStageLabel">賽前</span><button id="preResetBtn" class="preResetBtn" type="button" onclick="resetPreMatchSetup()" aria-label="重新設定賽前資料">↻ 重設</button>
             <span class="stageTimer timer" id="timer">00:00</span>
           </div>
-<div class="regulationHint" id="regulationHint"></div>
+<div class="regulationHint" id="regulationHint" aria-hidden="true"></div>
         </div>
       </div>
       <div class="scoreRow">
@@ -15429,9 +15552,15 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 
     <div class="timeSummary" id="timeSummary">
       <div class="timeHead">
-        <div class="timeTitle">⏱ 時間紀錄</div>
+        <div class="timeTitleBlock">
+          <div class="timeTitle">⏱ 時間紀錄</div>
+          <div class="timeStatusLine" id="timeStatusLine" hidden aria-live="polite">
+            <span class="timeRegulationBadge" id="timeRegulationBadge"></span>
+            <span class="timeStatusDivider" id="timeStatusDivider" hidden>·</span>
+            <span class="timeRegulationState" id="timeRegulationState" hidden></span>
+          </div>
+        </div>
         <div class="timeHeadActions">
-          <span class="timeRegulationBadge" id="timeRegulationBadge" hidden></span>
           <button class="timeToggle" id="timeToggle" onclick="toggleTimeBox()">展開</button>
         </div>
       </div>
@@ -17552,7 +17681,10 @@ function syncRegulationPlacement(){
   const timeHost=byId('timeRegulationHost');
   const preSection=byId('preRegulationSection');
   const regTitle=byId('regTitle');
+  const timeLine=byId('timeStatusLine');
   const timeBadge=byId('timeRegulationBadge');
+  const timeDivider=byId('timeStatusDivider');
+  const timeState=byId('timeRegulationState');
   const clearBtn=byId('regClearBtn');
 
   const hasBegun=Boolean(matchStartEpoch());
@@ -17576,13 +17708,25 @@ function syncRegulationPlacement(){
     clearBtn.hidden=!hasBegun || !state.regulationMinutes;
   }
 
-  if(timeBadge){
+  if(timeLine && timeBadge){
     if(hasBegun && state.regulationMinutes){
-      timeBadge.hidden=false;
-      timeBadge.textContent=`${regulationCompactText()}`;
+      timeLine.hidden=false;
+      timeBadge.textContent=`規定 ${regulationCompactText()}`;
+      if(timeDivider) timeDivider.hidden=true;
+      if(timeState){
+        timeState.hidden=true;
+        timeState.textContent='';
+        timeState.className='timeRegulationState';
+      }
     }else{
-      timeBadge.hidden=true;
+      timeLine.hidden=true;
       timeBadge.textContent='';
+      if(timeDivider) timeDivider.hidden=true;
+      if(timeState){
+        timeState.hidden=true;
+        timeState.textContent='';
+        timeState.className='timeRegulationState';
+      }
     }
   }
 }
@@ -20662,18 +20806,67 @@ function triggerOvertimeFramePulse(stage,mins){
 
 
 function renderRegulationTimeAlert(sampledElapsedSec=null){
-  const stage=byId('broadcastStage'), hint=byId('regulationHint');
-  if(!stage||!hint) return;
+  const stage=byId('broadcastStage');
+  const legacyHint=byId('regulationHint');
+  const timeLine=byId('timeStatusLine');
+  const timeBadge=byId('timeRegulationBadge');
+  const timeDivider=byId('timeStatusDivider');
+  const timeState=byId('timeRegulationState');
+
+  if(!stage) return;
+
   stage.classList.remove('regulationSoon','regulationCritical','regulationReached');
-  hint.className='regulationHint'; hint.textContent='';
-  if(!state.started||state.finished||state.awaitingNextPeriod) return;
+
+  // v5.95：舊提示列不再佔版面，只保留 DOM 相容性。
+  if(legacyHint){
+    legacyHint.className='regulationHint';
+    legacyHint.textContent='';
+  }
+
   const mins=Number(state.regulationMinutes||0);
-  if(!mins) return;
+  const hasBegun=Boolean(matchStartEpoch());
+
+  const resetTimeStatus=()=>{
+    if(!timeLine || !timeBadge) return;
+
+    if(hasBegun && mins){
+      timeLine.hidden=false;
+      timeBadge.textContent=`規定 ${regulationCompactText()}`;
+      if(timeDivider) timeDivider.hidden=true;
+      if(timeState){
+        timeState.hidden=true;
+        timeState.textContent='';
+        timeState.className='timeRegulationState';
+      }
+    }else{
+      timeLine.hidden=true;
+      timeBadge.textContent='';
+      if(timeDivider) timeDivider.hidden=true;
+      if(timeState){
+        timeState.hidden=true;
+        timeState.textContent='';
+        timeState.className='timeRegulationState';
+      }
+    }
+  };
+
+  const setTimeStatus=(text,statusClass)=>{
+    if(!timeLine || !timeBadge || !timeState) return;
+    timeLine.hidden=false;
+    timeBadge.textContent=`規定 ${regulationCompactText()}`;
+    if(timeDivider) timeDivider.hidden=false;
+    timeState.hidden=false;
+    timeState.textContent=text;
+    timeState.className=`timeRegulationState ${statusClass||''}`.trim();
+  };
+
+  resetTimeStatus();
+
+  if(!state.started || state.finished || state.awaitingNextPeriod || !mins) return;
 
   let sec=0;
   try{
-    // v5.91：若 tick() 已在本幀取得比賽秒數，就直接共用同一份取樣值。
-    // 這樣主計時器與「超時 +xx:xx」一定以同一個整數秒為基準。
+    // 主計時與規定時間狀態共用同一幀的整數秒。
     if(sampledElapsedSec!==null && Number.isFinite(Number(sampledElapsedSec))){
       sec=Math.floor(Number(sampledElapsedSec)||0);
     }else if(typeof elapsed==='function'){
@@ -20684,29 +20877,28 @@ function renderRegulationTimeAlert(sampledElapsedSec=null){
   }catch(e){}
 
   const diff=Math.round(mins*60)-sec;
+
+  // 超過 60 秒前只顯示「規定 X 分鐘」，不額外增加視覺資訊。
   if(diff>60) return;
 
-  // v5.93：剛進入規定時間到／超時狀態時，外框柔和 Pulse 3 次。
-  // 之後維持靜態紅框，不持續閃爍。
-  if(diff<=0){
-    triggerOvertimeFramePulse(stage,mins);
-  }
-
-  hint.classList.add('show');
-  if(Math.abs(diff)>=3600) hint.classList.add('longDuration');
-
   if(diff>30){
-    stage.classList.add('regulationSoon'); hint.classList.add('soon');
-    hint.textContent=`距比賽時間 ${fmtMatchClock(diff)}`;
+    stage.classList.add('regulationSoon');
+    setTimeStatus(`剩 ${fmtMatchClock(diff)}`,'soon');
   }else if(diff>0){
-    stage.classList.add('regulationCritical'); hint.classList.add('critical');
-    hint.textContent=`距比賽時間 ${fmtMatchClock(diff)}`;
+    stage.classList.add('regulationCritical');
+    setTimeStatus(`剩 ${fmtMatchClock(diff)}`,'critical');
   }else if(diff===0){
-    stage.classList.add('regulationReached'); hint.classList.add('reached');
-    hint.textContent='比賽時間到';
+    stage.classList.add('regulationReached');
+    setTimeStatus('時間到','reached');
+
+    // v5.93：剛進入規定時間到／超時時，只 Pulse 一次。
+    triggerOvertimeFramePulse(stage,mins);
   }else{
-    stage.classList.add('regulationReached'); hint.classList.add('reached');
-    hint.textContent=`超時 +${fmtMatchClock(Math.abs(diff))}`;
+    stage.classList.add('regulationReached');
+    setTimeStatus(`超時 +${fmtMatchClock(Math.abs(diff))}`,'overtime');
+
+    // 同一段比賽只會提醒一次，不持續閃爍。
+    triggerOvertimeFramePulse(stage,mins);
   }
 }
 
