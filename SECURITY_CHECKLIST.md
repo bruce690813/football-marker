@@ -1,8 +1,68 @@
 # SECURITY_CHECKLIST.md
-# v5.90 驗證範圍：Recovery 自動彈窗移除、比賽切換覆蓋修正與 Registry 時間修復。
+# v5.93 驗證範圍：超時外框一次性 Pulse、Reduce Motion 與持續閃爍防護。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.90 本次驗證
+## v5.93 本次驗證
+
+- [x] 規定時間 `diff <= 0` 時可觸發外框 Pulse。
+- [x] 同一 `startEpoch / currentPeriod / regulationMinutes` Token 只提醒一次。
+- [x] Pulse 約 1.25 秒一次，共 3 次，約 4 秒內停止。
+- [x] Pulse 結束後維持既有靜態超時紅框，不持續動畫。
+- [x] 動畫只使用外框 pseudo-element 與 box-shadow，不改背景。
+- [x] 不動畫比分、LIVE 標籤、比賽中標題與主計時文字。
+- [x] 不使用 scale，避免整張卡片跳動。
+- [x] 支援 `prefers-reduced-motion: reduce`，Reduce Motion 下不播放動畫。
+- [x] Reduce Motion 下改為短暫靜態高亮外框。
+- [x] 新 period / 新 regulationMinutes 可形成新的 Token 並再次提醒。
+- [x] v5.91 主計時與超時秒數同步邏輯保留。
+- [x] v5.92 H:MM:SS 長時間防爆排版保留。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、摘要、圖片與 CSV 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：規定時間 1 分鐘，確認 00:59 → 01:00 時只 Pulse 3 次。
+- [ ] 實機：Pulse 停止後等待數分鐘，確認不再持續閃。
+- [ ] 實機：iPhone 開啟「減少動態效果」，確認只呈現靜態高亮。
+
+## v5.92 歷史驗證
+
+- [x] `< 1 小時` 主計時仍維持 `MM:SS`。
+- [x] `≥ 1 小時` 主計時改為 `H:MM:SS`。
+- [x] `1148:15` 對應秒數會顯示為 `19:08:15`。
+- [x] 長時間 LIVE 列改用三欄 Grid，避免時間與「比賽中」重疊。
+- [x] LIVE / 狀態 / 時間元素皆加入縮放與 `min-width:0` 防 overflow。
+- [x] `≥ 100 小時` 具備第二級縮字保護。
+- [x] 超時提示 `≥ 1 小時` 同樣改為 `H:MM:SS`。
+- [x] 超時提示具備長字串 max-width / ellipsis 防護。
+- [x] 計時數字使用 `tabular-nums`。
+- [x] 單一段落 `≥ 3 小時` 重新進入頁面／回前景時會提示一次。
+- [x] 「繼續計時」只確認異常，不修改 startEpoch。
+- [x] 「結束比賽」沿用既有 finishMatch 流程，不直接改寫 finished 狀態。
+- [x] 程式不會因超長時間自動停止比賽。
+- [x] LocalStorage 仍保存完整 timestamp / 秒數，未截斷資料。
+- [x] v5.91 主計時／超時共用同一份 timerSec 的同步修正仍保留。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、摘要、圖片與 CSV 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：測試 59:59 → 1:00:00 切換時版面不跳位。
+- [ ] 實機：模擬 19:08:15 時 LIVE / 比賽中 / 時間均不重疊。
+- [ ] 實機：超過 3 小時後背景返回，確認只提示一次。
+
+## v5.91 歷史驗證
+
+- [x] 主計時器仍由 `requestAnimationFrame(tick)` 更新。
+- [x] `tick()` 每幀取得單一 `timerSec`。
+- [x] 主計時器與 `renderRegulationTimeAlert()` 共用同一份 `timerSec`。
+- [x] 主計時與超時提示皆以 `Math.floor()` 後的同一整數秒為顯示基準。
+- [x] 已移除獨立的 `setInterval(renderRegulationTimeAlert, 1000)`。
+- [x] `render()` 中的狀態刷新呼叫仍保留，用於開始、結束與設定變更後立即刷新樣式。
+- [x] 規定時間計算公式 `regulationSeconds - elapsedSeconds` 未改變。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、CSV、摘要與 LocalStorage 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：規定 20:00，觀察 19:59 → 20:00 → 20:01 邊界。
+- [ ] 實機：長時間超時後確認主計時與超時值仍維持精確差值。
+
+## v5.90 歷史驗證
 
 - [x] 啟動流程不再自動呼叫 Recovery Modal。
 - [x] 根網址正常開啟時直接建立新的 URL Match ID。

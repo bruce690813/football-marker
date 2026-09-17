@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.90</title>
+<title>足球場邊記錄器 v5.93</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -15022,6 +15022,238 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 }
 </style>
 
+
+<style id="v592LongDurationLayoutPatch">
+/* =========================================================
+   v5.92 Long-duration defensive layout
+   目標：即使計時跑到數小時甚至 100+ 小時，LIVE 列也不互相重疊。
+   ========================================================= */
+
+.broadcastStatusTime,
+.broadcastStage{
+  min-width:0!important;
+}
+.broadcastStage{
+  width:min(100%,520px)!important;
+}
+
+/* 一小時以上改成真正三欄：LIVE | 狀態 | H:MM:SS
+   不再讓置中的 absolute label 和長時間字串互相重疊。 */
+.broadcastStage.live.longClock{
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr) auto!important;
+  align-items:center!important;
+  column-gap:clamp(6px,2.2vw,10px)!important;
+  padding-left:clamp(8px,2.7vw,12px)!important;
+  padding-right:clamp(8px,2.7vw,12px)!important;
+}
+.broadcastStage.live.longClock .liveTag{
+  margin:0!important;
+  min-width:clamp(78px,23vw,96px)!important;
+  padding-left:clamp(9px,3vw,14px)!important;
+  padding-right:clamp(9px,3vw,14px)!important;
+}
+.broadcastStage.live.longClock .stageLabel{
+  position:static!important;
+  left:auto!important;
+  transform:none!important;
+  justify-self:center!important;
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  font-size:clamp(14px,4.2vw,17px)!important;
+}
+.broadcastStage .stageTimer.longClock{
+  margin:0!important;
+  padding-left:0!important;
+  min-width:0!important;
+  max-width:100%!important;
+  justify-self:end!important;
+  font-size:clamp(21px,6.2vw,26px)!important;
+  letter-spacing:.25px!important;
+  font-variant-numeric:tabular-nums!important;
+  font-feature-settings:"tnum" 1!important;
+}
+.broadcastStage .stageTimer.veryLongClock{
+  font-size:clamp(18px,5.4vw,22px)!important;
+  letter-spacing:0!important;
+}
+.broadcastStage.live.veryLongClock .liveTag{
+  min-width:72px!important;
+  padding-left:8px!important;
+  padding-right:8px!important;
+  font-size:12px!important;
+}
+.broadcastStage.live.veryLongClock .stageLabel{
+  font-size:13px!important;
+}
+
+/* 中場若也累積極端長時間，至少字級會縮，不讓 pill 撐破。 */
+.broadcastStage.halftime.longClock .stageTimer{
+  font-size:clamp(20px,6vw,24px)!important;
+}
+
+/* 超時 badge 同樣使用防爆格式。 */
+.regulationHint.longDuration{
+  max-width:calc(100% - 12px)!important;
+  padding-left:10px!important;
+  padding-right:10px!important;
+  font-size:clamp(10px,3.2vw,11px)!important;
+  letter-spacing:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  font-variant-numeric:tabular-nums!important;
+  font-feature-settings:"tnum" 1!important;
+}
+
+/* 3 小時異常提醒：只提示，不自動停止。 */
+.longDurationModal{
+  width:min(420px,calc(100vw - 24px));
+  text-align:center;
+  border-radius:22px;
+  background:linear-gradient(180deg,#182233 0%,#0d1623 100%);
+  border:1px solid rgba(251,113,133,.34);
+  box-shadow:0 24px 70px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.longDurationIcon{
+  font-size:34px;
+  line-height:1;
+  margin-bottom:7px;
+}
+.longDurationModal h2{
+  margin:0;
+  color:#fff4f4;
+  font-size:21px;
+  font-weight:950;
+}
+.longDurationValue{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:48px;
+  margin:12px auto 8px;
+  padding:7px 16px;
+  border-radius:999px;
+  background:rgba(239,68,68,.13);
+  border:1px solid rgba(248,113,113,.38);
+  color:#ff8b8b;
+  font-size:25px;
+  font-weight:1000;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+  letter-spacing:.4px;
+}
+.longDurationModal p{
+  margin:4px 3px 0;
+  color:#adbdce;
+  font-size:12.5px;
+  font-weight:750;
+  line-height:1.6;
+}
+.longDurationActions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:15px;
+}
+.longDurationActions button{
+  min-height:48px;
+  border-radius:14px;
+  font-size:15px;
+  font-weight:950;
+}
+.longDurationContinue{
+  background:linear-gradient(180deg,#405671 0%,#30445d 100%);
+  border:1px solid rgba(165,190,219,.24);
+  color:#f5f8fc;
+}
+.longDurationFinish{
+  background:linear-gradient(180deg,#d94855 0%,#ad2f3a 100%);
+  border:1px solid rgba(255,137,147,.35);
+  color:#fff;
+}
+
+@media(max-width:350px){
+  .broadcastStage.live.longClock{
+    column-gap:5px!important;
+    padding-left:7px!important;
+    padding-right:7px!important;
+  }
+  .broadcastStage.live.longClock .liveTag{
+    min-width:72px!important;
+    padding-left:7px!important;
+    padding-right:7px!important;
+    font-size:11.5px!important;
+  }
+  .broadcastStage.live.longClock .stageLabel{
+    font-size:13px!important;
+  }
+  .broadcastStage .stageTimer.longClock{
+    font-size:19px!important;
+  }
+  .longDurationActions{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+
+<style id="v593OvertimePulsePatch">
+/* =========================================================
+   v5.93 超時瞬間提醒
+   只讓「比賽中」外框做 3 次柔和 Pulse；不閃背景、不縮放整張卡片。
+   ========================================================= */
+#broadcastStage{
+  position:relative;
+  isolation:isolate;
+}
+#broadcastStage.overtimePulse::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  z-index:3;
+  pointer-events:none;
+  border-radius:inherit;
+  border:2px solid rgba(255,86,98,.76);
+  opacity:.28;
+  box-shadow:
+    0 0 0 0 rgba(255,72,86,0),
+    0 0 5px rgba(255,72,86,.10);
+  animation:overtimeFramePulse 1.25s ease-in-out 3;
+}
+
+@keyframes overtimeFramePulse{
+  0%,100%{
+    opacity:.28;
+    border-color:rgba(255,86,98,.62);
+    box-shadow:
+      0 0 0 0 rgba(255,72,86,0),
+      0 0 5px rgba(255,72,86,.10);
+  }
+  50%{
+    opacity:1;
+    border-color:rgba(255,105,116,1);
+    box-shadow:
+      0 0 0 2px rgba(255,72,86,.18),
+      0 0 13px rgba(255,72,86,.42);
+  }
+}
+
+/* 尊重 iOS / 系統 Reduce Motion。
+   不播放呼吸動畫，只短暫維持較亮的靜態外框。 */
+@media (prefers-reduced-motion: reduce){
+  #broadcastStage.overtimePulse::after{
+    animation:none!important;
+    opacity:1;
+    border-color:rgba(255,105,116,.92);
+    box-shadow:
+      0 0 0 2px rgba(255,72,86,.14),
+      0 0 8px rgba(255,72,86,.24);
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -15037,7 +15269,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.90</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.93</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15499,6 +15731,21 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
         <button class="quickGuideBack" type="button" onclick="backToAboutFromGuide()">← 返回介紹</button>
         <button class="quickGuideStart" type="button" onclick="startFromQuickGuide()">開始記錄比賽</button>
       </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- v5.92 abnormal long-duration notice -->
+<div class="modalBack" id="longDurationModal">
+  <div class="modal longDurationModal" role="dialog" aria-modal="true" aria-labelledby="longDurationTitle">
+    <div class="longDurationIcon" aria-hidden="true">⚠️</div>
+    <h2 id="longDurationTitle">計時時間異常偏長</h2>
+    <div class="longDurationValue" id="longDurationValue">3:00:00</div>
+    <p>這場比賽已持續計時很久。若比賽仍在進行，可以繼續計時；若實際已結束，建議現在完成結束流程。</p>
+    <div class="longDurationActions">
+      <button type="button" class="longDurationContinue" onclick="acknowledgeLongDuration()">繼續計時</button>
+      <button type="button" class="longDurationFinish" onclick="finishFromLongDuration()">結束比賽</button>
     </div>
   </div>
 </div>
@@ -16394,7 +16641,9 @@ let state={
   rosterNumbers:[],
   halftimeStartEpoch:null,
   halftimeEndEpoch:null,
-  halftimeDuration:0
+  halftimeDuration:0,
+  longDurationAckStartEpoch:null,
+  regulationPulseAckToken:''
 };
 
 function byId(id){ return document.getElementById(id); }
@@ -16788,6 +17037,8 @@ function loadState(){
   if(!('halftimeStartEpoch' in state)) state.halftimeStartEpoch=null;
   if(!('halftimeEndEpoch' in state)) state.halftimeEndEpoch=null;
   if(!('halftimeDuration' in state)) state.halftimeDuration=0;
+  if(!('longDurationAckStartEpoch' in state)) state.longDurationAckStartEpoch=null;
+  if(!('regulationPulseAckToken' in state)) state.regulationPulseAckToken='';
   if(!('competition' in state)) state.competition='';
   if(Array.isArray(state.markers)){
     state.markers.forEach(m=>{
@@ -16848,6 +17099,31 @@ function fmtMMSS(sec){
   sec=Math.max(0, Math.floor(Number(sec)||0));
   const m=Math.floor(sec/60), s=sec%60;
   return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+// v5.92：主畫面長時間計時使用 H:MM:SS，避免分鐘數無限增長成 1148:15。
+function fmtMatchClock(sec){
+  sec=Math.max(0,Math.floor(Number(sec)||0));
+  if(sec<3600) return fmtMMSS(sec);
+  const h=Math.floor(sec/3600);
+  const m=Math.floor((sec%3600)/60);
+  const s=sec%60;
+  return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function updateLongClockLayout(sec){
+  const stage=byId('broadcastStage');
+  const timer=byId('timer');
+  if(!stage || !timer) return;
+
+  const whole=Math.max(0,Math.floor(Number(sec)||0));
+  const longClock=whole>=3600;
+  const veryLongClock=whole>=360000; // 100 小時以上
+
+  stage.classList.toggle('longClock',longClock);
+  stage.classList.toggle('veryLongClock',veryLongClock);
+  timer.classList.toggle('longClock',longClock);
+  timer.classList.toggle('veryLongClock',veryLongClock);
 }
 function fmtClock(epoch){
   if(!epoch) return '--:--:--';
@@ -17138,7 +17414,12 @@ function scorerStatsHTML(){
 function tick(){
   const isHalftime=state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF';
   const timerSec=isHalftime ? halftimeElapsed() : (state.awaitingNextPeriod ? 0 : elapsed());
-  byId('timer').textContent=fmtMMSS(timerSec);
+
+  // v5.92：主計時與超時提示仍共用同一幀 timerSec；
+  // 超過 1 小時後自動切成 H:MM:SS 並啟用長時間版面。
+  byId('timer').textContent=fmtMatchClock(timerSec);
+  updateLongClockLayout(timerSec);
+  renderRegulationTimeAlert(timerSec);
 
   const halfDuration=byId('halftimeDurationText');
   if(halfDuration && state.halftimeStartEpoch && !state.halftimeEndEpoch){
@@ -18132,6 +18413,59 @@ function startMatch(){
   }
 }
 
+
+const LONG_DURATION_NOTICE_SECONDS=3*60*60;
+let longDurationModalOpen=false;
+
+function shouldOfferLongDurationNotice(){
+  if(!state.started || state.finished || state.awaitingNextPeriod || !state.startEpoch) return false;
+  const sec=Math.floor(Number(elapsed())||0);
+  if(sec<LONG_DURATION_NOTICE_SECONDS) return false;
+  return Number(state.longDurationAckStartEpoch||0)!==Number(state.startEpoch||0);
+}
+
+function openLongDurationNotice(){
+  if(longDurationModalOpen || !shouldOfferLongDurationNotice()) return;
+
+  // 不蓋在其他操作 Modal 上；下一次回到頁面仍可再判斷。
+  const otherOpen=[...document.querySelectorAll('.modalBack.open')]
+    .some(el=>el.id!=='longDurationModal');
+  if(otherOpen) return;
+
+  const sec=Math.floor(Number(elapsed())||0);
+  const value=byId('longDurationValue');
+  if(value) value.textContent=fmtMatchClock(sec);
+
+  longDurationModalOpen=true;
+  document.body.style.overflow='hidden';
+  byId('longDurationModal')?.classList.add('open');
+}
+
+function closeLongDurationNotice(){
+  byId('longDurationModal')?.classList.remove('open');
+  longDurationModalOpen=false;
+  document.body.style.overflow='';
+}
+
+function acknowledgeLongDuration(){
+  state.longDurationAckStartEpoch=state.startEpoch||null;
+  saveState();
+  closeLongDurationNotice();
+}
+
+function finishFromLongDuration(){
+  state.longDurationAckStartEpoch=state.startEpoch||null;
+  saveState();
+  closeLongDurationNotice();
+  setTimeout(()=>finishMatch(),0);
+}
+
+function maybeOfferLongDurationNotice(){
+  if(document.hidden) return;
+  setTimeout(openLongDurationNotice,180);
+}
+
+
 function finishMatch(){
   if(state.penalty?.active){
     openPenaltyModal();
@@ -18150,7 +18484,7 @@ function finishMatch(){
   const tied=state.ourScore===state.oppScore;
   const title=state.currentPeriod===1 ? '本段比賽已結束' : state.currentPeriod===2 ? '下半場已結束' : '延長賽已結束';
   byId('finishDecisionTitle').textContent=title;
-  byId('finishDecisionInfo').textContent=`目前比分 ${state.ourScore}:${state.oppScore}｜本段時間 ${fmtMMSS(pendingFinishElapsed)}${tied && state.currentPeriod>=2 ? '｜目前平手' : ''}`;
+  byId('finishDecisionInfo').textContent=`目前比分 ${state.ourScore}:${state.oppScore}｜本段時間 ${fmtMatchClock(pendingFinishElapsed)}${tied && state.currentPeriod>=2 ? '｜目前平手' : ''}`;
 
   const halfBtn=byId('finishHalfBtn');
   const extraBtn=byId('finishExtraBtn');
@@ -18578,7 +18912,9 @@ function newMatch(){
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
     periodStartOurScore:0, periodStartOppScore:0, periods:[],
     nextPeriodType:null, extraTime:false, extraTimeMinutes:null, penalty:null,
-    goalkeeperNumber:'', rosterNumbers:[], halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0
+    goalkeeperNumber:'', rosterNumbers:[], halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0,
+    longDurationAckStartEpoch:null,
+    regulationPulseAckToken:''
   };
 
   byId('ourTeam').value=rememberedOurTeam;
@@ -20192,7 +20528,41 @@ function renderMatchStateUI(){
 }
 
 
-function renderRegulationTimeAlert(){
+
+function regulationPulseToken(mins){
+  return [
+    Number(state.startEpoch)||0,
+    Number(state.currentPeriod)||1,
+    Number(mins)||0
+  ].join(':');
+}
+
+let overtimePulseTimer=null;
+
+function triggerOvertimeFramePulse(stage,mins){
+  if(!stage || !mins) return;
+
+  const token=regulationPulseToken(mins);
+  if(state.regulationPulseAckToken===token) return;
+
+  // 先標記已提醒，避免 requestAnimationFrame 的下一幀重複觸發。
+  state.regulationPulseAckToken=token;
+  try{ saveState(); }catch(e){}
+
+  stage.classList.remove('overtimePulse');
+  // 強制 reflow，確保同一個元素在新的一段比賽仍可重新播放動畫。
+  void stage.offsetWidth;
+  stage.classList.add('overtimePulse');
+
+  if(overtimePulseTimer) clearTimeout(overtimePulseTimer);
+  overtimePulseTimer=setTimeout(()=>{
+    stage.classList.remove('overtimePulse');
+    overtimePulseTimer=null;
+  },4000);
+}
+
+
+function renderRegulationTimeAlert(sampledElapsedSec=null){
   const stage=byId('broadcastStage'), hint=byId('regulationHint');
   if(!stage||!hint) return;
   stage.classList.remove('regulationSoon','regulationCritical','regulationReached');
@@ -20203,25 +20573,41 @@ function renderRegulationTimeAlert(){
 
   let sec=0;
   try{
-    if(typeof elapsed==='function') sec=Math.floor(Number(elapsed())||0);
-    else if(typeof currentPeriodElapsed==='function') sec=Math.floor(Number(currentPeriodElapsed())||0);
+    // v5.91：若 tick() 已在本幀取得比賽秒數，就直接共用同一份取樣值。
+    // 這樣主計時器與「超時 +xx:xx」一定以同一個整數秒為基準。
+    if(sampledElapsedSec!==null && Number.isFinite(Number(sampledElapsedSec))){
+      sec=Math.floor(Number(sampledElapsedSec)||0);
+    }else if(typeof elapsed==='function'){
+      sec=Math.floor(Number(elapsed())||0);
+    }else if(typeof currentPeriodElapsed==='function'){
+      sec=Math.floor(Number(currentPeriodElapsed())||0);
+    }
   }catch(e){}
+
   const diff=Math.round(mins*60)-sec;
   if(diff>60) return;
 
+  // v5.93：剛進入規定時間到／超時狀態時，外框柔和 Pulse 3 次。
+  // 之後維持靜態紅框，不持續閃爍。
+  if(diff<=0){
+    triggerOvertimeFramePulse(stage,mins);
+  }
+
   hint.classList.add('show');
+  if(Math.abs(diff)>=3600) hint.classList.add('longDuration');
+
   if(diff>30){
     stage.classList.add('regulationSoon'); hint.classList.add('soon');
-    hint.textContent=`距比賽時間 ${fmtMMSS(diff)}`;
+    hint.textContent=`距比賽時間 ${fmtMatchClock(diff)}`;
   }else if(diff>0){
     stage.classList.add('regulationCritical'); hint.classList.add('critical');
-    hint.textContent=`距比賽時間 ${fmtMMSS(diff)}`;
+    hint.textContent=`距比賽時間 ${fmtMatchClock(diff)}`;
   }else if(diff===0){
     stage.classList.add('regulationReached'); hint.classList.add('reached');
     hint.textContent='比賽時間到';
   }else{
     stage.classList.add('regulationReached'); hint.classList.add('reached');
-    hint.textContent=`超時 +${fmtMMSS(Math.abs(diff))}`;
+    hint.textContent=`超時 +${fmtMatchClock(Math.abs(diff))}`;
   }
 }
 
@@ -21707,7 +22093,11 @@ function persistBeforeBackgroundSuspend(){
   try{ saveState(); }catch(e){}
 }
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden) persistBeforeBackgroundSuspend();
+  if(document.hidden){
+    persistBeforeBackgroundSuspend();
+  }else{
+    maybeOfferLongDurationNotice();
+  }
 });
 window.addEventListener('pagehide',persistBeforeBackgroundSuspend,{capture:true});
 
@@ -21715,8 +22105,9 @@ window.addEventListener('pagehide',persistBeforeBackgroundSuspend,{capture:true}
 tick();
 syncVisualViewport();
 window.finishAppBoot();
+maybeOfferLongDurationNotice();
 
-setInterval(renderRegulationTimeAlert,1000);
+// v5.91：規定時間 / 超時提示已由 tick() 與主計時器同幀更新，不再使用獨立 1 秒 interval。
 
 
 
