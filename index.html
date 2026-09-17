@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.93</title>
+<title>足球場邊記錄器 v5.94</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14957,33 +14957,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 
 
 <style id="v590ManualRecoveryPatch">
-/* v5.90：資料復原不再阻擋正常啟動，只藏在「這是什麼？」內。 */
-.aboutRecoveryBtn{
-  width:100%;
-  min-height:40px;
-  margin:0 0 8px;
-  padding:7px 10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  border-radius:11px;
-  background:rgba(22,38,56,.58);
-  border:1px solid rgba(113,148,184,.22);
-  color:#8fa8c0;
-  box-shadow:none;
-  font-size:11.5px;
-  font-weight:850;
-}
-.aboutRecoveryBtn[hidden]{
-  display:none!important;
-}
-.aboutRecoveryBtn:active{
-  transform:scale(.99);
-  color:#c6d7e7;
-  background:rgba(29,48,70,.72);
-}
-
+/* v5.94：資料復原不再放在日常 About 畫面，只在真正找不到 Match 資料時提供。 */
 /* Recovery 視窗本身也從 Primary 降成工具型介面。 */
 .matchRecoveryModal{
   position:relative;
@@ -15254,6 +15228,66 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 }
 </style>
 
+
+<style id="v594RecoveryUxPatch">
+/* v5.94：Recovery 是災難復原，不再出現在日常 About UI。 */
+.matchRecoveryIssueModal{
+  width:min(390px,calc(100vw - 28px));
+  padding:19px 17px 17px;
+  text-align:center;
+  border-radius:22px;
+  background:linear-gradient(180deg,#162436 0%,#0d1724 100%);
+  border:1px solid rgba(245,158,11,.30);
+  box-shadow:0 24px 70px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.matchRecoveryIssueIcon{
+  font-size:31px;
+  line-height:1;
+  margin-bottom:8px;
+}
+.matchRecoveryIssueModal h2{
+  margin:0;
+  color:#f7fbff;
+  font-size:20px;
+  font-weight:950;
+}
+.matchRecoveryIssueModal p{
+  margin:8px 2px 0;
+  color:#a9bacb;
+  font-size:12.5px;
+  font-weight:750;
+  line-height:1.55;
+}
+.matchRecoveryIssueActions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:16px;
+}
+.matchRecoveryIssueActions button{
+  min-height:47px;
+  border-radius:14px;
+  font-size:14px;
+  font-weight:950;
+}
+.matchRecoveryIssueSecondary{
+  background:linear-gradient(180deg,#43566d 0%,#33445a 100%);
+  border:1px solid rgba(172,190,213,.23);
+  color:#eef4fb;
+}
+.matchRecoveryIssuePrimary{
+  background:linear-gradient(180deg,#2d7bff 0%,#1f63e9 55%,#194fc4 100%);
+  border:1px solid rgba(142,190,255,.48);
+  color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 6px 16px rgba(31,99,233,.20);
+}
+@media(max-width:350px){
+  .matchRecoveryIssueActions{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -15269,7 +15303,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.93</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.94</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15540,20 +15574,34 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 </div>
 
 
-<!-- v5.90 Manual match recovery modal -->
+
+<!-- v5.94: only shown when URL #match exists but its local data is missing -->
+<div class="modalBack" id="matchRecoveryIssueModal">
+  <div class="modal matchRecoveryIssueModal" role="alertdialog" aria-modal="true" aria-labelledby="matchRecoveryIssueTitle">
+    <div class="matchRecoveryIssueIcon" aria-hidden="true">⚠️</div>
+    <h2 id="matchRecoveryIssueTitle">找不到原本的比賽資料</h2>
+    <p id="matchRecoveryIssueText">網址指定的比賽在這台裝置找不到資料。</p>
+    <div class="matchRecoveryIssueActions">
+      <button type="button" class="matchRecoveryIssueSecondary" onclick="dismissMissingMatchRecovery()">開始新比賽</button>
+      <button type="button" class="matchRecoveryIssuePrimary" onclick="openRecoveryFromMissingMatch()">資料復原</button>
+    </div>
+  </div>
+</div>
+
+<!-- v5.94 Recovery tool: only reachable after a real Match restore failure -->
 <div class="modalBack" id="matchRecoveryModal">
   <div class="modal matchRecoveryModal" role="dialog" aria-modal="true" aria-labelledby="matchRecoveryTitle">
     <button class="matchRecoveryDismiss" type="button" onclick="closeMatchRecovery()" aria-label="關閉資料復原">✕</button>
     <div class="matchRecoveryHeader">
       <div class="matchRecoveryIcon">↺</div>
       <div>
-        <h2 id="matchRecoveryTitle">找回未完成的比賽</h2>
-        <p>只有需要找回舊場次時才使用。正常開啟網頁不會自動顯示這個視窗。</p>
+        <h2 id="matchRecoveryTitle">資料復原</h2>
+        <p>選擇這台裝置上仍保存的比賽紀錄。這是異常救援工具，不是平常的比賽清單。</p>
       </div>
     </div>
     <div class="matchRecoveryList" id="matchRecoveryList"></div>
     <button type="button" class="matchRecoveryClose" onclick="closeMatchRecovery()">關閉</button>
-    <div class="matchRecoveryFootnote">每場比賽仍以網址 #match=... 作為正式身分，彼此不覆蓋。</div>
+    <div class="matchRecoveryFootnote">復原資料只來自這台裝置的瀏覽器儲存空間。</div>
   </div>
 </div>
 
@@ -15663,10 +15711,6 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
             <span class="aboutGuideChevron" aria-hidden="true">›</span>
           </button>
         </div>
-        <button id="aboutRecoveryBtn" class="aboutRecoveryBtn" type="button" onclick="openMatchRecovery()" hidden aria-label="找回未完成的比賽">
-          <span aria-hidden="true">↺</span>
-          <span id="aboutRecoveryBtnText">找回未完成的比賽</span>
-        </button>
         <button class="aboutClose" type="button" onclick="closeAboutModal()">開始記錄比賽</button>
       </div>
     </div>
@@ -16223,7 +16267,9 @@ const MATCH_REGISTRY_LIMIT=12;
 
 let MATCH_ID='';
 let KEY='';
-let MATCH_ENTRY_MODE='url'; // url / legacy-tab / clean
+let MATCH_ENTRY_MODE='url'; // url / legacy-tab / clean / missing-url
+let MATCH_RECOVERY_REQUIRED=false;
+let MISSING_REQUESTED_MATCH_ID='';
 
 function isValidMatchId(value){
   return /^[a-z0-9][a-z0-9_-]{5,79}$/i.test(String(value||''));
@@ -16305,9 +16351,29 @@ function copyLegacySessionToMatchId(id){
 function resolveInitialMatchIdentity(){
   const urlId=readMatchIdFromUrl();
   if(urlId){
-    MATCH_ENTRY_MODE='url';
-    copyLegacySessionToMatchId(urlId);
-    activateMatchId(urlId,{writeUrl:false});
+    let hasMatchState=false;
+    try{
+      hasMatchState=Boolean(localStorage.getItem(MATCH_KEY_PREFIX+urlId));
+    }catch(e){}
+
+    if(!hasMatchState){
+      hasMatchState=copyLegacySessionToMatchId(urlId);
+    }
+
+    if(hasMatchState){
+      MATCH_ENTRY_MODE='url';
+      activateMatchId(urlId,{writeUrl:false});
+      return;
+    }
+
+    // v5.94：
+    // URL 明確指定了某場 #match，但這台裝置找不到對應資料。
+    // 不把空白 state 寫回這個不存在的 ID；先建立新的安全 Match ID，
+    // 只有真的存在其他可復原紀錄時，才顯示「資料復原」選項。
+    MATCH_ENTRY_MODE='missing-url';
+    MATCH_RECOVERY_REQUIRED=true;
+    MISSING_REQUESTED_MATCH_ID=urlId;
+    activateMatchId(createUniqueMatchId(),{writeUrl:true});
     return;
   }
 
@@ -16516,18 +16582,52 @@ function getRecoverableMatches(){
 
 let recoverySwitchInProgress=false;
 
-function closeMatchRecovery(){
-  byId('matchRecoveryModal')?.classList.remove('open');
+
+function closeMatchRecoveryIssue(){
+  byId('matchRecoveryIssueModal')?.classList.remove('open');
   document.body.style.overflow='';
 }
 
-function syncAboutRecoveryButton(){
-  const btn=byId('aboutRecoveryBtn');
-  const text=byId('aboutRecoveryBtnText');
-  if(!btn) return;
-  const count=getRecoverableMatches().length;
-  btn.hidden=count===0;
-  if(text) text.textContent=count>0 ? `找回未完成的比賽（${count}）` : '找回未完成的比賽';
+function dismissMissingMatchRecovery(){
+  MATCH_RECOVERY_REQUIRED=false;
+  MISSING_REQUESTED_MATCH_ID='';
+  closeMatchRecoveryIssue();
+}
+
+function openRecoveryFromMissingMatch(){
+  closeMatchRecoveryIssue();
+  openMatchRecovery();
+}
+
+function showMissingMatchRecoveryIfNeeded(){
+  if(!MATCH_RECOVERY_REQUIRED) return;
+
+  const matches=getRecoverableMatches();
+  if(!matches.length){
+    // 另一台手機拿到 #match URL 也會落在這裡：
+    // 該裝置沒有這場 localStorage，自然不能讀到原手機的內容。
+    MATCH_RECOVERY_REQUIRED=false;
+    MISSING_REQUESTED_MATCH_ID='';
+    showQuickNotice(
+      '找不到原本的比賽資料',
+      '這台裝置沒有該場資料，已建立新的獨立比賽'
+    );
+    return;
+  }
+
+  const text=byId('matchRecoveryIssueText');
+  if(text){
+    text.textContent=`網址指定的比賽在這台裝置找不到資料，但偵測到 ${matches.length} 筆其他本機紀錄。`;
+  }
+
+  document.body.style.overflow='hidden';
+  byId('matchRecoveryIssueModal')?.classList.add('open');
+}
+
+
+function closeMatchRecovery(){
+  byId('matchRecoveryModal')?.classList.remove('open');
+  document.body.style.overflow='';
 }
 
 function continueRecoveredMatch(id){
@@ -16553,12 +16653,11 @@ function continueRecoveredMatch(id){
 function openMatchRecovery(){
   const matches=getRecoverableMatches();
   if(!matches.length){
-    showQuickNotice('沒有可復原的比賽','目前沒有偵測到其他尚未完成的場次');
-    syncAboutRecoveryButton();
+    showQuickNotice('沒有可復原的資料','目前沒有偵測到其他可用的本機比賽紀錄');
     return;
   }
 
-  byId('aboutModal')?.classList.remove('open');
+  byId('matchRecoveryIssueModal')?.classList.remove('open');
   const list=byId('matchRecoveryList');
   if(!list) return;
   list.innerHTML='';
@@ -20818,7 +20917,6 @@ function focusAboutDismiss(){
 function openAboutModal(){
   aboutReturnFocus=document.activeElement instanceof HTMLElement ? document.activeElement : null;
   syncVisualViewport();
-  syncAboutRecoveryButton();
   document.body.style.overflow='hidden';
   byId('aboutModal').classList.add('open');
   const body=byId('aboutModal').querySelector('.aboutBody');
@@ -22106,6 +22204,7 @@ tick();
 syncVisualViewport();
 window.finishAppBoot();
 maybeOfferLongDurationNotice();
+setTimeout(showMissingMatchRecoveryIfNeeded,160);
 
 // v5.91：規定時間 / 超時提示已由 tick() 與主計時器同幀更新，不再使用獨立 1 秒 interval。
 

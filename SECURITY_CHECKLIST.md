@@ -1,8 +1,30 @@
 # SECURITY_CHECKLIST.md
-# v5.93 驗證範圍：超時外框一次性 Pulse、Reduce Motion 與持續閃爍防護。
+# v5.94 驗證範圍：Recovery 日常入口移除、真正 Match 遺失偵測與安全復原。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.93 本次驗證
+## v5.94 本次驗證
+
+- [x] About /「這是什麼？」已完全移除 Recovery 按鈕。
+- [x] 正常根網址進入不顯示 Recovery。
+- [x] 正常有效 `#match=` 進入不顯示 Recovery。
+- [x] 只有 URL 指定 Match ID 但本機資料不存在時，才標記 `MATCH_RECOVERY_REQUIRED`。
+- [x] 缺少 Match 資料時不會把空白 state 寫回原遺失 ID。
+- [x] 缺少 Match 資料時先建立新的安全 Match ID。
+- [x] 有其他本機可復原紀錄時，只先顯示小型異常提示。
+- [x] 使用者主動按「資料復原」後，才顯示 Recovery 清單。
+- [x] 沒有其他本機資料時，不顯示 Recovery 清單。
+- [x] Recovery 清單改以「資料復原」語意呈現，不再把所有技術 state 稱為日常「未完成比賽」。
+- [x] Recovery 切換舊場的 v5.90 autosave 競態修正仍保留。
+- [x] Match Registry 與舊 Session 掃描能力仍保留。
+- [x] v5.93 超時 Pulse 與 v5.92 長時間防爆邏輯均保留。
+- [x] 比分、事件、烏龍球、摘要、圖片、CSV 與計時邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：正常開啟「這是什麼？」確認不再看到 Recovery。
+- [ ] 實機：有效 Match URL reload 確認直接恢復、不出現 Recovery。
+- [ ] 實機：模擬不存在的 Match URL，確認只有真正異常時才出現資料復原提示。
+
+## v5.93 歷史驗證
 
 - [x] 規定時間 `diff <= 0` 時可觸發外框 Pulse。
 - [x] 同一 `startEpoch / currentPeriod / regulationMinutes` Token 只提醒一次。
