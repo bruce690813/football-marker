@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.95</title>
+<title>足球場邊記錄器 v5.96</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -15411,6 +15411,38 @@ body.matchStateLive .timeSummary:not(.open) .timeHead{
 }
 </style>
 
+
+<style id="v596OvertimeTypographyPatch">
+/* v5.96：超時資訊放大；主計時與超時維持同一紅色家族，但建立主次層級。 */
+#broadcastStage.regulationReached .stageTimer,
+#broadcastStage.regulationCritical .stageTimer{
+  color:#ff686e!important;
+}
+.timeRegulationState.overtime{
+  color:#ff858a!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  letter-spacing:.08px!important;
+  line-height:1.15!important;
+  text-shadow:0 1px 2px rgba(98,22,28,.24);
+}
+.timeRegulationState.reached{
+  color:#ff7b82!important;
+  font-size:12px!important;
+  font-weight:950!important;
+}
+.timeStatusLine .timeRegulationBadge{
+  color:#9eb6cc!important;
+  font-weight:800!important;
+}
+@media(max-width:390px){
+  .timeRegulationState.overtime{font-size:12.5px!important;}
+}
+@media(max-width:350px){
+  .timeRegulationState.overtime{font-size:12px!important;}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -15426,7 +15458,7 @@ body.matchStateLive .timeSummary:not(.open) .timeHead{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.95</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.96</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
