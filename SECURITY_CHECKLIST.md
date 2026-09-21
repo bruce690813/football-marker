@@ -1,8 +1,43 @@
 # SECURITY_CHECKLIST.md
-# v5.104 驗證範圍：全場本隊 / 對手修改的 focus 與輸入顯示一致性。
+# v5.106 驗證範圍：Header 左右球門安全區、版本號下移與中圈足球定位。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.104 本次驗證
+## v5.106 本次驗證
+
+- [x] 左側沒有第二顆足球圖示。
+- [x] 中圈只保留一顆 `.headerCenterBall`。
+- [x] 足球固定 `left:50% / top:50%`，不受左右文字寬度影響。
+- [x] 版本號已移至品牌標題下方。
+- [x] 右側按鈕文字改為 `說明`。
+- [x] 左右設定 `goal-safe area`，內容不進入球門區。
+- [x] 390px 以下仍保留左右安全區。
+- [x] 極窄 350px 以下有字級 / 按鈕降級策略。
+- [x] Header 在賽前 / LIVE / 中場 / 全場不套用額外動畫。
+- [x] 比分、事件、計時、摘要、CSV、Match ID 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：左右球門完整露出，不被標題 / 說明按鈕遮住。
+- [ ] 實機：⚽ 位於中圈正中央。
+- [ ] 實機：版本號位於「足球場邊記錄器」正下方。
+- [ ] 實機：390px iPhone 確認標題與「ⓘ 說明」不互相擠壓。
+
+## v5.105 歷史驗證
+
+- [x] 標題左側原本的足球 emoji 已移除。
+- [x] Header 中圈新增單一 `.headerCenterBall`。
+- [x] 中圈足球使用 absolute positioning，不占左右 flex 寬度。
+- [x] 左側產品名稱仍完整顯示。
+- [x] 右側版本號與「這是什麼？」按鈕保留。
+- [x] 中圈足球無動畫、無點擊事件、`aria-hidden=true`。
+- [x] 390px / 350px 以下有尺寸降級，避免擠壓左右文字。
+- [x] 比賽狀態、比分、事件、計時、摘要、CSV 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：iPhone Safari 確認 ⚽ 位於背景中圈中心。
+- [ ] 實機：確認品牌名稱、版本號、「這是什麼？」不互相重疊。
+- [ ] 實機：確認賽前 / LIVE / 中場 / 全場 Header 位置一致。
+
+## v5.104 歷史驗證
 
 - [x] 全場 `reviewEditing` 外框套用與賽前一致的 focus token。
 - [x] 全場 review input 不再顯示內層 border / outline / shadow。

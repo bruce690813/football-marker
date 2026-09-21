@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.104</title>
+<title>足球場邊記錄器 v5.106</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -16114,6 +16114,360 @@ body.resultMode .teamNameBox.reviewEditing .teamNameEditBtn{
 }
 </style>
 
+
+<style id="v5105HeaderCenterBallBranding">
+/* =========================================================
+   v5.105：Header 品牌配置
+   左：產品名稱｜中：足球置於球場中圈｜右：版本 + 說明
+   ========================================================= */
+
+.titleBlock{
+  position:relative!important;
+}
+
+/* 左側品牌文字不再重複放足球圖示。 */
+.titleBrand{
+  min-width:0;
+  flex:1 1 auto;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  padding-right:34px;
+}
+.titleBlock .titleBrand h1{
+  margin:0!important;
+  font-size:18px!important;
+  font-weight:950!important;
+  line-height:1.1!important;
+  letter-spacing:-.25px!important;
+  white-space:nowrap!important;
+  color:#fbfffc!important;
+  text-shadow:
+    0 2px 7px rgba(0,0,0,.58),
+    0 1px 0 rgba(0,0,0,.28)!important;
+}
+
+/* 足球直接定位在球場中圈，不占左右 flex 的版面寬度。 */
+.headerCenterBall{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  z-index:3!important;
+  transform:translate(-50%,-50%)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:30px!important;
+  height:30px!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  background:transparent!important;
+  font-size:27px!important;
+  line-height:1!important;
+  opacity:.80!important;
+  filter:
+    drop-shadow(0 2px 3px rgba(0,0,0,.48))
+    drop-shadow(0 0 4px rgba(255,255,255,.08));
+  pointer-events:none!important;
+  user-select:none!important;
+}
+
+/* 右側維持 metadata / action 層級，版本號再淡一點。 */
+.titleBlock .versionInfo{
+  position:relative!important;
+  z-index:4!important;
+  flex:0 0 auto!important;
+  gap:7px!important;
+  margin-left:auto!important;
+}
+.titleBlock .versionInfo .sub{
+  color:rgba(238,247,241,.70)!important;
+  font-weight:760!important;
+}
+
+/* 中圈足球是品牌符號，不做動畫、不隨 LIVE 狀態跳動。 */
+.headerCenterBall{
+  animation:none!important;
+  transition:none!important;
+}
+
+/* 小螢幕：足球略縮，左右資訊保持完整。 */
+@media(max-width:390px){
+  .titleBrand{
+    padding-right:30px;
+  }
+  .titleBlock .titleBrand h1{
+    font-size:17px!important;
+    letter-spacing:-.3px!important;
+  }
+  .headerCenterBall{
+    width:27px!important;
+    height:27px!important;
+    font-size:24px!important;
+    opacity:.78!important;
+  }
+  .titleBlock .versionInfo{
+    gap:6px!important;
+  }
+}
+
+/* 極窄螢幕：保住標題與「這是什麼？」按鈕，中間足球再退一級。 */
+@media(max-width:350px){
+  .titleBlock .titleBrand h1{
+    font-size:16px!important;
+  }
+  .headerCenterBall{
+    width:24px!important;
+    height:24px!important;
+    font-size:21px!important;
+    opacity:.68!important;
+  }
+  .titleBlock .versionInfo .sub{
+    font-size:10px!important;
+  }
+  .titleBlock .aboutInfoBtn{
+    padding-left:9px!important;
+    padding-right:9px!important;
+  }
+}
+</style>
+
+
+<style id="v5106HeaderGoalSafeLayout">
+/* =========================================================
+   v5.106：Header「修改後」版型
+   左右球門完整露出 + 標題左側 + 版本在標題下方
+   + 足球固定中圈 + 右側 ⓘ 說明
+   ========================================================= */
+
+.titleBlock{
+  --goal-safe: clamp(42px, 12vw, 50px);
+  --center-ball-size: 27px;
+  position:relative!important;
+  display:block!important;
+  min-height:58px!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+
+/* 左側品牌區：永遠從左球門安全區之後開始，
+   並在中圈足球之前結束。 */
+.titleBlock .titleBrand{
+  position:absolute!important;
+  left:var(--goal-safe)!important;
+  top:50%!important;
+  z-index:4!important;
+  transform:translateY(-50%)!important;
+
+  width:calc(50% - var(--goal-safe) - 24px)!important;
+  min-width:0!important;
+  padding:0!important;
+  margin:0!important;
+
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  gap:2px!important;
+}
+
+.titleBlock .titleBrand h1{
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+
+  color:#fbfffc!important;
+  font-size:17px!important;
+  font-weight:950!important;
+  line-height:1.08!important;
+  letter-spacing:-.28px!important;
+  white-space:nowrap!important;
+
+  text-align:left!important;
+  text-shadow:
+    0 2px 7px rgba(0,0,0,.58),
+    0 1px 0 rgba(0,0,0,.30)!important;
+}
+
+/* 版本號移到標題下方，明確降為 metadata。 */
+.titleBlock .headerVersion{
+  display:block!important;
+  margin:0 0 0 1px!important;
+  padding:0!important;
+
+  color:rgba(232,244,237,.72)!important;
+  font-size:10.5px!important;
+  font-weight:760!important;
+  line-height:1!important;
+  letter-spacing:.12px!important;
+  white-space:nowrap!important;
+
+  text-shadow:0 1px 3px rgba(0,0,0,.45)!important;
+}
+
+/* 足球只存在一顆，固定在真正的球場中圈中心，
+   完全不參與左右文字排版。 */
+.titleBlock .headerCenterBall{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  z-index:5!important;
+  transform:translate(-50%,-50%)!important;
+
+  width:var(--center-ball-size)!important;
+  height:var(--center-ball-size)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+
+  font-size:25px!important;
+  line-height:1!important;
+  opacity:.84!important;
+
+  filter:
+    drop-shadow(0 2px 3px rgba(0,0,0,.50))
+    drop-shadow(0 0 4px rgba(255,255,255,.07))!important;
+
+  pointer-events:none!important;
+  user-select:none!important;
+  animation:none!important;
+}
+
+/* 右側資訊區：必須在右球門安全區之前結束。 */
+.titleBlock .versionInfo{
+  position:absolute!important;
+  right:var(--goal-safe)!important;
+  top:50%!important;
+  z-index:6!important;
+  transform:translateY(-50%)!important;
+
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+
+  margin:0!important;
+  padding:0!important;
+}
+
+/* 示意圖中的「ⓘ 說明」：比原本「這是什麼？」更短，
+   可讓右側球門完整露出。 */
+.titleBlock .aboutInfoBtn{
+  min-width:72px!important;
+  min-height:30px!important;
+  padding:0 11px!important;
+  gap:5px!important;
+  border-radius:999px!important;
+
+  background:linear-gradient(180deg,#314761 0%,#223247 100%)!important;
+  border:1px solid rgba(96,165,250,.36)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 2px 7px rgba(0,0,0,.18)!important;
+
+  color:#eef6ff!important;
+}
+
+.titleBlock .aboutInfoBtn .icon{
+  font-size:14px!important;
+  line-height:1!important;
+}
+.titleBlock .aboutInfoBtn .label{
+  font-size:12px!important;
+  font-weight:900!important;
+  line-height:1!important;
+}
+
+/* 舊版 versionInfo 裡的 .sub 已移出 DOM；
+   若其他舊樣式殘留，也不讓它影響 Header。 */
+.titleBlock .versionInfo > .sub{
+  display:none!important;
+}
+
+/* 390px 以下：仍保留完整左右球門，不用縮掉安全區。 */
+@media(max-width:390px){
+  .titleBlock{
+    --goal-safe:42px;
+    --center-ball-size:25px;
+    min-height:56px!important;
+  }
+
+  .titleBlock .titleBrand{
+    width:calc(50% - var(--goal-safe) - 22px)!important;
+  }
+
+  .titleBlock .titleBrand h1{
+    font-size:16px!important;
+    letter-spacing:-.32px!important;
+  }
+
+  .titleBlock .headerVersion{
+    font-size:10px!important;
+  }
+
+  .titleBlock .headerCenterBall{
+    font-size:23px!important;
+  }
+
+  .titleBlock .aboutInfoBtn{
+    min-width:66px!important;
+    min-height:29px!important;
+    padding:0 9px!important;
+  }
+}
+
+/* 極窄裝置：優先保住「完整球門」與「標題不換行」。
+   說明按鈕再縮一級，但不侵入右球門安全區。 */
+@media(max-width:350px){
+  .titleBlock{
+    --goal-safe:38px;
+    --center-ball-size:23px;
+    min-height:54px!important;
+  }
+
+  .titleBlock .titleBrand{
+    width:calc(50% - var(--goal-safe) - 20px)!important;
+  }
+
+  .titleBlock .titleBrand h1{
+    font-size:14.5px!important;
+  }
+
+  .titleBlock .headerVersion{
+    font-size:9.5px!important;
+  }
+
+  .titleBlock .headerCenterBall{
+    font-size:21px!important;
+  }
+
+  .titleBlock .aboutInfoBtn{
+    min-width:58px!important;
+    min-height:28px!important;
+    padding:0 7px!important;
+    gap:4px!important;
+  }
+
+  .titleBlock .aboutInfoBtn .label{
+    font-size:11px!important;
+  }
+}
+
+/* 品牌 Header 保持穩定，不因 LIVE / 中場 / 全場狀態產生動畫。 */
+body.matchStateLive .titleBlock .headerCenterBall,
+body.matchStateHalftime .titleBlock .headerCenterBall,
+body.matchStateExtraWait .titleBlock .headerCenterBall,
+body.resultMode .titleBlock .headerCenterBall{
+  animation:none!important;
+  transform:translate(-50%,-50%)!important;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -16126,10 +16480,16 @@ body.resultMode .teamNameBox.reviewEditing .teamNameEditBtn{
 </div>
 <div class="wrap" id="appContent" inert aria-busy="true">
   <div class="top titleBlock">
-    <div>
-      <h1>⚽ 足球場邊記錄器</h1>
+    <div class="titleBrand">
+      <h1>足球場邊記錄器</h1>
+      <span class="headerVersion">v5.106</span>
     </div>
-    <div class="versionInfo"><span class="sub">v5.104</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <span class="headerCenterBall" aria-hidden="true">⚽</span>
+    <div class="versionInfo">
+      <button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="說明：了解足球場邊記錄器">
+        <span class="icon">ⓘ</span><span class="label">說明</span>
+      </button>
+    </div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
