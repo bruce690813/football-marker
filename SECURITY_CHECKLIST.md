@@ -1,8 +1,24 @@
 # SECURITY_CHECKLIST.md
-# v5.97 驗證範圍：七種比賽狀態的字級、間距與 Design System 一致性。
+# v5.98 驗證範圍：賽前賽事名稱 / 場地輸入框去除重複焦點外框。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.97 本次驗證
+## v5.98 本次驗證
+
+- [x] 賽前 `#competition` input 不再顯示獨立長方形 border / outline / box-shadow。
+- [x] 賽前 `#venue` input 不再顯示獨立長方形 border / outline / box-shadow。
+- [x] `preMetaField:focus-within` 仍提供清楚的整列焦點狀態。
+- [x] `guidedInput` 的全域邏輯未刪除，只在賽前 metadata input 做 CSS 覆蓋。
+- [x] 場地右側下拉按鈕與最近場地選單未修改。
+- [x] iOS input 加入 `autocorrect="off"` 與 `spellcheck="false"`。
+- [x] 文字內容、maxlength、enterkeyhint 與表單流程未修改。
+- [x] v5.97 七狀態 Design System、v5.96 超時視覺、v5.95 超時位置均保留。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、摘要、圖片、CSV 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：iPhone Safari 點擊賽事名稱，確認只有外層卡片發亮，文字區不再有第二層長方形框。
+- [ ] 實機：點擊場地輸入及下拉箭頭，確認焦點樣式與最近場地選單正常。
+
+## v5.97 歷史驗證
 
 - [x] 本版只新增 CSS 視覺覆蓋，不修改比賽資料與事件邏輯。
 - [x] 賽前群組間距收斂，但主要按鈕觸控高度未縮小。

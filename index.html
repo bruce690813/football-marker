@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.97</title>
+<title>足球場邊記錄器 v5.98</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -15639,6 +15639,86 @@ body.resultMode.finalOutputVisible .finalToolsCard{
 }
 </style>
 
+
+<style id="v598PreMetaInputPolish">
+/* =========================================================
+   v5.98：賽前文字輸入「外框單一化」
+   外層 preMetaField 是唯一輸入容器；
+   中間 input 不再產生第二個長方形焦點框。
+   ========================================================= */
+
+/* Safari / iOS：把原生 input 外觀與 guidedInput 的內層焦點環完全拿掉。 */
+body.matchStatePre .preMetaField input,
+body.matchStatePre .preMetaField input:focus,
+body.matchStatePre .preMetaField input:focus-visible,
+body.matchStatePre .preMetaField input.guidedInput{
+  -webkit-appearance:none!important;
+  appearance:none!important;
+  outline:none!important;
+  outline-offset:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+/* 文字輸入本身只負責內容，不再形成一張「卡片中的卡片」。 */
+body.matchStatePre .preMetaField input{
+  min-width:0!important;
+  width:100%!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
+
+/* 焦點只由整張外層卡片表達。
+   比原本稍微亮一點，讓使用者仍清楚知道正在編輯哪一欄。 */
+body.matchStatePre .preMetaField:focus-within{
+  border-color:rgba(56,189,248,.90)!important;
+  background:linear-gradient(
+    180deg,
+    rgba(12,28,45,.96) 0%,
+    rgba(8,21,35,.96) 100%
+  )!important;
+  box-shadow:
+    0 0 0 2px rgba(56,189,248,.13),
+    inset 0 1px 0 rgba(255,255,255,.045)!important;
+}
+
+/* 賽事名稱：移除舊 guidedInput 內框後，保留自然游標與文字區。 */
+body.matchStatePre #competition.guidedInput,
+body.matchStatePre #competition:focus{
+  outline:none!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
+
+/* 場地：同樣使用整列 focus，不影響右側最近場地下拉按鈕。 */
+body.matchStatePre .venueInputWrap input.guidedInput,
+body.matchStatePre .venueInputWrap input:focus{
+  outline:none!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
+
+/* 輸入中的文字與 placeholder 層級略拉開，避免拿掉內框後辨識度下降。 */
+body.matchStatePre .preMetaField input:focus{
+  color:#ffffff!important;
+}
+body.matchStatePre .preMetaField input::placeholder{
+  color:#8395aa!important;
+}
+
+/* 鍵盤操作仍保留無障礙焦點，但焦點放在整列，不畫在文字 input 上。 */
+@media (hover:hover) and (pointer:fine){
+  body.matchStatePre .preMetaField:has(input:focus-visible){
+    border-color:rgba(125,211,252,.95)!important;
+    box-shadow:
+      0 0 0 2px rgba(125,211,252,.16),
+      inset 0 1px 0 rgba(255,255,255,.05)!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -15654,19 +15734,19 @@ body.resultMode.finalOutputVisible .finalToolsCard{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.97</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.98</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
     <div class="matchMetaRow">
       <div class="preMetaField">
         <span class="preMetaIcon preCompetitionIcon" aria-hidden="true">🏆</span>
-        <input id="competition" type="text" inputmode="text" lang="zh-Hant" placeholder="賽事名稱" maxlength="20" enterkeyhint="next" autocomplete="off" autocapitalize="off" aria-label="賽事名稱">
+        <input id="competition" type="text" inputmode="text" lang="zh-Hant" placeholder="賽事名稱" maxlength="20" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="賽事名稱">
       </div>
       <div class="preMetaField venueMetaField">
         <span class="preMetaIcon preVenueIcon" aria-hidden="true">🏟️</span>
         <div class="venueInputWrap">
-          <input id="venue" type="text" inputmode="text" lang="zh-Hant" placeholder="場地" maxlength="15" enterkeyhint="done" autocomplete="off" autocapitalize="off" aria-label="比賽場地，可手動輸入或從最近場地選擇">
+          <input id="venue" type="text" inputmode="text" lang="zh-Hant" placeholder="場地" maxlength="15" enterkeyhint="done" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="比賽場地，可手動輸入或從最近場地選擇">
           <button id="venueDropdownBtn" class="venueDropdownBtn" type="button" aria-label="選擇最近使用場地" aria-expanded="false" onclick="toggleVenueMenu(event)" onmousedown="event.preventDefault()">▾</button>
         </div>
         <div id="venueMenu" class="venueMenu" role="menu" aria-label="最近使用場地"></div>
