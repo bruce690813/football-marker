@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.96</title>
+<title>足球場邊記錄器 v5.97</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -15443,6 +15443,202 @@ body.matchStateLive .timeSummary:not(.open) .timeHead{
 }
 </style>
 
+
+<style id="v597StateDesignSystemPolish">
+/* =========================================================
+   v5.97：State Design System 5% 精修
+   賽前 / 比賽中 / 中場 / 下半場 / 等待延長賽 / 延長賽 / 全場
+   ========================================================= */
+
+/* ---------- 1. 賽前：收斂設定區垂直節奏 ---------- */
+body.matchStatePre{
+  --pre-group-gap:9px!important;
+}
+
+/* 不縮觸控面積，只收斂群組之間的空白。 */
+body.matchStatePre .matchMetaRow,
+body.matchStatePre .preQuickSetup,
+body.matchStatePre .preRegulationSection,
+body.matchStatePre .broadcastScoreboard{
+  margin-bottom:var(--pre-group-gap)!important;
+}
+
+/* 賽前狀態條比進行中再輕一點、再扁一點。 */
+body.matchStatePre .broadcastBar{
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+}
+body.matchStatePre .broadcastStage.pre{
+  min-height:38px!important;
+  padding-top:5px!important;
+  padding-bottom:5px!important;
+}
+body.matchStatePre .broadcastStage.pre .stageLabel{
+  font-size:16px!important;
+  font-weight:900!important;
+}
+
+/* Primary CTA 只增加 1px 視覺重量，不增加按鈕高度。 */
+body.matchStatePre #startBtn{
+  font-size:17px!important;
+  font-weight:950!important;
+}
+
+/* ---------- 2. 比賽中 / 下半場 / 延長賽：只回收 2~4px ---------- */
+body.matchStateLive .broadcastBar{
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+}
+body.matchStateLive .broadcastStage.live{
+  min-height:40px!important;
+  padding-top:5px!important;
+  padding-bottom:5px!important;
+}
+
+/* 三種正在比賽狀態統一同一套字級階層。 */
+body.matchStateLive .broadcastStage.live .stageLabel{
+  font-size:17px!important;
+  font-weight:950!important;
+}
+body.matchStateLive .broadcastStage.live .stageTimer{
+  font-size:28px!important;
+  font-weight:1000!important;
+}
+
+/* ---------- 3. 中場：狀態退一級、時間升一級 ---------- */
+body.matchStateHalftime .broadcastBar{
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+}
+body.matchStateHalftime .broadcastStage.halftime{
+  min-height:40px!important;
+  padding-top:5px!important;
+  padding-bottom:5px!important;
+  gap:10px!important;
+}
+body.matchStateHalftime .broadcastStage.halftime .stageLabel{
+  font-size:16px!important;
+  font-weight:900!important;
+  letter-spacing:.2px!important;
+}
+body.matchStateHalftime .broadcastStage.halftime .stageTimer{
+  font-size:28px!important;
+  font-weight:1000!important;
+  letter-spacing:.8px!important;
+}
+
+/* ---------- 4. 等待延長賽：同樣維持「狀態 < 時間」 ---------- */
+body.matchStateExtraWait .broadcastBar{
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+}
+body.matchStateExtraWait .broadcastStage.halftime{
+  min-height:40px!important;
+  padding-top:5px!important;
+  padding-bottom:5px!important;
+  gap:10px!important;
+}
+body.matchStateExtraWait .broadcastStage.halftime .stageLabel{
+  font-size:15.5px!important;
+  font-weight:900!important;
+  letter-spacing:.1px!important;
+}
+body.matchStateExtraWait .broadcastStage.halftime .stageTimer{
+  font-size:29px!important;
+  font-weight:1000!important;
+  letter-spacing:.8px!important;
+}
+
+/* 等待延長賽時，下一步 CTA 稍微提高可發現性，但不換色。 */
+body.matchStateExtraWait #startBtn{
+  font-size:17px!important;
+  font-weight:950!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.13),
+    0 7px 16px rgba(20,184,166,.16)!important;
+}
+
+/* ---------- 5. 全場：結果資訊壓縮，主時間更明確 ---------- */
+body.resultMode .broadcastBar{
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+}
+body.resultMode .broadcastStage.full{
+  min-height:40px!important;
+  padding-top:5px!important;
+  padding-bottom:5px!important;
+  gap:10px!important;
+}
+body.resultMode .broadcastStage.full .stageLabel{
+  font-size:17px!important;
+  font-weight:900!important;
+}
+body.resultMode .broadcastStage.full .stageTimer{
+  font-size:27px!important;
+  font-weight:1000!important;
+}
+
+/* 統計內容收斂約 2~4px，把賽後工具與內容群組做得更俐落。 */
+body.resultMode .quickResultCard{
+  padding:10px 12px 11px!important;
+}
+body.resultMode .quickResultTitle{
+  margin-bottom:7px!important;
+}
+body.resultMode .quickResultStat{
+  min-height:54px!important;
+  padding-top:7px!important;
+  padding-bottom:6px!important;
+}
+
+/* 統計 / 紀錄是內容；摘要 / CSV 是操作。
+   利用工具卡自身上方留白做群組分界，不增加新線條或新顏色。 */
+body.resultMode.finalOutputVisible .finalToolsCard{
+  padding-top:9px!important;
+}
+
+/* ---------- 6. 全系統：階段名稱與時間的共同節奏 ---------- */
+.broadcastStage .stageLabel{
+  line-height:1!important;
+}
+.broadcastStage .stageTimer{
+  line-height:1!important;
+  font-variant-numeric:tabular-nums!important;
+  font-feature-settings:"tnum" 1!important;
+}
+
+/* 次要資訊維持可讀性，不再繼續縮小字體。 */
+.timeStatusLine .timeRegulationBadge{
+  font-size:10px!important;
+  line-height:1.2!important;
+}
+
+/* ---------- 7. 小型 iPhone：只回收間距，不硬縮主要文字 ---------- */
+@media(max-width:390px){
+  body.matchStatePre{
+    --pre-group-gap:8px!important;
+  }
+
+  body.matchStatePre .broadcastStage.pre .stageLabel{
+    font-size:15.5px!important;
+  }
+
+  body.matchStateHalftime .broadcastStage.halftime .stageLabel,
+  body.matchStateExtraWait .broadcastStage.halftime .stageLabel{
+    font-size:15px!important;
+  }
+
+  body.matchStateHalftime .broadcastStage.halftime .stageTimer,
+  body.matchStateExtraWait .broadcastStage.halftime .stageTimer{
+    font-size:27px!important;
+  }
+
+  body.resultMode .quickResultCard{
+    padding:9px 10px 10px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -15458,7 +15654,7 @@ body.matchStateLive .timeSummary:not(.open) .timeHead{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.96</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.97</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
