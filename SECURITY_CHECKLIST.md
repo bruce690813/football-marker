@@ -1,8 +1,21 @@
 # SECURITY_CHECKLIST.md
-# v5.100 驗證範圍：賽事 / 場地 / 本隊 / 對手 四個輸入區 focus 視覺完全統一。
+# v5.101 驗證範圍：四個輸入區同時間僅允許一個 Active Focus。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.100 本次驗證
+## v5.101 本次驗證
+
+- [x] `editing` 不再等同藍色 focus 高亮。
+- [x] 賽前隊名欄位藍色高亮只由 `:focus-within` 決定。
+- [x] 新增 `clearInactivePreMatchFieldFocus(activeId)` 清理其他欄位的殘留 editing / guidedInput 狀態。
+- [x] 點場地時，本隊 / 對手不應同時保留藍框。
+- [x] 點對手時，本隊不應同時保留藍框。
+- [x] 點賽事名稱時，兩個隊名欄位不應保留藍框。
+- [x] Guided Setup、Enter / ✓ 流程未移除。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：依序點場地 → 本隊 → 對手 → 賽事名稱，確認每次只有目前欄位亮藍框。
+
+## v5.100 歷史驗證
 
 - [x] 版本號已更新為 `v5.100`。
 - [x] 賽前狀態下，`.preMetaField:focus-within` 與 `.teamNameBox.editing / reviewEditing / :focus-within` 使用同一組 focus token。

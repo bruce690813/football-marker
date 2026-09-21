@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.100</title>
+<title>足球場邊記錄器 v5.101</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -15845,6 +15845,31 @@ body.matchStatePre .teamNameBox .teamNameEditor::placeholder{
 /* 只在賽前套用一致化，其他狀態維持原本比分區的資訊密度與可讀性 */
 </style>
 
+
+<style id="v5101SingleActiveFocusFix">
+/* =========================================================
+   v5.101：四個輸入區同一時間只允許一個 focus 高亮
+   editing = 顯示隊名 input；focus-within = 顯示藍色焦點。
+   避免場地 / 對手正在輸入時，本隊仍殘留藍色外框。
+   ========================================================= */
+
+/* v5.100 曾把 editing 也當成 focus 視覺來源；本版把兩者拆開。 */
+body.matchStatePre .teamNameBox.editing:not(:focus-within),
+body.matchStatePre .teamNameBox.reviewEditing:not(:focus-within){
+  border-color:rgba(71,96,126,.72)!important;
+  background:rgba(9,18,32,.84)!important;
+  box-shadow:none!important;
+}
+
+/* 四個輸入區唯一的 Active Focus 規則。 */
+body.matchStatePre .preMetaField:focus-within,
+body.matchStatePre .teamNameBox:focus-within{
+  border-color:var(--field-focus-border)!important;
+  background:var(--field-focus-bg)!important;
+  box-shadow:var(--field-focus-ring)!important;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -15860,7 +15885,7 @@ body.matchStatePre .teamNameBox .teamNameEditor::placeholder{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.100</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.101</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -22517,30 +22542,51 @@ function advanceGuidedSetup(from){
   return false;
 }
 
+
+function clearInactivePreMatchFieldFocus(activeId){
+  if(!document.body.classList.contains('matchStatePre')) return;
+
+  ['ourTeam','oppTeam'].forEach(id=>{
+    if(id===activeId) return;
+    byId(id)?.classList.remove('guidedInput');
+    byId(id+'Box')?.classList.remove('editing');
+  });
+
+  ['competition','venue'].forEach(id=>{
+    if(id===activeId) return;
+    byId(id)?.classList.remove('guidedInput');
+  });
+
+  // 讓剛離開編輯狀態的隊名立即回到正常文字顯示。
+  updateTeamNameDisplays();
+}
+
 // 我方：只要在賽前進入編輯，就視為導引起點。
 // 因此即使我方原本已有記憶值，重新編輯後按 ✓ 仍會自動跳到對手。
 byId('ourTeam').addEventListener('focus', ()=>{
+  clearInactivePreMatchFieldFocus('ourTeam');
   byId('ourTeamBox').classList.add('editing');
   byId('ourTeam').classList.add('guidedInput');
   if(isPreMatchGuidedSetup()) guidedSetupStep='our';
 });
 
 byId('oppTeam').addEventListener('focus', ()=>{
+  clearInactivePreMatchFieldFocus('oppTeam');
   byId('oppTeamBox').classList.add('editing');
   byId('oppTeam').classList.add('guidedInput');
   if(isPreMatchGuidedSetup()) guidedSetupStep='opp';
 });
 
 byId('competition').addEventListener('focus', ()=>{
+  clearInactivePreMatchFieldFocus('competition');
   if(isPreMatchGuidedSetup()) guidedSetupStep='competition';
   byId('competition').classList.add('guidedInput');
 });
 
 byId('venue').addEventListener('focus', ()=>{
-  // 使用者若主動直接點場地，就尊重使用者操作，不再被拉回對手或賽事名稱。
+  // 使用者若主動直接點場地，就尊重使用者操作，不再被拉回其他欄位。
+  clearInactivePreMatchFieldFocus('venue');
   if(isPreMatchGuidedSetup()) guidedSetupStep='venue';
-  byId('oppTeamBox').classList.remove('editing');
-  updateTeamNameDisplays();
   byId('venue').classList.add('guidedInput');
 });
 
