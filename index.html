@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.102</title>
+<title>足球場邊記錄器 v5.103</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -15944,6 +15944,102 @@ body.matchStatePre .teamNameBox.reviewEditing .teamNameEditor{
 }
 </style>
 
+
+<style id="v5103QuickResultCardPolish">
+/* =========================================================
+   v5.103：本場事件統計四卡片「去頂蓋、減厚重」
+   保留四種事件色彩語言，但改成較俐落的 Dashboard 統計卡。
+   ========================================================= */
+
+/* 移除原本最像「上方蓋子」的彩色頂條。 */
+.quickResultStat::before{
+  display:none!important;
+  content:none!important;
+}
+
+/* 上方高光改為整卡很淡的均勻質感，不再形成第二層蓋子。 */
+.quickResultStat::after{
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,.035) 0%,
+    rgba(255,255,255,.012) 46%,
+    rgba(255,255,255,0) 100%
+  )!important;
+}
+
+/* 四張卡片本體縮約 10%，圓角與陰影同步收斂。 */
+body.resultMode .quickResultStat{
+  min-height:82px!important;
+  padding:10px 6px 9px!important;
+  gap:5px!important;
+  border-radius:14px!important;
+  border-width:1px!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 5px 12px rgba(0,0,0,.14)!important;
+}
+
+/* 保留大數字：壓縮的是卡片，不是核心統計值。 */
+body.resultMode .quickResultStat strong{
+  margin-top:1px!important;
+  font-size:33px!important;
+  line-height:1!important;
+  font-weight:960!important;
+}
+
+/* 標題圖示稍微收斂，避免卡片變矮後上半部仍顯得擁擠。 */
+body.resultMode .quickResultLabel{
+  gap:5px!important;
+  font-size:13.5px!important;
+  font-weight:880!important;
+}
+body.resultMode .quickResultIcon{
+  font-size:16px!important;
+}
+
+/* 各類事件仍保留原有深色 tint 與分類色外框，
+   只把「立體按鈕感」降為「資訊卡感」。 */
+body.resultMode .quickResultStat.goalStat{
+  border-color:rgba(100,224,142,.34)!important;
+}
+body.resultMode .quickResultStat.shotStat{
+  border-color:rgba(255,216,100,.34)!important;
+}
+body.resultMode .quickResultStat.saveStat{
+  border-color:rgba(133,187,255,.35)!important;
+}
+body.resultMode .quickResultStat.defenseStat{
+  border-color:rgba(202,160,255,.35)!important;
+}
+
+/* 卡片間距略微增加 1px，去掉頂蓋後仍保持四卡片清楚分離。 */
+body.resultMode .quickResultStats{
+  gap:6px!important;
+}
+
+/* 小型 iPhone：維持一列四卡，不再把主要數字縮得太小。 */
+@media(max-width:390px){
+  body.resultMode .quickResultStat{
+    min-height:78px!important;
+    padding:9px 3px 8px!important;
+    border-radius:13px!important;
+  }
+  body.resultMode .quickResultStats{
+    gap:5px!important;
+  }
+  body.resultMode .quickResultLabel{
+    gap:4px!important;
+    font-size:12.5px!important;
+  }
+  body.resultMode .quickResultIcon{
+    font-size:15px!important;
+  }
+  body.resultMode .quickResultStat strong{
+    font-size:31px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -15959,7 +16055,7 @@ body.matchStatePre .teamNameBox.reviewEditing .teamNameEditor{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.102</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.103</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">

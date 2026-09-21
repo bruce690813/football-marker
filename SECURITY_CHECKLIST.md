@@ -1,8 +1,24 @@
 # SECURITY_CHECKLIST.md
-# v5.102 驗證範圍：賽前隊名未編輯 / 編輯狀態的字級一致性與截字修正。
+# v5.103 驗證範圍：本場事件統計四卡片去頂蓋、縮高與視覺層級精修。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.102 本次驗證
+## v5.103 本次驗證
+
+- [x] `.quickResultStat::before` 彩色頂條已移除。
+- [x] 四張統計卡仍保留進球 / 射門 / 撲救 / 防守的原有分類色。
+- [x] 全場模式卡片高度由原本 92px 級距縮為 82px。
+- [x] 卡片圓角、陰影與邊框厚度均已收斂。
+- [x] 主統計數字仍維持 33px，沒有因縮卡片而降低主要資訊辨識。
+- [x] 小型 iPhone 仍維持四卡一列。
+- [x] 四張卡片的 data-event / 點擊行為未修改。
+- [x] 比分、計時、事件、摘要、CSV、Match ID 與 LocalStorage 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：全場頁確認四張卡片無上方彩色蓋子。
+- [ ] 實機：確認卡片縮短後，圖示 / 標題 / 大數字仍沒有擠壓或換行。
+- [ ] 實機：確認四種事件卡點擊後仍可正常查看對應紀錄。
+
+## v5.102 歷史驗證
 
 - [x] 賽前 `.teamNameDisplay` 強制為 15.5px，覆蓋舊版 20px `!important` 規則。
 - [x] 賽前 `teamNameEditor` 與 display 使用相同 15.5px。
