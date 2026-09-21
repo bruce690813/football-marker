@@ -1,8 +1,22 @@
 # SECURITY_CHECKLIST.md
-# v5.101 驗證範圍：四個輸入區同時間僅允許一個 Active Focus。
+# v5.102 驗證範圍：賽前隊名未編輯 / 編輯狀態的字級一致性與截字修正。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.101 本次驗證
+## v5.102 本次驗證
+
+- [x] 賽前 `.teamNameDisplay` 強制為 15.5px，覆蓋舊版 20px `!important` 規則。
+- [x] 賽前 `teamNameEditor` 與 display 使用相同 15.5px。
+- [x] `mediumName` 不再把 4～6 字的賽前隊名重新放大。
+- [x] display / input 左右 padding 均為 2px。
+- [x] 長隊名仍保留逐級縮字與 overflow 防護。
+- [x] v5.101 單一 Active Focus 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：`忠義國小` 未點選時完整顯示四個字。
+- [ ] 實機：點選本隊後，字級與文字位置不應明顯跳動。
+- [ ] 實機：5～8 字隊名確認不會撐破比分區。
+
+## v5.101 歷史驗證
 
 - [x] `editing` 不再等同藍色 focus 高亮。
 - [x] 賽前隊名欄位藍色高亮只由 `:focus-within` 決定。

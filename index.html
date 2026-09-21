@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.101</title>
+<title>足球場邊記錄器 v5.102</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -15870,6 +15870,80 @@ body.matchStatePre .teamNameBox:focus-within{
 }
 </style>
 
+
+<style id="v5102TeamNameDisplayFitFix">
+/* =========================================================
+   v5.102：賽前隊名 display / input 尺寸完全一致
+   修正「忠義國小」未點選時最後一字被截斷。
+   ========================================================= */
+
+/* 重要：必須使用 !important，覆蓋舊版 --pre-team-font:20px 的 !important 規則。 */
+body.matchStatePre .teamNameDisplay{
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  padding:0 2px!important;
+  font-size:15.5px!important;
+  line-height:1.2!important;
+  font-weight:850!important;
+  letter-spacing:0!important;
+  text-align:left!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+/* 四字～六字的 mediumName 不再把賽前文字重新放大。 */
+body.matchStatePre .teamNameDisplay.mediumName{
+  font-size:15.5px!important;
+  line-height:1.2!important;
+  letter-spacing:0!important;
+}
+
+/* 較長隊名才逐級縮小，避免真的超出可用寬度。 */
+body.matchStatePre .teamNameDisplay.longName{
+  font-size:14.5px!important;
+  line-height:1.2!important;
+  letter-spacing:-.1px!important;
+}
+body.matchStatePre .teamNameDisplay.veryLongName{
+  display:block!important;
+  font-size:13.5px!important;
+  line-height:1.2!important;
+  letter-spacing:-.15px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  max-height:none!important;
+}
+
+/* 正在輸入與未輸入時使用完全相同的字體尺寸與左右內距，
+   避免點選前後文字跳動。 */
+body.matchStatePre .teamNameBox.editing .teamNameEditor,
+body.matchStatePre .teamNameBox.reviewEditing .teamNameEditor{
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  padding:0 2px!important;
+  font-size:15.5px!important;
+  line-height:1.2!important;
+  font-weight:850!important;
+  letter-spacing:0!important;
+  text-align:left!important;
+}
+
+@media(max-width:350px){
+  body.matchStatePre .teamNameDisplay,
+  body.matchStatePre .teamNameDisplay.mediumName,
+  body.matchStatePre .teamNameBox.editing .teamNameEditor,
+  body.matchStatePre .teamNameBox.reviewEditing .teamNameEditor{
+    font-size:15px!important;
+  }
+  body.matchStatePre .teamNameDisplay.longName{font-size:14px!important;}
+  body.matchStatePre .teamNameDisplay.veryLongName{font-size:13px!important;}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -15885,7 +15959,7 @@ body.matchStatePre .teamNameBox:focus-within{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.101</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.102</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
