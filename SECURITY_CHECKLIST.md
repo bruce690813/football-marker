@@ -1,8 +1,23 @@
 # SECURITY_CHECKLIST.md
-# v5.103 驗證範圍：本場事件統計四卡片去頂蓋、縮高與視覺層級精修。
+# v5.104 驗證範圍：全場本隊 / 對手修改的 focus 與輸入顯示一致性。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.103 本次驗證
+## v5.104 本次驗證
+
+- [x] 全場 `reviewEditing` 外框套用與賽前一致的 focus token。
+- [x] 全場 review input 不再顯示內層 border / outline / shadow。
+- [x] 全場 review input 字級為 15.5px、padding 2px。
+- [x] `忠義國小` 四字在全場修改模式下可完整顯示。
+- [x] 全場未修改時的大字隊名展示未變更。
+- [x] 修改按鈕在 review 編輯期間仍隱藏。
+- [x] 比賽中不開放隊名修改的規則未變更。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：全場點「我方修改」，確認只有外層出現青藍 focus 框。
+- [ ] 實機：全場點「對手修改」，確認樣式與我方完全一致。
+- [ ] 實機：確認 `忠義國小` 四字完整顯示、不截字。
+
+## v5.103 歷史驗證
 
 - [x] `.quickResultStat::before` 彩色頂條已移除。
 - [x] 四張統計卡仍保留進球 / 射門 / 撲救 / 防守的原有分類色。

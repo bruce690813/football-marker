@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.103</title>
+<title>足球場邊記錄器 v5.104</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -16040,6 +16040,80 @@ body.resultMode .quickResultStats{
 }
 </style>
 
+
+<style id="v5104ResultTeamEditMatchPre">
+/* =========================================================
+   v5.104：全場修改本隊 / 對手名稱，與賽前輸入規則一致
+   ========================================================= */
+
+/* 全場進入 review 編輯時，外層就是唯一輸入框。 */
+body.resultMode .teamNameBox.reviewEditing{
+  box-sizing:border-box!important;
+  min-height:44px!important;
+  padding:0 10px!important;
+  border:1px solid rgba(71,96,126,.72)!important;
+  border-radius:12px!important;
+  background:rgba(9,18,32,.84)!important;
+  transition:border-color .16s ease, box-shadow .16s ease, background .16s ease!important;
+}
+
+/* 真正取得焦點時，使用與賽前完全相同的青藍 focus 視覺。 */
+body.resultMode .teamNameBox.reviewEditing:focus-within{
+  border-color:var(--field-focus-border)!important;
+  background:var(--field-focus-bg)!important;
+  box-shadow:var(--field-focus-ring)!important;
+}
+
+/* review input 本身維持無框，避免「外框裡再一個輸入框」。 */
+body.resultMode .teamNameBox.reviewEditing .teamNameEditor,
+body.resultMode .teamNameBox.reviewEditing .teamNameEditor:focus,
+body.resultMode .teamNameBox.reviewEditing .teamNameEditor:focus-visible{
+  -webkit-appearance:none!important;
+  appearance:none!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0 2px!important;
+  border:0!important;
+  border-bottom:0!important;
+  border-radius:0!important;
+  outline:none!important;
+  background:transparent!important;
+  box-shadow:none!important;
+
+  /* 和賽前隊名輸入一致，確保「忠義國小」四字完整顯示。 */
+  color:#ffffff!important;
+  font-size:15.5px!important;
+  line-height:1.2!important;
+  font-weight:850!important;
+  letter-spacing:0!important;
+  text-align:left!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+
+/* placeholder 也沿用賽前層級。 */
+body.resultMode .teamNameBox.reviewEditing .teamNameEditor::placeholder{
+  color:#8fa0b4!important;
+  opacity:1!important;
+}
+
+/* 全場 review 編輯時只顯示 input，不顯示修改按鈕。 */
+body.resultMode .teamNameBox.reviewEditing .teamNameEditBtn{
+  display:none!important;
+}
+
+/* 小型 iPhone 仍維持完整四字優先。 */
+@media(max-width:350px){
+  body.resultMode .teamNameBox.reviewEditing .teamNameEditor{
+    font-size:15px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -16055,7 +16129,7 @@ body.resultMode .quickResultStats{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.103</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.104</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
