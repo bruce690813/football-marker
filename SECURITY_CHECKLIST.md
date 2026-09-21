@@ -1,8 +1,34 @@
 # SECURITY_CHECKLIST.md
-# v5.98 驗證範圍：賽前賽事名稱 / 場地輸入框去除重複焦點外框。
+# v5.100 驗證範圍：賽事 / 場地 / 本隊 / 對手 四個輸入區 focus 視覺完全統一。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.98 本次驗證
+## v5.100 本次驗證
+
+- [x] 版本號已更新為 `v5.100`。
+- [x] 賽前狀態下，`.preMetaField:focus-within` 與 `.teamNameBox.editing / reviewEditing / :focus-within` 使用同一組 focus token。
+- [x] 賽前狀態下，`.teamNameBox` 的預設 border / radius / background 已和 `.preMetaField` 對齊。
+- [x] 賽前狀態下，本隊 / 對手顯示文字改為與賽事 / 場地一致的字級、字重與對齊。
+- [x] 調整只限 `body.matchStatePre`，不影響比賽中 / 中場 / 下半場 / 延長賽 / 全場畫面。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：依序點擊「賽事名稱 / 場地 / 本隊 / 對手」，四者的 focus 視覺應完全一致。
+- [ ] 實機：進入比賽中後，本隊 / 對手顯示區仍維持既有比分畫面樣式，未被賽前輸入樣式污染。
+
+## v5.99 歷史驗證
+
+- [x] `#ourTeam` input 不再顯示獨立底線 / 邊框 / 陰影。
+- [x] `#oppTeam` input 不再顯示獨立底線 / 邊框 / 陰影。
+- [x] `teamNameBox.editing` / `reviewEditing` / `:focus-within` 由外層表達焦點。
+- [x] 我方與對手輸入加入 `autocorrect="off"` 與 `spellcheck="false"`。
+- [x] 長隊名縮字、空值顯示「對手」、review 編輯流程未移除。
+- [x] 賽事名稱 / 場地的 v5.98 單一外框邏輯保留。
+- [x] Match ID、多場比賽、摘要、CSV、計時、事件統計未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：iPhone Safari 點擊「忠義國小 / 對手」編輯時，只看到外層隊名區高亮，不再出現內層長方形輸入框。
+- [ ] 實機：中場 / 全場透過「✎ 修改」進入 review 編輯，確認同樣維持單一外框。
+
+## v5.98 歷史驗證
 
 - [x] 賽前 `#competition` input 不再顯示獨立長方形 border / outline / box-shadow。
 - [x] 賽前 `#venue` input 不再顯示獨立長方形 border / outline / box-shadow。

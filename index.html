@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.98</title>
+<title>足球場邊記錄器 v5.100</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -15719,6 +15719,132 @@ body.matchStatePre .preMetaField input::placeholder{
 }
 </style>
 
+
+<style id="v599TeamNameSingleFocus">
+/* =========================================================
+   v5.99：本隊 / 對手名稱輸入與賽事名稱 / 場地統一為單一外框語言
+   根因：teamNameEditor 仍沿用舊的 input 造型（底線 + 內層青藍框 + 陰影），
+   在 scoreRow 裡會變成「外層隊名區 + 內層輸入框」雙層視覺。
+   本版改為：由 teamNameBox 外層表達焦點，input 本身無框。
+   ========================================================= */
+.teamNameBox .teamNameEditor,
+.teamNameBox .teamNameEditor:focus,
+.teamNameBox .teamNameEditor:focus-visible,
+.teamNameBox .teamNameEditor.guidedInput{
+  -webkit-appearance:none!important;
+  appearance:none!important;
+  outline:none!important;
+  outline-offset:0!important;
+  border:0!important;
+  border-bottom:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.teamNameBox .teamNameEditor{
+  min-width:0!important;
+  width:100%!important;
+  padding:0 2px!important;
+  margin:0!important;
+}
+
+.teamNameBox.editing,
+.teamNameBox.reviewEditing,
+.teamNameBox:focus-within{
+  border-color:rgba(56,189,248,.90)!important;
+  background:linear-gradient(180deg,rgba(12,28,45,.96) 0%,rgba(8,21,35,.96) 100%)!important;
+  box-shadow:
+    0 0 0 2px rgba(56,189,248,.13),
+    inset 0 1px 0 rgba(255,255,255,.045)!important;
+}
+
+.teamNameBox.editing .teamNameEditor,
+.teamNameBox.reviewEditing .teamNameEditor{
+  color:#ffffff!important;
+  font-size:25px!important;
+  line-height:1.08!important;
+  text-align:center!important;
+}
+
+.teamNameBox .teamNameEditor::placeholder{
+  color:#8395aa!important;
+  opacity:1!important;
+}
+
+/* 仍保留空狀態與長隊名的既有縮放邏輯，只清掉內層輸入框。 */
+@media(max-width:390px){
+  .teamNameBox.editing .teamNameEditor,
+  .teamNameBox.reviewEditing .teamNameEditor{
+    font-size:24px!important;
+  }
+}
+</style>
+
+
+<style id="v5100UnifiedFocusVisual">
+/* =========================================================
+   v5.100：賽事 / 場地 / 本隊 / 對手 四個輸入區統一同一套 focus 視覺
+   目標：把 preMetaField 與 teamNameBox 的 focus 視覺完全收斂成同一語言。
+   ========================================================= */
+:root{
+  --field-focus-border: rgba(56,189,248,.88);
+  --field-focus-bg: linear-gradient(180deg,rgba(12,28,45,.96) 0%,rgba(8,21,35,.96) 100%);
+  --field-focus-ring: 0 0 0 2px rgba(56,189,248,.14), inset 0 1px 0 rgba(255,255,255,.045);
+}
+
+body.matchStatePre .preMetaField,
+body.matchStatePre .teamNameBox{
+  transition:border-color .16s ease, box-shadow .16s ease, background .16s ease, transform .16s ease;
+}
+
+/* 統一四個輸入區的 focus 狀態 */
+body.matchStatePre .preMetaField:focus-within,
+body.matchStatePre .teamNameBox.editing,
+body.matchStatePre .teamNameBox.reviewEditing,
+body.matchStatePre .teamNameBox:focus-within{
+  border-color:var(--field-focus-border)!important;
+  background:var(--field-focus-bg)!important;
+  box-shadow:var(--field-focus-ring)!important;
+}
+
+/* 本隊/對手平時也和上方賽事/場地維持一致的元件語言 */
+body.matchStatePre .teamNameBox{
+  border:1px solid rgba(71,96,126,.72);
+  border-radius:12px;
+  background:rgba(9,18,32,.84);
+  min-height:44px;
+  padding:0 10px;
+}
+
+body.matchStatePre .teamNameDisplay{
+  text-align:left;
+  font-size:15.5px;
+  line-height:1.2;
+  font-weight:850;
+  letter-spacing:0;
+}
+
+body.matchStatePre .teamNameDisplay.empty{
+  color:#8fa0b4;
+}
+
+body.matchStatePre .teamNameBox.editing .teamNameEditor,
+body.matchStatePre .teamNameBox.reviewEditing .teamNameEditor{
+  font-size:15.5px!important;
+  line-height:1.2!important;
+  font-weight:850!important;
+  text-align:left!important;
+  letter-spacing:0!important;
+}
+
+body.matchStatePre .teamNameBox .teamNameEditor::placeholder{
+  color:#8fa0b4!important;
+}
+
+/* 只在賽前套用一致化，其他狀態維持原本比分區的資訊密度與可讀性 */
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -15734,7 +15860,7 @@ body.matchStatePre .preMetaField input::placeholder{
     <div>
       <h1>⚽ 足球場邊記錄器</h1>
     </div>
-    <div class="versionInfo"><span class="sub">v5.98</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
+    <div class="versionInfo"><span class="sub">v5.100</span><button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="這是什麼？了解足球場邊記錄器"><span class="icon">ⓘ</span><span class="label">這是什麼？</span></button></div>
   </div>
 
   <div class="card matchCard idleState" id="matchCard">
@@ -15838,7 +15964,7 @@ body.matchStatePre .preMetaField input::placeholder{
       <div class="scoreRow">
         <div class="teamNameBox" id="ourTeamBox" onclick="editTeamName('ourTeam')">
           <div class="teamNameDisplay" id="ourTeamDisplay">忠義國小</div>
-          <input id="ourTeam" class="teamNameEditor" type="text" inputmode="text" lang="zh-Hant" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" autocapitalize="off" aria-label="我方隊伍名稱，可稍後補充">
+          <input id="ourTeam" class="teamNameEditor" type="text" inputmode="text" lang="zh-Hant" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="我方隊伍名稱，可稍後補充">
           <button class="teamNameEditBtn" type="button" onclick="event.stopPropagation();editTeamName('ourTeam',true)" aria-label="修正我方隊伍名稱">✎ 修改</button>
         </div>
         <div class="scoreMid">
@@ -15852,7 +15978,7 @@ body.matchStatePre .preMetaField input::placeholder{
         </div>
         <div class="teamNameBox" id="oppTeamBox" onclick="editTeamName('oppTeam')">
           <div class="teamNameDisplay empty" id="oppTeamDisplay">對手</div>
-          <input id="oppTeam" class="teamNameEditor" type="text" inputmode="text" lang="zh-Hant" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" autocapitalize="off" aria-label="對手隊伍名稱">
+          <input id="oppTeam" class="teamNameEditor" type="text" inputmode="text" lang="zh-Hant" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="對手隊伍名稱">
           <button class="teamNameEditBtn" type="button" onclick="event.stopPropagation();editTeamName('oppTeam',true)" aria-label="修正對手隊伍名稱">✎ 修改</button>
         </div>
       </div>
