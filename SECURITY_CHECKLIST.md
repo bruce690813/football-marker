@@ -1,8 +1,61 @@
 # SECURITY_CHECKLIST.md
-# v5.110 驗證範圍：摘要與說明頁關閉鍵視覺一致性。
+# v5.113 驗證範圍：賽前重設按鈕辨識度與狀態感知。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.110 本次驗證
+## v5.113 本次驗證
+
+- [x] 賽前重設仍位於狀態列右側。
+- [x] 重設按鈕只在 `hasMeaningfulPreMatchSetup()` 為 true 時顯示。
+- [x] 無可重設資料時 `disabled=true`、`aria-hidden=true`。
+- [x] 可視按鈕高度約 33–34px。
+- [x] 透明 pseudo hit-area 擴大約至 44px。
+- [x] 使用深藍透明底與淡藍灰描邊，不使用危險紅色。
+- [x] `↻` 圖示亮度高於文字，提升操作辨識。
+- [x] 重設確認訊息明確列出主要清除項目。
+- [x] 原 `resetPreMatchSetup()` 清除邏輯未更動。
+- [x] 開始比賽 Primary CTA 樣式未更動。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari：有賽前資料時確認「重設」明顯但不搶主 CTA。
+- [ ] iPhone Safari：無可重設資料時確認按鈕不顯示。
+- [ ] iPhone Safari：確認重設按鈕容易點擊且不擋住「賽前」文字。
+
+## v5.112 歷史驗證
+
+- [x] Header DOM 結構未修改。
+- [x] 中圈足球仍固定在 `50% / 50%`。
+- [x] 中圈足球一般版縮為 23.5px。
+- [x] 390px 以下中圈足球縮為 21.5px。
+- [x] 版本號位置向下 2px。
+- [x] 版本號明度由約 72% 降為約 67%。
+- [x] 說明按鈕寬度與左右 padding 已小幅收斂。
+- [x] 說明按鈕背景 / 邊框 / 陰影視覺重量降低。
+- [x] 左右球門安全區與半寫實球場 SVG 未修改。
+- [x] v5.111 中場比分／隊名整合邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari 實機確認中圈足球縮小後仍位於中圈正中央。
+- [ ] iPhone Safari 實機確認版本號與標題間距更自然。
+- [ ] iPhone Safari 實機確認「說明」按鈕變輕但仍清楚可點。
+
+## v5.111 歷史驗證
+
+- [x] 中場狀態左右 `.teamNameEditBtn` 已隱藏。
+- [x] 等待延長賽狀態左右 `.teamNameEditBtn` 已隱藏。
+- [x] 中場中央入口顯示「✎ 比分／隊名」。
+- [x] 等待延長賽中央入口顯示「✎ 比分／隊名」。
+- [x] 中場 Score Modal 顯示本隊 / 對手名稱欄位。
+- [x] 中場可同時儲存雙方隊名與比分。
+- [x] 中場隊名仍沿用 `validateTeamNameValue()` 驗證。
+- [x] 中場 / 等待延長賽共用全場的整合 Modal 視覺。
+- [x] 比賽進行中仍不開放人工修正比分。
+- [x] v5.110 摘要 X 與說明頁 X 統一樣式保留。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari 實機確認中場左右大型修改按鈕已消失。
+- [ ] iPhone Safari 實機確認中場「比分／隊名」可正常修改四個欄位。
+
+## v5.110 歷史驗證
 
 - [x] 摘要右上角符號統一為 `✕`。
 - [x] 摘要關閉鍵保留 44px 觸控範圍。

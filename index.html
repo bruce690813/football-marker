@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.110</title>
+<title>足球場邊記錄器 v5.113</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -16971,6 +16971,268 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn{
 }
 </style>
 
+
+<style id="v5111BreakScoreTeamConsolidation">
+/* =========================================================
+   v5.111：中場 / 等待延長賽的隊名與比分編輯，比照全場
+   ========================================================= */
+
+/* 中場與等待延長賽：移除左右各自的大型「修改」按鈕。 */
+body.matchStateHalftime .teamNameEditBtn,
+body.matchStateExtraWait .teamNameEditBtn{
+  display:none!important;
+}
+
+/* 隊名回歸純展示，釋出兩側空間。 */
+body.matchStateHalftime .teamNameBox,
+body.matchStateExtraWait .teamNameBox{
+  flex-direction:row!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:0!important;
+  min-height:54px!important;
+}
+body.matchStateHalftime .teamNameDisplay,
+body.matchStateExtraWait .teamNameDisplay{
+  width:100%!important;
+  max-width:100%!important;
+  padding:0 5px!important;
+  text-align:center!important;
+}
+
+/* 中央唯一入口的樣式直接與全場一致。 */
+body.matchStateHalftime #scoreEditBtn,
+body.matchStateExtraWait #scoreEditBtn{
+  min-height:28px!important;
+  margin-top:5px!important;
+  padding:4px 8px!important;
+  border:1px solid rgba(148,163,184,.18)!important;
+  border-radius:8px!important;
+  background:rgba(18,32,49,.55)!important;
+  color:#9fb1c5!important;
+  font-size:10.5px!important;
+  font-weight:850!important;
+  white-space:nowrap!important;
+}
+
+/* 中場的整合編輯視窗與全場完全共用 v5.108 的 modal 樣式。
+   這裡只做欄位顯示狀態，不新增第二套視覺。 */
+</style>
+
+
+<style id="v5112HeaderFinalPolish">
+/* =========================================================
+   v5.112：Header 最後 3–5% 視覺精修
+   不改結構，只微調中圈足球、版本號與說明按鈕的視覺權重。
+   ========================================================= */
+
+/* 1) 中圈足球縮小約 6%，讓中圈白線露出更多。
+   一般版原 25px → 23.5px。 */
+.titleBlock .headerCenterBall{
+  font-size:23.5px!important;
+}
+
+/* 2) 版本號往下 2px，並降低約 5% 視覺亮度。
+   讓「足球場邊記錄器」更明確成為第一閱讀層。 */
+.titleBlock .headerVersion{
+  position:relative!important;
+  top:2px!important;
+  color:rgba(232,244,237,.67)!important;
+}
+
+/* 3) 說明按鈕稍微縮窄、降低背景與邊框重量。
+   保留原本 pill 與觸控高度，不犧牲可點性。 */
+.titleBlock .aboutInfoBtn{
+  min-width:67px!important;
+  padding-left:9px!important;
+  padding-right:9px!important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(49,71,97,.94) 0%,
+      rgba(34,50,71,.94) 100%
+    )!important;
+
+  border-color:rgba(96,165,250,.31)!important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.065),
+    0 2px 6px rgba(0,0,0,.15)!important;
+}
+
+/* iPhone 常見寬度：
+   原 23px → 21.5px；說明按鈕原 66px → 62px。 */
+@media(max-width:390px){
+  .titleBlock .headerCenterBall{
+    font-size:21.5px!important;
+  }
+
+  .titleBlock .aboutInfoBtn{
+    min-width:62px!important;
+    padding-left:8px!important;
+    padding-right:8px!important;
+  }
+}
+
+/* 極窄裝置同步維持同樣比例，
+   但仍保留文字「說明」，不退化成只有 icon。 */
+@media(max-width:350px){
+  .titleBlock .headerCenterBall{
+    font-size:20px!important;
+  }
+
+  .titleBlock .aboutInfoBtn{
+    min-width:55px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+}
+</style>
+
+
+<style id="v5113PreMatchResetVisibility">
+/* =========================================================
+   v5.113：賽前「重設」辨識度提升
+   原則：
+   1. 仍是 Secondary Action，不搶「開始比賽」
+   2. 只在真的有資料可清除時出現
+   3. 看得出是可點按鈕，不再像 Disabled 文字
+   ========================================================= */
+
+body.matchStatePre .broadcastStage.pre .preResetBtn{
+  display:none!important;
+}
+
+/* 有可清除的賽前資料時才啟用。 */
+body.matchStatePre .broadcastStage.pre .preResetBtn.show{
+  display:inline-flex!important;
+  position:absolute!important;
+  right:10px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+
+  align-items:center!important;
+  justify-content:center!important;
+  gap:5px!important;
+
+  width:auto!important;
+  min-width:70px!important;
+  height:34px!important;
+  min-height:34px!important;
+  padding:0 10px!important;
+  margin:0!important;
+
+  border:1px solid rgba(104,153,205,.46)!important;
+  border-radius:10px!important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(31,61,91,.78) 0%,
+      rgba(19,42,65,.76) 100%
+    )!important;
+
+  color:#c8dcf0!important;
+  font-size:12.5px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:.1px!important;
+  opacity:1!important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    0 2px 7px rgba(0,0,0,.14)!important;
+
+  text-shadow:none!important;
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent!important;
+  overflow:visible!important;
+}
+
+/* 額外擴大 hit area 到約 44px，但不增加視覺高度。 */
+body.matchStatePre .broadcastStage.pre .preResetBtn.show::after{
+  content:"";
+  position:absolute;
+  left:-4px;
+  right:-4px;
+  top:-5px;
+  bottom:-5px;
+  border-radius:14px;
+  background:transparent;
+}
+
+/* ↻ 比文字稍亮，讓操作語意更快被辨識。 */
+body.matchStatePre .preResetBtn .preResetIcon{
+  color:#7ec8ff!important;
+  font-size:14px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  transform:translateY(-.2px);
+}
+body.matchStatePre .preResetBtn .preResetLabel{
+  color:inherit!important;
+  font:inherit!important;
+  line-height:1!important;
+}
+
+/* 點擊回饋清楚，但不使用危險紅色。 */
+body.matchStatePre .broadcastStage.pre .preResetBtn.show:active{
+  transform:translateY(-50%) scale(.965)!important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(42,78,113,.88) 0%,
+      rgba(24,52,80,.88) 100%
+    )!important;
+  border-color:rgba(126,177,229,.62)!important;
+  color:#eef7ff!important;
+}
+
+/* 鍵盤可及性；手機觸控不留下 focus ring。 */
+body.matchStatePre .broadcastStage.pre .preResetBtn.show:focus:not(:focus-visible){
+  outline:none!important;
+}
+body.matchStatePre .broadcastStage.pre .preResetBtn.show:focus-visible{
+  outline:2px solid rgba(126,200,255,.62)!important;
+  outline-offset:2px!important;
+}
+
+@media(hover:none) and (pointer:coarse){
+  body.matchStatePre .broadcastStage.pre .preResetBtn.show:focus,
+  body.matchStatePre .broadcastStage.pre .preResetBtn.show:focus-visible{
+    outline:none!important;
+  }
+}
+
+/* iPhone 常見窄寬度：維持清楚可點，不再縮到接近 Disabled 標籤。 */
+@media(max-width:390px){
+  body.matchStatePre .broadcastStage.pre .preResetBtn.show{
+    right:8px!important;
+    min-width:66px!important;
+    height:33px!important;
+    min-height:33px!important;
+    padding:0 8px!important;
+    gap:4px!important;
+    font-size:12px!important;
+  }
+
+  body.matchStatePre .preResetBtn .preResetIcon{
+    font-size:13.5px!important;
+  }
+}
+
+/* 極窄裝置仍保留「重設」文字，不退化為單 icon。 */
+@media(max-width:350px){
+  body.matchStatePre .broadcastStage.pre .preResetBtn.show{
+    right:7px!important;
+    min-width:62px!important;
+    padding:0 7px!important;
+    font-size:11.5px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -16985,7 +17247,7 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.110</span>
+      <span class="headerVersion">v5.113</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -17087,7 +17349,7 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn{
         <div class="broadcastStatusTime">
           <div class="broadcastStage pre" id="broadcastStage">
             <span class="liveTag" id="broadcastLiveTag">● LIVE</span>
-            <span class="stageLabel" id="broadcastStageLabel">賽前</span><button id="preResetBtn" class="preResetBtn" type="button" onclick="resetPreMatchSetup()" aria-label="重新設定賽前資料">↻ 重設</button>
+            <span class="stageLabel" id="broadcastStageLabel">賽前</span><button id="preResetBtn" class="preResetBtn" type="button" onclick="resetPreMatchSetup()" aria-label="重設賽前設定"><span class="preResetIcon" aria-hidden="true">↻</span><span class="preResetLabel">重設</span></button>
             <span class="stageTimer timer" id="timer">00:00</span>
           </div>
 <div class="regulationHint" id="regulationHint" aria-hidden="true"></div>
@@ -21629,6 +21891,7 @@ function openScoreModal(){
     !state.penalty?.active;
 
   const isFullTime=!!state.finished;
+  const isCombinedReview=!!isFullTime || !!isScoreReviewBreak;
   const pkScoreLocked=!!(state.penalty?.active || state.penalty?.completed);
 
   // PK 進行中不開放；PK 已完成的全場仍可修改隊名，但比分維持鎖定。
@@ -21636,7 +21899,7 @@ function openScoreModal(){
     return;
   }
 
-  if(!isFullTime && !isScoreReviewBreak){
+  if(!isCombinedReview){
     return;
   }
 
@@ -21647,16 +21910,17 @@ function openScoreModal(){
   const editOur=byId('editOur');
   const editOpp=byId('editOpp');
 
-  if(teamFields) teamFields.hidden=!isFullTime;
+  if(teamFields) teamFields.hidden=!isCombinedReview;
 
-  if(isFullTime){
+  if(isCombinedReview){
     if(title) title.textContent='編輯比分／隊名';
-    if(hint) hint.textContent='集中修正全場比分與雙方隊名；既有事件紀錄與事件時間不會被刪除。';
+    if(hint){
+      hint.textContent=isFullTime
+        ? '集中修正全場比分與雙方隊名；既有事件紀錄與事件時間不會被刪除。'
+        : '集中修正目前比分與雙方隊名；既有事件紀錄與事件時間不會被刪除。';
+    }
     byId('editOurTeamName').value=state.ourTeam||'';
     byId('editOppTeamName').value=state.oppTeam||'';
-  }else{
-    if(title) title.textContent='修正比分';
-    if(hint) hint.textContent='只調整目前比分，不會刪除既有事件。';
   }
 
   editOur.value=state.ourScore;
@@ -21678,6 +21942,11 @@ function closeScoreModal(){
 }
 function saveScoreModal(){
   const isFullTime=!!state.finished;
+  const isScoreReviewBreak=
+    !!state.awaitingNextPeriod &&
+    (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME') &&
+    !state.penalty?.active;
+  const isCombinedReview=!!isFullTime || !!isScoreReviewBreak;
   const pkScoreLocked=!!(state.penalty?.active || state.penalty?.completed);
 
   if(state.penalty?.active && !isFullTime){
@@ -21685,7 +21954,7 @@ function saveScoreModal(){
     return;
   }
 
-  if(isFullTime){
+  if(isCombinedReview){
     const ourName=String(byId('editOurTeamName').value||'').trim();
     const oppName=String(byId('editOppTeamName').value||'').trim();
 
@@ -22307,20 +22576,30 @@ function renderPreResetUI(){
   const btn=byId('preResetBtn');
   if(!btn) return;
 
-  const show=
+  const available=
     !state.started &&
     !state.finished &&
     !state.awaitingNextPeriod &&
     !state.penalty?.active &&
     hasMeaningfulPreMatchSetup();
 
-  btn.classList.toggle('show',show);
+  // 重設屬於低頻率次要操作：
+  // 只有賽前已有可清除內容時才顯示並可操作。
+  btn.classList.toggle('show',available);
+  btn.disabled=!available;
+  btn.setAttribute('aria-hidden', String(!available));
+  btn.setAttribute('aria-disabled', String(!available));
+  btn.tabIndex=available ? 0 : -1;
+  btn.title=available ? '清除本場賽前設定' : '';
 }
 
 function resetPreMatchSetup(){
   if(state.started || state.finished || state.awaitingNextPeriod || state.penalty?.active) return;
 
-  if(!confirm('重新設定會清除本場賽事名稱、場地、對手、名單、守門員、比賽時間與其他賽前設定，確定嗎？')) return;
+  if(!confirm(
+    '重設賽前設定？\n\n' +
+    '將清除本場尚未開始的賽事名稱、場地、對手、名單、守門員、比賽時間與其他賽前設定。'
+  )) return;
 
   hideMarkerUndo();
 
@@ -22704,14 +22983,15 @@ function render(){
 
     const pkLocksScore=!!(state.penalty?.active || state.penalty?.completed);
 
-    // 全場時這顆按鈕同時是「比分 / 隊名」唯一入口。
-    // PK 已完成時比分鎖定，但仍保留入口供修正隊名。
+    // 中場 / 等待延長賽 / 全場統一使用「比分／隊名」單一入口。
+    // PK 已完成時比分鎖定，但全場仍保留入口供修正隊名。
     const canOpenResultEdit=!!state.finished || (!pkLocksScore && isScoreReviewBreak);
+    const useCombinedScoreTeamEdit=!!state.finished || isScoreReviewBreak;
 
     scoreEditBtn.hidden=!canOpenResultEdit;
     scoreEditBtn.disabled=!canOpenResultEdit;
-    scoreEditBtn.textContent=state.finished ? '✎ 比分／隊名' : '✎ 修正比分';
-    scoreEditBtn.setAttribute('aria-label', state.finished ? '修改比分與隊伍名稱' : '修正比分');
+    scoreEditBtn.textContent=useCombinedScoreTeamEdit ? '✎ 比分／隊名' : '✎ 修正比分';
+    scoreEditBtn.setAttribute('aria-label', useCombinedScoreTeamEdit ? '修改比分與隊伍名稱' : '修正比分');
     scoreEditBtn.setAttribute('aria-hidden', String(!canOpenResultEdit));
     scoreEditBtn.setAttribute('aria-disabled', String(!canOpenResultEdit));
   }
