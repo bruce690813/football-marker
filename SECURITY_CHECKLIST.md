@@ -1,8 +1,35 @@
 # SECURITY_CHECKLIST.md
-# v5.108 驗證範圍：全場比分／隊名整合編輯與賽後三按鈕同列。
+# v5.110 驗證範圍：摘要與說明頁關閉鍵視覺一致性。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.108 本次驗證
+## v5.110 本次驗證
+
+- [x] 摘要右上角符號統一為 `✕`。
+- [x] 摘要關閉鍵保留 44px 觸控範圍。
+- [x] 可視圓鈕縮於 44px hit area 內。
+- [x] 背景、邊框、X 顏色與說明頁採相同視覺語言。
+- [x] 舊版方形 close button 的 border / background / shadow 已覆蓋。
+- [x] 小螢幕不再降成 38px 方形按鈕。
+- [x] 觸控裝置不留下多餘 focus ring。
+- [x] `closeReport()` 與 touch/click 綁定邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari 實機確認摘要 X 與說明頁 X 的圓鈕尺寸、顏色與視覺重量一致。
+
+## v5.109 歷史驗證
+
+- [x] 左側禁區弧線由禁區線向球場中央方向凸出。
+- [x] 右側禁區弧線由禁區線向球場中央方向凸出。
+- [x] 禁區弧線不再落在禁區矩形內部。
+- [x] 一般螢幕與 `max-width:390px` 使用相同修正版 SVG。
+- [x] 左右球門、球網、大禁區、小禁區位置未變更。
+- [x] 中線、中圈、中央足球與 Header 文字版面未變更。
+- [x] v5.108 的「比分／隊名」整合與三顆賽後按鈕保留。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari 實機確認左右禁區弧線均在禁區外側。
+
+## v5.108 歷史驗證
 
 - [x] 全場左右 `.teamNameEditBtn` 已隱藏。
 - [x] 中場 / 等待延長賽原隊名修改入口未移除。
