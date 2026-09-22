@@ -1,8 +1,47 @@
 # SECURITY_CHECKLIST.md
-# v5.106 驗證範圍：Header 左右球門安全區、版本號下移與中圈足球定位。
+# v5.108 驗證範圍：全場比分／隊名整合編輯與賽後三按鈕同列。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.106 本次驗證
+## v5.108 本次驗證
+
+- [x] 全場左右 `.teamNameEditBtn` 已隱藏。
+- [x] 中場 / 等待延長賽原隊名修改入口未移除。
+- [x] 全場中央入口顯示「比分／隊名」。
+- [x] 全場 Score Modal 新增雙方隊名欄位。
+- [x] 儲存隊名前同步主畫面 input，避免 `saveState()` 以舊值覆寫。
+- [x] 隊名沿用既有 `validateTeamNameValue()` 驗證。
+- [x] PK 完成後比分欄位鎖定，但仍可修正隊名。
+- [x] 摘要 / 匯出 CSV / 新比賽改為 3 欄同列。
+- [x] 三個工具使用 inline SVG，不依賴外部資源。
+- [x] 390px 以下按鈕高度維持 48px。
+- [x] v5.107 Header 半寫實球場保留。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：全場左右不再出現大型「修改」按鈕。
+- [ ] 實機：「比分／隊名」可同時修改雙方隊名與比分。
+- [ ] 實機：摘要 / CSV / 新比賽在 390px iPhone 維持一列。
+- [ ] 實機：Safari 工具列展開後仍可完整點擊三顆按鈕。
+
+## v5.107 歷史驗證
+
+- [x] Header DOM 配置維持 v5.106，不更動標題 / 版本 / 說明的位置。
+- [x] 草皮改為 CSS gradient，不需要外部圖片。
+- [x] 左右球門改用內嵌 SVG，包含門柱與低透明球網。
+- [x] 大禁區 / 小禁區 / 禁區弧線均包含在 SVG。
+- [x] 中線 / 中圈仍使用 CSS，保持不同螢幕下的幾何穩定。
+- [x] 左右 goal-safe area 未修改。
+- [x] 中圈足球仍固定 50% / 50%。
+- [x] 不加入持續動畫。
+- [x] 不加入外部網路資源。
+- [x] 比分、事件、計時、摘要、CSV、Match ID 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：左右球門完整且能看出淡球網。
+- [ ] 實機：標題可讀性不應因草皮 / 白線升級而下降。
+- [ ] 實機：中圈足球仍位於中圈正中央。
+- [ ] 實機：390px iPhone Header 不出現文字與球門互相覆蓋。
+
+## v5.106 歷史驗證
 
 - [x] 左側沒有第二顆足球圖示。
 - [x] 中圈只保留一顆 `.headerCenterBall`。

@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.106</title>
+<title>足球場邊記錄器 v5.108</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -16468,6 +16468,395 @@ body.resultMode .titleBlock .headerCenterBall{
 }
 </style>
 
+
+<style id="v5107SemiRealisticPitchHeader">
+/* =========================================================
+   v5.107：半寫實足球場 Header
+   原則：提升草皮 / 球門 / 球場線質感，但仍以工具 UI 可讀性優先。
+   ========================================================= */
+
+.titleBlock{
+  --pitch-white:rgba(238,250,242,.36);
+  --pitch-white-soft:rgba(238,250,242,.22);
+
+  /* 深淺割草條紋 + 細微草皮紋理，不使用外部圖片。 */
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,.050) 0%,
+      rgba(255,255,255,.010) 18%,
+      rgba(0,0,0,.025) 54%,
+      rgba(0,0,0,.13) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(36,111,70,.34) 0 12.5%,
+      rgba(17,73,45,.14) 12.5% 25%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.016) 0 1px,
+      rgba(255,255,255,0) 1px 4px,
+      rgba(0,0,0,.018) 4px 5px,
+      rgba(255,255,255,0) 5px 8px),
+    linear-gradient(180deg,#1b5839 0%,#12472e 43%,#0c3824 75%,#08291b 100%)!important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    inset 0 -1px 0 rgba(0,0,0,.24)!important;
+}
+
+/* 草皮暗角 + 文字區域的低調暗化。
+   不做照片級高光，避免和標題競爭。 */
+.titleBlock::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  background:
+    radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.035) 0%,rgba(255,255,255,0) 30%),
+    linear-gradient(90deg,
+      rgba(0,0,0,.20) 0%,
+      rgba(0,0,0,.05) 14%,
+      rgba(0,0,0,.02) 44%,
+      rgba(0,0,0,.02) 56%,
+      rgba(0,0,0,.05) 86%,
+      rgba(0,0,0,.20) 100%),
+    linear-gradient(180deg,
+      rgba(0,0,0,.03) 0%,
+      rgba(0,0,0,.10) 100%)!important;
+  opacity:1!important;
+}
+
+/* 球場線：
+   1) CSS radial 保持中圈是真圓
+   2) SVG 負責左右禁區與半寫實球門 / 球網 */
+.titleBlock::after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  pointer-events:none!important;
+
+  background-image:
+    radial-gradient(circle at 50% 50%,
+      rgba(246,255,248,.48) 0 2px,
+      transparent 2.5px),
+    radial-gradient(circle at 50% 50%,
+      transparent 0 24px,
+      rgba(239,251,242,.34) 24px 25.6px,
+      rgba(255,255,255,.08) 25.6px 26.3px,
+      transparent 26.5px),
+    linear-gradient(90deg,
+      transparent 0 calc(50% - 1px),
+      rgba(239,251,242,.34) calc(50% - 1px) calc(50% + 1px),
+      transparent calc(50% + 1px) 100%),
+    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAwIDEyMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0ibGluZUdsb3ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2YxZmJmNCIgc3RvcC1vcGFjaXR5PSIuNTgiLz4KICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Q4ZjFkZSIgc3RvcC1vcGFjaXR5PSIuMzQiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cgo8IS0tIOW3puWBtOemgeWNgCAtLT4KPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2xpbmVHbG93KSIgc3Ryb2tlLXdpZHRoPSIyLjIiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSI+CiAgPHBhdGggZD0iTTAgMTcgSDExOCBWMTAzIEgwIiBvcGFjaXR5PSIuNDgiLz4KICA8cGF0aCBkPSJNMCAzNCBINjggVjg2IEgwIiBvcGFjaXR5PSIuNTgiLz4KICA8cGF0aCBkPSJNMTE4IDQ2IEM5MSA0NiA5MSA3NCAxMTggNzQiIG9wYWNpdHk9Ii4yNiIvPgo8L2c+Cgo8IS0tIOWPs+WBtOemgeWNgCAtLT4KPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2xpbmVHbG93KSIgc3Ryb2tlLXdpZHRoPSIyLjIiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSI+CiAgPHBhdGggZD0iTTEwMDAgMTcgSDg4MiBWMTAzIEgxMDAwIiBvcGFjaXR5PSIuNDgiLz4KICA8cGF0aCBkPSJNMTAwMCAzNCBIOTMyIFY4NiBIMTAwMCIgb3BhY2l0eT0iLjU4Ii8+CiAgPHBhdGggZD0iTTg4MiA0NiBDOTA5IDQ2IDkwOSA3NCA4ODIgNzQiIG9wYWNpdHk9Ii4yNiIvPgo8L2c+Cgo8IS0tIOW3pueQg+mWgO+8mumWgOafsSArIOeri+mrlOe2siAtLT4KPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjdmZmY5IiB2ZWN0b3ItZWZmZWN0PSJub24tc2NhbGluZy1zdHJva2UiPgogIDxwYXRoIGQ9Ik0zNSAzOCBWODIgSDggVjM4IFoiIHN0cm9rZS13aWR0aD0iMi45IiBvcGFjaXR5PSIuNzQiLz4KICA8cGF0aCBkPSJNMzUgMzggTDIyIDQ0IFY3NiBMMzUgODIiIHN0cm9rZS13aWR0aD0iMS43IiBvcGFjaXR5PSIuNDYiLz4KICA8cGF0aCBkPSJNOCAzOCBMMjIgNDQgTTggODIgTDIyIDc2IiBzdHJva2Utd2lkdGg9IjEuNCIgb3BhY2l0eT0iLjM0Ii8+CiAgPGcgc3Ryb2tlLXdpZHRoPSIuOSIgb3BhY2l0eT0iLjI1Ij4KICAgIDxwYXRoIGQ9Ik0xMyAzOSBWODEgTTE4IDQxIFY3OSBNMjMgNDMgVjc3IE0yOCA0MSBWNzkgTTMzIDM5IFY4MSIvPgogICAgPHBhdGggZD0iTTkgNDUgSDM0IE05IDUyIEgzNCBNOSA2MCBIMzQgTTkgNjggSDM0IE05IDc1IEgzNCIvPgogIDwvZz4KPC9nPgoKPCEtLSDlj7PnkIPploDvvJrploDmn7EgKyDnq4vpq5TntrIgLS0+CjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y3ZmZmOSIgdmVjdG9yLWVmZmVjdD0ibm9uLXNjYWxpbmctc3Ryb2tlIj4KICA8cGF0aCBkPSJNOTY1IDM4IFY4MiBIOTkyIFYzOCBaIiBzdHJva2Utd2lkdGg9IjIuOSIgb3BhY2l0eT0iLjc0Ii8+CiAgPHBhdGggZD0iTTk2NSAzOCBMOTc4IDQ0IFY3NiBMOTY1IDgyIiBzdHJva2Utd2lkdGg9IjEuNyIgb3BhY2l0eT0iLjQ2Ii8+CiAgPHBhdGggZD0iTTk5MiAzOCBMOTc4IDQ0IE05OTIgODIgTDk3OCA3NiIgc3Ryb2tlLXdpZHRoPSIxLjQiIG9wYWNpdHk9Ii4zNCIvPgogIDxnIHN0cm9rZS13aWR0aD0iLjkiIG9wYWNpdHk9Ii4yNSI+CiAgICA8cGF0aCBkPSJNOTg3IDM5IFY4MSBNOTgyIDQxIFY3OSBNOTc3IDQzIFY3NyBNOTcyIDQxIFY3OSBNOTY3IDM5IFY4MSIvPgogICAgPHBhdGggZD0iTTk2NiA0NSBIOTkxIE05NjYgNTIgSDk5MSBNOTY2IDYwIEg5OTEgTTk2NiA2OCBIOTkxIE05NjYgNzUgSDk5MSIvPgogIDwvZz4KPC9nPgo8L3N2Zz4=")!important;
+
+  background-position:center,center,center,center!important;
+  background-size:100% 100%,100% 100%,100% 100%,100% 100%!important;
+  background-repeat:no-repeat!important;
+  opacity:1!important;
+
+  /* 線條稍柔，不做亮白海報感。 */
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.16))!important;
+}
+
+/* 足球保持 UI / 半寫實中間值，不放大、不加持續動畫。 */
+.titleBlock .headerCenterBall{
+  opacity:.90!important;
+  filter:
+    drop-shadow(0 2px 3px rgba(0,0,0,.58))
+    drop-shadow(0 0 3px rgba(255,255,255,.10))!important;
+}
+
+/* 標題仍是第一閱讀層。 */
+.titleBlock .titleBrand h1{
+  text-shadow:
+    0 2px 6px rgba(0,0,0,.72),
+    0 0 10px rgba(0,0,0,.12)!important;
+}
+
+/* 小螢幕保持同樣球門完整度，只稍縮中圈。 */
+@media(max-width:390px){
+  .titleBlock::after{
+    background-image:
+      radial-gradient(circle at 50% 50%,
+        rgba(246,255,248,.46) 0 1.8px,
+        transparent 2.3px),
+      radial-gradient(circle at 50% 50%,
+        transparent 0 22px,
+        rgba(239,251,242,.32) 22px 23.4px,
+        rgba(255,255,255,.07) 23.4px 24px,
+        transparent 24.2px),
+      linear-gradient(90deg,
+        transparent 0 calc(50% - .9px),
+        rgba(239,251,242,.32) calc(50% - .9px) calc(50% + .9px),
+        transparent calc(50% + .9px) 100%),
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAwIDEyMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0ibGluZUdsb3ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2YxZmJmNCIgc3RvcC1vcGFjaXR5PSIuNTgiLz4KICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Q4ZjFkZSIgc3RvcC1vcGFjaXR5PSIuMzQiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cgo8IS0tIOW3puWBtOemgeWNgCAtLT4KPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2xpbmVHbG93KSIgc3Ryb2tlLXdpZHRoPSIyLjIiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSI+CiAgPHBhdGggZD0iTTAgMTcgSDExOCBWMTAzIEgwIiBvcGFjaXR5PSIuNDgiLz4KICA8cGF0aCBkPSJNMCAzNCBINjggVjg2IEgwIiBvcGFjaXR5PSIuNTgiLz4KICA8cGF0aCBkPSJNMTE4IDQ2IEM5MSA0NiA5MSA3NCAxMTggNzQiIG9wYWNpdHk9Ii4yNiIvPgo8L2c+Cgo8IS0tIOWPs+WBtOemgeWNgCAtLT4KPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2xpbmVHbG93KSIgc3Ryb2tlLXdpZHRoPSIyLjIiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSI+CiAgPHBhdGggZD0iTTEwMDAgMTcgSDg4MiBWMTAzIEgxMDAwIiBvcGFjaXR5PSIuNDgiLz4KICA8cGF0aCBkPSJNMTAwMCAzNCBIOTMyIFY4NiBIMTAwMCIgb3BhY2l0eT0iLjU4Ii8+CiAgPHBhdGggZD0iTTg4MiA0NiBDOTA5IDQ2IDkwOSA3NCA4ODIgNzQiIG9wYWNpdHk9Ii4yNiIvPgo8L2c+Cgo8IS0tIOW3pueQg+mWgO+8mumWgOafsSArIOeri+mrlOe2siAtLT4KPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjdmZmY5IiB2ZWN0b3ItZWZmZWN0PSJub24tc2NhbGluZy1zdHJva2UiPgogIDxwYXRoIGQ9Ik0zNSAzOCBWODIgSDggVjM4IFoiIHN0cm9rZS13aWR0aD0iMi45IiBvcGFjaXR5PSIuNzQiLz4KICA8cGF0aCBkPSJNMzUgMzggTDIyIDQ0IFY3NiBMMzUgODIiIHN0cm9rZS13aWR0aD0iMS43IiBvcGFjaXR5PSIuNDYiLz4KICA8cGF0aCBkPSJNOCAzOCBMMjIgNDQgTTggODIgTDIyIDc2IiBzdHJva2Utd2lkdGg9IjEuNCIgb3BhY2l0eT0iLjM0Ii8+CiAgPGcgc3Ryb2tlLXdpZHRoPSIuOSIgb3BhY2l0eT0iLjI1Ij4KICAgIDxwYXRoIGQ9Ik0xMyAzOSBWODEgTTE4IDQxIFY3OSBNMjMgNDMgVjc3IE0yOCA0MSBWNzkgTTMzIDM5IFY4MSIvPgogICAgPHBhdGggZD0iTTkgNDUgSDM0IE05IDUyIEgzNCBNOSA2MCBIMzQgTTkgNjggSDM0IE05IDc1IEgzNCIvPgogIDwvZz4KPC9nPgoKPCEtLSDlj7PnkIPploDvvJrploDmn7EgKyDnq4vpq5TntrIgLS0+CjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y3ZmZmOSIgdmVjdG9yLWVmZmVjdD0ibm9uLXNjYWxpbmctc3Ryb2tlIj4KICA8cGF0aCBkPSJNOTY1IDM4IFY4MiBIOTkyIFYzOCBaIiBzdHJva2Utd2lkdGg9IjIuOSIgb3BhY2l0eT0iLjc0Ii8+CiAgPHBhdGggZD0iTTk2NSAzOCBMOTc4IDQ0IFY3NiBMOTY1IDgyIiBzdHJva2Utd2lkdGg9IjEuNyIgb3BhY2l0eT0iLjQ2Ii8+CiAgPHBhdGggZD0iTTk5MiAzOCBMOTc4IDQ0IE05OTIgODIgTDk3OCA3NiIgc3Ryb2tlLXdpZHRoPSIxLjQiIG9wYWNpdHk9Ii4zNCIvPgogIDxnIHN0cm9rZS13aWR0aD0iLjkiIG9wYWNpdHk9Ii4yNSI+CiAgICA8cGF0aCBkPSJNOTg3IDM5IFY4MSBNOTgyIDQxIFY3OSBNOTc3IDQzIFY3NyBNOTcyIDQxIFY3OSBNOTY3IDM5IFY4MSIvPgogICAgPHBhdGggZD0iTTk2NiA0NSBIOTkxIE05NjYgNTIgSDk5MSBNOTY2IDYwIEg5OTEgTTk2NiA2OCBIOTkxIE05NjYgNzUgSDk5MSIvPgogIDwvZz4KPC9nPgo8L3N2Zz4=")!important;
+  }
+}
+</style>
+
+
+<style id="v5108FullTimeActionConsolidation">
+/* =========================================================
+   v5.108：全場資訊編輯整合 + 賽後三顆操作同列
+   ========================================================= */
+
+/* 全場只留中央「比分／隊名」單一編輯入口。 */
+body.resultMode .teamNameEditBtn{
+  display:none!important;
+}
+body.resultMode .teamNameBox{
+  flex-direction:row!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:0!important;
+  min-height:54px!important;
+}
+body.resultMode .teamNameDisplay{
+  width:100%!important;
+  max-width:100%!important;
+  padding:0 5px!important;
+  text-align:center!important;
+}
+body.resultMode #scoreEditBtn{
+  min-height:28px!important;
+  margin-top:5px!important;
+  padding:4px 8px!important;
+  border:1px solid rgba(148,163,184,.18)!important;
+  border-radius:8px!important;
+  background:rgba(18,32,49,.55)!important;
+  color:#9fb1c5!important;
+  font-size:10.5px!important;
+  font-weight:850!important;
+  white-space:nowrap!important;
+}
+
+/* 比分 / 隊名整合 Modal。 */
+.scoreEditModal{
+  width:min(430px,100%)!important;
+}
+.scoreEditModal #scoreModalHint{
+  margin-bottom:12px!important;
+}
+.resultScoreTeamFields{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin:0 0 12px;
+}
+.resultScoreTeamFields[hidden]{
+  display:none!important;
+}
+.resultScoreTeamField{
+  min-width:0;
+}
+.resultScoreTeamField label{
+  display:block;
+  margin:0 0 5px;
+  color:#526274;
+  font-size:12px;
+  font-weight:850;
+}
+.resultScoreTeamField input{
+  width:100%;
+  min-height:44px;
+  padding:9px 10px;
+  border:1px solid #c5cfda;
+  border-radius:11px;
+  background:#fff;
+  color:#111827;
+  font:850 15px/1.15 -apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif;
+  outline:none;
+}
+.resultScoreTeamField input:focus{
+  border-color:#38bdf8;
+  box-shadow:0 0 0 3px rgba(56,189,248,.16);
+}
+.scoreLockedNote{
+  margin:10px 0 0;
+  padding:8px 10px;
+  border-radius:9px;
+  background:#fff5df;
+  border:1px solid #f3d49b;
+  color:#7a5218;
+  font-size:11.5px;
+  font-weight:750;
+  line-height:1.45;
+}
+.scoreLockedNote[hidden]{
+  display:none!important;
+}
+.scoreEditModal .scoreBox input:disabled{
+  opacity:.58;
+  background:#eef1f5;
+  color:#6b7280;
+}
+
+/* 摘要 / CSV / 新比賽：同列三顆。 */
+body.resultMode.finalOutputVisible .finalToolsCard{
+  display:block!important;
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  transform:none!important;
+  width:100%!important;
+  margin:8px 0 4px!important;
+  padding:7px!important;
+  border-radius:18px!important;
+  background:linear-gradient(180deg,rgba(13,25,42,.88),rgba(9,19,33,.92))!important;
+  border:1px solid rgba(104,137,177,.34)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 9px 20px rgba(0,0,0,.18)!important;
+}
+body.resultMode.finalOutputVisible .toolGrid.finalTools.finalToolsThree{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:7px!important;
+  margin:0!important;
+  width:100%!important;
+}
+body.resultMode.finalOutputVisible .finalToolBtn{
+  min-width:0!important;
+  width:100%!important;
+  height:52px!important;
+  min-height:52px!important;
+  margin:0!important;
+  padding:6px 5px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  border-radius:13px!important;
+  font-size:13.5px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+  text-shadow:none!important;
+}
+.finalToolIcon{
+  flex:0 0 auto;
+  width:19px;
+  height:19px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.finalToolIcon svg{
+  display:block;
+  width:100%;
+  height:100%;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* 摘要：最高層級藍色。 */
+body.resultMode.finalOutputVisible .finalToolSummary{
+  color:#f7fbff!important;
+  background:linear-gradient(180deg,#2f7cf5 0%,#1e63d4 100%)!important;
+  border:1px solid rgba(113,181,255,.82)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 4px 12px rgba(37,99,235,.18)!important;
+}
+
+/* CSV：中性次要操作。 */
+body.resultMode.finalOutputVisible .finalToolExport{
+  color:#eef4fb!important;
+  background:linear-gradient(180deg,#4d6078 0%,#394b61 100%)!important;
+  border:1px solid rgba(171,193,219,.38)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+
+/* 新比賽：珊瑚紅，和全場語意一致。 */
+body.resultMode.finalOutputVisible .finalToolNew{
+  color:#ff969c!important;
+  background:linear-gradient(180deg,rgba(86,34,43,.56),rgba(50,28,37,.66))!important;
+  border:1px solid rgba(255,102,113,.72)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 4px 12px rgba(105,24,35,.12)!important;
+}
+body.resultMode.finalOutputVisible .finalToolNew .finalToolIcon{
+  width:21px;
+  height:21px;
+}
+body.resultMode.finalOutputVisible .finalToolBtn:active{
+  transform:scale(.975)!important;
+  filter:brightness(1.07)!important;
+}
+
+/* 一列後同步縮短舊版兩列工具所需的底部安全高度。 */
+body.resultMode.finalOutputVisible .wrap{
+  padding-bottom:calc(88px + env(safe-area-inset-bottom))!important;
+  scroll-padding-bottom:calc(96px + env(safe-area-inset-bottom))!important;
+}
+body.resultMode.finalOutputVisible{
+  --result-bottom-safe-tail:max(112px,calc(var(--browser-bottom-gap,0px) + 62px))!important;
+}
+body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+  height:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+  min-height:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom))!important;
+}
+body.resultMode.finalOutputVisible .resultNewMatchBtn{
+  order:initial!important;
+}
+
+@media(max-width:390px){
+  body.resultMode.finalOutputVisible .finalToolsCard{
+    padding:6px!important;
+    margin-top:7px!important;
+  }
+  body.resultMode.finalOutputVisible .toolGrid.finalTools.finalToolsThree{
+    gap:5px!important;
+  }
+  body.resultMode.finalOutputVisible .finalToolBtn{
+    height:48px!important;
+    min-height:48px!important;
+    padding:5px 3px!important;
+    gap:4px!important;
+    border-radius:12px!important;
+    font-size:12px!important;
+  }
+  .finalToolIcon{
+    width:17px;
+    height:17px;
+  }
+  body.resultMode.finalOutputVisible .finalToolNew .finalToolIcon{
+    width:19px;
+    height:19px;
+  }
+  body.resultMode.finalOutputVisible .wrap{
+    padding-bottom:calc(84px + env(safe-area-inset-bottom))!important;
+    scroll-padding-bottom:calc(92px + env(safe-area-inset-bottom))!important;
+  }
+  body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:max(104px,calc(var(--browser-bottom-gap,0px) + 58px))!important;
+  }
+  .resultScoreTeamFields{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+}
+
+@media(max-width:350px){
+  body.resultMode.finalOutputVisible .finalToolBtn{
+    font-size:11px!important;
+    gap:3px!important;
+  }
+  .finalToolIcon{
+    width:16px;
+    height:16px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -16482,7 +16871,7 @@ body.resultMode .titleBlock .headerCenterBall{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.106</span>
+      <span class="headerVersion">v5.108</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -16747,12 +17136,28 @@ body.resultMode .titleBlock .headerCenterBall{
   </div>
 
 <div class="card finalToolsCard">
-    <div class="toolGrid finalTools">
-      <button id="reportBtn" class="reportBtn" onclick="openReport()" aria-label="查看比賽摘要">📋 摘要</button>
-      <button id="shareCsvBtn" class="share" onclick="shareCSV()" aria-label="匯出 CSV 檔案">📄 匯出 CSV</button>
+    <div class="toolGrid finalTools finalToolsThree">
+      <button id="reportBtn" class="reportBtn finalToolBtn finalToolSummary" onclick="openReport()" aria-label="查看比賽摘要">
+        <span class="finalToolIcon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false"><path d="M7 3.75h7l3 3V20.25H7z"/><path d="M14 3.75v3h3"/><path d="M9.5 11h5M9.5 14h5M9.5 17h3.5"/></svg>
+        </span>
+        <span class="finalToolLabel">摘要</span>
+      </button>
+
+      <button id="shareCsvBtn" class="share finalToolBtn finalToolExport" onclick="shareCSV()" aria-label="匯出 CSV 檔案">
+        <span class="finalToolIcon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false"><path d="M12 3.5v10"/><path d="m8.5 10.5 3.5 3.5 3.5-3.5"/><path d="M5 15.5v4h14v-4"/></svg>
+        </span>
+        <span class="finalToolLabel">匯出 CSV</span>
+      </button>
+
+      <button id="resultNewMatchBtn" class="resultNewMatchBtn finalToolBtn finalToolNew" type="button" onclick="newMatch()" aria-label="建立新比賽">
+        <span class="finalToolIcon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
+        </span>
+        <span class="finalToolLabel">新比賽</span>
+      </button>
     </div>
-    <button id="resultNewMatchBtn" class="resultNewMatchBtn" type="button" onclick="newMatch()" aria-label="建立新比賽">＋ 新比賽</button>
-    
   </div>
 
   <div class="fullTimeBottomSpacer" id="fullTimeBottomSpacer" aria-hidden="true"></div>
@@ -17245,11 +17650,27 @@ body.resultMode .titleBlock .headerCenterBall{
   </div>
 </div>
 
-<!-- Score modal -->
+<!-- Score / team metadata modal -->
 <div class="modalBack" id="scoreModal">
-  <div class="modal">
-    <h2>修正比分</h2>
-    <p>只調整目前比分，不會刪除既有事件。</p>
+  <div class="modal scoreEditModal">
+    <h2 id="scoreModalTitle">修正比分</h2>
+    <p id="scoreModalHint">只調整目前比分，不會刪除既有事件。</p>
+
+    <div class="resultScoreTeamFields" id="resultScoreTeamFields" hidden>
+      <div class="resultScoreTeamField">
+        <label for="editOurTeamName">本隊名稱</label>
+        <input id="editOurTeamName" type="text" inputmode="text" lang="zh-Hant"
+          maxlength="15" autocomplete="off" autocapitalize="off" autocorrect="off"
+          spellcheck="false" placeholder="我方">
+      </div>
+      <div class="resultScoreTeamField">
+        <label for="editOppTeamName">對手名稱</label>
+        <input id="editOppTeamName" type="text" inputmode="text" lang="zh-Hant"
+          maxlength="15" autocomplete="off" autocapitalize="off" autocorrect="off"
+          spellcheck="false" placeholder="對手">
+      </div>
+    </div>
+
     <div class="scoreForm">
       <div class="scoreBox">
         <label id="scoreOurName">我方</label>
@@ -17260,9 +17681,12 @@ body.resultMode .titleBlock .headerCenterBall{
         <input id="editOpp" type="number" min="0" max="99" step="1" inputmode="numeric">
       </div>
     </div>
+
+    <div class="scoreLockedNote" id="scoreLockedNote" hidden>PK 完成後正規賽比分已鎖定；仍可修正隊伍名稱。</div>
+
     <div class="scoreBtns">
       <button class="cancelScore" onclick="closeScoreModal()">取消</button>
-      <button class="saveScore" onclick="saveScoreModal()">確定</button>
+      <button class="saveScore" onclick="saveScoreModal()">儲存</button>
     </div>
   </div>
 </div>
@@ -21090,36 +21514,87 @@ function openScoreModal(){
     (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME') &&
     !state.penalty?.active;
 
-  // PK 開始後即鎖定正規賽比分；PK 完成後也不可再人工改比分，避免正規賽比分與 PK 結果矛盾。
-  if(state.penalty?.active || state.penalty?.completed){
+  const isFullTime=!!state.finished;
+  const pkScoreLocked=!!(state.penalty?.active || state.penalty?.completed);
+
+  // PK 進行中不開放；PK 已完成的全場仍可修改隊名，但比分維持鎖定。
+  if(state.penalty?.active && !isFullTime){
     return;
   }
 
-  // 只允許中場、等待延長賽、未進入 PK 的全場結果進入人工比分修正。
-  if(!state.finished && !isScoreReviewBreak){
+  if(!isFullTime && !isScoreReviewBreak){
     return;
   }
 
-  byId('editOur').value=state.ourScore;
-  byId('editOpp').value=state.oppScore;
+  const teamFields=byId('resultScoreTeamFields');
+  const title=byId('scoreModalTitle');
+  const hint=byId('scoreModalHint');
+  const lockNote=byId('scoreLockedNote');
+  const editOur=byId('editOur');
+  const editOpp=byId('editOpp');
+
+  if(teamFields) teamFields.hidden=!isFullTime;
+
+  if(isFullTime){
+    if(title) title.textContent='編輯比分／隊名';
+    if(hint) hint.textContent='集中修正全場比分與雙方隊名；既有事件紀錄與事件時間不會被刪除。';
+    byId('editOurTeamName').value=state.ourTeam||'';
+    byId('editOppTeamName').value=state.oppTeam||'';
+  }else{
+    if(title) title.textContent='修正比分';
+    if(hint) hint.textContent='只調整目前比分，不會刪除既有事件。';
+  }
+
+  editOur.value=state.ourScore;
+  editOpp.value=state.oppScore;
   byId('scoreOurName').textContent=state.ourTeam||'我方';
   byId('scoreOppName').textContent=state.oppTeam||'對手';
+
+  const lockScore=isFullTime && pkScoreLocked;
+  editOur.disabled=lockScore;
+  editOpp.disabled=lockScore;
+  if(lockNote) lockNote.hidden=!lockScore;
+
   byId('scoreModal').classList.add('open');
 }
-function closeScoreModal(){ byId('scoreModal').classList.remove('open'); }
+function closeScoreModal(){
+  byId('scoreModal').classList.remove('open');
+  byId('editOur').disabled=false;
+  byId('editOpp').disabled=false;
+}
 function saveScoreModal(){
-  if(state.penalty?.active || state.penalty?.completed){
+  const isFullTime=!!state.finished;
+  const pkScoreLocked=!!(state.penalty?.active || state.penalty?.completed);
+
+  if(state.penalty?.active && !isFullTime){
     closeScoreModal();
-    alert('已進入 PK 點球大戰，正規賽比分已鎖定，不能再修改。');
     return;
   }
-  const our=validateIntegerField('editOur','我方比分',0,99,false);
-  if(our===undefined) return;
-  const opp=validateIntegerField('editOpp','對手比分',0,99,false);
-  if(opp===undefined) return;
 
-  state.ourScore=our;
-  state.oppScore=opp;
+  if(isFullTime){
+    const ourName=String(byId('editOurTeamName').value||'').trim();
+    const oppName=String(byId('editOppTeamName').value||'').trim();
+
+    if(!validateTeamNameValue(ourName,'我方隊伍名稱',false)) return;
+    if(!validateTeamNameValue(oppName,'對手隊伍名稱',false)) return;
+
+    // saveState() 會從主畫面 input 讀值，因此先同步兩個來源。
+    byId('ourTeam').value=ourName;
+    byId('oppTeam').value=oppName;
+    state.ourTeam=ourName;
+    state.oppTeam=oppName;
+  }
+
+  if(!pkScoreLocked){
+    const our=validateIntegerField('editOur','我方比分',0,99,false);
+    if(our===undefined) return;
+    const opp=validateIntegerField('editOpp','對手比分',0,99,false);
+    if(opp===undefined) return;
+
+    state.ourScore=our;
+    state.oppScore=opp;
+  }
+
   closeScoreModal();
   saveState();
   render();
@@ -22114,12 +22589,17 @@ function render(){
       !state.penalty?.active;
 
     const pkLocksScore=!!(state.penalty?.active || state.penalty?.completed);
-    const canEditScore=!pkLocksScore && (!!state.finished || isScoreReviewBreak);
 
-    scoreEditBtn.hidden=!canEditScore;
-    scoreEditBtn.disabled=!canEditScore;
-    scoreEditBtn.setAttribute('aria-hidden', String(!canEditScore));
-    scoreEditBtn.setAttribute('aria-disabled', String(!canEditScore));
+    // 全場時這顆按鈕同時是「比分 / 隊名」唯一入口。
+    // PK 已完成時比分鎖定，但仍保留入口供修正隊名。
+    const canOpenResultEdit=!!state.finished || (!pkLocksScore && isScoreReviewBreak);
+
+    scoreEditBtn.hidden=!canOpenResultEdit;
+    scoreEditBtn.disabled=!canOpenResultEdit;
+    scoreEditBtn.textContent=state.finished ? '✎ 比分／隊名' : '✎ 修正比分';
+    scoreEditBtn.setAttribute('aria-label', state.finished ? '修改比分與隊伍名稱' : '修正比分');
+    scoreEditBtn.setAttribute('aria-hidden', String(!canOpenResultEdit));
+    scoreEditBtn.setAttribute('aria-disabled', String(!canOpenResultEdit));
   }
 
   const stage=byId('broadcastStage');
