@@ -1,8 +1,30 @@
 # SECURITY_CHECKLIST.md
-# v5.113 驗證範圍：賽前重設按鈕辨識度與狀態感知。
+# v5.114 驗證範圍：Header FIFA／IFAB 場地比例精修。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
-## v5.113 本次驗證
+## v5.114 本次驗證
+
+- [x] 大禁區深度依 16.5m / 105m 比例換算。
+- [x] 小禁區深度依 5.5m / 105m 比例換算。
+- [x] 大小禁區深度維持 1:3。
+- [x] 大禁區寬度依球門 7.32m + 兩側各 16.5m 換算。
+- [x] 小禁區寬度依球門 7.32m + 兩側各 5.5m 換算。
+- [x] 左右十二碼點依 11m 換算並淡化加入。
+- [x] 禁區弧改用 9.15m 半徑的 SVG elliptical arc。
+- [x] 左右禁區弧均位於大禁區外側。
+- [x] 中圈刻意保留接近正圓，不做超寬 Header 的橢圓投影。
+- [x] 一般版中圈約 38px 直徑。
+- [x] 390px 以下中圈約 36px 直徑。
+- [x] 球門縮小但保留 UI 可辨識度。
+- [x] v5.113 賽前重設邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari：確認小禁區相較大禁區明顯縮小。
+- [ ] iPhone Safari：確認大禁區向中場延伸後不干擾標題可讀性。
+- [ ] iPhone Safari：確認左右禁區弧方向與實際足球場一致。
+- [ ] iPhone Safari：確認縮小後中圈與中央足球仍有足夠留白。
+
+## v5.113 歷史驗證
 
 - [x] 賽前重設仍位於狀態列右側。
 - [x] 重設按鈕只在 `hasMeaningfulPreMatchSetup()` 為 true 時顯示。
