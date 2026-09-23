@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.116</title>
+<title>足球場邊記錄器 v5.117</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -17448,6 +17448,35 @@ body.matchStatePre .broadcastStage.pre .preResetBtn.show:focus-visible{
 }
 </style>
 
+
+<style id="v5117AboutButtonPolish">
+.titleBlock .aboutInfoBtn{
+  position:relative!important;
+  top:-3px!important;
+  min-width:58px!important;
+  padding-left:8px!important;
+  padding-right:8px!important;
+  border-color:rgba(96,165,250,.22)!important;
+  background:linear-gradient(180deg,rgba(49,71,97,.90) 0%,rgba(34,50,71,.90) 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 1.5px 4px rgba(0,0,0,.11)!important;
+}
+@media(max-width:390px){
+  .titleBlock .aboutInfoBtn{
+    top:-3px!important;
+    min-width:58px!important;
+    padding-left:7px!important;
+    padding-right:7px!important;
+  }
+}
+@media(max-width:350px){
+  .titleBlock .aboutInfoBtn{
+    min-width:55px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -17462,7 +17491,7 @@ body.matchStatePre .broadcastStage.pre .preResetBtn.show:focus-visible{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.116</span>
+      <span class="headerVersion">v5.117</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
