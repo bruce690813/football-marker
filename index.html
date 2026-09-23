@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.118</title>
+<title>足球場邊記錄器 v5.119</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -17593,7 +17593,7 @@ body.matchStatePre .broadcastStage.pre .preResetBtn.show:focus-visible{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.118</span>
+      <span class="headerVersion">v5.119</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -23364,7 +23364,7 @@ function render(){
         stageClass='live';
       }
     }else if(state.finished){
-      stageText=state.penalty?.completed ? `全場・PK ${penaltyGoals('our')}:${penaltyGoals('opp')}` : '全場';
+      stageText='全場';
       stageClass='full';
     }
     stageLabel.textContent=stageText;
