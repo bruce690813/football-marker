@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.119</title>
+<title>足球場邊記錄器 v5.120</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -17593,7 +17593,7 @@ body.matchStatePre .broadcastStage.pre .preResetBtn.show:focus-visible{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.119</span>
+      <span class="headerVersion">v5.120</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -19085,6 +19085,78 @@ let state={
 
 function byId(id){ return document.getElementById(id); }
 
+// v5.120：使用者可見的比賽時間統一採「整秒」基準。
+// Epoch 仍維持毫秒格式，讓既有 new Date(epoch) / 時區 / 跨日邏輯完全相容；
+// 只是把毫秒尾數固定為 000。系統用途的 Match ID、_savedAt、registry updatedAt
+// 仍繼續使用 Date.now() 的毫秒精度，不受此函式影響。
+function nowWholeMs(){
+  return Math.floor(Date.now()/1000)*1000;
+}
+function toWholeSecondEpoch(value){
+  const n=Number(value);
+  if(!Number.isFinite(n) || n<=0) return null;
+  return Math.floor(n/1000)*1000;
+}
+function wholeSecondDuration(startEpoch,endEpoch,fallback=0){
+  const start=toWholeSecondEpoch(startEpoch);
+  const end=toWholeSecondEpoch(endEpoch);
+  if(start && end) return Math.max(0,(end-start)/1000);
+  return Math.max(0,Math.floor(Number(fallback)||0));
+}
+
+// 若使用者正好從 v5.119 升級，而且該場尚未完成，
+// 把「進行中的」時間欄位一次對齊整秒，避免舊毫秒起點與新整秒終點混算。
+// 已完成的歷史比賽不改寫，避免發版後回頭改變舊報表。
+function normalizeUnfinishedTimingToWholeSeconds(){
+  if(state.finished) return false;
+  let changed=false;
+
+  const normalizeField=(obj,key)=>{
+    if(!obj || !(key in obj) || obj[key]==null) return;
+    const old=Number(obj[key]);
+    const next=toWholeSecondEpoch(old);
+    if(next!==null && next!==old){ obj[key]=next; changed=true; }
+  };
+
+  normalizeField(state,'startEpoch');
+  normalizeField(state,'endEpoch');
+  normalizeField(state,'halftimeStartEpoch');
+  normalizeField(state,'halftimeEndEpoch');
+  normalizeField(state,'longDurationAckStartEpoch');
+
+  if(Array.isArray(state.periods)){
+    state.periods.forEach(p=>{
+      if(!p || typeof p!=='object') return;
+      normalizeField(p,'startEpoch');
+      normalizeField(p,'endEpoch');
+      const nextDuration=wholeSecondDuration(p.startEpoch,p.endEpoch,p.duration);
+      if(Number(p.duration)!==nextDuration){ p.duration=nextDuration; changed=true; }
+    });
+  }
+
+  if(state.halftimeStartEpoch){
+    const nextHalf=state.halftimeEndEpoch
+      ? wholeSecondDuration(state.halftimeStartEpoch,state.halftimeEndEpoch,state.halftimeDuration)
+      : Math.max(0,Math.floor(Number(state.halftimeDuration)||0));
+    if(Number(state.halftimeDuration)!==nextHalf){
+      state.halftimeDuration=nextHalf;
+      changed=true;
+    }
+  }
+
+  if(state.penalty && typeof state.penalty==='object'){
+    normalizeField(state.penalty,'startEpoch');
+    normalizeField(state.penalty,'endEpoch');
+  }
+
+  if(!Number.isInteger(Number(state.finalElapsed))){
+    state.finalElapsed=Math.max(0,Math.floor(Number(state.finalElapsed)||0));
+    changed=true;
+  }
+
+  return changed;
+}
+
 function containsBopomofo(value){
   // 注音符號、聲調符號與注音擴充區：ㄅ～ㄩ、ˊˇˋ˙、ㆠ～ㆺ。
   return /[\u02C7\u02CA-\u02CB\u02D9\u3105-\u312F\u31A0-\u31BF]/u.test(String(value||''));
@@ -19504,6 +19576,13 @@ function loadState(){
     if(!Array.isArray(state.penalty.our)) state.penalty.our=[];
     if(!Array.isArray(state.penalty.opp)) state.penalty.opp=[];
   }
+
+  // v5.120：只遷移尚未完成的舊比賽時間；不改 _savedAt / registry updatedAt。
+  const timingNormalized=normalizeUnfinishedTimingToWholeSeconds();
+  if(timingNormalized){
+    try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){}
+  }
+
   const rememberedOurTeam=localStorage.getItem(LAST_OUR_TEAM_KEY)||'';
   const rememberedVenue=localStorage.getItem(LAST_VENUE_KEY)||'';
 
@@ -19528,9 +19607,9 @@ function loadState(){
 
 function elapsed(){
   if(state.started && !state.finished && state.startEpoch){
-    return (Date.now()-state.startEpoch)/1000;
+    return Math.max(0,(nowWholeMs()-state.startEpoch)/1000);
   }
-  return state.finalElapsed || 0;
+  return Math.max(0,Math.floor(Number(state.finalElapsed)||0));
 }
 function fmtMMSS(sec){
   sec=Math.max(0, Math.floor(Number(sec)||0));
@@ -19740,7 +19819,7 @@ function totalMatchElapsed(){
 }
 function halftimeElapsed(){
   if(!state.halftimeStartEpoch) return Number(state.halftimeDuration)||0;
-  const end=state.halftimeEndEpoch || Date.now();
+  const end=state.halftimeEndEpoch || nowWholeMs();
   return Math.max(0,(end-state.halftimeStartEpoch)/1000);
 }
 
@@ -20837,10 +20916,14 @@ function startMatch(){
     rememberRecentVenue(state.venue);
   }
 
+  // 同一次「開始」操作共用同一個整秒時間，避免剛好跨秒時
+  // 出現中場結束與下半場開始相差 1 秒的假空檔。
+  const actionEpoch=nowWholeMs();
+
   if(state.awaitingNextPeriod){
     if(state.nextPeriodType==='SECOND_HALF' && state.halftimeStartEpoch){
-      state.halftimeEndEpoch=Date.now();
-      state.halftimeDuration=Math.max(0,(state.halftimeEndEpoch-state.halftimeStartEpoch)/1000);
+      state.halftimeEndEpoch=actionEpoch;
+      state.halftimeDuration=wholeSecondDuration(state.halftimeStartEpoch,state.halftimeEndEpoch);
     }
     state.currentPeriod=state.nextPeriodType==='EXTRA_TIME' ? 3 : 2;
     state.awaitingNextPeriod=false;
@@ -20850,7 +20933,7 @@ function startMatch(){
   }
 
   state.started=true;
-  state.startEpoch=Date.now();
+  state.startEpoch=actionEpoch;
   state.endEpoch=null;
   state.finalElapsed=0;
   state.periodStartOurScore=state.ourScore;
@@ -20930,8 +21013,8 @@ function finishMatch(){
   }
   if(state.finished) return;
 
-  pendingFinishEnd=Date.now();
-  pendingFinishElapsed=elapsed();
+  pendingFinishEnd=nowWholeMs();
+  pendingFinishElapsed=wholeSecondDuration(state.startEpoch,pendingFinishEnd,elapsed());
 
   const tied=state.ourScore===state.oppScore;
   const title=state.currentPeriod===1 ? '本段比賽已結束' : state.currentPeriod===2 ? '下半場已結束' : '延長賽已結束';
@@ -20983,7 +21066,7 @@ function confirmFinishHalf(){
   state.finished=false;
   state.awaitingNextPeriod=true;
   state.nextPeriodType='SECOND_HALF';
-  state.halftimeStartEpoch=pendingFinishEnd || Date.now();
+  state.halftimeStartEpoch=pendingFinishEnd || nowWholeMs();
   state.halftimeEndEpoch=null;
   state.halftimeDuration=0;
   pendingFinishEnd=null;
@@ -21117,7 +21200,7 @@ function clearPenaltyRosterNumber(){
 
 function emptyPenaltyKick(){ return {number:'',result:null}; }
 function ensurePenaltyState(){
-  if(!state.penalty) state.penalty={active:true,completed:false,startEpoch:Date.now(),endEpoch:null,our:[],opp:[],baseOurScore:state.ourScore,baseOppScore:state.oppScore};
+  if(!state.penalty) state.penalty={active:true,completed:false,startEpoch:nowWholeMs(),endEpoch:null,our:[],opp:[],baseOurScore:state.ourScore,baseOppScore:state.oppScore};
   if(!Number.isFinite(Number(state.penalty.baseOurScore))) state.penalty.baseOurScore=state.ourScore;
   if(!Number.isFinite(Number(state.penalty.baseOppScore))) state.penalty.baseOppScore=state.oppScore;
   while(state.penalty.our.length<5) state.penalty.our.push(emptyPenaltyKick());
@@ -21139,7 +21222,7 @@ function beginPenaltyShootout(){
   state.finished=false;
   state.awaitingNextPeriod=false;
   state.nextPeriodType=null;
-  state.penalty={active:true,completed:false,startEpoch:Date.now(),endEpoch:null,our:[],opp:[],baseOurScore:state.ourScore,baseOppScore:state.oppScore};
+  state.penalty={active:true,completed:false,startEpoch:nowWholeMs(),endEpoch:null,our:[],opp:[],baseOurScore:state.ourScore,baseOppScore:state.oppScore};
   ensurePenaltyState();
   pendingFinishEnd=null;
   pendingFinishElapsed=null;
@@ -21276,7 +21359,7 @@ function finishPenaltyShootout(){
   state.oppScore=Number(state.penalty.baseOppScore);
   state.penalty.active=false;
   state.penalty.completed=true;
-  state.penalty.endEpoch=Date.now();
+  state.penalty.endEpoch=nowWholeMs();
   state.finished=true;
   state.started=false;
   timeExpanded=false;

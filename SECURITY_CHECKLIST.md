@@ -1,7 +1,28 @@
 # SECURITY_CHECKLIST.md
-# v5.117 驗證範圍：Header「說明」按鈕位置與視覺重量微調。
+# v5.120 驗證範圍：比賽時間整秒制與系統毫秒 timestamp 分離。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
+
+
+## v5.120 本次驗證
+
+- [x] 新增 `nowWholeMs()`，比賽時間 epoch 毫秒尾數固定為 `000`。
+- [x] 主比賽開始 / 結束改為整秒。
+- [x] 中場開始 / 結束與中場休息秒數改為整秒。
+- [x] 下半場開始與中場結束共用同一個 action epoch，避免跨秒假空檔。
+- [x] 延長賽沿用各階段整秒計時。
+- [x] PK 開始 / 結束改為整秒。
+- [x] 結束某段時，duration 直接由該段 start/end 的同一組整秒邊界計算。
+- [x] `elapsed()` 仍以系統時間差計算，不使用 interval 累加。
+- [x] Match ID 備援值仍保留 `Date.now()` 毫秒精度。
+- [x] `_savedAt` 仍保留 `Date.now()` 毫秒精度。
+- [x] Registry `updatedAt` 仍保留 `Date.now()` 毫秒精度。
+- [x] 已完成歷史比賽不做時間遷移。
+- [x] 尚未完成的 v5.119 比賽會在載入時對齊整秒。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：開始 6 秒後結束，確認開始 / 結束人工相減與該段時間一致。
+- [ ] iPhone Safari：中場 5 秒後開始下半場，確認中場結束與下半場開始同秒。
+- [ ] iPhone Safari：鎖螢幕 / 背景後恢復，確認計時不因 timer throttling 變慢。
 
 ## v5.119 本次驗證
 
