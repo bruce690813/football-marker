@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.123</title>
+<title>足球場邊記錄器 v5.125</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -17710,6 +17710,117 @@ body.resultMode.finalOutputVisible .quickResultTitle{
 }
 </style>
 
+
+<style id="v5124UnifiedLineIcons">
+/* =========================================================
+   v5.124：系統操作圖示統一
+   足球內容仍保留彩色具象圖示；編輯 / 紀錄 / 匯出等系統操作
+   統一使用 24×24、無填色、圓角端點的線性 SVG。
+   ========================================================= */
+.uiLineIcon{
+  width:18px;
+  height:18px;
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:currentColor;
+  line-height:0;
+}
+.uiLineIcon svg{
+  width:100%;
+  height:100%;
+  display:block;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* 編輯入口：與底部工具列同一套線性語言，不再使用文字鉛筆符號。 */
+.teamNameEditBtn,
+.scoreEdit,
+.resultMetaEditBtn,
+.venueMenuManual,
+.markerManageEdit{
+  gap:6px;
+}
+.teamNameEditBtn .uiEditIcon,
+.scoreEdit .uiEditIcon{
+  width:15px;
+  height:15px;
+}
+.resultMetaEditBtn .uiEditIcon{
+  width:18px;
+  height:18px;
+}
+.venueMenuManual .uiEditIcon,
+.markerManageEdit .uiEditIcon{
+  width:17px;
+  height:17px;
+}
+
+/* 事件紀錄：使用「文件清單」而不是三橫線，辨識為資料紀錄而非選單。 */
+.recordIconWrap{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.recordIcon{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:0!important;
+}
+.recordIcon .uiRecordIcon{
+  width:19px;
+  height:19px;
+}
+.recordIcon .uiRecordIcon svg{
+  stroke-width:1.9;
+}
+
+/* Modal 標題同步統一。 */
+.logModalTitle,
+.uiIconHeading{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+}
+.logModalTitle > .uiRecordIcon{
+  width:20px;
+  height:20px;
+  color:#8fd6ff;
+}
+.logModalFilterEmoji{
+  display:inline-flex;
+  align-items:center;
+  line-height:1;
+}
+.uiIconHeading .uiEditIcon{
+  width:19px;
+  height:19px;
+  color:currentColor;
+}
+.quickResultEmptyIcon .uiRecordIcon{
+  width:22px;
+  height:22px;
+  color:#7f96ad;
+}
+
+/* v5.124 不改變摘要 / CSV / 新比賽；它們已經是同一套 SVG family。 */
+.finalToolIcon svg,
+.uiLineIcon svg{
+  vector-effect:non-scaling-stroke;
+}
+
+@media(max-width:390px){
+  .uiLineIcon{width:17px;height:17px}
+  .recordIcon .uiRecordIcon{width:18px;height:18px}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -17724,7 +17835,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.123</span>
+      <span class="headerVersion">v5.125</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -17836,7 +17947,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
         <div class="teamNameBox" id="ourTeamBox" onclick="editTeamName('ourTeam')">
           <div class="teamNameDisplay" id="ourTeamDisplay">忠義國小</div>
           <input id="ourTeam" class="teamNameEditor" type="text" inputmode="text" lang="zh-Hant" placeholder="我方" maxlength="15" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="我方隊伍名稱，可稍後補充">
-          <button class="teamNameEditBtn" type="button" onclick="event.stopPropagation();editTeamName('ourTeam',true)" aria-label="修正我方隊伍名稱">✎ 修改</button>
+          <button class="teamNameEditBtn" type="button" onclick="event.stopPropagation();editTeamName('ourTeam',true)" aria-label="修正我方隊伍名稱"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span><span class="uiEditLabel">修改</span></button>
         </div>
         <div class="scoreMid">
           <div class="scoreText" aria-label="目前比分">
@@ -17845,12 +17956,12 @@ body.resultMode.finalOutputVisible .quickResultTitle{
             <span class="scoreTile"><span id="oppScore">0</span><span class="winnerBadge scoreWinnerBadge" id="oppWinnerBadge" aria-label="勝方" title="勝方">勝</span></span>
           </div>
           <div class="pkMainScore" id="pkMainScore" aria-live="polite"></div>
-          <button class="scoreEdit" id="scoreEditBtn" onclick="openScoreModal()" aria-label="修正比分">✎ 修正比分</button>
+          <button class="scoreEdit" id="scoreEditBtn" onclick="openScoreModal()" aria-label="修正比分"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span><span class="uiEditLabel">修正比分</span></button>
         </div>
         <div class="teamNameBox" id="oppTeamBox" onclick="editTeamName('oppTeam')">
           <div class="teamNameDisplay empty" id="oppTeamDisplay">對手</div>
           <input id="oppTeam" class="teamNameEditor" type="text" inputmode="text" lang="zh-Hant" placeholder="對手" maxlength="15" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="對手隊伍名稱">
-          <button class="teamNameEditBtn" type="button" onclick="event.stopPropagation();editTeamName('oppTeam',true)" aria-label="修正對手隊伍名稱">✎ 修改</button>
+          <button class="teamNameEditBtn" type="button" onclick="event.stopPropagation();editTeamName('oppTeam',true)" aria-label="修正對手隊伍名稱"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span><span class="uiEditLabel">修改</span></button>
         </div>
       </div>
     </div>
@@ -17983,7 +18094,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
     </div>
 
     <div class="eventSubsection stateManaged eventMinorSection" id="recordSection">
-      <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon">☰</span></span><span class="recordLabel">事件紀錄</span></span><span class="recordMeta"><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
+      <button id="recordBtn" class="secondary event recordFullBtn" onclick="openLogModal()"><span class="recordCardMain"><span class="recordIconWrap"><span class="recordIcon"><span class="uiLineIcon uiRecordIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.5 3.75h8l3 3v13.5h-11z"/><path d="M14.5 3.75v3h3"/><path d="M9 10.25h6M9 13.5h6M9 16.75h4.5"/></svg></span></span></span><span class="recordLabel">事件紀錄</span></span><span class="recordMeta"><span id="count" class="recordCount">0</span><span class="recordMetaSuffix">筆</span></span></button>
     </div>
   </div>
   </div>
@@ -18058,7 +18169,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
 <!-- Result metadata edit modal -->
 <div class="modalBack" id="resultMetaEditModal">
   <div class="modal resultMetaEditCard">
-    <h2>✎ 編輯賽事資料</h2>
+    <h2 class="uiIconHeading"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span><span>編輯賽事資料</span></h2>
     <div class="resultMetaEditHint">全場後可補充或修正賽事名稱與場地；不影響比分、事件時間、守門員或本場球員名單。</div>
     <div class="resultMetaField">
       <label for="resultCompetitionInput">🏆 賽事名稱</label>
@@ -18549,7 +18660,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
 <div class="modalBack" id="logModal">
   <div class="modal logModal">
     <div class="logModalTop">
-      <div class="logModalTitle" id="logModalTitle">☰ 事件紀錄</div>
+      <div class="logModalTitle" id="logModalTitle"><span class="uiLineIcon uiRecordIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.5 3.75h8l3 3v13.5h-11z"/><path d="M14.5 3.75v3h3"/><path d="M9 10.25h6M9 13.5h6M9 16.75h4.5"/></svg></span><span class="logModalTitleText">事件紀錄</span></div>
       <div class="logModalCount">共 <span id="logModalCount">0</span> 筆</div>
     </div>
     <div class="logModalBody">
@@ -18573,7 +18684,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
 
     <div class="markerManageActions">
       <button type="button" class="markerManageEdit" onclick="editManagedMarker()">
-        <span class="markerManageActionIcon" aria-hidden="true">✎</span>
+        <span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span>
         <span>
           <b>編輯事件</b>
           <small>修改事件類型、球隊或球員背號</small>
@@ -18597,7 +18708,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
 <div class="modalBack" id="editMarkerModal">
   <div class="modal editMarkerModal" role="dialog" aria-modal="true" aria-labelledby="editMarkerTitle">
     <div class="editMarkerHead">
-      <h2 id="editMarkerTitle">✎ 編輯事件紀錄</h2>
+      <h2 id="editMarkerTitle" class="uiIconHeading"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span><span>編輯事件紀錄</span></h2>
       <div class="editMarkerHint">只修改事件內容，原本標記時間會保留不變。</div>
     </div>
     <div class="editMarkerBody">
@@ -19526,7 +19637,7 @@ function renderVenueMenu(){
     html+='<div class="venueMenuEmpty">尚無最近使用場地<br><span>開始比賽後會自動加入</span></div>';
   }
 
-  html+='<button class="venueMenuItem venueMenuManual" type="button" data-manual="1">✎ 手動輸入其他場地</button>';
+  html+='<button class="venueMenuItem venueMenuManual" type="button" data-manual="1"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span><span>手動輸入其他場地</span></button>';
   menu.innerHTML=html;
 
   menu.querySelectorAll('[data-venue-index]').forEach(btn=>{
@@ -19717,11 +19828,15 @@ function saveState(){
 function loadState(){
   // 還原失敗交由啟動保護顯示錯誤；不可默默以空白賽前資料開放操作。
   const raw=localStorage.getItem(KEY);
+  let hadSavedMatchState=false;
+  let savedHadVenueField=false;
   if(raw){
     const saved=JSON.parse(raw);
     if(!saved || typeof saved!=='object' || Array.isArray(saved)){
       throw new Error('Invalid saved match state');
     }
+    hadSavedMatchState=true;
+    savedHadVenueField=Object.prototype.hasOwnProperty.call(saved,'venue');
     state={...state, ...saved};
   }
   if(!Array.isArray(state.periods)) state.periods=[];
@@ -19789,7 +19904,17 @@ function loadState(){
     else state.ourTeam='忠義國小';
   }
 
-  if(!state.venue && rememberedVenue){
+  // v5.125：場地空白必須視為「本場明確狀態」，不可在重新整理後用上一場場地回填。
+  // 根因：舊邏輯只判斷 !state.venue，因此本場已保存 venue:'' 時，reload 後仍會套用
+  // football_marker_last_venue，造成「賽前/比賽中沒填場地，重新整理後卻跑出舊場地」。
+  // 新規則：
+  // 1) 已有本場儲存資料且含 venue 欄位 → 完全尊重本場值（包含空字串）。
+  // 2) 舊版資料根本沒有 venue 欄位、且尚未開始 → 才允許用 last venue 做相容性預填。
+  // 3) 已開始/已結束的比賽永遠不補入上一場場地。
+  const canUseRememberedVenue =
+    !state.started && !state.finished &&
+    (!hadSavedMatchState || !savedHadVenueField);
+  if(canUseRememberedVenue && !state.venue && rememberedVenue){
     state.venue=rememberedVenue;
   }
   byId('ourTeam').value=state.ourTeam||'';
@@ -22821,14 +22946,17 @@ function renderLogModal(){
 
   const title=byId('logModalTitle');
   if(title){
-    title.textContent=currentLogFilter
-      ? `${eventIcon(currentLogFilter)} ${eventLabel(currentLogFilter)}細節`
-      : '☰ 事件紀錄';
+    title.innerHTML=currentLogFilter
+      ? `<span class="logModalFilterEmoji" aria-hidden="true">${eventIcon(currentLogFilter)}</span><span class="logModalTitleText">${eventLabel(currentLogFilter)}細節</span>`
+      : `<span class="uiLineIcon uiRecordIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.5 3.75h8l3 3v13.5h-11z"/><path d="M14.5 3.75v3h3"/><path d="M9 10.25h6M9 13.5h6M9 16.75h4.5"/></svg></span><span class="logModalTitleText">事件紀錄</span>`;
   }
 
   if(!filteredCount){
     const emptyLabel=currentLogFilter?eventLabel(currentLogFilter):'事件';
-    list.innerHTML=`<div class="quickResultEmpty"><div class="quickResultEmptyIcon">${currentLogFilter?eventIcon(currentLogFilter):'☰'}</div><div>尚無${emptyLabel}紀錄</div></div>`;
+    const emptyIcon=currentLogFilter
+      ? `<span aria-hidden="true">${eventIcon(currentLogFilter)}</span>`
+      : `<span class="uiLineIcon uiRecordIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.5 3.75h8l3 3v13.5h-11z"/><path d="M14.5 3.75v3h3"/><path d="M9 10.25h6M9 13.5h6M9 16.75h4.5"/></svg></span>`;
+    list.innerHTML=`<div class="quickResultEmpty"><div class="quickResultEmptyIcon">${emptyIcon}</div><div>尚無${emptyLabel}紀錄</div></div>`;
   }
 }
 
@@ -22990,7 +23118,7 @@ function renderLiveFocusUI(){
 
   if(isResult){
     const label=meta.length ? meta.join(' · ') : '🏆 未填賽事 · 🏟️ 未填場地';
-    strip.innerHTML=`<span class="resultMetaText">${escapeHtml(label)}</span><button type="button" class="resultMetaEditBtn" onclick="openResultMetaEdit()" aria-label="編輯賽事名稱與場地">✎</button>`;
+    strip.innerHTML=`<span class="resultMetaText">${escapeHtml(label)}</span><button type="button" class="resultMetaEditBtn" onclick="openResultMetaEdit()" aria-label="編輯賽事名稱與場地"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span></button>`;
     strip.classList.add('show');
   }else{
     strip.textContent=meta.join(' · ');
@@ -23615,7 +23743,8 @@ function render(){
 
     scoreEditBtn.hidden=!canOpenResultEdit;
     scoreEditBtn.disabled=!canOpenResultEdit;
-    scoreEditBtn.textContent=useCombinedScoreTeamEdit ? '✎ 比分／隊名' : '✎ 修正比分';
+    const scoreEditLabel=scoreEditBtn.querySelector('.uiEditLabel');
+    if(scoreEditLabel) scoreEditLabel.textContent=useCombinedScoreTeamEdit ? '比分／隊名' : '修正比分';
     scoreEditBtn.setAttribute('aria-label', useCombinedScoreTeamEdit ? '修改比分與隊伍名稱' : '修正比分');
     scoreEditBtn.setAttribute('aria-hidden', String(!canOpenResultEdit));
     scoreEditBtn.setAttribute('aria-disabled', String(!canOpenResultEdit));
