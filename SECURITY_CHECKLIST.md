@@ -1,10 +1,63 @@
 # SECURITY_CHECKLIST.md
-# v5.120 驗證範圍：比賽時間整秒制與系統毫秒 timestamp 分離。
+# v5.123 驗證範圍：本場事件統計四卡片 UI 精修。
 # 足球場邊記錄器 — 發版安全與同步檢查清單
 
 
 
-## v5.120 本次驗證
+## v5.123 本次驗證
+
+- [x] 一般尺寸四張統計卡固定為 74px 高。
+- [x] 390px 以下固定為 72px 高。
+- [x] 四張卡仍維持單列四欄。
+- [x] 圓角縮小，避免胖厚感。
+- [x] icon / label 視覺權重降低。
+- [x] 統計數字仍為每張卡第一視覺層級。
+- [x] 分類色仍保留（進球 / 射門 / 撲救 / 防守）。
+- [x] 邊框與陰影強度降低。
+- [x] 卡片高度仍高於 44px 觸控基準。
+- [x] 未修改事件統計、drill-down、時間、CSV 或比賽狀態邏輯。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：確認 74px 卡片仍有明確卡片感。
+- [ ] iPhone Safari：確認數字掃讀性與四卡分離感。
+- [ ] iPhone Safari：確認全場首屏垂直空間比 v5.122 更俐落。
+
+## v5.122 歷史驗證
+
+- [x] 新增 `wholeSecondMarkerSeconds()`，事件相對秒數統一向下取整。
+- [x] 歷史 marker `seconds` 有小數時會安全轉為整秒。
+- [x] 歷史 marker `time` 依整秒 `seconds` 重新同步。
+- [x] CSV `time` 與 `seconds` 共用相同 `markerSeconds`。
+- [x] 不再使用 `Math.round(m.seconds)` 造成 `00:05 / 6` 不一致。
+- [x] CSV `duration_seconds` 明確使用整秒值。
+- [x] marker `recorded_at` 保留原始毫秒 timestamp。
+- [x] Match ID、`_savedAt`、Registry `updatedAt` 邏輯未修改。
+- [x] marker 遷移寫回 localStorage 不更新 `_savedAt` / Registry `updatedAt`。
+- [x] JavaScript syntax check 通過。
+- [x] 範例 `seconds=5.7` 會得到 `time=00:05`、`seconds=5`。
+- [ ] iPhone Safari：載入舊比賽後匯出 CSV，確認事件 `time` / `seconds` 一致。
+- [ ] iPhone Safari：確認 `recorded_at` 仍保留原始毫秒。
+- [ ] iPhone Safari：新比賽標記事件後匯出 CSV，確認畫面 / 摘要 / CSV 事件時間一致。
+
+## v5.121 歷史驗證
+
+- [x] `normalizeUnfinishedTimingToWholeSeconds()` 升級為 `normalizeMatchTimingToWholeSeconds()`。
+- [x] 已完成歷史比賽不再直接略過。
+- [x] period 同時具有 start/end 時，先對齊整秒再重算 duration。
+- [x] period 缺少 start/end 時不猜測，沿用既有 duration 並安全取整秒。
+- [x] finished + periods 存在時，`finalElapsed` 由各 period duration 重新加總。
+- [x] 中場休息不計入 `finalElapsed`。
+- [x] 等待延長賽空檔不計入 `finalElapsed`。
+- [x] PK 時間不計入 `finalElapsed`。
+- [x] `_savedAt` 不因時間資料遷移而更新。
+- [x] Registry `updatedAt` 不因時間資料遷移而更新。
+- [x] Match ID 生成邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] 範例 22:16:57→22:17:03、22:17:08→22:17:10、22:17:34→22:17:39 重算為 6+2+5=13 秒。
+- [ ] iPhone Safari：開啟舊已完成比賽，確認原 `00:11` 重新顯示為 `00:13`。
+- [ ] iPhone Safari：重新整理頁面，確認重算結果穩定不再變動。
+- [ ] iPhone Safari：確認摘要 / CSV / 時間紀錄使用相同 `finalElapsed`。
+
+## v5.120 歷史驗證
 
 - [x] 新增 `nowWholeMs()`，比賽時間 epoch 毫秒尾數固定為 `000`。
 - [x] 主比賽開始 / 結束改為整秒。

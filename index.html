@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.120</title>
+<title>足球場邊記錄器 v5.123</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -17579,6 +17579,137 @@ body.matchStatePre .broadcastStage.pre .preResetBtn.show:focus-visible{
 }
 </style>
 
+
+<style id="v5123QuickResultStatCardRefine">
+/* =========================================================
+   v5.123：本場事件統計四卡片「74px 專業資訊卡」精修
+   設計目標：比 68px 更有卡片感、比 82px 更俐落，
+   讓數字成為主角，icon / 標題 / 邊框退為輔助資訊。
+   ========================================================= */
+
+/* 卡片群維持一列四張；間距稍收，整體更像一組儀表板。 */
+body.resultMode .quickResultStats,
+body.resultMode.finalOutputVisible .quickResultStats{
+  gap:5px!important;
+}
+
+/* 74px 為主要甜蜜點：仍有完整卡片份量，但不再胖厚。 */
+body.resultMode .quickResultStat,
+body.resultMode.finalOutputVisible .quickResultStat{
+  box-sizing:border-box!important;
+  height:74px!important;
+  min-height:74px!important;
+  padding:7px 4px 6px!important;
+  gap:3px!important;
+  border-radius:11px!important;
+  border-width:1px!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.040),
+    0 3px 8px rgba(0,0,0,.11)!important;
+  overflow:hidden!important;
+}
+
+/* 去掉「厚卡 / 按鈕」感：只保留非常淡的上方材質高光。 */
+body.resultMode .quickResultStat::before,
+body.resultMode.finalOutputVisible .quickResultStat::before{
+  display:none!important;
+  content:none!important;
+}
+body.resultMode .quickResultStat::after,
+body.resultMode.finalOutputVisible .quickResultStat::after{
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,.022) 0%,
+    rgba(255,255,255,.008) 42%,
+    rgba(255,255,255,0) 100%
+  )!important;
+}
+
+/* 上方 icon + 標題縮成輔助層級。 */
+body.resultMode .quickResultLabel,
+body.resultMode.finalOutputVisible .quickResultLabel{
+  gap:4px!important;
+  font-size:12.5px!important;
+  line-height:1.05!important;
+  font-weight:850!important;
+  letter-spacing:0!important;
+}
+body.resultMode .quickResultIcon,
+body.resultMode.finalOutputVisible .quickResultIcon{
+  font-size:14.5px!important;
+  line-height:1!important;
+  transform:none!important;
+}
+
+/* 數字仍是視覺主角，但不需要靠超大尺寸製造厚重感。 */
+body.resultMode .quickResultStat strong,
+body.resultMode.finalOutputVisible .quickResultStat strong{
+  margin-top:0!important;
+  font-size:30px!important;
+  line-height:.98!important;
+  font-weight:950!important;
+  letter-spacing:-.4px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+
+/* 四種分類色保留，但描邊亮度與 glow 收斂。 */
+body.resultMode .quickResultStat.goalStat,
+body.resultMode.finalOutputVisible .quickResultStat.goalStat{
+  border-color:rgba(100,224,142,.26)!important;
+}
+body.resultMode .quickResultStat.shotStat,
+body.resultMode.finalOutputVisible .quickResultStat.shotStat{
+  border-color:rgba(255,216,100,.26)!important;
+}
+body.resultMode .quickResultStat.saveStat,
+body.resultMode.finalOutputVisible .quickResultStat.saveStat{
+  border-color:rgba(133,187,255,.27)!important;
+}
+body.resultMode .quickResultStat.defenseStat,
+body.resultMode.finalOutputVisible .quickResultStat.defenseStat{
+  border-color:rgba(202,160,255,.27)!important;
+}
+
+/* 外層統計區上下留白略收，但標題與四張卡仍保有呼吸感。 */
+body.resultMode .quickResultCard,
+body.resultMode.finalOutputVisible .quickResultCard{
+  padding-top:8px!important;
+  padding-bottom:9px!important;
+}
+body.resultMode .quickResultTitle,
+body.resultMode.finalOutputVisible .quickResultTitle{
+  margin-bottom:6px!important;
+}
+
+/* 小型 iPhone：仍保持「卡片」而不是壓成數據條。 */
+@media(max-width:390px){
+  body.resultMode .quickResultStat,
+  body.resultMode.finalOutputVisible .quickResultStat{
+    height:72px!important;
+    min-height:72px!important;
+    padding:6px 3px 5px!important;
+    border-radius:10px!important;
+  }
+  body.resultMode .quickResultStats,
+  body.resultMode.finalOutputVisible .quickResultStats{
+    gap:4px!important;
+  }
+  body.resultMode .quickResultLabel,
+  body.resultMode.finalOutputVisible .quickResultLabel{
+    gap:3px!important;
+    font-size:12px!important;
+  }
+  body.resultMode .quickResultIcon,
+  body.resultMode.finalOutputVisible .quickResultIcon{
+    font-size:14px!important;
+  }
+  body.resultMode .quickResultStat strong,
+  body.resultMode.finalOutputVisible .quickResultStat strong{
+    font-size:29px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -17593,7 +17724,7 @@ body.matchStatePre .broadcastStage.pre .preResetBtn.show:focus-visible{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.120</span>
+      <span class="headerVersion">v5.123</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -19104,18 +19235,31 @@ function wholeSecondDuration(startEpoch,endEpoch,fallback=0){
   return Math.max(0,Math.floor(Number(fallback)||0));
 }
 
-// 若使用者正好從 v5.119 升級，而且該場尚未完成，
-// 把「進行中的」時間欄位一次對齊整秒，避免舊毫秒起點與新整秒終點混算。
-// 已完成的歷史比賽不改寫，避免發版後回頭改變舊報表。
-function normalizeUnfinishedTimingToWholeSeconds(){
-  if(state.finished) return false;
+// v5.122：事件相對時間也統一採整秒。
+// recorded_at 屬於系統稽核 / 排序 timestamp，保留原始毫秒精度，不由此函式處理。
+function wholeSecondMarkerSeconds(value){
+  const n=Number(value);
+  if(!Number.isFinite(n) || n<0) return 0;
+  return Math.floor(n);
+}
+
+// v5.121：所有「使用者可見的比賽時間」統一到整秒，包括已完成歷史比賽。
+// v5.122：再把事件 markers 的 seconds / time 與 CSV 匯出同步成同一整秒基準。
+// 若某個已完成階段同時有 startEpoch / endEpoch，duration 以兩個整秒邊界重新計算；
+// 因此報表上的 HH:MM:SS 可以直接人工相減，與「實際比賽時間」一致。
+// Match ID、_savedAt、Registry updatedAt 仍保留毫秒精度，不由此函式處理。
+function normalizeMatchTimingToWholeSeconds(){
   let changed=false;
 
   const normalizeField=(obj,key)=>{
-    if(!obj || !(key in obj) || obj[key]==null) return;
+    if(!obj || !(key in obj) || obj[key]==null) return null;
     const old=Number(obj[key]);
     const next=toWholeSecondEpoch(old);
-    if(next!==null && next!==old){ obj[key]=next; changed=true; }
+    if(next!==null && next!==old){
+      obj[key]=next;
+      changed=true;
+    }
+    return next;
   };
 
   normalizeField(state,'startEpoch');
@@ -19124,13 +19268,27 @@ function normalizeUnfinishedTimingToWholeSeconds(){
   normalizeField(state,'halftimeEndEpoch');
   normalizeField(state,'longDurationAckStartEpoch');
 
+  let hasPeriodData=false;
   if(Array.isArray(state.periods)){
     state.periods.forEach(p=>{
       if(!p || typeof p!=='object') return;
-      normalizeField(p,'startEpoch');
-      normalizeField(p,'endEpoch');
-      const nextDuration=wholeSecondDuration(p.startEpoch,p.endEpoch,p.duration);
-      if(Number(p.duration)!==nextDuration){ p.duration=nextDuration; changed=true; }
+      hasPeriodData=true;
+
+      const start=normalizeField(p,'startEpoch');
+      const end=normalizeField(p,'endEpoch');
+
+      let nextDuration;
+      if(start && end && end>=start){
+        nextDuration=(end-start)/1000;
+      }else{
+        // 舊資料若缺少起訖時間，不猜測；只把既有 duration 安全取整秒。
+        nextDuration=Math.max(0,Math.floor(Number(p.duration)||0));
+      }
+
+      if(Number(p.duration)!==nextDuration){
+        p.duration=nextDuration;
+        changed=true;
+      }
     });
   }
 
@@ -19142,6 +19300,9 @@ function normalizeUnfinishedTimingToWholeSeconds(){
       state.halftimeDuration=nextHalf;
       changed=true;
     }
+  }else if(!Number.isInteger(Number(state.halftimeDuration))){
+    state.halftimeDuration=Math.max(0,Math.floor(Number(state.halftimeDuration)||0));
+    changed=true;
   }
 
   if(state.penalty && typeof state.penalty==='object'){
@@ -19149,9 +19310,42 @@ function normalizeUnfinishedTimingToWholeSeconds(){
     normalizeField(state.penalty,'endEpoch');
   }
 
-  if(!Number.isInteger(Number(state.finalElapsed))){
-    state.finalElapsed=Math.max(0,Math.floor(Number(state.finalElapsed)||0));
-    changed=true;
+  // 已完成比賽：若有 periods，就以各階段「整秒起訖」重算實際比賽時間。
+  // PK 時間、中場休息、等待延長賽時間都不計入 finalElapsed。
+  if(state.finished && hasPeriodData){
+    const nextFinal=state.periods.reduce(
+      (sum,p)=>sum+Math.max(0,Math.floor(Number(p?.duration)||0)),
+      0
+    );
+    if(Number(state.finalElapsed)!==nextFinal){
+      state.finalElapsed=nextFinal;
+      changed=true;
+    }
+  }else{
+    const nextFinal=Math.max(0,Math.floor(Number(state.finalElapsed)||0));
+    if(Number(state.finalElapsed)!==nextFinal){
+      state.finalElapsed=nextFinal;
+      changed=true;
+    }
+  }
+
+  // v5.122：舊版事件若仍有小數秒，將 seconds 與 time 同步成同一個整秒值。
+  // 例如 5.7 秒會統一為 seconds=5、time=00:05。
+  // recorded_at 保留原始 ISO timestamp（含毫秒），不改寫。
+  if(Array.isArray(state.markers)){
+    state.markers.forEach(m=>{
+      if(!m || typeof m!=='object') return;
+      const nextSeconds=wholeSecondMarkerSeconds(m.seconds);
+      if(Number(m.seconds)!==nextSeconds || typeof m.seconds!=='number'){
+        m.seconds=nextSeconds;
+        changed=true;
+      }
+      const nextTime=fmtMMSS(nextSeconds);
+      if(String(m.time||'')!==nextTime){
+        m.time=nextTime;
+        changed=true;
+      }
+    });
   }
 
   return changed;
@@ -19577,8 +19771,10 @@ function loadState(){
     if(!Array.isArray(state.penalty.opp)) state.penalty.opp=[];
   }
 
-  // v5.120：只遷移尚未完成的舊比賽時間；不改 _savedAt / registry updatedAt。
-  const timingNormalized=normalizeUnfinishedTimingToWholeSeconds();
+  // v5.122：新舊比賽與事件時間都統一到整秒。
+  // 已完成歷史比賽依整秒邊界重算 duration / finalElapsed；舊 marker 的 seconds / time 也同步整秒化。
+  // 這裡直接寫回 match state，但不更新 _savedAt / Registry updatedAt；marker recorded_at 亦完整保留。
+  const timingNormalized=normalizeMatchTimingToWholeSeconds();
   if(timingNormalized){
     try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){}
   }
@@ -24227,7 +24423,7 @@ function csvText(){
       state.ourTeam, state.oppTeam, state.venue, state.competition, currentRosterNumbers().join('|'),
       matchStartEpoch()?fmtDateTime(matchStartEpoch()):'',
       matchEndEpoch()?fmtDateTime(matchEndEpoch()):'',
-      Math.round(state.finished?state.finalElapsed:totalMatchElapsed()),
+      Math.floor(state.finished?state.finalElapsed:totalMatchElapsed()),
       state.regulationMinutes||'',
       diffSecondsExport(),
       state.ourScore, state.oppScore,
@@ -24235,18 +24431,19 @@ function csvText(){
     ]);
   }else{
     state.markers.forEach(m=>{
+      const markerSeconds=wholeSecondMarkerSeconds(m.seconds);
       rows.push([
         state.ourTeam, state.oppTeam, state.venue, state.competition, currentRosterNumbers().join('|'),
         state.startEpoch?fmtDateTime(matchStartEpoch()):'',
         state.endEpoch?fmtDateTime(matchEndEpoch()):'',
-        Math.round(state.finished?state.finalElapsed:0),
+        Math.floor(state.finished?state.finalElapsed:0),
         state.regulationMinutes||'',
         diffSecondsExport(),
         state.ourScore, state.oppScore,
         m.period||1,
         state.multiPeriod?periodLabel(m.period||1):'全場',
-        fmtMMSS(m.seconds),
-        Math.round(m.seconds),
+        fmtMMSS(markerSeconds),
+        markerSeconds,
         m.event,
         m.team||'',
         m.player_number||'',
@@ -24266,7 +24463,7 @@ function csvText(){
           state.ourTeam,state.oppTeam,state.venue,state.competition,currentRosterNumbers().join('|'),
           matchStartEpoch()?fmtDateTime(matchStartEpoch()):'',
           matchEndEpoch()?fmtDateTime(matchEndEpoch()):'',
-          Math.round(state.finished?state.finalElapsed:totalMatchElapsed()),
+          Math.floor(state.finished?state.finalElapsed:totalMatchElapsed()),
           state.regulationMinutes||'',diffSecondsExport(),state.ourScore,state.oppScore,
           'PK','PK 點球',`第${i+1}點`,'',k.result==='GOAL'?'PENALTY_GOAL':k.result==='MISS'?'PENALTY_MISS':'PENALTY_PENDING',
           side==='our'?'OUR':'OPP',k.number||'','',`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`,state.penalty.endEpoch||state.penalty.startEpoch||''
