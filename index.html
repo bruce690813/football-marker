@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.126</title>
+<title>足球場邊記錄器 v5.128</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -17825,6 +17825,116 @@ body.resultMode.finalOutputVisible .quickResultTitle{
 <style id="v5126PenaltyAreaVisibilityPolish">
 /* v5.126：Header 禁區辨識度精修。大禁區 1.75/.40；小禁區 1.85/.42。 */
 </style>
+
+<style id="v5127CompactTimeRecord">
+/* =========================================================
+   v5.127：時間紀錄精簡版
+   - 開始 / 結束改成同一列
+   - 階段合計時間直接放進標題
+   - 移除中場休息的獨立第三列
+   ========================================================= */
+
+.timeDetail{
+  padding:10px 10px 12px!important;
+}
+
+/* 整場、上半場、中場、下半場、延長賽皆使用同一種雙欄時間列。 */
+.timelinePairRow{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:14px;
+  align-items:center;
+  padding:3px 0 1px;
+}
+.timelinePairItem{
+  min-width:0;
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  white-space:nowrap;
+}
+.timelinePairLabel{
+  flex:0 0 auto;
+  color:#d8e2ed;
+  font-size:13px;
+  font-weight:900;
+  line-height:1.2;
+}
+.timelinePairValue{
+  min-width:0;
+  color:#f8fafc;
+  font-size:15px;
+  font-weight:950;
+  line-height:1.2;
+  letter-spacing:.1px;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+
+.matchBoundaryPair{
+  margin:3px 0 7px;
+  padding:7px 0 9px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+
+/* 每一階段縮成「標題（合計）＋一列開始/結束」。 */
+.periodPhaseDetailBlock.compactPhaseBlock,
+.halftimeDetailBlock.compactPhaseBlock{
+  margin:5px 0 0!important;
+  padding:9px 0 10px!important;
+  border-top:1px solid rgba(148,163,184,.16)!important;
+  border-bottom:0!important;
+}
+
+.periodPhaseDetailTitle,
+.halftimeDetailTitle{
+  display:flex;
+  align-items:baseline;
+  gap:4px;
+  margin:0 0 7px!important;
+  font-size:14px!important;
+  line-height:1.25;
+}
+.phaseDuration{
+  color:#a9c1d6;
+  font-size:12.5px;
+  font-weight:900;
+  letter-spacing:.1px;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+.periodPhaseDetailBlock.extraPhase .phaseDuration{
+  color:#c4b5fd;
+}
+
+/* v5.127 已不用原本每階段兩列 detailRow。 */
+.compactPhaseBlock .detailRow{
+  display:none!important;
+}
+
+/* 實際比賽時間與階段明細之間留乾淨的呼吸空間。 */
+.fullTimeActualBox{
+  margin:9px 0!important;
+}
+
+@media(max-width:390px){
+  .timelinePairRow{gap:8px}
+  .timelinePairItem{gap:5px}
+  .timelinePairLabel{font-size:12px}
+  .timelinePairValue{font-size:14px}
+  .phaseDuration{font-size:12px}
+}
+
+@media(max-width:340px){
+  .timelinePairRow{grid-template-columns:1fr;gap:6px}
+  .matchBoundaryPair{padding-bottom:8px}
+}
+</style>
+
+
+<style id="v5128HalftimeRestLabelPolish">
+/* v5.128：中場階段名稱改為「中場休息紀錄」，更清楚表達這段時間不屬於實際比賽時間。 */
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -17839,7 +17949,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.126</span>
+      <span class="headerVersion">v5.128</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -17993,41 +18103,41 @@ body.resultMode.finalOutputVisible .quickResultTitle{
           <span>比賽日期</span><strong id="timeRecordDateValue">----</strong>
         </div>
 
-        <div class="detailRow"><div class="label" id="fullStartLabel">比賽開始</div><div class="value" id="fullStart">--</div></div>
-        <div class="detailRow"><div class="label" id="fullEndLabel">比賽結束</div><div class="value" id="fullEnd">--</div></div>
-
-        <div class="periodPhaseDetailBlock" id="firstHalfDetailBlock" hidden>
-          <div class="periodPhaseDetailTitle">上半場紀錄</div>
-          <div class="detailRow"><div class="label">上半場開始</div><div class="value" id="firstHalfStartText">--</div></div>
-          <div class="detailRow"><div class="label">上半場結束</div><div class="value" id="firstHalfEndText">--</div></div>
+        <div class="timelinePairRow matchBoundaryPair" aria-label="整場開始與結束時間">
+          <div class="timelinePairItem"><span class="timelinePairLabel" id="fullStartLabel">開始</span><strong class="timelinePairValue" id="fullStart">--</strong></div>
+          <div class="timelinePairItem"><span class="timelinePairLabel" id="fullEndLabel">結束</span><strong class="timelinePairValue" id="fullEnd">--</strong></div>
         </div>
 
-        <div class="halftimeDetailBlock" id="halftimeDetailBlock" hidden>
-          <div class="halftimeDetailTitle">中場紀錄</div>
-          <div class="detailRow">
-            <div class="label">中場開始</div>
-            <div class="value" id="halftimeStartText">--</div>
-          </div>
-          <div class="detailRow">
-            <div class="label">中場結束</div>
-            <div class="value" id="halftimeEndText">--</div>
-          </div>
-          <div class="detailRow">
-            <div class="label">中場休息</div>
-            <div class="value" id="halftimeDurationText">--</div>
+        <div class="periodPhaseDetailBlock compactPhaseBlock" id="firstHalfDetailBlock" hidden>
+          <div class="periodPhaseDetailTitle"><span>上半場紀錄</span><span class="phaseDuration" id="firstHalfDurationText">（00:00）</span></div>
+          <div class="timelinePairRow">
+            <div class="timelinePairItem"><span class="timelinePairLabel">開始</span><strong class="timelinePairValue" id="firstHalfStartText">--</strong></div>
+            <div class="timelinePairItem"><span class="timelinePairLabel">結束</span><strong class="timelinePairValue" id="firstHalfEndText">--</strong></div>
           </div>
         </div>
 
-        <div class="periodPhaseDetailBlock" id="secondHalfDetailBlock" hidden>
-          <div class="periodPhaseDetailTitle">下半場紀錄</div>
-          <div class="detailRow"><div class="label">下半場開始</div><div class="value" id="secondHalfStartText">--</div></div>
-          <div class="detailRow"><div class="label">下半場結束</div><div class="value" id="secondHalfEndText">--</div></div>
+        <div class="halftimeDetailBlock compactPhaseBlock" id="halftimeDetailBlock" hidden>
+          <div class="halftimeDetailTitle"><span>中場休息紀錄</span><span class="phaseDuration" id="halftimeDurationTitle">（00:00）</span></div>
+          <div class="timelinePairRow">
+            <div class="timelinePairItem"><span class="timelinePairLabel">開始</span><strong class="timelinePairValue" id="halftimeStartText">--</strong></div>
+            <div class="timelinePairItem"><span class="timelinePairLabel">結束</span><strong class="timelinePairValue" id="halftimeEndText">--</strong></div>
+          </div>
         </div>
 
-        <div class="periodPhaseDetailBlock extraPhase" id="extraTimeDetailBlock" hidden>
-          <div class="periodPhaseDetailTitle">延長賽紀錄</div>
-          <div class="detailRow"><div class="label">延長賽開始</div><div class="value" id="extraTimeStartText">--</div></div>
-          <div class="detailRow"><div class="label">延長賽結束</div><div class="value" id="extraTimeEndText">--</div></div>
+        <div class="periodPhaseDetailBlock compactPhaseBlock" id="secondHalfDetailBlock" hidden>
+          <div class="periodPhaseDetailTitle"><span>下半場紀錄</span><span class="phaseDuration" id="secondHalfDurationText">（00:00）</span></div>
+          <div class="timelinePairRow">
+            <div class="timelinePairItem"><span class="timelinePairLabel">開始</span><strong class="timelinePairValue" id="secondHalfStartText">--</strong></div>
+            <div class="timelinePairItem"><span class="timelinePairLabel">結束</span><strong class="timelinePairValue" id="secondHalfEndText">--</strong></div>
+          </div>
+        </div>
+
+        <div class="periodPhaseDetailBlock compactPhaseBlock extraPhase" id="extraTimeDetailBlock" hidden>
+          <div class="periodPhaseDetailTitle"><span>延長賽紀錄</span><span class="phaseDuration" id="extraTimeDurationText">（00:00）</span></div>
+          <div class="timelinePairRow">
+            <div class="timelinePairItem"><span class="timelinePairLabel">開始</span><strong class="timelinePairValue" id="extraTimeStartText">--</strong></div>
+            <div class="timelinePairItem"><span class="timelinePairLabel">結束</span><strong class="timelinePairValue" id="extraTimeEndText">--</strong></div>
+          </div>
         </div>
 
         <div class="fullTimeActualBox" id="fullTimeActualBox" hidden>
@@ -20159,11 +20269,11 @@ function renderHalftimeTimeDetail(){
   const baseEpoch=matchStartEpoch();
   const start=byId('halftimeStartText');
   const end=byId('halftimeEndText');
-  const duration=byId('halftimeDurationText');
+  const duration=byId('halftimeDurationTitle');
 
   if(start) start.textContent=fmtTimelineTime(state.halftimeStartEpoch,baseEpoch);
   if(end) end.textContent=state.halftimeEndEpoch ? fmtTimelineTime(state.halftimeEndEpoch,baseEpoch) : '--';
-  if(duration) duration.textContent=fmtMMSS(halftimeElapsed());
+  if(duration) duration.textContent=`（${fmtMMSS(halftimeElapsed())}）`;
 }
 
 function periodRecord(number){
@@ -20175,6 +20285,15 @@ function currentPeriodStartEpoch(number){
   }
   return null;
 }
+function phaseElapsedSeconds(record,startEpoch,endEpoch){
+  if(record && Number.isFinite(Number(record.duration)) && Number(record.duration)>=0 && record.endEpoch){
+    return Math.max(0,Math.floor(Number(record.duration)||0));
+  }
+  if(!startEpoch) return 0;
+  const end=endEpoch || nowWholeMs();
+  return Math.max(0,Math.floor((end-startEpoch)/1000));
+}
+
 function renderPeriodPhaseTimeDetail(){
   const baseEpoch=matchStartEpoch();
   const p1=periodRecord(1);
@@ -20184,11 +20303,14 @@ function renderPeriodPhaseTimeDetail(){
   const firstBlock=byId('firstHalfDetailBlock');
   const firstStart=byId('firstHalfStartText');
   const firstEnd=byId('firstHalfEndText');
+  const firstDuration=byId('firstHalfDurationText');
   const showFirst=Boolean(state.finished && state.multiPeriod && (p1?.startEpoch || baseEpoch));
   if(firstBlock) firstBlock.hidden=!showFirst;
   if(showFirst){
-    if(firstStart) firstStart.textContent=fmtTimelineTime(p1?.startEpoch || baseEpoch,baseEpoch);
+    const startEpoch=p1?.startEpoch || baseEpoch;
+    if(firstStart) firstStart.textContent=fmtTimelineTime(startEpoch,baseEpoch);
     if(firstEnd) firstEnd.textContent=p1?.endEpoch ? fmtTimelineTime(p1.endEpoch,baseEpoch) : '--';
+    if(firstDuration) firstDuration.textContent=`（${fmtMMSS(phaseElapsedSeconds(p1,startEpoch,p1?.endEpoch || null))}）`;
   }
 
   const secondStartEpoch=p2?.startEpoch || currentPeriodStartEpoch(2);
@@ -20198,6 +20320,8 @@ function renderPeriodPhaseTimeDetail(){
   if(secondStartEpoch){
     byId('secondHalfStartText').textContent=fmtTimelineTime(secondStartEpoch,baseEpoch);
     byId('secondHalfEndText').textContent=secondEndEpoch ? fmtTimelineTime(secondEndEpoch,baseEpoch) : '--';
+    const duration=byId('secondHalfDurationText');
+    if(duration) duration.textContent=`（${fmtMMSS(phaseElapsedSeconds(p2,secondStartEpoch,secondEndEpoch))}）`;
   }
 
   const extraStartEpoch=p3?.startEpoch || currentPeriodStartEpoch(3);
@@ -20207,6 +20331,8 @@ function renderPeriodPhaseTimeDetail(){
   if(extraStartEpoch){
     byId('extraTimeStartText').textContent=fmtTimelineTime(extraStartEpoch,baseEpoch);
     byId('extraTimeEndText').textContent=extraEndEpoch ? fmtTimelineTime(extraEndEpoch,baseEpoch) : '--';
+    const duration=byId('extraTimeDurationText');
+    if(duration) duration.textContent=`（${fmtMMSS(phaseElapsedSeconds(p3,extraStartEpoch,extraEndEpoch))}）`;
   }
 }
 
@@ -20262,9 +20388,20 @@ function tick(){
   updateLongClockLayout(timerSec);
   renderRegulationTimeAlert(timerSec);
 
-  const halfDuration=byId('halftimeDurationText');
+  const halfDuration=byId('halftimeDurationTitle');
   if(halfDuration && state.halftimeStartEpoch && !state.halftimeEndEpoch){
-    halfDuration.textContent=fmtMMSS(halftimeElapsed());
+    halfDuration.textContent=`（${fmtMMSS(halftimeElapsed())}）`;
+  }
+
+  // v5.127：進行中的下半場 / 延長賽，標題旁的階段合計時間同步更新。
+  if(state.started && !state.finished){
+    if(Number(state.currentPeriod)===2){
+      const el=byId('secondHalfDurationText');
+      if(el) el.textContent=`（${fmtMMSS(elapsed())}）`;
+    }else if(Number(state.currentPeriod)===3){
+      const el=byId('extraTimeDurationText');
+      if(el) el.textContent=`（${fmtMMSS(elapsed())}）`;
+    }
   }
 
   requestAnimationFrame(tick);
@@ -20417,8 +20554,8 @@ function renderTimeBox(){
     detailEndEpoch=p1?.endEpoch || null;
   }
 
-  byId('fullStartLabel').textContent=detailStartLabel;
-  byId('fullEndLabel').textContent=detailEndLabel;
+  byId('fullStartLabel').textContent='開始';
+  byId('fullEndLabel').textContent='結束';
   byId('fullStart').textContent=fmtTimelineTime(detailStartEpoch,matchStart);
   byId('fullEnd').textContent=fmtTimelineTime(detailEndEpoch,matchStart);
 
