@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.128</title>
+<title>足球場邊記錄器 v5.130</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -17935,6 +17935,284 @@ body.resultMode.finalOutputVisible .quickResultTitle{
 <style id="v5128HalftimeRestLabelPolish">
 /* v5.128：中場階段名稱改為「中場休息紀錄」，更清楚表達這段時間不屬於實際比賽時間。 */
 </style>
+
+<style id="v5129NonBlockingLongDurationNotice">
+/* =========================================================
+   v5.129：3 小時長時間計時改為「時間紀錄」內非阻斷提醒
+   - 不再彈出 Modal
+   - 不暫停、不改變計時邏輯
+   - 使用者仍可正常記錄事件與操作頁面
+   ========================================================= */
+.longDurationInline{
+  margin:8px 9px 2px;
+  padding:9px 9px 9px 10px;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(248,113,113,.52);
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(113,29,40,.26) 0%,rgba(75,21,31,.20) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+}
+.longDurationInline[hidden]{display:none!important}
+.longDurationInlineIcon{
+  width:25px;
+  height:25px;
+  display:grid;
+  place-items:center;
+  color:#ff6977;
+}
+.longDurationInlineIcon svg{
+  width:23px;
+  height:23px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.longDurationInlineCopy{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.longDurationInlineTitle{
+  color:#ff8b92;
+  font-size:12.5px;
+  font-weight:950;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.longDurationInlineValue{
+  margin-left:3px;
+  color:#ff9aa0;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+.longDurationInlineText{
+  color:#afbecd;
+  font-size:10.5px;
+  font-weight:750;
+  line-height:1.3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.longDurationInlineFinish{
+  min-height:36px;
+  padding:0 11px;
+  border-radius:11px;
+  border:1px solid rgba(255,132,143,.38);
+  background:linear-gradient(180deg,#d94855 0%,#ad2f3a 100%);
+  color:#fff;
+  font-size:12px;
+  font-weight:950;
+  white-space:nowrap;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+}
+.longDurationInlineDismiss{
+  width:32px;
+  height:32px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#7f91a5;
+}
+.longDurationInlineDismiss svg{
+  width:17px;
+  height:17px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+}
+.longDurationInlineDismiss:active,
+.longDurationInlineFinish:active{transform:scale(.97)}
+
+/* 舊版阻斷式長時間 Modal 已停用。 */
+#longDurationModal{display:none!important}
+
+@media(max-width:390px){
+  .longDurationInline{
+    margin-left:7px;
+    margin-right:7px;
+    gap:6px;
+    padding-left:8px;
+    padding-right:7px;
+  }
+  .longDurationInlineIcon{width:22px;height:22px}
+  .longDurationInlineIcon svg{width:21px;height:21px}
+  .longDurationInlineTitle{font-size:11.8px}
+  .longDurationInlineText{font-size:9.8px}
+  .longDurationInlineFinish{min-height:34px;padding:0 9px;font-size:11.5px}
+  .longDurationInlineDismiss{width:28px;height:28px}
+}
+
+@media(max-width:350px){
+  .longDurationInline{
+    grid-template-columns:auto minmax(0,1fr) auto;
+    grid-template-areas:
+      "icon copy dismiss"
+      ". finish finish";
+    row-gap:7px;
+  }
+  .longDurationInlineIcon{grid-area:icon}
+  .longDurationInlineCopy{grid-area:copy}
+  .longDurationInlineFinish{grid-area:finish;justify-self:end}
+  .longDurationInlineDismiss{grid-area:dismiss}
+}
+</style>
+
+
+<style id="v5130StackedMatchMetaCards">
+/* =========================================================
+   v5.130：比賽賽事 / 比賽場地改為上下兩張滿版資訊卡
+   - 未填時只顯示單列提示「比賽賽事」「比賽場地」
+   - 已填時同一位置顯示實際內容，不額外增加 label 列
+   - 賽前 / 比賽中 / 中場 / 延長賽 / PK / 全場統一結構
+   ========================================================= */
+
+/* ---------- 賽前：兩張滿版卡片 ---------- */
+body.matchStatePre .matchMetaRow{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:8px!important;
+  align-items:stretch!important;
+}
+
+body.matchStatePre .preMetaField{
+  width:100%!important;
+  min-width:0!important;
+  min-height:48px!important;
+  padding:0 12px!important;
+  border-radius:12px!important;
+  box-sizing:border-box!important;
+}
+
+body.matchStatePre .preMetaIcon{
+  font-size:18px!important;
+  margin-right:1px!important;
+}
+
+body.matchStatePre .preMetaField input{
+  min-height:46px!important;
+  font-size:16px!important;
+  font-weight:900!important;
+}
+body.matchStatePre .preMetaField input::placeholder{
+  color:#7f90a6!important;
+  font-size:15px!important;
+  font-weight:800!important;
+}
+body.matchStatePre .venueInputWrap{
+  width:100%!important;
+  min-width:0!important;
+}
+
+/* 滿版後不必過早縮字；極長名稱才降級字級。 */
+body.matchStatePre .preMetaField input.metaFitMedium{font-size:15.5px!important;}
+body.matchStatePre .preMetaField input.metaFitLong{font-size:14.5px!important;letter-spacing:-.2px!important;}
+body.matchStatePre .preMetaField input.metaFitXL{font-size:13.2px!important;letter-spacing:-.3px!important;}
+body.matchStatePre .preMetaField input.metaEditing{font-size:16px!important;}
+
+/* ---------- 已開始 / 中場 / 等待延長 / 延長 / PK / 全場 ---------- */
+body.matchStateLive .liveMetaStrip.show,
+body.matchActive .liveMetaStrip.show,
+body.matchStateSecondHalf .liveMetaStrip.show,
+body.matchStateHalftime .liveMetaStrip.show,
+body.matchStateExtraWait .liveMetaStrip.show,
+body.matchStateExtraActive .liveMetaStrip.show,
+body.matchStateBreak .liveMetaStrip.show,
+body.matchStatePenalty .liveMetaStrip.show,
+body.resultMode .liveMetaStrip.show{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:7px!important;
+  min-height:0!important;
+  margin:0 1px 8px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  position:relative!important;
+  color:#edf5ff!important;
+}
+
+.liveMetaStrip .matchMetaDisplayRow{
+  width:100%;
+  min-width:0;
+  min-height:42px;
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 12px;
+  border-radius:11px;
+  border:1px solid rgba(71,96,126,.72);
+  background:linear-gradient(180deg,rgba(13,29,46,.94) 0%,rgba(8,20,33,.96) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.liveMetaStrip .matchMetaDisplayIcon{
+  flex:0 0 auto;
+  font-size:17px;
+  line-height:1;
+}
+
+.liveMetaStrip .matchMetaDisplayValue{
+  min-width:0;
+  flex:1;
+  color:#edf5ff;
+  font-size:clamp(14.5px,3.85vw,16px);
+  line-height:1.25;
+  font-weight:950;
+  letter-spacing:-.08px;
+  text-align:left;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+
+.liveMetaStrip .matchMetaDisplayRow.empty .matchMetaDisplayValue{
+  color:#718198;
+  font-weight:820;
+}
+
+/* 全場只有一顆編輯鍵，代表同時編輯兩個欄位。 */
+body.resultMode .liveMetaStrip .matchMetaDisplayRow{
+  padding-right:48px;
+}
+body.resultMode .liveMetaStrip .metaGroupEditBtn{
+  position:absolute;
+  right:8px;
+  top:50%;
+  transform:translateY(-50%);
+  width:32px;
+  min-width:32px;
+  height:32px;
+  min-height:32px;
+  border-radius:9px;
+}
+body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
+  transform:translateY(-50%) scale(.96);
+}
+
+@media(max-width:390px){
+  body.matchStatePre .preMetaField{min-height:46px!important;padding-left:10px!important;padding-right:10px!important;}
+  body.matchStatePre .preMetaField input{min-height:44px!important;font-size:15.5px!important;}
+  body.matchStatePre .preMetaField input::placeholder{font-size:14.5px!important;}
+  .liveMetaStrip .matchMetaDisplayRow{min-height:40px;padding:6px 10px;}
+  .liveMetaStrip .matchMetaDisplayValue{font-size:14.5px;}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -17949,7 +18227,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.128</span>
+      <span class="headerVersion">v5.130</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -17963,12 +18241,12 @@ body.resultMode.finalOutputVisible .quickResultTitle{
     <div class="matchMetaRow">
       <div class="preMetaField">
         <span class="preMetaIcon preCompetitionIcon" aria-hidden="true">🏆</span>
-        <input id="competition" type="text" inputmode="text" lang="zh-Hant" placeholder="賽事名稱" maxlength="20" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="賽事名稱">
+        <input id="competition" type="text" inputmode="text" lang="zh-Hant" placeholder="比賽賽事" maxlength="40" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="比賽賽事">
       </div>
       <div class="preMetaField venueMetaField">
         <span class="preMetaIcon preVenueIcon" aria-hidden="true">🏟️</span>
         <div class="venueInputWrap">
-          <input id="venue" type="text" inputmode="text" lang="zh-Hant" placeholder="場地" maxlength="15" enterkeyhint="done" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="比賽場地，可手動輸入或從最近場地選擇">
+          <input id="venue" type="text" inputmode="text" lang="zh-Hant" placeholder="比賽場地" maxlength="30" enterkeyhint="done" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="比賽場地，可手動輸入或從最近場地選擇">
           <button id="venueDropdownBtn" class="venueDropdownBtn" type="button" aria-label="選擇最近使用場地" aria-expanded="false" onclick="toggleVenueMenu(event)" onmousedown="event.preventDefault()">▾</button>
         </div>
         <div id="venueMenu" class="venueMenu" role="menu" aria-label="最近使用場地"></div>
@@ -18093,6 +18371,15 @@ body.resultMode.finalOutputVisible .quickResultTitle{
         <div class="timeHeadActions">
           <button class="timeToggle" id="timeToggle" onclick="toggleTimeBox()">展開</button>
         </div>
+      </div>
+      <div class="longDurationInline" id="longDurationInline" hidden role="status" aria-live="polite">
+        <span class="longDurationInlineIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3.2 21 19H3L12 3.2Z"/><path d="M12 8.1v5.3"/><path d="M12 16.8h.01"/></svg></span>
+        <div class="longDurationInlineCopy">
+          <div class="longDurationInlineTitle">已持續計時 <span class="longDurationInlineValue" id="longDurationInlineValue">03:00:00</span></div>
+          <div class="longDurationInlineText">請確認比賽是否仍在進行</div>
+        </div>
+        <button class="longDurationInlineFinish" type="button" onclick="finishFromLongDurationInline()">結束比賽</button>
+        <button class="longDurationInlineDismiss" type="button" onclick="dismissLongDurationInline()" aria-label="暫時隱藏長時間計時提醒"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg></button>
       </div>
       <div class="timeCompact">
         <div class="timeCell"><div class="label">開始時間</div><div class="value" id="compactStart">--:--:--</div></div>
@@ -18284,14 +18571,14 @@ body.resultMode.finalOutputVisible .quickResultTitle{
 <div class="modalBack" id="resultMetaEditModal">
   <div class="modal resultMetaEditCard">
     <h2 class="uiIconHeading"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span><span>編輯賽事資料</span></h2>
-    <div class="resultMetaEditHint">全場後可補充或修正賽事名稱與場地；不影響比分、事件時間、守門員或本場球員名單。</div>
+    <div class="resultMetaEditHint">全場後可補充或修正比賽賽事與比賽場地；不影響比分、事件時間、守門員或本場球員名單。</div>
     <div class="resultMetaField">
-      <label for="resultCompetitionInput">🏆 賽事名稱</label>
-      <input id="resultCompetitionInput" type="text" maxlength="15" placeholder="例如 黃蜂盃">
+      <label for="resultCompetitionInput">🏆 比賽賽事</label>
+      <input id="resultCompetitionInput" type="text" maxlength="40" placeholder="例如 2026格溫拜克盃 U10兒童足球賽">
     </div>
     <div class="resultMetaField">
-      <label for="resultVenueInput">🏟️ 場地</label>
-      <input id="resultVenueInput" type="text" maxlength="15" placeholder="例如 新莊體育場">
+      <label for="resultVenueInput">🏟️ 比賽場地</label>
+      <input id="resultVenueInput" type="text" maxlength="30" placeholder="例如 迎風足球場">
     </div>
     <div class="resultMetaActions">
       <button type="button" class="resultMetaCancel" onclick="closeResultMetaEdit()">取消</button>
@@ -18455,19 +18742,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
 </div>
 
 
-<!-- v5.92 abnormal long-duration notice -->
-<div class="modalBack" id="longDurationModal">
-  <div class="modal longDurationModal" role="dialog" aria-modal="true" aria-labelledby="longDurationTitle">
-    <div class="longDurationIcon" aria-hidden="true">⚠️</div>
-    <h2 id="longDurationTitle">計時時間異常偏長</h2>
-    <div class="longDurationValue" id="longDurationValue">3:00:00</div>
-    <p>這場比賽已持續計時很久。若比賽仍在進行，可以繼續計時；若實際已結束，建議現在完成結束流程。</p>
-    <div class="longDurationActions">
-      <button type="button" class="longDurationContinue" onclick="acknowledgeLongDuration()">繼續計時</button>
-      <button type="button" class="longDurationFinish" onclick="finishFromLongDuration()">結束比賽</button>
-    </div>
-  </div>
-</div>
+<!-- v5.129: long-duration notice moved inline into time record -->
 
 <!-- Finish decision modal -->
 <div class="modalBack" id="finishDecisionModal">
@@ -18895,7 +19170,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
       <div class="reportMeta">
         <span id="reportDate">📅 ----/--/--</span>
         <span id="reportCompetition" style="display:none">🏆 賽事</span>
-        <span id="reportVenue" class="reportVenueMeta"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText">未填場地</span></span>
+        <span id="reportVenue" class="reportVenueMeta"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText">未填比賽場地</span></span>
         <span id="reportRoster" class="reportRosterMeta" style="display:none"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="reportRosterText">本場名單</span></span>
       </div>
       <div class="reportStatusBadge idle" id="reportStatusBadge">尚未開始</div>
@@ -19167,7 +19442,7 @@ function registryEntryFromState(id,saved,updatedAt=Date.now()){
     updatedAt:Number(updatedAt)||Date.now(),
     ourTeam:String(saved.ourTeam||'我方').slice(0,30),
     oppTeam:String(saved.oppTeam||'對手').slice(0,30),
-    competition:String(saved.competition||'').slice(0,30),
+    competition:String(saved.competition||'').slice(0,40),
     venue:String(saved.venue||'').slice(0,30),
     ourScore:Number(saved.ourScore)||0,
     oppScore:Number(saved.oppScore)||0,
@@ -19674,10 +19949,10 @@ function validateMatchTextFields(){
   const opp=validateTextField('oppTeam','對手隊伍名稱',false,15);
   if(opp===null){ focusMatchRequiredField('oppTeam'); return false; }
 
-  const v=validateTextField('venue','場地',false,15);
+  const v=validateTextField('venue','比賽場地',false,30);
   if(v===null){ focusMatchRequiredField('venue'); return false; }
 
-  const competition=validateTextField('competition','賽事名稱',false,20);
+  const competition=validateTextField('competition','比賽賽事',false,40);
   if(competition===null){ byId('competition').focus(); return false; }
 
   return true;
@@ -20387,6 +20662,7 @@ function tick(){
   byId('timer').textContent=fmtMatchClock(timerSec);
   updateLongClockLayout(timerSec);
   renderRegulationTimeAlert(timerSec);
+  renderLongDurationInline(timerSec);
 
   const halfDuration=byId('halftimeDurationTitle');
   if(halfDuration && state.halftimeStartEpoch && !state.halftimeEndEpoch){
@@ -20572,6 +20848,7 @@ function renderTimeBox(){
   if(actualValue) actualValue.textContent=state.finished ? fmtMMSS(state.finalElapsed) : '00:00';
 
   renderDiff(byId('diffText'));
+  renderLongDurationInline();
   renderRegulationTimeBox();
 }
 function regulationPeriodCount(){
@@ -21412,54 +21689,42 @@ function startMatch(){
 
 
 const LONG_DURATION_NOTICE_SECONDS=3*60*60;
-let longDurationModalOpen=false;
+let longDurationInlineDismissedStartEpoch=null;
 
-function shouldOfferLongDurationNotice(){
+function shouldShowLongDurationInline(){
   if(!state.started || state.finished || state.awaitingNextPeriod || !state.startEpoch) return false;
   const sec=Math.floor(Number(elapsed())||0);
   if(sec<LONG_DURATION_NOTICE_SECONDS) return false;
-  return Number(state.longDurationAckStartEpoch||0)!==Number(state.startEpoch||0);
+  return Number(longDurationInlineDismissedStartEpoch||0)!==Number(state.startEpoch||0);
 }
 
-function openLongDurationNotice(){
-  if(longDurationModalOpen || !shouldOfferLongDurationNotice()) return;
+function renderLongDurationInline(secOverride){
+  const host=byId('longDurationInline');
+  if(!host) return;
+  const show=shouldShowLongDurationInline();
+  host.hidden=!show;
+  if(!show) return;
 
-  // 不蓋在其他操作 Modal 上；下一次回到頁面仍可再判斷。
-  const otherOpen=[...document.querySelectorAll('.modalBack.open')]
-    .some(el=>el.id!=='longDurationModal');
-  if(otherOpen) return;
-
-  const sec=Math.floor(Number(elapsed())||0);
-  const value=byId('longDurationValue');
+  const sec=Number.isFinite(Number(secOverride)) ? Math.floor(Number(secOverride)) : Math.floor(Number(elapsed())||0);
+  const value=byId('longDurationInlineValue');
   if(value) value.textContent=fmtMatchClock(sec);
-
-  longDurationModalOpen=true;
-  document.body.style.overflow='hidden';
-  byId('longDurationModal')?.classList.add('open');
+  host.setAttribute('aria-label',`比賽已持續計時 ${fmtMatchClock(sec)}，請確認比賽是否仍在進行`);
 }
 
-function closeLongDurationNotice(){
-  byId('longDurationModal')?.classList.remove('open');
-  longDurationModalOpen=false;
-  document.body.style.overflow='';
+function dismissLongDurationInline(){
+  // 只在目前頁面工作階段暫時隱藏；重新整理後若仍超過門檻會再次提醒。
+  longDurationInlineDismissedStartEpoch=state.startEpoch||null;
+  renderLongDurationInline();
 }
 
-function acknowledgeLongDuration(){
-  state.longDurationAckStartEpoch=state.startEpoch||null;
-  saveState();
-  closeLongDurationNotice();
-}
-
-function finishFromLongDuration(){
-  state.longDurationAckStartEpoch=state.startEpoch||null;
-  saveState();
-  closeLongDurationNotice();
-  setTimeout(()=>finishMatch(),0);
+function finishFromLongDurationInline(){
+  finishMatch();
 }
 
 function maybeOfferLongDurationNotice(){
+  // v5.129：保留舊呼叫點，但改成非阻斷的 inline render。
   if(document.hidden) return;
-  setTimeout(openLongDurationNotice,180);
+  renderLongDurationInline();
 }
 
 
@@ -23252,19 +23517,29 @@ function renderLiveFocusUI(){
   const isHalftime=!!state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF' && !state.finished && !isPenalty;
   const isExtraWait=!!state.awaitingNextPeriod && state.nextPeriodType==='EXTRA_TIME' && !state.finished && !isPenalty;
   const isResult=!!state.finished;
+  const shouldShow=isLive || isHalftime || isExtraWait || isPenalty || isResult;
 
-  const meta=[];
-  if(state.competition) meta.push(`🏆 ${state.competition}`);
-  if(state.venue) meta.push(`🏟️ ${state.venue}`);
+  if(shouldShow){
+    const comp=String(state.competition||'').trim();
+    const venue=String(state.venue||'').trim();
+    const editBtn=isResult
+      ? `<button type="button" class="resultMetaEditBtn metaGroupEditBtn" onclick="openResultMetaEdit()" aria-label="編輯比賽賽事與比賽場地"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span></button>`
+      : '';
 
-  if(isResult){
-    const label=meta.length ? meta.join(' · ') : '🏆 未填賽事 · 🏟️ 未填場地';
-    strip.innerHTML=`<span class="resultMetaText">${escapeHtml(label)}</span><button type="button" class="resultMetaEditBtn" onclick="openResultMetaEdit()" aria-label="編輯賽事名稱與場地"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span></button>`;
+    strip.innerHTML=`
+      <div class="matchMetaDisplayRow competitionDisplayRow${comp?'':' empty'}">
+        <span class="matchMetaDisplayIcon" aria-hidden="true">🏆</span>
+        <span class="matchMetaDisplayValue">${escapeHtml(comp || '比賽賽事')}</span>
+      </div>
+      <div class="matchMetaDisplayRow venueDisplayRow${venue?'':' empty'}">
+        <span class="matchMetaDisplayIcon" aria-hidden="true">🏟️</span>
+        <span class="matchMetaDisplayValue">${escapeHtml(venue || '比賽場地')}</span>
+      </div>
+      ${editBtn}`;
     strip.classList.add('show');
   }else{
-    strip.textContent=meta.join(' · ');
-    // v5.00：PK 與其他比賽狀態使用完全相同的賽事 / 場地資訊列。
-    strip.classList.toggle('show', (isLive || isHalftime || isExtraWait || isPenalty) && meta.length>0);
+    strip.innerHTML='';
+    strip.classList.remove('show');
   }
 
   if(keeperText){
@@ -23305,14 +23580,14 @@ function saveResultMetaEdit(){
   const venue=String(byId('resultVenueInput')?.value||'').trim();
   const invalid=/[<>\r\n]/;
 
-  if(comp.length>15 || invalid.test(comp)){
-    alert('賽事名稱請控制在 15 字內，且不可包含 <、> 或換行。');
+  if(comp.length>40 || invalid.test(comp)){
+    alert('比賽賽事請控制在 40 字內，且不可包含 <、> 或換行。');
     byId('resultCompetitionInput')?.focus();
     return;
   }
 
-  if(venue.length>15 || invalid.test(venue)){
-    alert('場地請控制在 15 字內，且不可包含 <、> 或換行。');
+  if(venue.length>30 || invalid.test(venue)){
+    alert('比賽場地請控制在 30 字內，且不可包含 <、> 或換行。');
     byId('resultVenueInput')?.focus();
     return;
   }
@@ -23449,12 +23724,13 @@ function updatePreMetaInputFit(input){
   }
 
   const len=metaTextLength(input.value);
-  if(len<=5) return;
-  if(len<=7){
+  // v5.130：賽事 / 場地改為滿版後，延後縮字門檻，優先維持正常字級。
+  if(len<=12) return;
+  if(len<=20){
     input.classList.add('metaFitMedium');
     return;
   }
-  if(len<=10){
+  if(len<=30){
     input.classList.add('metaFitLong');
     return;
   }
@@ -24110,7 +24386,7 @@ function buildReportDOM(){
   }else{
     reportCompetition.style.display='none';
   }
-  byId('reportVenueText').textContent=state.venue||'未填場地';
+  byId('reportVenueText').textContent=state.venue||'未填比賽場地';
   const reportRoster=byId('reportRoster');
   const reportRosterText=byId('reportRosterText');
   const rosterForReport=currentRosterNumbers();
@@ -24211,8 +24487,8 @@ function reportLines(){
   const lines=[{type:'title',text:'足球比賽摘要'},
     {type:'score',left:state.ourTeam||'我方',right:state.oppTeam||'對手',score:`${state.ourScore} : ${state.oppScore}`,status}];
   const cells=[
-    {label:'日期／賽事',value:`${matchDateLabel(start,end)}｜${state.competition||'未填賽事'}`},
-    {label:'場地',value:state.venue||'未填場地'},
+    {label:'日期／賽事',value:`${matchDateLabel(start,end)}｜${state.competition||'未填比賽賽事'}`},
+    {label:'場地',value:state.venue||'未填比賽場地'},
     {label:'實際比賽時間',value:fmtDurationReadable(totalMatchElapsed())},
     {label:'開始／結束',value:`${clock(start)} → ${clock(end)}${crossDay?'（跨日）':''}`}
   ];
@@ -24663,7 +24939,7 @@ h1{font-size:24px}.score{font-size:44px;font-weight:900;text-align:center}.teams
 }
 
 </style></head><body><div class="wrap">
-<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">${state.competition?`🏆 ${escapeHtml(state.competition)}　`:''}📍 ${escapeHtml(state.venue||'未填場地')}</div></div>
+<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta">${state.competition?`🏆 ${escapeHtml(state.competition)}　`:''}📍 ${escapeHtml(state.venue||'未填比賽場地')}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</p>${state.halftimeStartEpoch?`<p><b>中場開始：</b>${escapeHtml(fmtClock(state.halftimeStartEpoch))}<br><b>中場結束：</b>${escapeHtml(state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--')}<br><b>中場休息：</b>${escapeHtml(fmtMMSS(halftimeElapsed()))}</p>`:''}${diff}</div>
 <div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
@@ -24768,7 +25044,7 @@ async function shareCSV(){
     try{
       await navigator.share({
         title:'足球精彩標記 CSV',
-        text:`${state.ourTeam||'我方'} ${state.ourScore}:${state.oppScore} ${state.oppTeam||'對手'}${state.competition?`｜${state.competition}`:''}｜${state.venue||'未填場地'}`,
+        text:`${state.ourTeam||'我方'} ${state.ourScore}:${state.oppScore} ${state.oppTeam||'對手'}${state.competition?`｜${state.competition}`:''}｜${state.venue||'未填比賽場地'}`,
         files:[file]
       });
       return;
@@ -24889,7 +25165,7 @@ function advanceGuidedSetup(from){
   }
 
   if(from==='competition'){
-    const value=validateTextField('competition','賽事名稱',false,20);
+    const value=validateTextField('competition','比賽賽事',false,40);
     if(value===null) return false;
 
     state.competition=value;
@@ -24901,7 +25177,7 @@ function advanceGuidedSetup(from){
   }
 
   if(from==='venue'){
-    const value=validateTextField('venue','場地',false,15);
+    const value=validateTextField('venue','比賽場地',false,30);
     if(value===null) return false;
 
     saveState();
@@ -24998,7 +25274,7 @@ byId('competition').addEventListener('keydown', e=>{
       guidedSetupStep='competition';
       advanceGuidedSetup('competition');
     }else{
-      const value=validateTextField('competition','賽事名稱',false,20);
+      const value=validateTextField('competition','比賽賽事',false,40);
       if(value!==null){
         state.competition=value;
         saveState();
@@ -25016,7 +25292,7 @@ byId('venue').addEventListener('keydown', e=>{
       guidedSetupStep='venue';
       advanceGuidedSetup('venue');
     }else{
-      const value=validateTextField('venue','場地',false,15);
+      const value=validateTextField('venue','比賽場地',false,30);
       if(value===null) return;
       saveState();
       // Enter 只完成輸入；開始比賽後才正式加入最近場地。
@@ -25084,7 +25360,7 @@ byId('competition').addEventListener('blur', ()=>{
     return;
   }
 
-  const value=validateTextField('competition','賽事名稱',false,20);
+  const value=validateTextField('competition','比賽賽事',false,40);
   if(value!==null){
     state.competition=value;
     saveState();
@@ -25134,7 +25410,7 @@ window.visualViewport?.addEventListener('scroll',()=>{
   });
 
   input.addEventListener('blur',()=>{
-    if(id==='venue') validateTextField('venue','場地',false,15);
+    if(id==='venue') validateTextField('venue','比賽場地',false,30);
     requestAnimationFrame(()=>updatePreMetaInputFit(input));
   });
 });
@@ -25151,7 +25427,7 @@ byId('venue').addEventListener('blur', ()=>{
 
   const raw=byId('venue').value.trim();
   if(raw){
-    const value=validateTextField('venue','場地',false,15);
+    const value=validateTextField('venue','比賽場地',false,30);
     if(value===null) return;
   }
 
