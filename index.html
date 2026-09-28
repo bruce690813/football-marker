@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.130</title>
+<title>足球場邊記錄器 v5.131</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -18213,6 +18213,161 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 }
 </style>
 
+
+<style id="v5131LiveEventFocusPolish">
+/* =========================================================
+   v5.131：比賽進行中首屏「事件紀錄」聚焦修正
+   適用：上半場 / 下半場 / 延長賽（matchStateLive）
+   目的：v5.130 將賽事與場地拆成兩張滿版卡後，首屏垂直高度增加，
+         iPhone Safari 底部工具列容易遮住事件紀錄入口。
+   原則：
+   1. 保留「比賽賽事 / 比賽場地」兩張滿版資訊卡。
+   2. 進行中狀態改成 compact density；賽前 / 中場 / 全場不受影響。
+   3. 主要事件按鈕仍維持至少 44px 觸控高度。
+   4. 事件紀錄入口視覺略升級，讓記錄後能立即找到回顧入口。
+   ========================================================= */
+
+/* ---------- 進行中：賽事 / 場地由「卡片」降成較精簡的 context rows ---------- */
+body.matchStateLive .liveMetaStrip.show{
+  gap:4px!important;
+  margin:0 1px 5px!important;
+}
+body.matchStateLive .liveMetaStrip .matchMetaDisplayRow{
+  min-height:34px!important;
+  padding:4px 10px!important;
+  border-radius:10px!important;
+}
+body.matchStateLive .liveMetaStrip .matchMetaDisplayIcon{
+  font-size:15px!important;
+}
+body.matchStateLive .liveMetaStrip .matchMetaDisplayValue{
+  font-size:clamp(13.8px,3.55vw,15px)!important;
+  line-height:1.16!important;
+  letter-spacing:-.08px!important;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+}
+
+/* ---------- 比分主卡：只回收非必要留白，不動主要資訊層級 ---------- */
+body.matchStateLive .broadcastBar{
+  min-height:50px!important;
+  padding:6px 9px!important;
+}
+body.matchStateLive .scoreRow{
+  padding-top:7px!important;
+  padding-bottom:7px!important;
+}
+body.matchStateLive .timeSummary:not(.open){
+  margin-top:3px!important;
+  margin-bottom:3px!important;
+}
+body.matchStateLive .timeSummary:not(.open) .timeHead{
+  min-height:42px!important;
+  padding-top:5px!important;
+  padding-bottom:5px!important;
+}
+body.matchStateLive .controls{
+  gap:6px!important;
+}
+body.matchStateLive .controls button{
+  min-height:44px!important;
+  padding-top:7px!important;
+  padding-bottom:7px!important;
+}
+
+/* ---------- 事件區：維持大按鈕可點性，縮減群組間留白 ---------- */
+body.matchStateLive #eventHubSection{
+  padding:6px 10px 7px!important;
+}
+body.matchStateLive #eventHubSection .events{
+  gap:5px!important;
+}
+body.matchStateLive #eventHubSection .event{
+  min-height:46px!important;
+}
+body.matchStateLive #eventHubSection #disciplineSection{
+  margin-top:5px!important;
+  padding-top:5px!important;
+}
+body.matchStateLive #eventHubSection #disciplineSection .disciplineButtonsGrid{
+  gap:7px!important;
+}
+body.matchStateLive #eventHubSection #disciplineSection .cardEventBtn.cardEventDirect{
+  min-height:44px!important;
+  padding-top:6px!important;
+  padding-bottom:6px!important;
+}
+body.matchStateLive #eventHubSection #recordSection{
+  margin-top:4px!important;
+  padding-top:4px!important;
+}
+body.matchStateLive #eventHubSection #recordSection .recordFullBtn{
+  min-height:44px!important;
+  border-color:rgba(111,177,226,.34)!important;
+  background:linear-gradient(180deg,rgba(31,51,70,.92) 0%,rgba(17,34,50,.95) 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 3px 9px rgba(0,0,0,.16)!important;
+}
+body.matchStateLive #eventHubSection #recordSection .recordLabel{
+  color:#e6f0fa!important;
+}
+body.matchStateLive #eventHubSection #recordSection .recordMeta{
+  min-height:30px!important;
+}
+
+/* ---------- iPhone / Safari 可視高度較短時，再做一級 density 收斂 ---------- */
+@media(max-width:430px) and (max-height:950px){
+  body.matchStateLive .liveMetaStrip.show{
+    gap:3px!important;
+    margin-bottom:4px!important;
+  }
+  body.matchStateLive .liveMetaStrip .matchMetaDisplayRow{
+    min-height:32px!important;
+    padding:3px 9px!important;
+  }
+  body.matchStateLive .liveMetaStrip .matchMetaDisplayIcon{
+    font-size:14px!important;
+  }
+  body.matchStateLive .liveMetaStrip .matchMetaDisplayValue{
+    font-size:13.5px!important;
+  }
+  body.matchStateLive .broadcastBar{
+    min-height:48px!important;
+    padding-top:5px!important;
+    padding-bottom:5px!important;
+  }
+  body.matchStateLive .scoreRow{
+    padding-top:6px!important;
+    padding-bottom:6px!important;
+  }
+  body.matchStateLive .timeSummary:not(.open) .timeHead{
+    min-height:40px!important;
+  }
+  body.matchStateLive #eventHubSection{
+    padding-top:5px!important;
+    padding-bottom:6px!important;
+  }
+  body.matchStateLive #eventHubSection .event{
+    min-height:44px!important;
+  }
+  body.matchStateLive #eventHubSection #disciplineSection,
+  body.matchStateLive #eventHubSection #recordSection{
+    margin-top:4px!important;
+    padding-top:4px!important;
+  }
+  body.matchStateLive #eventHubSection #disciplineSection .cardEventBtn.cardEventDirect,
+  body.matchStateLive #eventHubSection #recordSection .recordFullBtn{
+    min-height:44px!important;
+  }
+}
+
+/* Safari 底部工具列仍保留足夠可捲動尾端；首屏能看到紀錄，向下滑時也不會被工具列吃掉。 */
+body.matchStateLive #eventHubSection{
+  scroll-margin-bottom:calc(max(176px, calc(var(--browser-bottom-gap,0px) + 86px)) + env(safe-area-inset-bottom))!important;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -18227,7 +18382,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.130</span>
+      <span class="headerVersion">v5.131</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
