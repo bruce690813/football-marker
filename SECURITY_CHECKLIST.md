@@ -1,3 +1,12 @@
+## v5.134 本次驗證
+
+- [x] 全場比分列縮減非必要水平 padding / gap，不變更比分數值與操作邏輯。
+- [x] 純英文／拉丁字母隊名新增 `latinName` 顯示分類，不修改實際隊名資料。
+- [x] 中文隊名原有 suffixSplit / longName / veryLongName 判斷保留。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：確認 `MONSTER` / `MONOSTER` 等英文隊名完整顯示。
+- [ ] iPhone Safari：確認中英文混合長隊名不與中央比分重疊。
+
 
 ## v5.129 本次驗證
 
