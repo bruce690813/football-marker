@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.139</title>
+<title>足球場邊記錄器 v5.140</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -18787,6 +18787,65 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   #reportModal .reportScore{font-size:40px!important;}
 }
 </style>
+
+
+<style id="v5140ReportCloseFooterSpacingPatch">
+/* =========================================================
+   v5.140：摘要關閉鍵與底部輸出列位置精修
+   1. 標題列保留完整 44px 關閉鍵觸控空間，避免 X 壓到比分框。
+   2. 比分框只微調上方間距，不犧牲比分的主視覺比例。
+   3. 分享／儲存圖片再貼近摘要視窗底部，縮減無效底部留白，
+      同時把約 4px 的高度還給可捲動內容區。
+   ========================================================= */
+#reportModal .reportTitle{
+  min-height:34px!important;
+  display:flex!important;
+  align-items:center!important;
+  padding-right:50px!important;
+}
+#reportModal .reportCloseIcon{
+  top:3px!important;
+  right:7px!important;
+}
+#reportModal .reportScoreRow{
+  margin-top:5px!important;
+}
+#reportModal .reportScoreRow.finished{
+  margin-top:6px!important;
+}
+#reportModal .reportActions.oneReportAction{
+  flex:0 0 50px!important;
+  min-height:50px!important;
+  padding:3px 9px 2px!important;
+  align-items:end!important;
+}
+#reportModal .reportActions.oneReportAction #reportShareBtn{
+  min-height:44px!important;
+  height:44px!important;
+  margin:0!important;
+}
+@media(max-width:430px){
+  #reportModal .reportTitle{
+    min-height:34px!important;
+  }
+  #reportModal .reportCloseIcon{
+    top:3px!important;
+    right:6px!important;
+  }
+  #reportModal .reportScoreRow{
+    margin-top:4px!important;
+  }
+  #reportModal .reportScoreRow.finished{
+    margin-top:5px!important;
+  }
+  #reportModal .reportActions.oneReportAction{
+    flex-basis:48px!important;
+    min-height:48px!important;
+    padding:2px 8px 1px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -18801,7 +18860,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.139</span>
+      <span class="headerVersion">v5.140</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
