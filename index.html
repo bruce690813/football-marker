@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.138</title>
+<title>足球場邊記錄器 v5.139</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -18715,6 +18715,78 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   }
 }
 </style>
+
+<style id="v5139ReportViewportPolishPatch">
+/* =========================================================
+   v5.139：摘要可閱讀高度精修
+   1. 標題簡化為「比賽摘要」，移除重複的「本場事件統計」。
+   2. 固定比分區縮高約 10–15%，比分仍保留第一視覺。
+   3. 底部分享／儲存圖片操作列壓縮外層留白，按鈕維持 44px 觸控高度，
+      把更多視窗高度還給可捲動摘要內容。
+   ========================================================= */
+#reportModal .reportTitle{
+  font-size:13px!important;
+  line-height:1.2!important;
+  padding-right:46px!important;
+}
+#reportModal .reportTop{
+  padding:12px 14px 8px!important;
+}
+#reportModal .reportScoreRow{
+  gap:8px!important;
+  margin-top:8px!important;
+  padding:10px 12px!important;
+  border-radius:15px!important;
+}
+#reportModal .reportScoreRow.finished{
+  margin-top:16px!important;
+}
+#reportModal .reportScoreRow.finished::before{
+  top:-11px!important;
+  min-width:82px!important;
+  padding:3px 12px!important;
+  font-size:10.5px!important;
+}
+#reportModal .reportTeam{
+  font-size:24px!important;
+  line-height:1.08!important;
+}
+#reportModal .reportScore{
+  font-size:46px!important;
+  line-height:.96!important;
+}
+#reportModal .reportBody{
+  padding-top:7px!important;
+  padding-bottom:5px!important;
+}
+#reportModal .reportActions.oneReportAction{
+  flex:0 0 54px!important;
+  min-height:54px!important;
+  padding:4px 9px 6px!important;
+  align-items:end!important;
+}
+#reportModal .reportActions.oneReportAction #reportShareBtn{
+  min-height:44px!important;
+  height:44px!important;
+  padding:8px 4px!important;
+  margin:0!important;
+}
+@media(max-width:430px){
+  #reportModal .reportTop{padding:11px 12px 7px!important;}
+  #reportModal .reportScoreRow{padding:9px 10px!important;}
+  #reportModal .reportTeam{font-size:22px!important;}
+  #reportModal .reportScore{font-size:43px!important;}
+  #reportModal .reportActions.oneReportAction{
+    flex-basis:52px!important;
+    min-height:52px!important;
+    padding:3px 8px 5px!important;
+  }
+}
+@media(max-width:350px){
+  #reportModal .reportTeam{font-size:20px!important;}
+  #reportModal .reportScore{font-size:40px!important;}
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -18729,7 +18801,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.138</span>
+      <span class="headerVersion">v5.139</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -19676,7 +19748,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 <div class="modalBack" id="reportModal">
   <div class="modal reportModal">
     <div class="reportTop">
-      <div class="reportTitle">⚽ 比賽摘要｜本場事件統計</div>
+      <div class="reportTitle">⚽ 比賽摘要</div>
       <button id="reportCloseBtn" class="reportCloseIcon" type="button" aria-label="關閉摘要" title="關閉">✕</button>
       <div class="reportScoreRow" id="reportScoreRow">
         <div class="reportTeam" id="reportOurTeam">我方</div>
