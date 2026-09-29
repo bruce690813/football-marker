@@ -18671,50 +18671,47 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 }
 </style>
 
-<style id="v5138RosterModalBreathingRoomPatch">
+<style id="v5138ReportScrollableMetaPatch">
 /* =========================================================
-   v5.138：本場球員名單視窗上下留白 / Safari 視窗壓迫感精修
-   - Modal 與視窗上下緣保留更明確的呼吸空間。
-   - 內容區維持獨立捲動，標題與完成按鈕固定，不犧牲操作性。
-   - iPhone 較矮可視高度採較小但仍清楚的外部留白。
+   v5.138：摘要固定區只保留標題 / 關閉 / 比分
+   - 比賽賽事、日期、場地、球員移入 reportBody，跟時間／統計一起捲動。
+   - 使用者向下閱讀時，基本資料自然離開畫面，把可視高度還給時間與事件資訊。
+   - 比分仍固定在摘要頂部，保留整場摘要的核心定位。
    ========================================================= */
-#rosterModal{
-  box-sizing:border-box!important;
-  padding:clamp(18px,3.2vh,28px) 10px calc(clamp(18px,3.2vh,28px) + env(safe-area-inset-bottom))!important;
+#reportModal .reportTop{
+  padding-bottom:10px!important;
+  box-shadow:0 7px 16px rgba(0,0,0,.10);
+  position:relative!important;
+  z-index:6;
 }
-#rosterModal .rosterModalPanel{
-  max-height:min(720px,calc(var(--vv-height,100dvh) - 56px - env(safe-area-inset-bottom)))!important;
-  border-radius:24px!important;
+#reportModal .reportTop .reportScoreRow{
+  margin-bottom:0!important;
 }
-#rosterModal .rosterModalFixedHead{
-  padding:20px 18px 14px!important;
+#reportModal .reportBody{
+  padding-top:9px!important;
 }
-#rosterModal .rosterModalScroll{
-  padding:7px 18px 18px!important;
-  scroll-padding-top:10px;
-  scroll-padding-bottom:16px;
+#reportModal .reportMetaScrollable{
+  margin-top:0!important;
+  margin-bottom:9px!important;
 }
-#rosterModal .rosterModalFooter{
-  padding:13px 18px calc(14px + env(safe-area-inset-bottom))!important;
+#reportModal .reportStatusScrollable{
+  width:max-content;
+  max-width:100%;
+  margin:0 auto 9px!important;
 }
-#rosterModal .rosterDoneBtn{
-  min-height:52px!important;
-  border-radius:13px!important;
+#reportModal .reportStatusScrollable[style*="display: none"],
+#reportModal .reportStatusScrollable[style*="display:none"]{
+  margin-bottom:0!important;
 }
-@media(max-height:720px){
-  #rosterModal{
-    padding:14px 8px calc(14px + env(safe-area-inset-bottom))!important;
+@media(max-width:430px){
+  #reportModal .reportTop{
+    padding-bottom:9px!important;
   }
-  #rosterModal .rosterModalPanel{
-    max-height:calc(var(--vv-height,100dvh) - 34px - env(safe-area-inset-bottom))!important;
+  #reportModal .reportBody{
+    padding-top:8px!important;
   }
-  #rosterModal .rosterModalFixedHead{padding:16px 14px 11px!important;}
-  #rosterModal .rosterModalScroll{padding:5px 14px 14px!important;}
-  #rosterModal .rosterModalFooter{padding:10px 14px calc(11px + env(safe-area-inset-bottom))!important;}
-}
-@media(max-width:390px){
-  #rosterModal .rosterModalPanel{
-    max-height:min(710px,calc(var(--vv-height,100dvh) - 48px - env(safe-area-inset-bottom)))!important;
+  #reportModal .reportMetaScrollable{
+    margin-bottom:8px!important;
   }
 }
 </style>
@@ -19686,15 +19683,15 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
         <div class="reportScore" id="reportScore">0 : 0</div>
         <div class="reportTeam" id="reportOppTeam">對手</div>
       </div>
-      <div class="reportMeta">
+    </div>
+    <div class="reportBody">
+      <div class="reportMeta reportMetaScrollable" aria-label="比賽基本資料">
         <span id="reportCompetition" class="reportMetaRow">🏆 未填比賽賽事</span>
         <span id="reportDate" class="reportMetaRow">📅 ----/--/--</span>
         <span id="reportVenue" class="reportVenueMeta reportMetaRow"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText">未填比賽場地</span></span>
         <span id="reportRoster" class="reportRosterMeta reportMetaRow" style="display:none"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="reportRosterText">本場名單</span></span>
       </div>
-      <div class="reportStatusBadge idle" id="reportStatusBadge">尚未開始</div>
-    </div>
-    <div class="reportBody">
+      <div class="reportStatusBadge idle reportStatusScrollable" id="reportStatusBadge">尚未開始</div>
       <div class="reportSectionTitle reportSectionTitleTime">時間紀錄</div>
       <div class="reportTimeCard">
         <div class="reportOverviewGrid">
