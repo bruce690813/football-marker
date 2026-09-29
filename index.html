@@ -18919,6 +18919,45 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 }
 </style>
 
+
+
+<style id="v5142ReportSafariChromeTintFix">
+/* =========================================================
+   v5.142：iPhone Safari 底部藍色染色修正
+   根因：v5.141 將摘要 Modal 幾乎貼到 visual viewport 最底部，
+   藍色「分享／儲存圖片」成為 Safari 底部瀏覽器列附近最主要的背景色，
+   透明 / 半透明瀏覽器工具列因此被染成大面積亮藍。
+
+   修正：
+   1. 仍讓摘要比舊版更靠下，但保留一小段深色安全緩衝帶。
+   2. Modal 高度扣除同等底部緩衝，避免內容伸到瀏覽器 chrome 下方。
+   3. 分享按鈕本身不改藍色；進球比分暖黃強調也完整保留。
+   ========================================================= */
+@media(max-width:430px){
+  #reportModal{
+    align-items:flex-end!important;
+    padding:6px 5px 12px!important;
+    background:rgba(0,0,0,.76)!important;
+  }
+  #reportModal .reportModal{
+    width:min(calc(100vw - 10px),560px)!important;
+    height:calc(var(--vv-height,100dvh) - 18px)!important;
+    max-height:calc(var(--vv-height,100dvh) - 18px)!important;
+  }
+  #reportModal .reportActions.oneReportAction{
+    flex-basis:48px!important;
+    min-height:48px!important;
+    padding:2px 8px 2px!important;
+    background:#0f1720!important;
+  }
+  #reportModal .reportActions.oneReportAction #reportShareBtn{
+    min-height:44px!important;
+    height:44px!important;
+    margin:0!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -18933,7 +18972,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.141</span>
+      <span class="headerVersion">v5.142</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -25843,6 +25882,45 @@ body.resultMode.finalOutputVisible .finalToolsCard{
   }
 }
 </style>
+
+
+<style id="v5142ReportSafariChromeTintFix">
+/* =========================================================
+   v5.142：iPhone Safari 底部藍色染色修正
+   根因：v5.141 將摘要 Modal 幾乎貼到 visual viewport 最底部，
+   藍色「分享／儲存圖片」成為 Safari 底部瀏覽器列附近最主要的背景色，
+   透明 / 半透明瀏覽器工具列因此被染成大面積亮藍。
+
+   修正：
+   1. 仍讓摘要比舊版更靠下，但保留一小段深色安全緩衝帶。
+   2. Modal 高度扣除同等底部緩衝，避免內容伸到瀏覽器 chrome 下方。
+   3. 分享按鈕本身不改藍色；進球比分暖黃強調也完整保留。
+   ========================================================= */
+@media(max-width:430px){
+  #reportModal{
+    align-items:flex-end!important;
+    padding:6px 5px 12px!important;
+    background:rgba(0,0,0,.76)!important;
+  }
+  #reportModal .reportModal{
+    width:min(calc(100vw - 10px),560px)!important;
+    height:calc(var(--vv-height,100dvh) - 18px)!important;
+    max-height:calc(var(--vv-height,100dvh) - 18px)!important;
+  }
+  #reportModal .reportActions.oneReportAction{
+    flex-basis:48px!important;
+    min-height:48px!important;
+    padding:2px 8px 2px!important;
+    background:#0f1720!important;
+  }
+  #reportModal .reportActions.oneReportAction #reportShareBtn{
+    min-height:44px!important;
+    height:44px!important;
+    margin:0!important;
+  }
+}
+</style>
+
 </head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}</div><div>🏆 ${escapeHtml(state.competition||'未填比賽賽事')}</div><div>📍 ${escapeHtml(state.venue||'未填比賽場地')}</div></div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
