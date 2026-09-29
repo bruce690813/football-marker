@@ -18846,6 +18846,79 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 }
 </style>
 
+
+
+<style id="v5141ReportBottomAndGoalScorePatch">
+/* =========================================================
+   v5.141：摘要底部空間與進球比分辨識度精修
+   1. iPhone 摘要 Modal 改為貼近 visual viewport 底部，利用原本下方空白。
+   2. 同時把 Modal 可用高度再增加少量，將空間優先還給可捲動摘要內容。
+   3. 比賽事件時間軸中，只有「進球」事件的當下比分改用記分板暖黃，
+      非進球事件仍維持原本中性灰，避免每一筆比分都搶焦點。
+   ========================================================= */
+
+/* 進球後比分：與主畫面記分板暖黃語言一致，但不使用隊伍藍／橘色，
+   避免誤解為我方／對手色。 */
+#reportModal .matchTimelineRow.isGoal .matchTimelineScore{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  justify-self:end!important;
+  min-width:42px!important;
+  min-height:23px!important;
+  padding:2px 6px!important;
+  border-radius:999px!important;
+  border:1px solid rgba(250,204,21,.28)!important;
+  background:rgba(250,204,21,.10)!important;
+  color:#ffd84d!important;
+  font-size:15px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  letter-spacing:.1px!important;
+  text-align:center!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+
+/* 一般事件的比分快照維持低權重。 */
+#reportModal .matchTimelineRow:not(.isGoal) .matchTimelineScore{
+  color:#aebccc!important;
+  background:transparent!important;
+  border-color:transparent!important;
+}
+
+/* iPhone / 窄螢幕：摘要本身往 visual viewport 底部靠，
+   不再把上下空白平均分配；下方原本可見的黑色空間拿回來使用。 */
+@media(max-width:430px){
+  #reportModal{
+    align-items:flex-end!important;
+    padding:6px 5px 0!important;
+  }
+  #reportModal .reportModal{
+    width:min(calc(100vw - 10px),560px)!important;
+    height:calc(var(--vv-height,100dvh) - 6px)!important;
+    max-height:calc(var(--vv-height,100dvh) - 6px)!important;
+  }
+  #reportModal .reportActions.oneReportAction{
+    flex-basis:47px!important;
+    min-height:47px!important;
+    padding:2px 8px 0!important;
+  }
+  #reportModal .reportActions.oneReportAction #reportShareBtn{
+    min-height:44px!important;
+    height:44px!important;
+  }
+}
+
+@media(max-width:350px){
+  #reportModal .matchTimelineRow.isGoal .matchTimelineScore{
+    min-width:40px!important;
+    padding-left:5px!important;
+    padding-right:5px!important;
+    font-size:14px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -18860,7 +18933,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.140</span>
+      <span class="headerVersion">v5.141</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
