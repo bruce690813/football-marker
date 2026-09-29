@@ -19005,44 +19005,6 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 }
 </style>
 
-
-
-<style id="v5144ReportGoalScoreOnlyPatch">
-/* =========================================================
-   v5.144：摘要時間軸比分顯示規則精簡
-   1. 只有進球事件顯示當下比分。
-   2. 射門、撲救、防守與牌卡不再重複顯示未變動的比分。
-   3. 進球比分保留暖黃色粗體，但移除膠囊背景、邊框與陰影。
-   4. 非進球事件內容可延伸使用右側原比分欄位，增加可讀寬度。
-   資料層仍完整保留 score_after，不影響 CSV / 歷史資料。
-   ========================================================= */
-#reportModal .matchTimelineRow.isGoal .matchTimelineScore{
-  display:block!important;
-  min-width:0!important;
-  min-height:0!important;
-  padding:1px 0!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
-  box-shadow:none!important;
-  color:#ffd84d!important;
-  font-size:16px!important;
-  font-weight:950!important;
-  line-height:1.2!important;
-  letter-spacing:.1px!important;
-  text-align:right!important;
-}
-#reportModal .matchTimelineRow:not(.isGoal) .matchTimelineContent{
-  grid-column:3 / 5!important;
-  padding-right:2px!important;
-}
-@media(max-width:350px){
-  #reportModal .matchTimelineRow.isGoal .matchTimelineScore{
-    font-size:15px!important;
-  }
-}
-</style>
-
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25231,7 +25193,7 @@ function reportTimelineHTML(){
     return heading+`<li class="matchTimelineRow ${e.team==='OUR'?'isOur':e.team==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
       <div class="matchTimelineTime">${escapeHtml(e.time)}</div><div class="matchTimelineNode" aria-hidden="true"></div>
       <div class="matchTimelineContent"><div class="matchTimelineCompact"><span class="matchTimelineCompactIcon" aria-hidden="true">${escapeHtml(compact.icon)}</span><span class="matchTimelineCompactMain">${escapeHtml(compact.main)}</span>${compact.assist?`<span class="matchTimelineAssistInline">${escapeHtml(compact.assist)}</span>`:''}</div></div>
-      ${e.event==='GOAL'?`<div class="matchTimelineScore" aria-label="進球後比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>`:''}
+      <div class="matchTimelineScore" aria-label="當時比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>
     </li>`;
   }).join('')+'</ol>';
 }
@@ -25385,37 +25347,44 @@ function closeReport(){
 }
 
 /* PNG report */
+// v5.144：儲存圖片排版改為以螢幕摘要為唯一視覺基準。
 function reportLines(){
   const start=matchStartEpoch(), end=matchEndEpoch();
   const crossDay=isCrossDay(start,end);
   const clock=epoch=>epoch?(crossDay?fmtMonthDayClock(epoch):fmtClock(epoch)):'--:--:--';
   const status=state.finished?'比賽結束':state.penalty?.active?'PK 點球大戰':state.awaitingNextPeriod?'中場／等待開賽':state.started?(state.currentPeriod===3?'延長賽':state.multiPeriod?periodLabel(state.currentPeriod||1):'比賽中'):'尚未開始';
-  const lines=[{type:'title',text:'足球比賽摘要'},
+  const lines=[{type:'title',text:'比賽摘要'},
     {type:'score',left:state.ourTeam||'我方',right:state.oppTeam||'對手',score:`${state.ourScore} : ${state.oppScore}`,status}];
   const roster=currentRosterNumbers();
-  const cells=[
-    {label:'比賽賽事',value:state.competition||'未填比賽賽事',full:true},
-    {label:'比賽日期',value:matchDateLabel(start,end),full:true},
-    {label:'比賽場地',value:state.venue||'未填比賽場地',full:true}
+
+  // v5.144：儲存圖片的基本資料順序與螢幕摘要一致。
+  const metaCards=[
+    {label:'比賽賽事',icon:'🏆',value:state.competition||'未填比賽賽事',full:true,summaryCard:true},
+    {label:'比賽日期',icon:'📅',value:matchDateLabel(start,end),full:true,summaryCard:true},
+    {label:'比賽場地',icon:'📍',value:state.venue||'未填比賽場地',full:true,summaryCard:true}
   ];
   if(roster.length){
-    cells.push({label:'本場球員',value:roster.map(n=>'#'+n).join(' '),full:true});
+    metaCards.push({label:'本場球員',icon:'👕',value:roster.map(n=>'#'+n).join(' '),full:true,summaryCard:true});
   }
-  cells.push(
-    {label:'實際比賽時間',value:fmtDurationReadable(totalMatchElapsed())},
+  lines.push({type:'metaGrid',cells:metaCards});
+
+  lines.push({type:'section',text:'時間紀錄'});
+  const timeCells=[
+    {label:'實際比賽時間',value:fmtDurationReadable(totalMatchElapsed()),primary:true},
     {label:'開始／結束',value:`${clock(start)} → ${clock(end)}${crossDay?'（跨日）':''}`}
-  );
+  ];
   if(state.halftimeStartEpoch){
-    cells.push({label:'中場休息',value:fmtMMSS(halftimeElapsed())},
+    timeCells.push({label:'中場休息',value:fmtMMSS(halftimeElapsed())},
       {label:'中場起訖',value:`${clock(state.halftimeStartEpoch)} → ${clock(state.halftimeEndEpoch)}`});
   }
-  lines.push({type:'metaGrid',cells});
+  lines.push({type:'timeGrid',cells:timeCells});
   if(state.regulationMinutes){
     const diff=Math.round((state.finished?state.finalElapsed:totalMatchElapsed())-regulationTargetSeconds());
-    lines.push({type:'meta',text:`比賽設定：${regulationDisplayText()}${state.finished?`｜${diff<0?'提前':'超過'} ${fmtMMSS(Math.abs(diff))}`:''}`});
+    lines.push({type:'meta',text:`${regulationDisplayText()}${state.finished?`｜${diff<0?'提前':'超過'} ${fmtMMSS(Math.abs(diff))}`:''}`});
   }
 
   if(state.multiPeriod && state.periods.length){
+    lines.push({type:'section',text:'比賽段落'});
     lines.push({type:'periodGrid',items:state.periods.map(p=>({label:p.label||periodLabel(p.number),
       score:`${Math.max(0,(p.endOurScore??0)-(p.startOurScore??0))}:${Math.max(0,(p.endOppScore??0)-(p.startOppScore??0))}`,
       duration:fmtMMSS(p.duration||0)}))});
@@ -25430,8 +25399,18 @@ function reportLines(){
   }
   if(scorers.size) lines.push({type:'scorerGrid',items:[...scorers.values()].sort((a,b)=>b.goals-a.goals)});
   lines.push({type:'timelineHeading',text:'比賽事件時間軸'});
-  if(!entries.length) lines.push({type:'meta',text:'尚未標記事件'});
-  lines.push(...entries);
+  if(!entries.length){
+    lines.push({type:'meta',text:'尚未標記事件'});
+  }else{
+    let phase=null;
+    for(const e of entries){
+      if(phase!==e.period){
+        lines.push({type:'timelinePhase',text:e.phase});
+        phase=e.period;
+      }
+      lines.push(e);
+    }
+  }
   // PK 比分及輪次獨立保留，不混入正規／延長賽進球。
   if(state.penalty){
     lines.push({type:'section',text:`PK 點球大戰 · ${penaltyGoals('our')} : ${penaltyGoals('opp')}`});
@@ -25534,47 +25513,50 @@ function reportCanvasLayout(lines,ctx){
   let y=54;
   const blocks=lines.map(line=>{
     const b={...line,y};
-    if(line.type==='title') b.height=66;
+    if(line.type==='title') b.height=62;
     else if(line.type==='score') b.height=154;
     else if(line.type==='metaGrid'){
-      b.rows=[];b.height=12;
-      let i=0;
-      while(i<line.cells.length){
-        const current=line.cells[i];
-        if(current?.full){
-          const cells=[reportWrapText(ctx,`${current.label}：${current.value}`,content-16,font)];
-          const height=cells[0].length*32+10;
-          b.rows.push({cells,height,full:true});
-          b.height+=height;
-          i+=1;
-          continue;
+      b.rows=[];b.height=8;
+      for(const current of line.cells){
+        if(current?.summaryCard){
+          const rows=reportWrapText(ctx,current.value,content-92,mainFont);
+          const height=Math.max(58,rows.length*34+20);
+          b.rows.push({summaryCard:true,icon:current.icon,label:current.label,rows,height});
+          b.height+=height+8;
         }
-        const pair=[current];
-        if(i+1<line.cells.length && !line.cells[i+1]?.full) pair.push(line.cells[i+1]);
-        const cells=pair.map(c=>reportWrapText(ctx,`${c.label}：${c.value}`,(content-28)/2,font));
-        const height=Math.max(...cells.map(c=>c.length))*32+10;
-        b.rows.push({cells,height,full:false});
-        b.height+=height;
-        i+=pair.length;
+      }
+    }else if(line.type==='timeGrid'){
+      b.rows=[];b.height=8;
+      for(let i=0;i<line.cells.length;i+=2){
+        const pair=line.cells.slice(i,i+2);
+        const cells=pair.map(c=>({
+          ...c,
+          labelRows:reportWrapText(ctx,c.label,(content-30)/2-26,'700 19px -apple-system, sans-serif'),
+          valueRows:reportWrapText(ctx,c.value,(content-30)/2-26,c.primary?'800 31px -apple-system, sans-serif':'700 24px -apple-system, sans-serif')
+        }));
+        const height=Math.max(78,...cells.map(c=>c.labelRows.length*24+c.valueRows.length*(c.primary?36:30)+18));
+        b.rows.push({cells,height});b.height+=height+8;
       }
     }else if(line.type==='meta'){
       b.textRows=reportWrapText(ctx,line.text,content-16,font);b.height=b.textRows.length*32+10;
     }else if(line.type==='periodGrid'){
-      b.height=28+Math.ceil(line.items.length/3)*78;
+      b.height=Math.ceil(line.items.length/3)*78+4;
     }else if(line.type==='scorerGrid'){
-      b.rows=[];b.height=38;
-      for(let i=0;i<line.items.length;i+=3){
-        const cells=line.items.slice(i,i+3).map(s=>reportWrapText(ctx,`${s.name} · ${s.goals} 球`,(content-32)/3-20,font));
+      b.rows=[];b.height=48;
+      for(let i=0;i<line.items.length;i+=2){
+        const cells=line.items.slice(i,i+2).map(s=>reportWrapText(ctx,`${s.name}  ${'⚽'.repeat(s.goals)}`,(content-16)/2-20,font));
         const height=Math.max(...cells.map(c=>c.length))*32+14;
         b.rows.push({cells,height});b.height+=height;
       }
-    }else if(line.type==='timelineHeading') b.height=86;
-    else if(line.type==='section') b.height=56;
+    }else if(line.type==='timelineHeading') b.height=76;
+    else if(line.type==='timelinePhase') b.height=46;
+    else if(line.type==='section') b.height=52;
     else if(line.type==='timelineEvent'){
-      b.titleRows=reportWrapText(ctx,`${line.typeLabel} · ${line.actor}`,content-322,mainFont);
-      b.assistRows=line.assist?reportWrapText(ctx,line.assist,content-282,font):[];
-      b.phaseRows=reportWrapText(ctx,line.phase,146,'500 23px -apple-system, sans-serif');
-      b.height=Math.max(64,b.titleRows.length*34+b.assistRows.length*28+20,b.phaseRows.length*25+46);
+      const compact=reportTimelineCompactParts(line);
+      b.compact=compact;
+      const combined=`${compact.main}${compact.assist?`  ${compact.assist}`:''}`;
+      b.compactRows=reportWrapText(ctx,combined,content-310,mainFont);
+      b.height=Math.max(58,b.compactRows.length*34+20);
     }else{
       b.textRows=reportWrapText(ctx,line.text||'',content-16,font);b.height=b.textRows.length*32+10;
     }
@@ -25582,6 +25564,7 @@ function reportCanvasLayout(lines,ctx){
   });
   return {width,pad,content,height:Math.ceil(y+80),blocks};
 }
+
 function makeReportCanvas(lines=reportLines(),resolution=1){
   const measure=document.createElement('canvas');measure.width=1;measure.height=1;
   const mctx=measure.getContext('2d');
@@ -25598,6 +25581,9 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
   const font=(size,weight=500)=>`${weight} ${size}px -apple-system, BlinkMacSystemFont, sans-serif`;
   const text=(value,x,y,size=24,color='#b9c9d9',weight=500)=>{
     ctx.font=font(size,weight);ctx.fillStyle=color;ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText(String(value),x,y);
+  };
+  const emojiText=(value,x,y,size=26)=>{
+    ctx.font=`${size}px Apple Color Emoji, -apple-system, sans-serif`;ctx.fillStyle='#eef4fb';ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText(String(value),x,y);
   };
   const centered=(value,x,y,size,color,weight=800)=>{
     ctx.font=font(size,weight);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='alphabetic';
@@ -25616,66 +25602,87 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
   blocks.forEach((b,index)=>{
     const y=b.y;
     if(b.type==='title'){
-      text(b.text,pad,y,42,'#f7fafc',800);
+      emojiText('⚽',pad,y+3,32);text(b.text,pad+44,y,40,'#f7fafc',800);
     }else if(b.type==='score'){
       ctx.fillStyle='#0c1724';roundRect(ctx,pad,y,content,138,18,true,false);
-      ctx.strokeStyle='#30465b';ctx.lineWidth=2;roundRect(ctx,pad,y,content,138,18,false,true);
-      ctx.fillStyle='#182b3d';roundRect(ctx,pad+12,y+24,300,94,12,true,false);roundRect(ctx,W-pad-312,y+24,300,94,12,true,false);
+      ctx.strokeStyle=b.status==='比賽結束'?'#ff4f5f':'#30465b';ctx.lineWidth=b.status==='比賽結束'?4:2;roundRect(ctx,pad,y,content,138,18,false,true);
       ctx.fillStyle='#0b1420';roundRect(ctx,W/2-146,y+24,292,94,14,true,false);
-      ctx.strokeStyle=b.status==='比賽結束'?'#ff6173':'#59c8f1';ctx.lineWidth=3;roundRect(ctx,W/2-146,y+24,292,94,14,false,true);
-      ctx.fillStyle=b.status==='比賽結束'?'#f2485a':'#235e7b';roundRect(ctx,W/2-84,y+3,168,28,14,true,false);
+      ctx.fillStyle=b.status==='比賽結束'?'#ff4f5f':'#235e7b';roundRect(ctx,W/2-84,y+3,168,28,14,true,false);
       centered(b.status,W/2,y+17,18,'#f7fafc',700);
       teamName(b.left,pad+162,y+72);teamName(b.right,W-pad-162,y+72);
       centered(b.score,W/2,y+76,72,'#ffffff');
     }else if(b.type==='metaGrid'){
-      let rowY=y+6;
+      let rowY=y+2;
       b.rows.forEach(row=>{
+        if(row.summaryCard){
+          ctx.fillStyle='#162535';roundRect(ctx,pad,rowY,content,row.height,10,true,false);
+          emojiText(row.icon,pad+18,rowY+14,28);
+          row.rows.forEach((value,j)=>text(value,pad+62,rowY+12+j*34,28,'#c8d6e4',700));
+          rowY+=row.height+8;
+        }
+      });
+    }else if(b.type==='timeGrid'){
+      let rowY=y+2;
+      b.rows.forEach(row=>{
+        const cellW=(content-12)/2;
         row.cells.forEach((cell,i)=>{
-          const x=row.full ? pad+8 : pad+8+i*(content+28)/2;
-          cell.forEach((value,j)=>text(value,x,rowY+j*32));
+          const x=pad+i*(cellW+12);
+          ctx.fillStyle='#162535';roundRect(ctx,x,rowY,cellW,row.height,10,true,false);
+          text(cell.label,x+14,rowY+10,19,'#7dd3fc',800);
+          cell.valueRows.forEach((value,j)=>text(value,x+14,rowY+36+j*(cell.primary?36:30),cell.primary?31:24,cell.primary?'#38bdf8':'#eef5fc',cell.primary?900:750));
         });
-        rowY+=row.height;
+        rowY+=row.height+8;
       });
     }else if(b.type==='periodGrid'){
-      text('各段比分 · 非累計',pad+8,y,21,'#9fb4c8');
       b.items.forEach((p,i)=>{
-        const x=pad+(i%3)*(content+16)/3, top=y+28+Math.floor(i/3)*78, w=(content-32)/3;
+        const x=pad+(i%3)*(content+16)/3, top=y+Math.floor(i/3)*78, w=(content-32)/3;
         ctx.fillStyle='#182837';roundRect(ctx,x,top,w,68,8,true,false);
-        text(p.label,x+12,top+8,21);text(`${p.score} · ${p.duration}`,x+12,top+34,25,'#eef5fc',700);
+        text(p.label,x+12,top+8,21,'#7dd3fc',750);text(p.duration,x+12,top+34,22,'#b9c9d9',650);
+        ctx.font=font(25,800);ctx.textAlign='right';ctx.textBaseline='top';ctx.fillStyle='#eef5fc';ctx.fillText(p.score,x+w-12,top+34);
       });
     }else if(b.type==='scorerGrid'){
-      text('球員進球統計',pad+8,y+4,25,'#7dd3fc',700);let rowY=y+38;
+      text('球員進球統計',pad+8,y+4,29,'#7dd3fc',800);let rowY=y+42;
       b.rows.forEach(row=>{
+        const cellW=(content-12)/2;
         row.cells.forEach((cell,i)=>{
-          const x=pad+i*(content+16)/3;
-          ctx.fillStyle='#182837';roundRect(ctx,x,rowY,(content-32)/3,row.height-6,8,true,false);
-          cell.forEach((value,j)=>text(value,x+10,rowY+6+j*32,24,'#eaf3fc',600));
+          const x=pad+i*(cellW+12);
+          ctx.fillStyle='#182837';roundRect(ctx,x,rowY,cellW,row.height-6,8,true,false);
+          cell.forEach((value,j)=>text(value,x+12,rowY+7+j*32,24,'#eaf3fc',700));
         });rowY+=row.height;
       });
     }else if(b.type==='timelineHeading'){
-      text(b.text,pad+8,y+10,30,'#7dd3fc',800);
-      ctx.fillStyle='#59c8f1';ctx.beginPath();ctx.arc(pad+16,y+63,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+50,23);
-      ctx.fillStyle='#ffad83';ctx.beginPath();ctx.arc(pad+120,y+63,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+50,23);
-      text('間距非時間比例 · 右側為當時比分',pad+238,y+50,23);
+      text(b.text,pad+8,y+8,30,'#7dd3fc',800);
+      ctx.fillStyle='#59c8f1';ctx.beginPath();ctx.arc(pad+16,y+57,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+44,23,'#59c8f1',700);
+      ctx.fillStyle='#ffad83';ctx.beginPath();ctx.arc(pad+120,y+57,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+44,23,'#ffad83',700);
+    }else if(b.type==='timelinePhase'){
+      text(b.text,pad+8,y+10,25,'#b3c3d3',800);
+      ctx.strokeStyle='#293c4e';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,y+42);ctx.lineTo(W-pad,y+42);ctx.stroke();
     }else if(b.type==='timelineEvent'){
       const nodeX=pad+172, actorX=pad+200, isGoal=b.event==='GOAL';
       if(isGoal){ctx.fillStyle='#172b3c';roundRect(ctx,pad,y,content,b.height-4,8,true,false);}
-      if(blocks[index+1]?.type==='timelineEvent'){
+      const next=blocks[index+1];
+      if(next?.type==='timelineEvent'){
         ctx.strokeStyle='#30465b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(nodeX,y+24);ctx.lineTo(nodeX,y+b.height+24);ctx.stroke();
       }
       ctx.fillStyle=b.team==='OUR'?'#59c8f1':b.team==='OPP'?'#ffad83':'#aeb9c5';ctx.beginPath();ctx.arc(nodeX,y+24,7,0,Math.PI*2);ctx.fill();
-      b.phaseRows.forEach((value,j)=>text(value,pad+8,y+8+j*25,23));
-      text(b.time,pad+8,y+10+b.phaseRows.length*25,24);
+      text(b.time,pad+8,y+10,24,'#b3c3d3',600);
       if(b.event==='YELLOW_CARD'||b.event==='RED_CARD'){
         ctx.fillStyle=b.event==='YELLOW_CARD'?'#ffd21f':'#ef3535';roundRect(ctx,actorX,y+12,17,27,2,true,false);
       }else{
-        ctx.font='28px Apple Color Emoji, sans-serif';ctx.textAlign='left';ctx.textBaseline='top';ctx.fillStyle='#eef4fb';ctx.fillText(emoji(b.event),actorX,y+10);
+        emojiText(emoji(b.event),actorX,y+8,28);
       }
-      b.titleRows.forEach((value,j)=>text(value,actorX+38,y+8+j*34,28,'#edf5fc',isGoal?800:600));
-      b.assistRows.forEach((value,j)=>text(value,actorX+38,y+8+b.titleRows.length*34+j*28,24));
-      ctx.font=font(30,isGoal?800:500);ctx.textAlign='right';ctx.textBaseline='top';ctx.fillStyle=isGoal?'#ffffff':'#aebccc';ctx.fillText(b.score,W-pad-10,y+9);
+      b.compactRows.forEach((value,j)=>text(value,actorX+38,y+8+j*34,28,'#edf5fc',isGoal?800:700));
+      // 與螢幕摘要一致：只有真正改變比分的進球事件顯示當時比分。
+      if(isGoal){
+        const score=String(b.score||'');
+        ctx.font=font(28,900);const tw=ctx.measureText(score).width;
+        const pillW=Math.max(60,tw+28), pillH=38, px=W-pad-pillW, py=y+7;
+        ctx.fillStyle='rgba(250,204,21,.10)';roundRect(ctx,px,py,pillW,pillH,19,true,false);
+        ctx.strokeStyle='rgba(250,204,21,.42)';ctx.lineWidth=2;roundRect(ctx,px,py,pillW,pillH,19,false,true);
+        centered(score,px+pillW/2,py+pillH/2,28,'#ffd84d',900);
+      }
     }else if(b.type==='section'){
-      text(b.text,pad+8,y+14,28,'#7dd3fc',800);
+      text(b.text,pad+8,y+12,28,'#7dd3fc',800);
     }else{
       (b.textRows||[]).forEach((value,j)=>text(value,pad+8,y+4+j*32));
     }
@@ -25683,6 +25690,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
   centered('足球場邊記錄器',W/2,H-42,20,'#8298ae',500);
   return canvas;
 }
+
 function roundRect(ctx,x,y,w,h,r,fill,stroke){
   if(w<2*r) r=w/2; if(h<2*r) r=h/2;
   ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
