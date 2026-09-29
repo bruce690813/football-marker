@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.137</title>
+<title>足球場邊記錄器 v5.138</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -18670,6 +18670,54 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   }
 }
 </style>
+
+<style id="v5138RosterModalBreathingRoomPatch">
+/* =========================================================
+   v5.138：本場球員名單視窗上下留白 / Safari 視窗壓迫感精修
+   - Modal 與視窗上下緣保留更明確的呼吸空間。
+   - 內容區維持獨立捲動，標題與完成按鈕固定，不犧牲操作性。
+   - iPhone 較矮可視高度採較小但仍清楚的外部留白。
+   ========================================================= */
+#rosterModal{
+  box-sizing:border-box!important;
+  padding:clamp(18px,3.2vh,28px) 10px calc(clamp(18px,3.2vh,28px) + env(safe-area-inset-bottom))!important;
+}
+#rosterModal .rosterModalPanel{
+  max-height:min(720px,calc(var(--vv-height,100dvh) - 56px - env(safe-area-inset-bottom)))!important;
+  border-radius:24px!important;
+}
+#rosterModal .rosterModalFixedHead{
+  padding:20px 18px 14px!important;
+}
+#rosterModal .rosterModalScroll{
+  padding:7px 18px 18px!important;
+  scroll-padding-top:10px;
+  scroll-padding-bottom:16px;
+}
+#rosterModal .rosterModalFooter{
+  padding:13px 18px calc(14px + env(safe-area-inset-bottom))!important;
+}
+#rosterModal .rosterDoneBtn{
+  min-height:52px!important;
+  border-radius:13px!important;
+}
+@media(max-height:720px){
+  #rosterModal{
+    padding:14px 8px calc(14px + env(safe-area-inset-bottom))!important;
+  }
+  #rosterModal .rosterModalPanel{
+    max-height:calc(var(--vv-height,100dvh) - 34px - env(safe-area-inset-bottom))!important;
+  }
+  #rosterModal .rosterModalFixedHead{padding:16px 14px 11px!important;}
+  #rosterModal .rosterModalScroll{padding:5px 14px 14px!important;}
+  #rosterModal .rosterModalFooter{padding:10px 14px calc(11px + env(safe-area-inset-bottom))!important;}
+}
+@media(max-width:390px){
+  #rosterModal .rosterModalPanel{
+    max-height:min(710px,calc(var(--vv-height,100dvh) - 48px - env(safe-area-inset-bottom)))!important;
+  }
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -18684,7 +18732,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.137</span>
+      <span class="headerVersion">v5.138</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
