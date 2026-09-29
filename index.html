@@ -19005,6 +19005,44 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 }
 </style>
 
+
+
+<style id="v5144ReportGoalScoreOnlyPatch">
+/* =========================================================
+   v5.144：摘要時間軸比分顯示規則精簡
+   1. 只有進球事件顯示當下比分。
+   2. 射門、撲救、防守與牌卡不再重複顯示未變動的比分。
+   3. 進球比分保留暖黃色粗體，但移除膠囊背景、邊框與陰影。
+   4. 非進球事件內容可延伸使用右側原比分欄位，增加可讀寬度。
+   資料層仍完整保留 score_after，不影響 CSV / 歷史資料。
+   ========================================================= */
+#reportModal .matchTimelineRow.isGoal .matchTimelineScore{
+  display:block!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:1px 0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#ffd84d!important;
+  font-size:16px!important;
+  font-weight:950!important;
+  line-height:1.2!important;
+  letter-spacing:.1px!important;
+  text-align:right!important;
+}
+#reportModal .matchTimelineRow:not(.isGoal) .matchTimelineContent{
+  grid-column:3 / 5!important;
+  padding-right:2px!important;
+}
+@media(max-width:350px){
+  #reportModal .matchTimelineRow.isGoal .matchTimelineScore{
+    font-size:15px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19019,7 +19057,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.143</span>
+      <span class="headerVersion">v5.144</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -25193,7 +25231,7 @@ function reportTimelineHTML(){
     return heading+`<li class="matchTimelineRow ${e.team==='OUR'?'isOur':e.team==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
       <div class="matchTimelineTime">${escapeHtml(e.time)}</div><div class="matchTimelineNode" aria-hidden="true"></div>
       <div class="matchTimelineContent"><div class="matchTimelineCompact"><span class="matchTimelineCompactIcon" aria-hidden="true">${escapeHtml(compact.icon)}</span><span class="matchTimelineCompactMain">${escapeHtml(compact.main)}</span>${compact.assist?`<span class="matchTimelineAssistInline">${escapeHtml(compact.assist)}</span>`:''}</div></div>
-      <div class="matchTimelineScore" aria-label="當時比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>
+      ${e.event==='GOAL'?`<div class="matchTimelineScore" aria-label="進球後比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>`:''}
     </li>`;
   }).join('')+'</ol>';
 }
