@@ -18923,7 +18923,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 
 <style id="v5142ReportSafariChromeTintFix">
 /* =========================================================
-   v5.142：iPhone Safari 底部藍色染色修正
+   v5.143：摘要時間軸單列緊湊格式
    根因：v5.141 將摘要 Modal 幾乎貼到 visual viewport 最底部，
    藍色「分享／儲存圖片」成為 Safari 底部瀏覽器列附近最主要的背景色，
    透明 / 半透明瀏覽器工具列因此被染成大面積亮藍。
@@ -18958,6 +18958,53 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 }
 </style>
 
+
+
+<style id="v5143ReportTimelineCompactPatch">
+/* =========================================================
+   v5.143：摘要時間軸改為單列緊湊格式
+   1. 將「事件名稱 / 球員 / 助攻」整併為同一列閱讀。
+   2. 每筆事件高度更精簡，騰出更多垂直空間給整體時間軸。
+   ========================================================= */
+.matchTimelineCompact{
+  display:flex;
+  align-items:flex-start;
+  gap:6px;
+  min-width:0;
+  flex-wrap:wrap;
+  color:#eef5fc;
+  font-size:14px;
+  line-height:1.48;
+}
+.matchTimelineCompactIcon{
+  flex:0 0 auto;
+  font-size:1.02em;
+  line-height:1.2;
+  transform:translateY(1px);
+}
+.matchTimelineCompactMain,
+.matchTimelineAssistInline{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+.matchTimelineCompactMain{
+  font-weight:800;
+  color:#eef5fc;
+}
+.matchTimelineAssistInline{
+  color:#c8d6e4;
+  font-size:13px;
+  font-weight:700;
+}
+.matchTimelineContent{line-height:1.45!important}
+.matchTimelineRow{padding-top:10px!important;padding-bottom:12px!important}
+.matchTimelineActor,.matchTimelineAssist,.matchTimelineOwnGoal{display:none!important}
+@media(max-width:350px){
+  .matchTimelineCompact{font-size:13px;gap:5px}
+  .matchTimelineAssistInline{font-size:12px}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -18972,7 +19019,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.142</span>
+      <span class="headerVersion">v5.143</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -25113,6 +25160,9 @@ function reportTimelineEntries(){
       phase:state.multiPeriod?periodLabel(Number(m.period)||1):'比賽',
       time:fmtMMSS(Number(m.seconds)||0),
       actor:`${markerPlayerTeamCode(m)==='OUR'?'我方':markerPlayerTeamCode(m)==='OPP'?'對手':'未指定'}${m.player_number?` #${m.player_number}`:''}${m.event==='GOAL' && m.own_goal?'（烏龍）':''}`,
+      playerNumber:m.player_number?String(m.player_number):'',
+      assistNumber:m.assist_number?String(m.assist_number):'',
+      ownGoal:!!m.own_goal,
       assist:m.event==='GOAL'
         ? (m.own_goal
             ? `比分計入${teamDisplay(m.team)||'對方'}`
@@ -25122,6 +25172,16 @@ function reportTimelineEntries(){
       score:String(m.score_after||'—')
     }));
 }
+function reportTimelineCompactParts(e){
+  const side=e.team==='OUR'?'我方':e.team==='OPP'?'對手':'未指定';
+  let action='';
+  if(e.event==='GOAL') action=e.ownGoal?'烏龍球':'進球';
+  else action=e.typeLabel==='烏龍球'?'烏龍球':e.typeLabel.replace('（兩黃轉紅）','');
+  let main=`${side}${action}`;
+  if(e.playerNumber) main += ` #${e.playerNumber}`;
+  const assist=(e.event==='GOAL' && !e.ownGoal && e.assistNumber) ? `助攻 #${e.assistNumber}` : '';
+  return {icon:emoji(e.event), main, assist};
+}
 function reportTimelineHTML(){
   const entries=reportTimelineEntries();
   if(!entries.length) return '<div class="reportEmpty">尚未標記事件</div>';
@@ -25129,9 +25189,10 @@ function reportTimelineHTML(){
   return '<ol class="matchTimeline">'+entries.map(e=>{
     const heading=phase!==e.period?`<li class="matchTimelinePhase">${escapeHtml(e.phase)}</li>`:'';
     phase=e.period;
+    const compact=reportTimelineCompactParts(e);
     return heading+`<li class="matchTimelineRow ${e.team==='OUR'?'isOur':e.team==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
       <div class="matchTimelineTime">${escapeHtml(e.time)}</div><div class="matchTimelineNode" aria-hidden="true"></div>
-      <div class="matchTimelineContent"><div>${reportTypeHTML(e.event,e.typeLabel)}${e.typeLabel.includes('兩黃')?'（兩黃轉紅）':''}</div><div class="matchTimelineActor">${escapeHtml(e.actor)}</div>${e.assist?`<div class="${e.typeLabel==='烏龍球'?'matchTimelineOwnGoal':'matchTimelineAssist'}">${escapeHtml(e.assist)}</div>`:''}</div>
+      <div class="matchTimelineContent"><div class="matchTimelineCompact"><span class="matchTimelineCompactIcon" aria-hidden="true">${escapeHtml(compact.icon)}</span><span class="matchTimelineCompactMain">${escapeHtml(compact.main)}</span>${compact.assist?`<span class="matchTimelineAssistInline">${escapeHtml(compact.assist)}</span>`:''}</div></div>
       <div class="matchTimelineScore" aria-label="當時比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>
     </li>`;
   }).join('')+'</ol>';
@@ -25886,7 +25947,7 @@ body.resultMode.finalOutputVisible .finalToolsCard{
 
 <style id="v5142ReportSafariChromeTintFix">
 /* =========================================================
-   v5.142：iPhone Safari 底部藍色染色修正
+   v5.143：摘要時間軸單列緊湊格式
    根因：v5.141 將摘要 Modal 幾乎貼到 visual viewport 最底部，
    藍色「分享／儲存圖片」成為 Safari 底部瀏覽器列附近最主要的背景色，
    透明 / 半透明瀏覽器工具列因此被染成大面積亮藍。
