@@ -1,3 +1,12 @@
+## v5.150 本次驗證
+
+- [x] LINE 分享文字移除欄位名稱與所有 `｜` 分隔符號。
+- [x] 場地分享圖示統一使用與摘要畫面相同的 `📍`。
+- [x] 未填賽事／場地仍整列省略，不輸出 placeholder。
+- [x] 儲存圖片模式仍不附帶分享文字。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari／LINE：實機確認換行與 emoji 顯示一致。
+
 ## v5.149 本次驗證
 
 - 球衣顏色 `gray` 僅接受既定 palette key，仍經 `normalizeJerseyColor()` 白名單驗證。
