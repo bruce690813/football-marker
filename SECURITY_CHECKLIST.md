@@ -1,3 +1,13 @@
+## v5.154 本次驗證
+
+- [x] 本版僅加入 UI / UX CSS polish，未更動比賽資料 schema、計時、事件記錄、CSV 或分享資料邏輯。
+- [x] 主要操作元件保留／補強至少 44px 觸控目標。
+- [x] `focus-visible` 只影響鍵盤焦點，不在一般手機點擊後留下突兀外框。
+- [x] Modal 動效遵守 `prefers-reduced-motion`。
+- [x] 不新增第三方套件、外部字型、網路請求或追蹤程式。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：實機確認 Modal blur、長文字與網址列展開／收合時的畫面一致性。
+
 ## v5.153 本次驗證
 
 - LINE 分享文字：確認僅首行保留 ⚽，第二行使用全形空白呈現賽果，日期包含星期，賽事與場地不重複置頂。

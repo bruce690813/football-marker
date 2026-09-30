@@ -19124,6 +19124,182 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
    極窄螢幕才切為 3×2，確保每個色票仍有足夠觸控寬度。 */
 </style>
 
+
+
+<style id="v5154AwardQualityPolishPatch">
+/* =========================================================
+   v5.154 — Quality polish pass
+   目標：不改變既有操作流程與資料邏輯，統一字體、數字、觸控、焦點、
+   動態回饋與手機閱讀節奏。以高完成度作品的細節一致性為品質基準，
+   但維持場邊工具「快、清楚、可靠」優先。
+   ========================================================= */
+
+/* 1) Typography / rendering ------------------------------------------------ */
+html{
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+body,
+button,
+input,
+select,
+textarea{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+}
+
+/* 比分、計時、事件時間等使用等寬數字，畫面更新時不左右跳動。 */
+.scoreText,
+.stageTimer,
+.reportScore,
+.reportOverviewValue,
+.matchTimelineTime,
+.matchTimelineScore,
+.recordCount,
+.time,
+.scoreSnap,
+#timer,
+#reportActual,
+#reportStart,
+#reportEnd{
+  font-variant-numeric:tabular-nums lining-nums;
+  font-feature-settings:"tnum" 1,"lnum" 1;
+}
+
+/* 2) Touch quality ---------------------------------------------------------- */
+button,
+[role="button"],
+select{
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+button{
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+/* 不用全域 transform，避免與既有按鈕動畫互相覆蓋；只做非常輕的亮度回饋。 */
+button:not(:disabled):active{
+  filter:brightness(.94);
+}
+
+/* 3) Keyboard / accessibility focus --------------------------------------- */
+:where(button,input,select,textarea):focus-visible{
+  outline:3px solid rgba(77,190,255,.82);
+  outline-offset:2px;
+}
+:where(button,input,select,textarea):focus:not(:focus-visible){
+  outline:none;
+}
+
+/* 4) Consistent minimum tap targets ---------------------------------------- */
+.aboutInfoBtn,
+.venueDropdownBtn,
+.regCompactEdit,
+.timeToggle,
+.reportCloseIcon,
+#reportShareBtn,
+.rosterDoneBtn,
+.finalToolBtn{
+  min-height:44px;
+}
+.reportCloseIcon,
+.venueDropdownBtn{
+  min-width:44px;
+}
+
+/* 5) Information hierarchy / wrapping ------------------------------------- */
+.titleBlock h1,
+.reportTitle,
+.reportTeam,
+.liveMetaStrip,
+.reportMetaRow,
+.matchTimelineCompactMain,
+.matchTimelineAssistInline{
+  text-wrap:pretty;
+}
+.reportMetaRow,
+.liveMetaStrip,
+.matchTimelineCompactMain,
+.matchTimelineAssistInline{
+  overflow-wrap:anywhere;
+}
+
+/* 長文字行保持舒適行高，避免大字重疊或太擁擠。 */
+.reportMetaRow,
+.matchTimelineCompact{
+  line-height:1.45;
+}
+
+/* 6) Refined surface separation ------------------------------------------- */
+#appContent .matchCard,
+#appContent .eventHubShell,
+#appContent .finalToolsCard{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 12px 30px rgba(0,0,0,.16);
+}
+
+/* 事件按鈕保持高辨識度，但讓文字與 icon 基線更一致。 */
+.event .eventTop,
+.cardEventBtn .cardLabel,
+.finalToolBtn{
+  align-items:center;
+}
+.eventIcon,
+.finalToolIcon{
+  line-height:1;
+}
+
+/* 7) Modal depth ------------------------------------------------------------ */
+.modalBack.open{
+  -webkit-backdrop-filter:blur(4px) saturate(.88);
+  backdrop-filter:blur(4px) saturate(.88);
+}
+
+@media (prefers-reduced-motion:no-preference){
+  #reportModal.open .reportModal,
+  #rosterModal.open .rosterModalPanel,
+  #keeperModal.open .modal,
+  #scoreModal.open .modal,
+  #resultMetaEditModal.open .resultMetaEditCard{
+    animation:v5154ModalIn .16s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes v5154ModalIn{
+    from{opacity:.76;transform:translateY(6px) scale(.992)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+}
+
+/* 8) Hover enhancements only on devices that truly support hover. ---------- */
+@media (hover:hover) and (pointer:fine){
+  .event:not(:disabled):hover,
+  .cardEventBtn:not(:disabled):hover,
+  .finalToolBtn:not(:disabled):hover,
+  .preQuickSetup > button:not(:disabled):hover,
+  .liveQuickSetup button:not(:disabled):hover,
+  #reportShareBtn:not(:disabled):hover{
+    filter:brightness(1.055);
+  }
+}
+
+/* 9) Small-screen rhythm ---------------------------------------------------- */
+@media(max-width:390px){
+  .reportMetaRow{line-height:1.42}
+  .matchTimelineCompact{line-height:1.42}
+  .finalToolLabel{letter-spacing:.01em}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    scroll-behavior:auto!important;
+  }
+  button{transition:none!important}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19138,7 +19314,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.153</span>
+      <span class="headerVersion">v5.154</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
