@@ -52,7 +52,7 @@ html.appBootFailed #appBootError{display:block}
   cursor:pointer;
 }
 
-/* v5.136：本場球員名單新增球衣顏色選擇（預設／藍／黃／白／紅），主畫面與摘要球衣 icon 同步。 */
+/* v5.136：本場球員名單新增球衣顏色選擇（目前支援預設／藍／黃／白／紅／灰），主畫面與摘要球衣 icon 同步。 */
 </style>
 <script>
 // 保護必須在主程式之前建立；即使主程式載入失敗，也不開放未還原的比賽操作。
@@ -351,7 +351,7 @@ h1{font-size:18px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.72)}
 .rosterPresetBtn:active{transform:scale(.97)}
 .rosterGrid{
   display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
+  grid-template-columns:repeat(6,minmax(0,1fr));
   gap:8px;
   margin:8px 0 12px
 }
@@ -11478,12 +11478,12 @@ body.matchStatePre .preRosterIcon .rosterJerseyIcon{
 #rosterModal .jerseyColorGrid{
   display:grid;
   grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:7px;
+  gap:5px;
 }
 #rosterModal .jerseyColorBtn{
   min-width:0;
   min-height:58px;
-  padding:6px 4px 5px;
+  padding:6px 2px 5px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -11526,9 +11526,13 @@ body.matchStatePre .preRosterIcon .rosterJerseyIcon{
 #rosterModal .jerseyColorShirt .jerseySwatchCollar{fill:var(--swatch-collar)}
 
 @media(max-width:360px){
-  #rosterModal .jerseyColorGrid{gap:5px}
-  #rosterModal .jerseyColorBtn{min-height:54px;padding-left:2px;padding-right:2px;font-size:10px}
-  #rosterModal .jerseyColorShirt{width:25px;height:25px}
+  #rosterModal .jerseyColorGrid{gap:4px}
+  #rosterModal .jerseyColorBtn{min-height:54px;padding-left:1px;padding-right:1px;font-size:9.5px}
+  #rosterModal .jerseyColorShirt{width:24px;height:24px}
+}
+@media(max-width:340px){
+  #rosterModal .jerseyColorGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  #rosterModal .jerseyColorBtn{min-height:50px;font-size:10px}
 }
 
 /*
@@ -19114,6 +19118,12 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 /* v5.147：分享圖片隊名以單行優先；繪圖端會自動縮字，極長名稱才換行。 */
 </style>
 
+
+<style id="v5149JerseyGrayPatch">
+/* v5.149：球衣顏色新增灰色。正常手機寬度維持六色同列，避免增加名單視窗高度；
+   極窄螢幕才切為 3×2，確保每個色票仍有足夠觸控寬度。 */
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19128,7 +19138,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.147</span>
+      <span class="headerVersion">v5.149</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -19823,6 +19833,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
           <button class="jerseyColorBtn" type="button" data-jersey-color="yellow" onclick="setJerseyColor('yellow')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#facc15;--swatch-outline:#ca8a04;--swatch-collar:#ffffff"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>黃色</span></button>
           <button class="jerseyColorBtn" type="button" data-jersey-color="white" onclick="setJerseyColor('white')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#f8fafc;--swatch-outline:#94a3b8;--swatch-collar:#64748b"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>白色</span></button>
           <button class="jerseyColorBtn" type="button" data-jersey-color="red" onclick="setJerseyColor('red')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#dc2626;--swatch-outline:#991b1b;--swatch-collar:#ffffff"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>紅色</span></button>
+          <button class="jerseyColorBtn" type="button" data-jersey-color="gray" onclick="setJerseyColor('gray')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#94a3b8;--swatch-outline:#64748b;--swatch-collar:#f8fafc"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>灰色</span></button>
         </div>
       </div>
 
@@ -21953,7 +21964,8 @@ const JERSEY_COLOR_OPTIONS={
   blue:{fill:'#3b82f6',outline:'#1d4ed8',collar:'#ffffff'},
   yellow:{fill:'#facc15',outline:'#ca8a04',collar:'#ffffff'},
   white:{fill:'#f8fafc',outline:'#94a3b8',collar:'#64748b'},
-  red:{fill:'#dc2626',outline:'#991b1b',collar:'#ffffff'}
+  red:{fill:'#dc2626',outline:'#991b1b',collar:'#ffffff'},
+  gray:{fill:'#94a3b8',outline:'#64748b',collar:'#f8fafc'}
 };
 function normalizeJerseyColor(value){
   const key=String(value||'default');
@@ -25897,19 +25909,17 @@ function shareSummaryShortTime(epoch){
 function shareSummaryText(){
   const start=matchStartEpoch() || Date.now();
   const our=String(state.ourTeam||'我方').trim() || '我方';
-  const rawOpp=String(state.oppTeam||'').trim();
-  const opp=rawOpp || '對手';
-  const genericOpp=!rawOpp || rawOpp==='對手' || rawOpp.toLowerCase()==='opponent';
-  const dateTime=genericOpp
-    ? `${shareSummaryShortDate(start)} ${shareSummaryShortTime(start)}`
-    : shareSummaryShortDate(start);
-  const first=`⚽ 比賽摘要｜${dateTime}｜${our} ${state.ourScore}:${state.oppScore} ${opp}`;
-  const detail=[];
+  const opp=String(state.oppTeam||'').trim() || '對手';
   const competition=String(state.competition||'').trim();
   const venue=String(state.venue||'').trim();
-  if(competition) detail.push(`🏆 ${competition}`);
-  if(venue) detail.push(`📍 ${venue}`);
-  return detail.length ? `${first}\n${detail.join('｜')}` : first;
+  const lines=[
+    '⚽ 比賽摘要',
+    `🥅 比分｜${our} ${state.ourScore}：${state.oppScore} ${opp}`,
+    `📅 日期｜${shareSummaryShortDate(start)} ${shareSummaryShortTime(start)}`
+  ];
+  if(competition) lines.push(`🏆 賽事｜${competition}`);
+  if(venue) lines.push(`📍 場地｜${venue}`);
+  return lines.join('\n');
 }
 
 async function shareImageFile(mode='share'){
@@ -25932,9 +25942,8 @@ async function shareImageFile(mode='share'){
         title:'比賽摘要',
         files
       };
-      // v5.147：分享到 LINE 等訊息 App 時附上「本場識別文字」。
-      // 有正式對手名稱時：日期＋雙方＋比分；若對手未填則再加入開賽時間，
-      // 並於第二行補上賽事與場地，方便一天多場時快速辨識。
+      // v5.148：分享到 LINE 等訊息 App 時改成「一個欄位一行」。
+      // 標題、比分、日期時間、賽事、場地分列顯示；未填的賽事／場地不輸出。
       // 儲存圖片模式仍不附帶文字，避免「儲存影像」流程出現多餘訊息。
       if(mode!=='save') shareData.text=shareSummaryText();
       await navigator.share(shareData);
