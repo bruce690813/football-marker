@@ -19005,6 +19005,115 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 }
 </style>
 
+
+<style id="v5145ReportScoreVisibilityPatch">
+/* =========================================================
+   v5.146：摘要事件比分顯示規則修正
+   1. 只有進球事件顯示當下比分。
+   2. 射門／撲救／防守／牌卡完全不顯示比分，也不保留空白比分欄。
+   3. 進球比分保留暖黃色文字強調，但移除膠囊底色、邊框與圓角框。
+   ========================================================= */
+#reportModal .matchTimelineRow:not(.isGoal){
+  grid-template-columns:54px 16px minmax(0,1fr)!important;
+}
+#reportModal .matchTimelineRow:not(.isGoal) .matchTimelineScore{
+  display:none!important;
+}
+#reportModal .matchTimelineRow.isGoal .matchTimelineScore{
+  display:block!important;
+  justify-self:end!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:2px 0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#ffd84d!important;
+  font-size:15px!important;
+  font-weight:950!important;
+  line-height:1.25!important;
+  text-align:right!important;
+}
+@media(max-width:350px){
+  #reportModal .matchTimelineRow:not(.isGoal){
+    grid-template-columns:46px 12px minmax(0,1fr)!important;
+  }
+  #reportModal .matchTimelineRow.isGoal .matchTimelineScore{
+    font-size:14px!important;
+  }
+}
+</style>
+
+
+
+<style id="v5146RosterModalBreathingPatch">
+/* =========================================================
+   v5.146：本場球員名單 Modal 呼吸空間修正
+   - 根因：舊版面板使用 90vh，iPhone Safari 動態網址列存在時，
+     90vh 可能大於真正可見 visual viewport，導致面板上下緊貼甚至裁切。
+   - 改用 --vv-height 限制實際高度，並保留上下可見的背景緩衝。
+   - Header / 內容 / Footer 各自保留適度內距，讓視窗不再有壓迫感。
+   ========================================================= */
+#rosterModal{
+  box-sizing:border-box!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:20px 10px 22px!important;
+}
+#rosterModal .rosterModalPanel{
+  width:min(430px,calc(100vw - 20px))!important;
+  height:auto!important;
+  max-height:min(760px,calc(var(--vv-height,100dvh) - 42px))!important;
+  margin:0!important;
+  border-radius:24px!important;
+  box-shadow:0 22px 58px rgba(0,0,0,.32)!important;
+}
+#rosterModal .rosterModalFixedHead{
+  padding:20px 18px 15px!important;
+}
+#rosterModal .rosterHeadHint{
+  margin-top:6px!important;
+}
+#rosterModal .rosterModalScroll{
+  padding:10px 18px 22px!important;
+  scroll-padding-top:10px!important;
+  scroll-padding-bottom:22px!important;
+}
+#rosterModal .rosterModalFooter{
+  padding:12px 18px calc(14px + env(safe-area-inset-bottom))!important;
+}
+#rosterModal .rosterDoneBtn{
+  min-height:50px!important;
+}
+
+/* Safari 可視高度較短時仍保留上下留白，但稍微收斂，避免內容區過小。 */
+@media(max-height:720px){
+  #rosterModal{padding-top:12px!important;padding-bottom:14px!important}
+  #rosterModal .rosterModalPanel{
+    max-height:calc(var(--vv-height,100dvh) - 26px)!important;
+  }
+  #rosterModal .rosterModalFixedHead{padding:16px 16px 12px!important}
+  #rosterModal .rosterModalScroll{padding:8px 16px 18px!important}
+  #rosterModal .rosterModalFooter{
+    padding:10px 16px calc(11px + env(safe-area-inset-bottom))!important;
+  }
+}
+
+@media(max-width:390px){
+  #rosterModal{padding-left:8px!important;padding-right:8px!important}
+  #rosterModal .rosterModalPanel{
+    width:calc(100vw - 16px)!important;
+    max-height:min(760px,calc(var(--vv-height,100dvh) - 38px))!important;
+  }
+}
+</style>
+
+
+<style id="v5147ShareImageTeamNamePatch">
+/* v5.147：分享圖片隊名以單行優先；繪圖端會自動縮字，極長名稱才換行。 */
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19019,7 +19128,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.144</span>
+      <span class="headerVersion">v5.147</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -25193,7 +25302,7 @@ function reportTimelineHTML(){
     return heading+`<li class="matchTimelineRow ${e.team==='OUR'?'isOur':e.team==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
       <div class="matchTimelineTime">${escapeHtml(e.time)}</div><div class="matchTimelineNode" aria-hidden="true"></div>
       <div class="matchTimelineContent"><div class="matchTimelineCompact"><span class="matchTimelineCompactIcon" aria-hidden="true">${escapeHtml(compact.icon)}</span><span class="matchTimelineCompactMain">${escapeHtml(compact.main)}</span>${compact.assist?`<span class="matchTimelineAssistInline">${escapeHtml(compact.assist)}</span>`:''}</div></div>
-      <div class="matchTimelineScore" aria-label="當時比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>
+      ${e.event==='GOAL'?`<div class="matchTimelineScore" aria-label="進球後比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>`:''}
     </li>`;
   }).join('')+'</ol>';
 }
@@ -25424,41 +25533,60 @@ function reportLines(){
   return lines;
 }
 
-function drawTeamNameTwoLines(ctx, text, centerX, centerY, maxWidth, maxFont=48, minFont=32){
+function drawTeamNameTwoLines(ctx, text, centerX, centerY, maxWidth, maxFont=38, minFont=26){
   const raw=String(text||'').trim() || '對手';
+  const family='-apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
   let fontSize=maxFont;
+  const setFont=()=>{ ctx.font=`900 ${fontSize}px ${family}`; };
 
-  const setFont=()=>{
-    ctx.font=`900 ${fontSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
-  };
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
 
-  // Try one line first.
+  // v5.147：先以「同一行完整顯示」為最高優先。
+  // 只有縮到最低可讀字級仍放不下時，才允許拆成兩行。
   setFont();
+  while(fontSize>minFont && ctx.measureText(raw).width>maxWidth){
+    fontSize-=1;
+    setFont();
+  }
   if(ctx.measureText(raw).width<=maxWidth){
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
     ctx.fillText(raw,centerX,centerY);
     return;
   }
 
-  // Find the best two-line split with the smallest maximum line width.
   const chars=[...raw];
+  const badLineStart=/^[\)\]】》〉」』）]/u;
+  const badLineEnd=/[\(\[【《〈「『（]$/u;
   let best=null;
+
+  // 若有完整括號尾碼（例如 ZYES），把「主名稱 / (ZYES)」視為優先候選，
+  // 避免單獨一個右括號掉到下一行。
+  const suffixMatch=raw.match(/^(.*?)(\([^()]+\)|（[^（）]+）)$/u);
+  const candidates=[];
+  if(suffixMatch && suffixMatch[1].trim()) candidates.push([suffixMatch[1].trim(),suffixMatch[2]]);
   for(let i=1;i<chars.length;i++){
-    const a=chars.slice(0,i).join('');
-    const b=chars.slice(i).join('');
-    setFont();
-    const wa=ctx.measureText(a).width;
-    const wb=ctx.measureText(b).width;
-    const score=Math.max(wa,wb);
-    if(!best || score<best.score) best={a,b,score};
+    const a=chars.slice(0,i).join('').trim();
+    const b=chars.slice(i).join('').trim();
+    if(!a || !b || badLineStart.test(b) || badLineEnd.test(a)) continue;
+    candidates.push([a,b]);
   }
 
-  // Shrink only if even the optimal two-line split is too wide.
-  while(best && best.score>maxWidth && fontSize>minFont){
-    fontSize-=2;
+  const scoreCandidate=(a,b)=>{
     setFont();
-    best.score=Math.max(ctx.measureText(best.a).width,ctx.measureText(best.b).width);
+    const wa=ctx.measureText(a).width, wb=ctx.measureText(b).width;
+    // 最大行寬優先，其次偏好兩行視覺較均衡。
+    return {a,b,wa,wb,score:Math.max(wa,wb)+Math.abs(wa-wb)*0.08};
+  };
+  for(const [a,b] of candidates){
+    const c=scoreCandidate(a,b);
+    if(!best || c.score<best.score) best=c;
+  }
+
+  // 兩行模式仍可小幅再縮，盡量保留完整文字，不先截斷。
+  while(best && Math.max(best.wa,best.wb)>maxWidth && fontSize>22){
+    fontSize-=1;
+    const rescored=scoreCandidate(best.a,best.b);
+    best={...rescored};
   }
 
   if(!best){
@@ -25466,21 +25594,14 @@ function drawTeamNameTwoLines(ctx, text, centerX, centerY, maxWidth, maxFont=48,
     return;
   }
 
-  // If still too wide, trim only the second line as last resort.
   const fit=(s)=>{
+    if(ctx.measureText(s).width<=maxWidth) return s;
     let out=s;
-    while(out.length>1 && ctx.measureText(out+'…').width>maxWidth){
-      out=out.slice(0,-1);
-    }
+    while(out.length>1 && ctx.measureText(out+'…').width>maxWidth) out=out.slice(0,-1);
     return out===s?s:out+'…';
   };
-
-  const line1=fit(best.a);
-  const line2=fit(best.b);
-  const gap=fontSize*0.95;
-
-  ctx.textAlign='center';
-  ctx.textBaseline='middle';
+  const line1=fit(best.a), line2=fit(best.b);
+  const gap=fontSize*1.02;
   ctx.fillText(line1,centerX,centerY-gap/2);
   ctx.fillText(line2,centerX,centerY+gap/2);
 }
@@ -25592,9 +25713,9 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
     ctx.fillText(String(value),x,y+(ascent-descent)/2);
   };
   const teamName=(value,cx,cy)=>{
-    let size=38,rows=reportWrapText(ctx,value,278,font(size,800));
-    while(rows.length>2 && size>24){size-=2;rows=reportWrapText(ctx,value,278,font(size,800));}
-    rows.forEach((row,i)=>centered(row,cx,cy+(i-(rows.length-1)/2)*(size+4),size,'#f3f7fc'));
+    ctx.fillStyle='#f3f7fc';
+    // v5.147：比分圖片的隊名優先單行顯示；必要時自動縮字，真的過長才拆兩行。
+    drawTeamNameTwoLines(ctx,value,cx,cy,300,38,26);
   };
   ctx.fillStyle='#0b1220';ctx.fillRect(0,0,W,H);
   ctx.fillStyle='#111b26';roundRect(ctx,32,26,W-64,H-52,16,true,false);
@@ -25672,14 +25793,14 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         emojiText(emoji(b.event),actorX,y+8,28);
       }
       b.compactRows.forEach((value,j)=>text(value,actorX+38,y+8+j*34,28,'#edf5fc',isGoal?800:700));
-      // 與螢幕摘要一致：只有真正改變比分的進球事件顯示當時比分。
+      // 與螢幕摘要一致：只有進球事件顯示比分，使用單純暖黃色文字，不加膠囊外框。
       if(isGoal){
         const score=String(b.score||'');
-        ctx.font=font(28,900);const tw=ctx.measureText(score).width;
-        const pillW=Math.max(60,tw+28), pillH=38, px=W-pad-pillW, py=y+7;
-        ctx.fillStyle='rgba(250,204,21,.10)';roundRect(ctx,px,py,pillW,pillH,19,true,false);
-        ctx.strokeStyle='rgba(250,204,21,.42)';ctx.lineWidth=2;roundRect(ctx,px,py,pillW,pillH,19,false,true);
-        centered(score,px+pillW/2,py+pillH/2,28,'#ffd84d',900);
+        ctx.font=font(28,900);
+        ctx.fillStyle='#ffd84d';
+        ctx.textAlign='right';
+        ctx.textBaseline='top';
+        ctx.fillText(score,W-pad,y+10);
       }
     }else if(b.type==='section'){
       text(b.text,pad+8,y+12,28,'#7dd3fc',800);
@@ -25765,6 +25886,32 @@ function showReportImageDownloads(images){
   box.scrollIntoView({block:'nearest'});
 }
 
+function shareSummaryShortDate(epoch){
+  const d=new Date(epoch || Date.now());
+  return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+}
+function shareSummaryShortTime(epoch){
+  const d=new Date(epoch || Date.now());
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function shareSummaryText(){
+  const start=matchStartEpoch() || Date.now();
+  const our=String(state.ourTeam||'我方').trim() || '我方';
+  const rawOpp=String(state.oppTeam||'').trim();
+  const opp=rawOpp || '對手';
+  const genericOpp=!rawOpp || rawOpp==='對手' || rawOpp.toLowerCase()==='opponent';
+  const dateTime=genericOpp
+    ? `${shareSummaryShortDate(start)} ${shareSummaryShortTime(start)}`
+    : shareSummaryShortDate(start);
+  const first=`⚽ 比賽摘要｜${dateTime}｜${our} ${state.ourScore}:${state.oppScore} ${opp}`;
+  const detail=[];
+  const competition=String(state.competition||'').trim();
+  const venue=String(state.venue||'').trim();
+  if(competition) detail.push(`🏆 ${competition}`);
+  if(venue) detail.push(`📍 ${venue}`);
+  return detail.length ? `${first}\n${detail.join('｜')}` : first;
+}
+
 async function shareImageFile(mode='share'){
   let result;
   try{
@@ -25782,12 +25929,14 @@ async function shareImageFile(mode='share'){
     try{
       // 必須在按鈕點擊後直接呼叫 navigator.share()
       const shareData={
-        title:'足球比賽摘要',
+        title:'比賽摘要',
         files
       };
-      // 儲存圖片模式不再附帶教學提示文字，避免訊息 App / 分享面板出現
-      //「請選擇儲存影像 / 儲存到照片」等額外文字。
-      if(mode!=='save') shareData.text='足球比賽摘要';
+      // v5.147：分享到 LINE 等訊息 App 時附上「本場識別文字」。
+      // 有正式對手名稱時：日期＋雙方＋比分；若對手未填則再加入開賽時間，
+      // 並於第二行補上賽事與場地，方便一天多場時快速辨識。
+      // 儲存圖片模式仍不附帶文字，避免「儲存影像」流程出現多餘訊息。
+      if(mode!=='save') shareData.text=shareSummaryText();
       await navigator.share(shareData);
       return;
     }catch(e){
