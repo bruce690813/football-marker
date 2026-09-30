@@ -19138,7 +19138,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.150</span>
+      <span class="headerVersion">v5.153</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -25902,6 +25902,10 @@ function shareSummaryShortDate(epoch){
   const d=new Date(epoch || Date.now());
   return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
 }
+function shareSummaryWeekday(epoch){
+  const d=new Date(epoch || Date.now());
+  return ['日','一','二','三','四','五','六'][d.getDay()];
+}
 function shareSummaryShortTime(epoch){
   const d=new Date(epoch || Date.now());
   return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
@@ -25910,19 +25914,12 @@ function shareSummaryText(){
   const start=matchStartEpoch() || Date.now();
   const our=String(state.ourTeam||'我方').trim() || '我方';
   const opp=String(state.oppTeam||'').trim() || '對手';
-  const competition=String(state.competition||'').trim();
-  const venue=String(state.venue||'').trim();
-  // v5.150：LINE／訊息 App 分享文字再簡化。
-  // 一個欄位一行，但移除「比分／日期／賽事／場地」文字標籤與分隔符號，
-  // 僅保留圖示＋內容；場地統一使用與摘要畫面相同的 📍 圖示。
-  const lines=[
-    '⚽ 比賽摘要',
-    `🥅 ${our} ${state.ourScore}：${state.oppScore} ${opp}`,
-    `📅 ${shareSummaryShortDate(start)} ${shareSummaryShortTime(start)}`
-  ];
-  if(competition) lines.push(`🏆 ${competition}`);
-  if(venue) lines.push(`📍 ${venue}`);
-  return lines.join('\n');
+  // v5.153：LINE／訊息 App 的分享文字只保留「賽果＋日期時間」兩項關鍵識別資訊。
+  // 完整賽事、場地、球員與時間軸已在摘要圖片中呈現，避免文字泡泡與圖片重複。
+  return [
+    `⚽ ${our}　${state.ourScore}：${state.oppScore}　${opp}`,
+    `${shareSummaryShortDate(start)}（${shareSummaryWeekday(start)}）${shareSummaryShortTime(start)}`
+  ].join('\n');
 }
 
 async function shareImageFile(mode='share'){
@@ -25945,7 +25942,7 @@ async function shareImageFile(mode='share'){
         title:'比賽摘要',
         files
       };
-      // v5.150：分享到 LINE 等訊息 App 維持「一個欄位一行」，並移除欄位名稱與分隔符號。
+      // v5.153：分享到 LINE 等訊息 App 維持一欄一行；賽果採標題式間距，日期含星期。
       // 僅保留圖示＋內容；未填的賽事／場地不輸出。
       // 儲存圖片模式仍不附帶文字，避免「儲存影像」流程出現多餘訊息。
       if(mode!=='save') shareData.text=shareSummaryText();
