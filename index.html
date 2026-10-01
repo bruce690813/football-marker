@@ -19128,7 +19128,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 
 <style id="v5154AwardQualityPolishPatch">
 /* =========================================================
-   v5.154 — Quality polish pass
+   v5.155 — Quality polish pass
    目標：不改變既有操作流程與資料邏輯，統一字體、數字、觸控、焦點、
    動態回饋與手機閱讀節奏。以高完成度作品的細節一致性為品質基準，
    但維持場邊工具「快、清楚、可靠」優先。
@@ -19314,7 +19314,7 @@ button:not(:disabled):active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.154</span>
+      <span class="headerVersion">v5.157</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -20272,9 +20272,9 @@ button:not(:disabled):active{
     </div>
     <div class="reportBody">
       <div class="reportMeta reportMetaScrollable" aria-label="比賽基本資料">
-        <span id="reportCompetition" class="reportMetaRow">🏆 未填比賽賽事</span>
+        <span id="reportCompetition" class="reportMetaRow" style="display:none"></span>
         <span id="reportDate" class="reportMetaRow">📅 ----/--/--</span>
-        <span id="reportVenue" class="reportVenueMeta reportMetaRow"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText">未填比賽場地</span></span>
+        <span id="reportVenue" class="reportVenueMeta reportMetaRow" style="display:none"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText"></span></span>
         <span id="reportRoster" class="reportRosterMeta reportMetaRow" style="display:none"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="reportRosterText">本場名單</span></span>
       </div>
       <div class="reportStatusBadge idle reportStatusScrollable" id="reportStatusBadge">尚未開始</div>
@@ -20778,6 +20778,7 @@ const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const LAST_VENUE_KEY='football_marker_last_venue';
 const RECENT_VENUES_KEY='football_marker_recent_venues_v1';
 let guidedSetupStep=null; // 'our' -> 'opp' -> 'competition' -> 'venue' during pre-match guided input
+let nextMatchOpponentOnly=false; // v5.157：沿用上一場資料時，只需重新輸入對手
 const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
 const LAST_ROSTER_KEY='football_marker_last_roster_v1';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
@@ -23294,33 +23295,31 @@ function newMatch(){
   // 先完整保存舊場，再建立新的 URL Match ID。
   try{ saveState(); }catch(e){}
 
+  // v5.157：同一天連續賽程通常沿用相同比賽設定。
+  // 建立下一場前先快照本場可重用欄位；對手名稱、比分、事件與所有計時狀態仍歸零。
   rememberCurrentRosterAsPrevious();
-  const rememberedOurTeam=(byId('ourTeam').value.trim() || localStorage.getItem(LAST_OUR_TEAM_KEY) || '忠義國小').trim();
-  const currentVenue=byId('venue').value.trim();
-  const currentCompetition=byId('competition').value.trim();
-  const currentVenueChineseCount=(currentVenue.match(/[\u3400-\u4DBF\u4E00-\u9FFF]/g)||[]).length;
-  const currentVenueEligible=
-    currentVenue.length>=3 &&
-    currentVenue.length<=30 &&
-    currentVenueChineseCount>=2 &&
-    !/[<>\r\n]/.test(currentVenue);
-
-  const rememberedVenue=(currentVenueEligible
-    ? currentVenue
-    : (localStorage.getItem(LAST_VENUE_KEY) || '')
-  ).trim();
+  const rememberedOurTeam=String(byId('ourTeam')?.value ?? state.ourTeam ?? '').trim();
+  const rememberedVenue=String(byId('venue')?.value ?? state.venue ?? '').trim();
+  const rememberedCompetition=String(byId('competition')?.value ?? state.competition ?? '').trim();
+  const rememberedRoster=currentRosterNumbers();
+  const rememberedGoalkeeper=String(state.goalkeeperNumber||'').trim();
+  // v5.157：同日連續比賽沿用上一場球衣顏色。
+  // 仍透過既有白名單正規化，避免未知值污染新場資料。
+  const rememberedJerseyColor=normalizeJerseyColor(state.jerseyColor);
+  const reg=Number(state.regulationMinutes);
+  const rememberedRegulationMinutes=(Number.isInteger(reg) && reg>=1 && reg<=45) ? reg : null;
 
   activateMatchId(createUniqueMatchId(),{writeUrl:true});
   MATCH_ENTRY_MODE='url';
 
   state={
-    ourTeam:rememberedOurTeam, oppTeam:'', venue:rememberedVenue, competition:currentCompetition,
+    ourTeam:rememberedOurTeam, oppTeam:'', venue:rememberedVenue, competition:rememberedCompetition,
     started:false, finished:false, startEpoch:null, endEpoch:null, finalElapsed:0,
-    regulationMinutes:null, ourScore:0, oppScore:0, markers:[],
+    regulationMinutes:rememberedRegulationMinutes, ourScore:0, oppScore:0, markers:[],
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
     periodStartOurScore:0, periodStartOppScore:0, periods:[],
     nextPeriodType:null, extraTime:false, extraTimeMinutes:null, penalty:null,
-    goalkeeperNumber:'', rosterNumbers:[], jerseyColor:'default', halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0,
+    goalkeeperNumber:rememberedGoalkeeper, rosterNumbers:[...rememberedRoster], jerseyColor:rememberedJerseyColor, halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0,
     longDurationAckStartEpoch:null,
     regulationPulseAckToken:''
   };
@@ -23331,19 +23330,20 @@ function newMatch(){
   byId('ourTeamBox')?.classList.remove('editing');
   byId('oppTeamBox')?.classList.remove('editing');
   byId('venue').value=rememberedVenue;
-  byId('competition').value=currentCompetition;
+  byId('competition').value=rememberedCompetition;
   syncRegulationInputsFromState();
   timeExpanded=false;
   regulationEditorExpanded=false;
   saveState();
   render();
 
-  // 新比賽輸入引導：我方 → 對手 → 場地。
-  // 直接聚焦我方隊名，讓 iPhone 鍵盤「下一步」可以一路完成基本資料。
-  guidedSetupStep='our';
+  // 下一場只需要重新輸入對手；其餘常用欄位已從上一場帶入。
+  // 不再先選取我方隊名，避免使用者誤以為還需要重填已保留資料。
+  nextMatchOpponentOnly=true;
+  guidedSetupStep=null;
   setTimeout(()=>{
-    editTeamName('ourTeam');
-    const input=byId('ourTeam');
+    editTeamName('oppTeam');
+    const input=byId('oppTeam');
     if(input){
       try{ input.select(); }catch(e){}
     }
@@ -25549,9 +25549,16 @@ function buildReportDOM(){
   const crossedDay=isCrossDay(reportStartEpoch,reportEndEpoch);
   byId('reportDate').textContent=`📅 ${matchDateLabel(reportStartEpoch,reportEndEpoch)}`;
   const reportCompetition=byId('reportCompetition');
-  reportCompetition.textContent=`🏆 ${state.competition||'未填比賽賽事'}`;
-  reportCompetition.style.display='';
-  byId('reportVenueText').textContent=state.venue||'未填比賽場地';
+  const reportCompetitionValue=String(state.competition||'').trim();
+  if(reportCompetition){
+    reportCompetition.textContent=reportCompetitionValue?`🏆 ${reportCompetitionValue}`:'';
+    reportCompetition.style.display=reportCompetitionValue?'':'none';
+  }
+  const reportVenue=byId('reportVenue');
+  const reportVenueText=byId('reportVenueText');
+  const reportVenueValue=String(state.venue||'').trim();
+  if(reportVenueText) reportVenueText.textContent=reportVenueValue;
+  if(reportVenue) reportVenue.style.display=reportVenueValue?'':'none';
   const reportRoster=byId('reportRoster');
   const reportRosterText=byId('reportRosterText');
   const rosterForReport=currentRosterNumbers();
@@ -25595,7 +25602,17 @@ function buildReportDOM(){
   badge.className='reportStatusBadge ' + (state.finished ? 'finished' : (state.started ? 'running' : 'idle'));
   badge.textContent=state.finished ? (state.penalty?.completed?`比賽結束｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:'比賽結束') : (state.penalty?.active?`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:(state.started ? (state.currentPeriod===3?'延長賽':state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?(state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':`中場 ${fmtMMSS(halftimeElapsed())}`):'尚未開始')));
   badge.style.display=state.finished?'none':'inline-flex';
-  renderDiff(byId('reportDiff'));
+  const reportDiff=byId('reportDiff');
+  if(reportDiff){
+    if(state.regulationMinutes){
+      reportDiff.style.display='';
+      renderDiff(reportDiff);
+    }else{
+      reportDiff.textContent='';
+      reportDiff.className='diff reportDiff';
+      reportDiff.style.display='none';
+    }
+  }
   byId('reportScorers').innerHTML=scorerStatsHTML();
   byId('reportTimeline').innerHTML=reportTimelineHTML();
 }
@@ -25654,12 +25671,13 @@ function reportLines(){
     {type:'score',left:state.ourTeam||'我方',right:state.oppTeam||'對手',score:`${state.ourScore} : ${state.oppScore}`,status}];
   const roster=currentRosterNumbers();
 
-  // v5.144：儲存圖片的基本資料順序與螢幕摘要一致。
-  const metaCards=[
-    {label:'比賽賽事',icon:'🏆',value:state.competition||'未填比賽賽事',full:true,summaryCard:true},
-    {label:'比賽日期',icon:'📅',value:matchDateLabel(start,end),full:true,summaryCard:true},
-    {label:'比賽場地',icon:'📍',value:state.venue||'未填比賽場地',full:true,summaryCard:true}
-  ];
+  // v5.155：摘要圖片只顯示有實際內容的賽事／場地；日期固定保留。
+  const metaCards=[];
+  const competitionValue=String(state.competition||'').trim();
+  const venueValue=String(state.venue||'').trim();
+  if(competitionValue) metaCards.push({label:'比賽賽事',icon:'🏆',value:competitionValue,full:true,summaryCard:true});
+  metaCards.push({label:'比賽日期',icon:'📅',value:matchDateLabel(start,end),full:true,summaryCard:true});
+  if(venueValue) metaCards.push({label:'比賽場地',icon:'📍',value:venueValue,full:true,summaryCard:true});
   if(roster.length){
     metaCards.push({label:'本場球員',icon:'👕',value:roster.map(n=>'#'+n).join(' '),full:true,summaryCard:true});
   }
@@ -26363,7 +26381,7 @@ body.resultMode.finalOutputVisible .finalToolsCard{
 </style>
 
 </head><body><div class="wrap">
-<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}</div><div>🏆 ${escapeHtml(state.competition||'未填比賽賽事')}</div><div>📍 ${escapeHtml(state.venue||'未填比賽場地')}</div></div></div>
+<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}</div>${state.competition?`<div>🏆 ${escapeHtml(state.competition)}</div>`:''}${state.venue?`<div>📍 ${escapeHtml(state.venue)}</div>`:''}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</p>${state.halftimeStartEpoch?`<p><b>中場開始：</b>${escapeHtml(fmtClock(state.halftimeStartEpoch))}<br><b>中場結束：</b>${escapeHtml(state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--')}<br><b>中場休息：</b>${escapeHtml(fmtMMSS(halftimeElapsed()))}</p>`:''}${diff}</div>
 <div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
@@ -26583,6 +26601,16 @@ function advanceGuidedSetup(from){
     saveState();
     byId('oppTeamBox').classList.remove('editing');
     updateTeamNameDisplays();
+
+    // v5.157：由「新比賽」帶入上一場設定時，其餘欄位已保留，
+    // 對手輸入完成後直接結束導引，不再跳去重填賽事／場地。
+    if(nextMatchOpponentOnly){
+      nextMatchOpponentOnly=false;
+      guidedSetupStep=null;
+      byId('oppTeam')?.classList.remove('guidedInput');
+      byId('oppTeam')?.blur();
+      return true;
+    }
 
     focusCompetitionField();
     return true;
