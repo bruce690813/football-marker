@@ -19314,7 +19314,7 @@ button:not(:disabled):active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.157</span>
+      <span class="headerVersion">v5.159</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -20778,7 +20778,7 @@ const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const LAST_VENUE_KEY='football_marker_last_venue';
 const RECENT_VENUES_KEY='football_marker_recent_venues_v1';
 let guidedSetupStep=null; // 'our' -> 'opp' -> 'competition' -> 'venue' during pre-match guided input
-let nextMatchOpponentOnly=false; // v5.157：沿用上一場資料時，只需重新輸入對手
+let nextMatchOpponentOnly=false; // v5.159：沿用上一場資料時，只需重新輸入對手
 const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
 const LAST_ROSTER_KEY='football_marker_last_roster_v1';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
@@ -20809,6 +20809,10 @@ let state={
   extraTimeMinutes:null,
   penalty:null,
   goalkeeperNumber:'',
+  // v5.159：記錄「因設定守門員而自動加入名單」的背號來源。
+  // 只有這種自動加入的舊守門員，在更換守門員時才會自動移除；
+  // 原本就由使用者選進名單的球員，即使不再守門仍會保留。
+  goalkeeperAutoRosterNumber:'',
   rosterNumbers:[],
   jerseyColor:'default',
   halftimeStartEpoch:null,
@@ -21345,6 +21349,21 @@ function loadState(){
   if(!('goalkeeperNumber' in state)) state.goalkeeperNumber='';
   if(!Array.isArray(state.rosterNumbers)) state.rosterNumbers=[];
   state.rosterNumbers=[...new Set(state.rosterNumbers.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=99))].sort((a,b)=>a-b);
+  if(!('goalkeeperAutoRosterNumber' in state)){
+    // v5.159 舊資料相容：若名單只有目前守門員一人，可安全判定此人很可能是
+    // 舊版「設定守門員時自動加入名單」所產生，保留來源標記以便之後正確替換。
+    const legacyGk=Number(state.goalkeeperNumber);
+    state.goalkeeperAutoRosterNumber=(
+      Number.isInteger(legacyGk) &&
+      state.rosterNumbers.length===1 &&
+      state.rosterNumbers[0]===legacyGk
+    ) ? String(legacyGk) : '';
+  }else{
+    const autoGk=Number(state.goalkeeperAutoRosterNumber);
+    state.goalkeeperAutoRosterNumber=(
+      Number.isInteger(autoGk) && autoGk>=1 && autoGk<=99
+    ) ? String(autoGk) : '';
+  }
   if(!('jerseyColor' in state)) state.jerseyColor='default';
   state.jerseyColor=normalizeJerseyColor(state.jerseyColor);
   if(!('halftimeStartEpoch' in state)) state.halftimeStartEpoch=null;
@@ -22633,10 +22652,33 @@ function setKeeperNumber(number){
     alert(`#${n} 已領紅牌退場，不能再設定為守門員。`);
     return;
   }
+
+  const previousKeeper=String(state.goalkeeperNumber||'').trim();
+  const autoRosterKeeper=String(state.goalkeeperAutoRosterNumber||'').trim();
+  let roster=currentRosterNumbers();
+
+  // v5.159：如果上一位守門員只是因「設定守門員」而自動加入名單，
+  // 更換守門員時要把舊背號同步移除，避免名單從 1 人錯誤累積成 2 人、3 人。
+  // 若舊守門員原本就是使用者手動選入的正式名單成員，則仍保留在名單中。
+  if(previousKeeper && previousKeeper!==String(n) && autoRosterKeeper===previousKeeper){
+    const previousNumber=Number(previousKeeper);
+    roster=roster.filter(v=>v!==previousNumber);
+  }
+
   state.goalkeeperNumber=String(n);
-  // 守門員必須同步列入本場名單，開啟名單時會直接呈現已選取狀態。
-  const roster=currentRosterNumbers();
-  if(!roster.includes(n)) state.rosterNumbers=[...roster,n].sort((a,b)=>a-b);
+
+  // 守門員必須屬於本場球員；若此背號原本不在名單中，才自動加入並記錄來源。
+  if(!roster.includes(n)){
+    state.rosterNumbers=[...roster,n].sort((a,b)=>a-b);
+    state.goalkeeperAutoRosterNumber=String(n);
+  }else{
+    state.rosterNumbers=[...roster].sort((a,b)=>a-b);
+    // 新守門員本來就在名單內，代表不是本次自動加入，不應在下次更換時自動刪除。
+    if(previousKeeper!==String(n) || autoRosterKeeper!==String(n)){
+      state.goalkeeperAutoRosterNumber='';
+    }
+  }
+
   rememberPlayerNumber(n);
   buildNumberGrid();
   buildKeeperGrid();
@@ -22659,7 +22701,14 @@ function saveKeeperCustom(){
   setKeeperNumber(n);
 }
 function clearKeeperNumber(){
+  const current=String(state.goalkeeperNumber||'').trim();
+  const autoRosterKeeper=String(state.goalkeeperAutoRosterNumber||'').trim();
+  if(current && autoRosterKeeper===current){
+    const n=Number(current);
+    state.rosterNumbers=currentRosterNumbers().filter(v=>v!==n);
+  }
   state.goalkeeperNumber='';
+  state.goalkeeperAutoRosterNumber='';
   saveState();
   render();
   closeKeeperModal();
@@ -23295,7 +23344,7 @@ function newMatch(){
   // 先完整保存舊場，再建立新的 URL Match ID。
   try{ saveState(); }catch(e){}
 
-  // v5.157：同一天連續賽程通常沿用相同比賽設定。
+  // v5.159：同一天連續賽程通常沿用相同比賽設定。
   // 建立下一場前先快照本場可重用欄位；對手名稱、比分、事件與所有計時狀態仍歸零。
   rememberCurrentRosterAsPrevious();
   const rememberedOurTeam=String(byId('ourTeam')?.value ?? state.ourTeam ?? '').trim();
@@ -23303,7 +23352,8 @@ function newMatch(){
   const rememberedCompetition=String(byId('competition')?.value ?? state.competition ?? '').trim();
   const rememberedRoster=currentRosterNumbers();
   const rememberedGoalkeeper=String(state.goalkeeperNumber||'').trim();
-  // v5.157：同日連續比賽沿用上一場球衣顏色。
+  const rememberedGoalkeeperAutoRoster=String(state.goalkeeperAutoRosterNumber||'').trim();
+  // v5.159：同日連續比賽沿用上一場球衣顏色。
   // 仍透過既有白名單正規化，避免未知值污染新場資料。
   const rememberedJerseyColor=normalizeJerseyColor(state.jerseyColor);
   const reg=Number(state.regulationMinutes);
@@ -23319,7 +23369,8 @@ function newMatch(){
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
     periodStartOurScore:0, periodStartOppScore:0, periods:[],
     nextPeriodType:null, extraTime:false, extraTimeMinutes:null, penalty:null,
-    goalkeeperNumber:rememberedGoalkeeper, rosterNumbers:[...rememberedRoster], jerseyColor:rememberedJerseyColor, halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0,
+    goalkeeperNumber:rememberedGoalkeeper, goalkeeperAutoRosterNumber:rememberedGoalkeeperAutoRoster,
+    rosterNumbers:[...rememberedRoster], jerseyColor:rememberedJerseyColor, halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0,
     longDurationAckStartEpoch:null,
     regulationPulseAckToken:''
   };
@@ -24938,6 +24989,7 @@ function resetPreMatchSetup(){
   state.competition='';
   state.venue='';
   state.goalkeeperNumber='';
+  state.goalkeeperAutoRosterNumber='';
   state.rosterNumbers=[];
   state.jerseyColor='default';
   state.regulationMinutes=null;
@@ -25616,6 +25668,14 @@ function buildReportDOM(){
   byId('reportScorers').innerHTML=scorerStatsHTML();
   byId('reportTimeline').innerHTML=reportTimelineHTML();
 }
+
+function syncIOSBrowserUIMode(){
+  const ua=String(navigator.userAgent||'');
+  const isiOS=/iPad|iPhone|iPod/.test(ua) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  const standalone=Boolean(window.navigator.standalone===true || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches));
+  document.documentElement.classList.toggle('iosBrowserUI', isiOS && !standalone);
+}
+syncIOSBrowserUIMode();
 
 function syncVisualViewport(){
   const vv=window.visualViewport;
@@ -26388,7 +26448,50 @@ ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${pe
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
 <div class="card"><h2>其他精彩標記事件</h2><ul>${otherHtml}</ul></div>
 
-</div></body></html>`;
+</div>
+<style id="v5158FullTimeSafariActionsPatch">
+/* =========================================================
+   v5.159：全場底部三顆操作按鈕避開 iPhone Safari 工具列
+   問題：一般文件流雖有尾端 spacer，但 Safari 展開底部工具列時，
+         三顆按鈕仍可能停在工具列後方，看起來像被裁切。
+   修正：iOS 瀏覽器模式下，賽後操作列固定停在瀏覽器工具列上方；
+         同時保留真實頁尾空間，避免固定列遮住最後一段內容。
+   ========================================================= */
+@media (max-width:430px){
+  html.iosBrowserUI body.resultMode.finalOutputVisible:not(.keyboardOpen) .finalToolsCard{
+    position:fixed!important;
+    left:max(10px, env(safe-area-inset-left,0px))!important;
+    right:max(10px, env(safe-area-inset-right,0px))!important;
+    bottom:calc(max(76px, var(--browser-bottom-gap,0px)) + env(safe-area-inset-bottom,0px))!important;
+    width:auto!important;
+    margin:0!important;
+    z-index:88!important;
+    padding:6px!important;
+    border-radius:18px!important;
+    box-shadow:
+      0 16px 34px rgba(0,0,0,.34),
+      inset 0 1px 0 rgba(255,255,255,.06)!important;
+  }
+
+  /* 固定操作列不佔文件流，因此在頁尾補足真實可捲動空間。 */
+  html.iosBrowserUI body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    display:block!important;
+    height:calc(max(220px, calc(var(--browser-bottom-gap,0px) + 132px)) + env(safe-area-inset-bottom,0px))!important;
+    min-height:calc(max(220px, calc(var(--browser-bottom-gap,0px) + 132px)) + env(safe-area-inset-bottom,0px))!important;
+  }
+  html.iosBrowserUI body.resultMode.finalOutputVisible .wrap{
+    padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))!important;
+    scroll-padding-bottom:calc(max(220px, calc(var(--browser-bottom-gap,0px) + 132px)) + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  /* 鍵盤開啟時延續既有行為：不讓固定列擋住輸入。 */
+  html.iosBrowserUI body.keyboardOpen .finalToolsCard{
+    display:none!important;
+  }
+}
+</style>
+
+</body></html>`;
 }
 function downloadReportHTML(){
   downloadBlob(reportHTMLText(), 'text/html;charset=utf-8', reportFilename('html'));
@@ -26602,7 +26705,7 @@ function advanceGuidedSetup(from){
     byId('oppTeamBox').classList.remove('editing');
     updateTeamNameDisplays();
 
-    // v5.157：由「新比賽」帶入上一場設定時，其餘欄位已保留，
+    // v5.159：由「新比賽」帶入上一場設定時，其餘欄位已保留，
     // 對手輸入完成後直接結束導引，不再跳去重填賽事／場地。
     if(nextMatchOpponentOnly){
       nextMatchOpponentOnly=false;
@@ -26922,6 +27025,7 @@ byId('assistCustomNumber')?.addEventListener('keydown',e=>{
 
 
 document.addEventListener('DOMContentLoaded',()=>{
+  syncIOSBrowserUIMode();
   const closeBtn=byId('reportCloseBtn');
   const shareBtn=byId('reportShareBtn');
 
