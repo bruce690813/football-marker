@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.140</title>
+<title>足球場邊記錄器 v5.161</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -19300,6 +19300,71 @@ button:not(:disabled):active{
 }
 </style>
 
+
+<style id="v5160RosterLearningPatch">
+/* =========================================================
+   v5.160：快捷背號「原始預設 → 球隊常用」學習模式
+   ========================================================= */
+#rosterModal .rosterPickerLabelWithHint{
+  display:flex!important;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+#rosterModal .rosterQuickSourceHint{
+  flex:0 0 auto;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#e8eef7;
+  color:#64748b;
+  font-size:10.5px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.01em;
+}
+#rosterModal .rosterQuickSourceHint.learned{
+  background:#dcfce7;
+  color:#15803d;
+  border:1px solid #bbf7d0;
+}
+#rosterModal .rosterUtilityRow{
+  display:flex!important;
+  align-items:center;
+  justify-content:flex-start!important;
+  gap:8px!important;
+  flex-wrap:wrap;
+}
+#rosterModal .rosterResetLearnedBtn{
+  min-height:44px;
+  padding:8px 14px;
+  border-radius:11px;
+  background:#eef4ff;
+  border:1px solid #bfdbfe;
+  color:#1d4ed8;
+  font-size:12.5px;
+  font-weight:950;
+  box-shadow:none;
+}
+#rosterModal .rosterResetLearnedBtn:active{
+  background:#dbeafe;
+  transform:scale(.98);
+}
+@media(max-width:360px){
+  #rosterModal .rosterUtilityRow{display:grid!important;grid-template-columns:1fr 1fr;}
+  #rosterModal .rosterResetLearnedBtn,#rosterModal .rosterClearBtn{width:100%!important;padding-left:8px!important;padding-right:8px!important;}
+}
+</style>
+
+
+<style id="v5161RecentRosterLearningPatch">
+/* v5.161：來源標籤沿用既有 pill，但語意改為「近 N 場」。 */
+#rosterModal .rosterQuickSourceHint.learned{
+  background:#e0f2fe!important;
+  color:#0369a1!important;
+  border-color:#bae6fd!important;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19314,7 +19379,7 @@ button:not(:disabled):active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.159</span>
+      <span class="headerVersion">v5.161</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -20013,7 +20078,7 @@ button:not(:disabled):active{
         </div>
       </div>
 
-      <div class="rosterPickerLabel">快速點選背號</div>
+      <div class="rosterPickerLabel rosterPickerLabelWithHint"><span>快速點選背號</span><span id="rosterQuickSourceHint" class="rosterQuickSourceHint">原始預設</span></div>
       <div id="rosterPresetGrid" class="rosterPresetGrid"></div>
 
       <div id="rosterUndoBar" class="rosterUndoBar" role="status" aria-live="polite">
@@ -20034,6 +20099,7 @@ button:not(:disabled):active{
       <div id="rosterInlineStatus" class="rosterInlineStatus" aria-live="polite"></div>
 
       <div class="rosterUtilityRow">
+        <button class="rosterResetLearnedBtn" type="button" onclick="resetLearnedRosterPool()">↺ 重設快捷背號</button>
         <button class="rosterClearBtn" type="button" onclick="clearRoster()">↻ 清空名單</button>
       </div>
     </div>
@@ -20779,7 +20845,12 @@ const LAST_VENUE_KEY='football_marker_last_venue';
 const RECENT_VENUES_KEY='football_marker_recent_venues_v1';
 let guidedSetupStep=null; // 'our' -> 'opp' -> 'competition' -> 'venue' during pre-match guided input
 let nextMatchOpponentOnly=false; // v5.159：沿用上一場資料時，只需重新輸入對手
-const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1';
+const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1'; // 舊版相容保留，不再直接驅動快捷背號
+const LEARNED_ROSTER_POOL_KEY='football_marker_learned_roster_pool_v2'; // v5.160 舊池，僅供一次性遷移
+const RECENT_ROSTER_HISTORY_KEY='football_marker_recent_roster_history_v1';
+const RECENT_ROSTER_HISTORY_INIT_KEY='football_marker_recent_roster_history_initialized_v1';
+const RECENT_ROSTER_MATCH_LIMIT=5;
+const RECENT_ROSTER_NUMBER_LIMIT=24;
 const LAST_ROSTER_KEY='football_marker_last_roster_v1';
 const COMMON_NUMBERS=[7,13,14,16,17,19,21,22,25,30,31,32,36,40,51,56,59,71];
 let editingMarkerIndex=null, editingMarkerEvent=null, editingMarkerTeam='OUR', editingMarkerOwnGoal=false;
@@ -22129,29 +22200,185 @@ function getRegulationMinutesInput(){
   return value;
 }
 
-function getLearnedNumbers(){
+function normalizeRosterPool(raw){
+  if(!Array.isArray(raw)) return [];
+  return [...new Set(raw.map(Number).filter(n=>Number.isInteger(n) && n>=1 && n<=99))].sort((a,b)=>a-b);
+}
+
+/* =========================================================
+   v5.161：快捷背號改為「最近 5 場活躍背號」
+   - 原始 18 個只在完全沒有近期比賽紀錄時顯示。
+   - 每場真正結束後，才把該場最終球員名單記入近期歷史。
+   - 快捷區只根據最近 5 場，不再永久累加。
+   - 若 5 場內出現太多不同背號，依出場頻率、近期程度、守門員權重挑選最多 24 個。
+   - 最終顯示仍按背號排序，保持掃讀穩定。
+   ========================================================= */
+function normalizeRecentRosterHistory(raw){
+  if(!Array.isArray(raw)) return [];
+  const seen=new Set();
+  const normalized=[];
+  raw.forEach((item,index)=>{
+    if(!item || typeof item!=='object') return;
+    const roster=normalizeRosterPool(item.roster);
+    const gkNum=Number(item.goalkeeper);
+    const goalkeeper=(Number.isInteger(gkNum)&&gkNum>=1&&gkNum<=99) ? gkNum : null;
+    if(!roster.length && !goalkeeper) return;
+    if(goalkeeper && !roster.includes(goalkeeper)) roster.push(goalkeeper);
+    roster.sort((a,b)=>a-b);
+    const matchId=String(item.matchId||`legacy-${index}`);
+    if(seen.has(matchId)) return;
+    seen.add(matchId);
+    normalized.push({
+      matchId,
+      roster,
+      goalkeeper,
+      updatedAt:Number(item.updatedAt)||0
+    });
+  });
+  return normalized
+    .sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0))
+    .slice(0,RECENT_ROSTER_MATCH_LIMIT);
+}
+
+function writeRecentRosterHistory(list){
+  const normalized=normalizeRecentRosterHistory(list);
   try{
-    const raw=JSON.parse(localStorage.getItem(LEARNED_NUMBERS_KEY)||'[]');
-    if(!Array.isArray(raw)) return [];
-    return [...new Set(raw.map(Number).filter(n=>Number.isInteger(n) && n>=1 && n<=99))].sort((a,b)=>a-b);
+    localStorage.setItem(RECENT_ROSTER_HISTORY_INIT_KEY,'1');
+    if(normalized.length) localStorage.setItem(RECENT_ROSTER_HISTORY_KEY,JSON.stringify(normalized));
+    else localStorage.removeItem(RECENT_ROSTER_HISTORY_KEY);
+  }catch(e){}
+  return normalized;
+}
+
+function migrateRecentRosterHistoryIfNeeded(){
+  let initialized=false;
+  try{ initialized=localStorage.getItem(RECENT_ROSTER_HISTORY_INIT_KEY)==='1'; }catch(e){}
+  if(initialized) return;
+
+  let seed=[];
+  try{
+    const previous=normalizeRosterPool(JSON.parse(localStorage.getItem(LAST_ROSTER_KEY)||'[]'));
+    if(previous.length){
+      seed=[{matchId:'legacy-last-roster',roster:previous,goalkeeper:null,updatedAt:Date.now()}];
+    }else{
+      // v5.160 升級相容：沒有上一場名單時，才以舊「球隊常用池」當一次性起始資料。
+      const legacyPool=normalizeRosterPool(JSON.parse(localStorage.getItem(LEARNED_ROSTER_POOL_KEY)||'[]'));
+      if(legacyPool.length){
+        seed=[{matchId:'legacy-learned-pool',roster:legacyPool,goalkeeper:null,updatedAt:Date.now()}];
+      }
+    }
+  }catch(e){}
+  writeRecentRosterHistory(seed);
+}
+
+function getRecentRosterHistory(){
+  migrateRecentRosterHistoryIfNeeded();
+  try{
+    return normalizeRecentRosterHistory(JSON.parse(localStorage.getItem(RECENT_ROSTER_HISTORY_KEY)||'[]'));
   }catch(e){
     return [];
   }
 }
 
+function recordRecentRosterForMatch({matchId=MATCH_ID,roster=currentRosterNumbers(),goalkeeper=state.goalkeeperNumber,updatedAt=Date.now()}={}){
+  const normalizedRoster=normalizeRosterPool(roster);
+  const gk=Number(goalkeeper);
+  const validGk=(Number.isInteger(gk)&&gk>=1&&gk<=99) ? gk : null;
+  if(validGk && !normalizedRoster.includes(validGk)) normalizedRoster.push(validGk);
+  normalizedRoster.sort((a,b)=>a-b);
+  if(!normalizedRoster.length) return false;
+
+  const id=String(matchId||`match-${Number(updatedAt)||Date.now()}`);
+  const history=getRecentRosterHistory().filter(item=>item.matchId!==id);
+  history.unshift({
+    matchId:id,
+    roster:normalizedRoster,
+    goalkeeper:validGk,
+    updatedAt:Number(updatedAt)||Date.now()
+  });
+  writeRecentRosterHistory(history);
+  return true;
+}
+
+function recentActiveRosterNumbers(){
+  const history=getRecentRosterHistory();
+  if(!history.length) return [];
+
+  const stats=new Map();
+  history.forEach((entry,index)=>{
+    const recencyWeight=Math.max(1,RECENT_ROSTER_MATCH_LIMIT-index);
+    entry.roster.forEach(n=>{
+      const item=stats.get(n)||{number:n,appearances:0,recentScore:0,keeperCount:0};
+      item.appearances+=1;
+      item.recentScore+=recencyWeight;
+      stats.set(n,item);
+    });
+    if(entry.goalkeeper){
+      const item=stats.get(entry.goalkeeper)||{number:entry.goalkeeper,appearances:0,recentScore:0,keeperCount:0};
+      item.keeperCount+=1;
+      stats.set(entry.goalkeeper,item);
+    }
+  });
+
+  const ranked=[...stats.values()].sort((a,b)=>
+    (b.appearances-a.appearances) ||
+    (b.keeperCount-a.keeperCount) ||
+    (b.recentScore-a.recentScore) ||
+    (a.number-b.number)
+  );
+  return ranked.slice(0,RECENT_ROSTER_NUMBER_LIMIT).map(x=>x.number).sort((a,b)=>a-b);
+}
+
+function hasLearnedRosterPool(){
+  return getRecentRosterHistory().length>0;
+}
+
+// 舊函式名稱保留給既有流程；v5.161 起回傳「近期活躍背號」。
+function getLearnedRosterPool(){
+  return recentActiveRosterNumbers();
+}
+function getLearnedNumbers(){
+  return recentActiveRosterNumbers();
+}
+
+// v5.161 不再因單一事件／臨時輸入就永久學習背號。
+// 真正的學習只在該場比賽完成時，以「最終本場名單」寫入最近 5 場歷史。
 function rememberPlayerNumber(number){
   const n=Number(number);
-  if(!Number.isInteger(n) || n<1 || n>99) return;
-  if(COMMON_NUMBERS.includes(n)) return;
-  const learned=getLearnedNumbers();
-  if(learned.includes(n)) return;
-  learned.push(n);
-  learned.sort((a,b)=>a-b);
-  localStorage.setItem(LEARNED_NUMBERS_KEY,JSON.stringify(learned));
+  return Number.isInteger(n) && n>=1 && n<=99;
 }
 
 function allCommonNumbers(){
-  return [...new Set([...COMMON_NUMBERS,...getLearnedNumbers()])].sort((a,b)=>a-b);
+  const recent=recentActiveRosterNumbers();
+  return recent.length ? recent : [...COMMON_NUMBERS];
+}
+
+// 保留舊呼叫介面，但不再於名單視窗關閉時更新長期池。
+function commitRosterLearningFromCurrent(){
+  return false;
+}
+
+function resetLearnedRosterPool(){
+  if(state.finished) return;
+  const history=getRecentRosterHistory();
+  if(!history.length){
+    setRosterInlineStatus('目前快捷背號已是原始預設 18 個。','info');
+    renderRosterModal();
+    return;
+  }
+  if(!confirm('確定清除「最近 5 場活躍背號」並回到程式原始 18 個快捷背號嗎？\n\n本場已選球員與既有比賽紀錄都不會被刪除。')) return;
+  try{
+    localStorage.removeItem(RECENT_ROSTER_HISTORY_KEY);
+    localStorage.setItem(RECENT_ROSTER_HISTORY_INIT_KEY,'1');
+    // 舊版學習資料一併清除，避免回退舊版後又把歷史背號帶回。
+    localStorage.removeItem(LEARNED_ROSTER_POOL_KEY);
+    localStorage.removeItem(LEARNED_NUMBERS_KEY);
+  }catch(e){}
+  rosterLearningDirty=false;
+  setRosterInlineStatus('已回到原始 18 個快捷背號；本場名單維持不變。','success');
+  renderRosterModal();
+  render();
+  byId('rosterModal')?.classList.add('open');
 }
 
 
@@ -22220,7 +22447,7 @@ function playerPickerSourceMeta(eligibleCount){
   const roster=currentRosterNumbers();
   return roster.length
     ? {label:'本場名單',badge:`${eligibleCount} 人可選`,fallback:false}
-    : {label:'常用背號',badge:`${eligibleCount} 個`,fallback:true};
+    : {label:'近期背號',badge:`${eligibleCount} 個`,fallback:true};
 }
 
 function renderPlayerPickerSource(labelId,badgeId,count){
@@ -22252,6 +22479,7 @@ function rememberCurrentRosterAsPrevious(){
 let lastRosterRenderedCount=null;
 let rosterUndoNumber=null;
 let rosterUndoTimer=null;
+let rosterLearningDirty=false;
 
 function setRosterInlineStatus(message='',tone=''){
   const el=byId('rosterInlineStatus');
@@ -22278,6 +22506,15 @@ function renderRosterModal(){
   const extraWrap=byId('rosterExtraWrap');
   const badge=byId('rosterCountBadge');
   const previousBtn=byId('rosterPreviousBtn');
+  const quickSourceHint=byId('rosterQuickSourceHint');
+
+  if(quickSourceHint){
+    const historyCount=getRecentRosterHistory().length;
+    const learned=historyCount>0;
+    quickSourceHint.textContent=learned?`近${historyCount}場`:'原始預設';
+    quickSourceHint.title=learned?'快捷背號依最近完成的比賽自動整理':'尚無近期比賽紀錄，使用程式原始 18 個背號';
+    quickSourceHint.classList.toggle('learned',learned);
+  }
 
   if(badge){
     badge.textContent=`${roster.length} 人`;
@@ -22348,6 +22585,7 @@ function openRosterModal(){
   hideRosterUndo();
   setRosterInlineStatus('');
   lastRosterRenderedCount=null;
+  rosterLearningDirty=false;
   renderRosterModal();
   const input=byId('rosterInput');
   if(input) input.value='';
@@ -22356,6 +22594,8 @@ function openRosterModal(){
 
 function closeRosterModal(){
   hideRosterUndo();
+  // v5.161：關閉名單視窗只保存本場資料；近期快捷背號要等比賽真正結束才更新。
+  rosterLearningDirty=false;
   saveState();
   render();
   byId('rosterModal').classList.remove('open');
@@ -22396,6 +22636,7 @@ function addRosterNumbers(){
 
   hideRosterUndo();
   state.rosterNumbers=[...roster,number].sort((a,b)=>a-b);
+  rosterLearningDirty=true;
   rememberPlayerNumber(number);
   buildNumberGrid();
   buildKeeperGrid();
@@ -22440,6 +22681,7 @@ function undoRosterRemoval(){
   const roster=currentRosterNumbers();
   if(!roster.includes(n)){
     state.rosterNumbers=[...roster,n].sort((a,b)=>a-b);
+    rosterLearningDirty=true;
     rememberPlayerNumber(n);
     buildNumberGrid();
     buildKeeperGrid();
@@ -22461,6 +22703,7 @@ function toggleRosterNumber(number){
   const roster=currentRosterNumbers();
   setRosterInlineStatus('');
 
+  rosterLearningDirty=true;
   if(roster.includes(n)){
     state.rosterNumbers=roster.filter(v=>v!==n);
     showRosterUndo(n);
@@ -22487,6 +22730,7 @@ function removeRosterNumber(number){
   if(state.finished) return;
   const n=Number(number);
   state.rosterNumbers=currentRosterNumbers().filter(v=>v!==n);
+  rosterLearningDirty=true;
 
   showRosterUndo(n);
   setRosterInlineStatus('');
@@ -22511,6 +22755,7 @@ function clearRoster(){
 
   hideRosterUndo();
   state.rosterNumbers=[];
+  rosterLearningDirty=true;
   buildNumberGrid();
   buildKeeperGrid();
   saveState();
@@ -22538,6 +22783,7 @@ function applyPreviousRoster(){
   hideRosterUndo();
   previous.forEach(rememberPlayerNumber);
   state.rosterNumbers=[...previous];
+  rosterLearningDirty=true;
 
   buildNumberGrid();
   buildKeeperGrid();
@@ -23288,6 +23534,8 @@ function finishPenaltyShootout(){
   timeExpanded=false;
   state.endEpoch=state.penalty.endEpoch;
   state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
+  rememberCurrentRosterAsPrevious();
+  recordRecentRosterForMatch({matchId:MATCH_ID,roster:currentRosterNumbers(),goalkeeper:state.goalkeeperNumber,updatedAt:state.endEpoch||Date.now()});
   byId('penaltyRosterModal')?.classList.remove('open');
   pendingPenaltyRosterIndex=null;
   byId('penaltyModal').classList.remove('open');
@@ -23324,6 +23572,7 @@ function confirmFinishFull(){
   state.started=false;
   state.finished=true;
   rememberCurrentRosterAsPrevious();
+  recordRecentRosterForMatch({matchId:MATCH_ID,roster:currentRosterNumbers(),goalkeeper:state.goalkeeperNumber,updatedAt:pendingFinishEnd||Date.now()});
   timeExpanded=false;
   regulationEditorExpanded=false;
   state.awaitingNextPeriod=false;
@@ -23347,6 +23596,10 @@ function newMatch(){
   // v5.159：同一天連續賽程通常沿用相同比賽設定。
   // 建立下一場前先快照本場可重用欄位；對手名稱、比分、事件與所有計時狀態仍歸零。
   rememberCurrentRosterAsPrevious();
+  // v5.161：保險機制。若本場已完成，建立下一場前再同步一次近期名單歷史；同一 Match ID 會去重，不會重複計算。
+  if(state.finished){
+    recordRecentRosterForMatch({matchId:MATCH_ID,roster:currentRosterNumbers(),goalkeeper:state.goalkeeperNumber,updatedAt:state.endEpoch||Date.now()});
+  }
   const rememberedOurTeam=String(byId('ourTeam')?.value ?? state.ourTeam ?? '').trim();
   const rememberedVenue=String(byId('venue')?.value ?? state.venue ?? '').trim();
   const rememberedCompetition=String(byId('competition')?.value ?? state.competition ?? '').trim();
@@ -26451,7 +26704,7 @@ ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${pe
 </div>
 <style id="v5158FullTimeSafariActionsPatch">
 /* =========================================================
-   v5.159：全場底部三顆操作按鈕避開 iPhone Safari 工具列
+   v5.160：全場底部三顆操作按鈕避開 iPhone Safari 工具列
    問題：一般文件流雖有尾端 spacer，但 Safari 展開底部工具列時，
          三顆按鈕仍可能停在工具列後方，看起來像被裁切。
    修正：iOS 瀏覽器模式下，賽後操作列固定停在瀏覽器工具列上方；
