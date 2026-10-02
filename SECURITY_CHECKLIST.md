@@ -1,4 +1,8 @@
-## v5.168 本次驗證
+## v5.169 本次驗證
+
+- Safari 手動上下捲動不再觸發程式自動 `scrollBy()`。
+- 全場結果頁可自由捲回頁首，不會卡在統計／工具按鈕附近。
+- Reload 頁首校正縮短為初始 frame，不持續干預使用者操作。
 
 - [x] 一般 navigate / reload 會在狀態 render 後回到頁首，避免 Safari 還原舊 scroll position。
 - [x] back / forward 導航不強制歸零，保留使用者原本閱讀位置。
