@@ -19517,6 +19517,50 @@ html.iosBrowserUI body.resultMode.finalOutputVisible:not(.keyboardOpen) .finalTo
 }
 </style>
 
+
+
+<style id="v5167FinalToolsSafariSafeRevealPatch">
+/* =========================================================
+   v5.167：全場賽後三顆按鈕維持文件流，並確保可完整露出
+
+   v5.166 已取消 fixed，但部分 iPhone Safari 在底部工具列展開時，
+   可能停在「按鈕剛好進入畫面、下緣仍被瀏覽器 chrome 蓋住」的位置。
+
+   本版不再把按鈕改成浮動：
+   1. 手機結果頁一律保留足夠的真實頁尾可捲動空間。
+   2. Safari 若偵測到這列按鈕已在畫面內、但下緣落進安全區，
+      只把頁面補捲動必要距離，讓整列按鈕完整停在工具列上方。
+   3. PWA / standalone 不強制保留瀏覽器工具列距離。
+   ========================================================= */
+@media (max-width:430px){
+  body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    display:block!important;
+    height:calc(260px + env(safe-area-inset-bottom,0px))!important;
+    min-height:calc(260px + env(safe-area-inset-bottom,0px))!important;
+    flex:0 0 auto!important;
+  }
+  body.resultMode.finalOutputVisible .wrap{
+    padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))!important;
+    scroll-padding-bottom:calc(260px + env(safe-area-inset-bottom,0px))!important;
+  }
+  body.resultMode.finalOutputVisible .finalToolsCard{
+    position:relative!important;
+    inset:auto!important;
+    transform:none!important;
+    scroll-margin-bottom:calc(260px + env(safe-area-inset-bottom,0px))!important;
+  }
+}
+@media (max-width:390px){
+  body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    height:calc(276px + env(safe-area-inset-bottom,0px))!important;
+    min-height:calc(276px + env(safe-area-inset-bottom,0px))!important;
+  }
+  body.resultMode.finalOutputVisible .wrap{
+    scroll-padding-bottom:calc(276px + env(safe-area-inset-bottom,0px))!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19531,7 +19575,7 @@ html.iosBrowserUI body.resultMode.finalOutputVisible:not(.keyboardOpen) .finalTo
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.166</span>
+      <span class="headerVersion">v5.167</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -25741,6 +25785,7 @@ function render(){
   // Match State UI：賽後輸出只屬於「結果模式」。
   // 賽前 / 比賽中 / 中場 / PK 進行中都不佔用畫面。
   document.body.classList.toggle('finalOutputVisible', !!state.finished);
+  if(state.finished) scheduleFinalToolsSafeVisibility();
   ['reportBtn','saveImageBtn','shareCsvBtn'].forEach(id=>{
     const btn=byId(id);
     if(btn) btn.disabled=!state.finished;
@@ -26078,6 +26123,43 @@ function buildReportDOM(){
   byId('reportTimeline').innerHTML=reportTimelineHTML();
 }
 
+
+let finalToolsSafeRevealRaf=0;
+function ensureFinalToolsSafeVisibility(){
+  if(!document.body.classList.contains('resultMode') || !document.body.classList.contains('finalOutputVisible')) return;
+  if(document.body.classList.contains('keyboardOpen')) return;
+  const card=document.querySelector('.finalToolsCard');
+  if(!card || card.offsetParent===null) return;
+
+  const rect=card.getBoundingClientRect();
+  const iosBrowser=document.documentElement.classList.contains('iosBrowserUI');
+  const standalone=Boolean(window.navigator.standalone===true || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches));
+  const vv=window.visualViewport;
+  const visualBottom=vv ? Math.min(window.innerHeight, vv.offsetTop + vv.height) : window.innerHeight;
+
+  // Safari 的透明底部工具列有時未完整反映在 visualViewport，
+  // 因此瀏覽器模式保守保留約 112px；PWA / 其他瀏覽器只留一般呼吸距離。
+  const reserve=(iosBrowser && !standalone) ? 112 : 18;
+  const safeBottom=visualBottom-reserve;
+  const cardVisible=rect.bottom>0 && rect.top<visualBottom;
+  if(!cardVisible) return;
+
+  const overlap=Math.ceil(rect.bottom-safeBottom);
+  if(overlap>0){
+    try{ window.scrollBy({top:overlap+14,left:0,behavior:'auto'}); }
+    catch(e){ window.scrollBy(0,overlap+14); }
+  }
+}
+function scheduleFinalToolsSafeVisibility(){
+  if(finalToolsSafeRevealRaf) cancelAnimationFrame(finalToolsSafeRevealRaf);
+  finalToolsSafeRevealRaf=requestAnimationFrame(()=>{
+    finalToolsSafeRevealRaf=requestAnimationFrame(()=>{
+      finalToolsSafeRevealRaf=0;
+      ensureFinalToolsSafeVisibility();
+    });
+  });
+}
+
 function syncIOSBrowserUIMode(){
   const ua=String(navigator.userAgent||'');
   const isiOS=/iPad|iPhone|iPod/.test(ua) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
@@ -26107,6 +26189,9 @@ function syncVisualViewport(){
     document.documentElement.style.setProperty('--browser-bottom-gap', '0px');
     document.body.classList.remove('keyboardOpen');
   }
+  // v5.167：若 Safari 工具列剛展開而賽後按鈕已在可視區，
+  // 只補捲動必要距離，避免按鈕下緣被瀏覽器工具列遮住。
+  if(document.body.classList.contains('finalOutputVisible')) scheduleFinalToolsSafeVisibility();
 }
 if(window.visualViewport){
   window.visualViewport.addEventListener('resize', syncVisualViewport);
