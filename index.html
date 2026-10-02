@@ -19453,6 +19453,70 @@ button:not(:disabled):active{
 }
 </style>
 
+
+
+<style id="v5166FinalToolsDocumentFlowPatch">
+/* =========================================================
+   v5.166：全場三顆賽後操作恢復文件流，不再浮動覆蓋內容
+
+   問題：v5.165 為避免 iPhone Safari 底部工具列遮蔽，將
+         「摘要／匯出 CSV／新比賽」改為 fixed；雖可避免被遮住，
+         但會覆蓋「本場事件統計／事件紀錄」，形成浮動工具列感。
+
+   修正原則：
+   1. 三顆按鈕重新回到內容正常順序，不再 fixed / sticky。
+   2. 保留按鈕後方的真實可捲動安全尾距，讓使用者可把整列
+      按鈕自然捲到 Safari 底部工具列上方。
+   3. 不改按鈕尺寸、配色、功能與資料流程。
+   ========================================================= */
+body.resultMode.finalOutputVisible .finalToolsCard,
+html.iosBrowserUI body.resultMode.finalOutputVisible:not(.keyboardOpen) .finalToolsCard{
+  position:relative!important;
+  top:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  left:auto!important;
+  inset:auto!important;
+  transform:none!important;
+  width:100%!important;
+  margin:8px 0 6px!important;
+  z-index:auto!important;
+}
+
+/* Safari 瀏覽器模式：按鈕不浮動，改由「按鈕後方空間」確保可捲到安全區。 */
+@media (max-width:430px){
+  html.iosBrowserUI body.resultMode.finalOutputVisible .finalToolsCard{
+    padding:7px!important;
+    border-radius:18px!important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.055),
+      0 9px 20px rgba(0,0,0,.18)!important;
+    scroll-margin-bottom:calc(max(176px, calc(var(--browser-bottom-gap,0px) + 108px)) + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  html.iosBrowserUI body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    display:block!important;
+    height:calc(max(176px, calc(var(--browser-bottom-gap,0px) + 108px)) + env(safe-area-inset-bottom,0px))!important;
+    min-height:calc(max(176px, calc(var(--browser-bottom-gap,0px) + 108px)) + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  html.iosBrowserUI body.resultMode.finalOutputVisible .wrap{
+    padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))!important;
+    scroll-padding-bottom:calc(max(176px, calc(var(--browser-bottom-gap,0px) + 108px)) + env(safe-area-inset-bottom,0px))!important;
+  }
+}
+
+@media (max-width:390px){
+  html.iosBrowserUI body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    height:calc(max(184px, calc(var(--browser-bottom-gap,0px) + 112px)) + env(safe-area-inset-bottom,0px))!important;
+    min-height:calc(max(184px, calc(var(--browser-bottom-gap,0px) + 112px)) + env(safe-area-inset-bottom,0px))!important;
+  }
+  html.iosBrowserUI body.resultMode.finalOutputVisible .wrap{
+    scroll-padding-bottom:calc(max(184px, calc(var(--browser-bottom-gap,0px) + 112px)) + env(safe-area-inset-bottom,0px))!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19467,7 +19531,7 @@ button:not(:disabled):active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.165</span>
+      <span class="headerVersion">v5.166</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">

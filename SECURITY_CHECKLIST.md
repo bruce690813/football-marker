@@ -1,3 +1,10 @@
+## v5.166 本次驗證
+
+- [x] 全場賽後三顆操作按鈕恢復一般文件流，不再使用 fixed / sticky 覆蓋其他內容。
+- [x] iPhone Safari 以按鈕後方 spacer 與 scroll-padding 提供可捲動安全距離。
+- [x] 僅調整 CSS 版面位置，不變更比分、計時、事件、摘要、CSV、新比賽與資料儲存。
+- [x] PWA／standalone 與鍵盤行為維持既有邏輯。
+
 ## v5.165 本次驗證
 
 - [x] Safari 底部安全抬升只作用於 iOS 瀏覽器模式的全場結果頁。
