@@ -19735,6 +19735,66 @@ html.stateTopLock,html.stateTopLock body{
 }
 </style>
 
+
+<style id="v5171FullTimeBottomSpaceBalancePatch">
+/* =========================================================
+   v5.171：全場頁尾安全空間比例再平衡
+
+   v5.170 為避免 iPhone Safari 底部工具列遮住三顆賽後按鈕，
+   保留了約 220px 的文件流 spacer；按鈕雖完整可見，但滑到底後
+   會留下過大的深色空白區。
+
+   本版原則：
+   1. 三顆按鈕仍為正常文件流，不 fixed / sticky / transform。
+   2. 不加入任何自動 scroll，手勢完全由使用者控制。
+   3. iOS Safari 以「工具列實際 bottom gap + 小幅安全距離」為主，
+      並保留約 104px fallback，兼顧工具列回報不足的狀況。
+   4. PWA / 其他手機瀏覽器沒有 Safari 工具列時，尾端只留基本呼吸空間。
+   ========================================================= */
+@media (max-width:430px){
+  html.iosBrowserUI body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(104px, calc(var(--browser-bottom-gap,0px) + 30px))!important;
+  }
+  html.iosBrowserUI body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    display:block!important;
+    height:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom,0px))!important;
+    min-height:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom,0px))!important;
+  }
+  html.iosBrowserUI body.resultMode.finalOutputVisible .wrap{
+    padding-bottom:calc(6px + env(safe-area-inset-bottom,0px))!important;
+    scroll-padding-bottom:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom,0px))!important;
+  }
+  html.iosBrowserUI body.resultMode.finalOutputVisible .finalToolsCard{
+    margin-bottom:0!important;
+    scroll-margin-bottom:calc(var(--result-bottom-safe-tail) + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  /* standalone / PWA / 其他手機不需要為 Safari 工具列保留大片尾端。 */
+  html:not(.iosBrowserUI) body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:44px!important;
+  }
+  html:not(.iosBrowserUI) body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    height:calc(44px + env(safe-area-inset-bottom,0px))!important;
+    min-height:calc(44px + env(safe-area-inset-bottom,0px))!important;
+  }
+}
+
+@media (max-width:390px){
+  html.iosBrowserUI body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(112px, calc(var(--browser-bottom-gap,0px) + 32px))!important;
+  }
+}
+
+@media (max-width:375px){
+  html.iosBrowserUI body.resultMode.finalOutputVisible{
+    --result-bottom-safe-tail:
+      max(118px, calc(var(--browser-bottom-gap,0px) + 34px))!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19749,7 +19809,7 @@ html.stateTopLock,html.stateTopLock body{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.170</span>
+      <span class="headerVersion">v5.171</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">

@@ -1,3 +1,11 @@
+## v5.171 本次驗證
+
+- [x] 全場三顆賽後按鈕仍為一般文件流，不使用 fixed / sticky / transform 抬升。
+- [x] 不新增 `scrollBy` / `scrollTo` / `scrollIntoView` 等自動捲動行為。
+- [x] iOS Safari 頁尾安全距離改為 bottom-gap 動態值加小幅 fallback，不再保留 220px 大型固定空白。
+- [x] PWA／standalone 只保留基本尾端呼吸空間。
+- [x] 不修改比分、計時、事件、摘要、CSV、新比賽與資料儲存格式。
+
 ## v5.170 本次驗證
 
 - [x] 全場頁三顆賽後操作仍為正常文件流，不使用 fixed / sticky。
