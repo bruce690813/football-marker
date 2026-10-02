@@ -52,7 +52,7 @@ html.appBootFailed #appBootError{display:block}
   cursor:pointer;
 }
 
-/* v5.136：本場球員名單新增球衣顏色選擇（目前支援預設／藍／黃／白／紅／灰），主畫面與摘要球衣 icon 同步。 */
+/* v5.163：本場球員名單球衣顏色目前支援預設／藍／黃／白／紅／灰／綠／黑／橘／紫，主畫面與摘要球衣 icon 同步。 */
 </style>
 <script>
 // 保護必須在主程式之前建立；即使主程式載入失敗，也不開放未還原的比賽操作。
@@ -18035,7 +18035,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
   margin:8px 9px 2px;
   padding:9px 9px 9px 10px;
   display:grid;
-  grid-template-columns:auto minmax(0,1fr) auto auto;
+  grid-template-columns:auto minmax(0,1fr) auto;
   align-items:center;
   gap:8px;
   border:1px solid rgba(248,113,113,.52);
@@ -18076,7 +18076,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
   text-overflow:ellipsis;
 }
 .longDurationInlineValue{
-  margin-left:3px;
+  margin-left:2px;
   color:#ff9aa0;
   font-variant-numeric:tabular-nums;
   font-feature-settings:"tnum" 1;
@@ -18085,22 +18085,9 @@ body.resultMode.finalOutputVisible .quickResultTitle{
   color:#afbecd;
   font-size:10.5px;
   font-weight:750;
-  line-height:1.3;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.longDurationInlineFinish{
-  min-height:36px;
-  padding:0 11px;
-  border-radius:11px;
-  border:1px solid rgba(255,132,143,.38);
-  background:linear-gradient(180deg,#d94855 0%,#ad2f3a 100%);
-  color:#fff;
-  font-size:12px;
-  font-weight:950;
-  white-space:nowrap;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+  line-height:1.35;
+  white-space:normal;
+  overflow:visible;
 }
 .longDurationInlineDismiss{
   width:32px;
@@ -18121,8 +18108,7 @@ body.resultMode.finalOutputVisible .quickResultTitle{
   stroke-width:2;
   stroke-linecap:round;
 }
-.longDurationInlineDismiss:active,
-.longDurationInlineFinish:active{transform:scale(.97)}
+.longDurationInlineDismiss:active{transform:scale(.97)}
 
 /* 舊版阻斷式長時間 Modal 已停用。 */
 #longDurationModal{display:none!important}
@@ -18139,21 +18125,17 @@ body.resultMode.finalOutputVisible .quickResultTitle{
   .longDurationInlineIcon svg{width:21px;height:21px}
   .longDurationInlineTitle{font-size:11.8px}
   .longDurationInlineText{font-size:9.8px}
-  .longDurationInlineFinish{min-height:34px;padding:0 9px;font-size:11.5px}
   .longDurationInlineDismiss{width:28px;height:28px}
 }
 
 @media(max-width:350px){
   .longDurationInline{
     grid-template-columns:auto minmax(0,1fr) auto;
-    grid-template-areas:
-      "icon copy dismiss"
-      ". finish finish";
-    row-gap:7px;
+    grid-template-areas:"icon copy dismiss";
+    row-gap:0;
   }
   .longDurationInlineIcon{grid-area:icon}
   .longDurationInlineCopy{grid-area:copy}
-  .longDurationInlineFinish{grid-area:finish;justify-self:end}
   .longDurationInlineDismiss{grid-area:dismiss}
 }
 </style>
@@ -19120,7 +19102,7 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 
 
 <style id="v5149JerseyGrayPatch">
-/* v5.149：球衣顏色新增灰色。正常手機寬度維持六色同列，避免增加名單視窗高度；
+/* v5.163：球衣顏色擴充為 10 色。一般手機寬度維持 5 欄 × 2 列，避免名單視窗過度增高；
    極窄螢幕才切為 3×2，確保每個色票仍有足夠觸控寬度。 */
 </style>
 
@@ -19365,6 +19347,112 @@ button:not(:disabled):active{
 }
 </style>
 
+
+<style id="v5162RosterExtraChipPatch">
+/* =========================================================
+   v5.163：其他已選背號的移除提示與號碼文字分離
+   - 修正 #99 等雙位數背號被紅色 × 覆蓋的問題。
+   - 號碼保持置中；移除提示改成右上角浮動小圓標。
+   ========================================================= */
+#rosterModal .rosterExtraGrid{
+  overflow:visible!important;
+}
+#rosterModal .rosterChip{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:7px 8px!important;
+  overflow:visible!important;
+  text-align:center!important;
+  line-height:1.1!important;
+}
+#rosterModal .rosterChip::after{
+  content:'×'!important;
+  position:absolute!important;
+  right:-4px!important;
+  top:-4px!important;
+  transform:none!important;
+  width:15px!important;
+  height:15px!important;
+  display:grid!important;
+  place-items:center!important;
+  border-radius:999px!important;
+  background:#ef4444!important;
+  color:#fff!important;
+  border:2px solid #f8fafc!important;
+  box-shadow:0 1px 3px rgba(15,23,42,.18)!important;
+  font-size:11px!important;
+  font-weight:1000!important;
+  line-height:1!important;
+  z-index:2!important;
+  pointer-events:none!important;
+}
+</style>
+
+
+<style id="v5165FullTimeSafariActionLiftPatch">
+/* =========================================================
+   v5.165：全場底部三顆操作按鈕 Safari 工具列安全抬升
+
+   問題：部分 iPhone Safari 狀態下 visualViewport 不會完整反映
+         底部瀏覽器工具列的覆蓋高度，導致「摘要／匯出 CSV／新比賽」
+         即使已 fixed，仍有下緣被工具列遮住。
+
+   修正：
+   1. iPhone Safari 瀏覽器模式下，增加一個保守的固定抬升基準。
+   2. 若 visualViewport 有回報更大的 bottom gap，仍以較大值為準。
+   3. 同步增加文件流尾端 spacer，避免固定工具列遮住最後內容。
+   4. PWA / standalone 與鍵盤開啟情境維持既有行為。
+   ========================================================= */
+@media (max-width:430px){
+  html.iosBrowserUI body.resultMode.finalOutputVisible:not(.keyboardOpen){
+    --final-tools-safari-lift:110px;
+  }
+
+  html.iosBrowserUI body.resultMode.finalOutputVisible:not(.keyboardOpen) .finalToolsCard{
+    position:fixed!important;
+    left:max(10px, env(safe-area-inset-left,0px))!important;
+    right:max(10px, env(safe-area-inset-right,0px))!important;
+    bottom:calc(
+      max(
+        var(--final-tools-safari-lift,110px),
+        calc(var(--browser-bottom-gap,0px) + 34px)
+      ) + env(safe-area-inset-bottom,0px)
+    )!important;
+    width:auto!important;
+    margin:0!important;
+    z-index:96!important;
+  }
+
+  html.iosBrowserUI body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    display:block!important;
+    height:calc(max(260px, calc(var(--browser-bottom-gap,0px) + 164px)) + env(safe-area-inset-bottom,0px))!important;
+    min-height:calc(max(260px, calc(var(--browser-bottom-gap,0px) + 164px)) + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  html.iosBrowserUI body.resultMode.finalOutputVisible .wrap{
+    scroll-padding-bottom:calc(max(260px, calc(var(--browser-bottom-gap,0px) + 164px)) + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  html.iosBrowserUI body.resultMode.finalOutputVisible .finalToolsCard{
+    scroll-margin-bottom:calc(max(260px, calc(var(--browser-bottom-gap,0px) + 164px)) + env(safe-area-inset-bottom,0px))!important;
+  }
+}
+
+@media (max-width:390px){
+  html.iosBrowserUI body.resultMode.finalOutputVisible:not(.keyboardOpen){
+    --final-tools-safari-lift:114px;
+  }
+}
+
+@media (max-width:375px){
+  html.iosBrowserUI body.resultMode.finalOutputVisible:not(.keyboardOpen){
+    --final-tools-safari-lift:118px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19379,7 +19467,7 @@ button:not(:disabled):active{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.161</span>
+      <span class="headerVersion">v5.165</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -19527,10 +19615,9 @@ button:not(:disabled):active{
       <div class="longDurationInline" id="longDurationInline" hidden role="status" aria-live="polite">
         <span class="longDurationInlineIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3.2 21 19H3L12 3.2Z"/><path d="M12 8.1v5.3"/><path d="M12 16.8h.01"/></svg></span>
         <div class="longDurationInlineCopy">
-          <div class="longDurationInlineTitle">已持續計時 <span class="longDurationInlineValue" id="longDurationInlineValue">03:00:00</span></div>
-          <div class="longDurationInlineText">請確認比賽是否仍在進行</div>
+          <div class="longDurationInlineTitle">計時時間異常偏長</div>
+          <div class="longDurationInlineText">已持續 <span class="longDurationInlineValue" id="longDurationInlineValue">03:00:00</span>，請確認比賽是否仍在進行。</div>
         </div>
-        <button class="longDurationInlineFinish" type="button" onclick="finishFromLongDurationInline()">結束比賽</button>
         <button class="longDurationInlineDismiss" type="button" onclick="dismissLongDurationInline()" aria-label="暫時隱藏長時間計時提醒"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg></button>
       </div>
       <div class="timeCompact">
@@ -19590,7 +19677,7 @@ button:not(:disabled):active{
 
     <div class="controls">
       <button class="start" id="startBtn" onclick="startMatch()">▶ 開始比賽</button>
-      <button class="finish" id="finishBtn" onclick="finishMatch()">■ 比賽結束</button>
+      <button class="finish" id="finishBtn" onclick="finishMatch()">■ 結束比賽</button>
     </div>
     <div class="status" id="status">尚未開始</div>
   </div>
@@ -20075,6 +20162,10 @@ button:not(:disabled):active{
           <button class="jerseyColorBtn" type="button" data-jersey-color="white" onclick="setJerseyColor('white')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#f8fafc;--swatch-outline:#94a3b8;--swatch-collar:#64748b"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>白色</span></button>
           <button class="jerseyColorBtn" type="button" data-jersey-color="red" onclick="setJerseyColor('red')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#dc2626;--swatch-outline:#991b1b;--swatch-collar:#ffffff"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>紅色</span></button>
           <button class="jerseyColorBtn" type="button" data-jersey-color="gray" onclick="setJerseyColor('gray')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#94a3b8;--swatch-outline:#64748b;--swatch-collar:#f8fafc"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>灰色</span></button>
+          <button class="jerseyColorBtn" type="button" data-jersey-color="green" onclick="setJerseyColor('green')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#16a34a;--swatch-outline:#166534;--swatch-collar:#ffffff"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>綠色</span></button>
+          <button class="jerseyColorBtn" type="button" data-jersey-color="black" onclick="setJerseyColor('black')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#111827;--swatch-outline:#020617;--swatch-collar:#f8fafc"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>黑色</span></button>
+          <button class="jerseyColorBtn" type="button" data-jersey-color="orange" onclick="setJerseyColor('orange')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#f97316;--swatch-outline:#c2410c;--swatch-collar:#ffffff"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>橘色</span></button>
+          <button class="jerseyColorBtn" type="button" data-jersey-color="purple" onclick="setJerseyColor('purple')" aria-pressed="false"><span class="jerseyColorShirt" style="--swatch:#7c3aed;--swatch-outline:#5b21b6;--swatch-collar:#ffffff"><svg viewBox="0 0 24 24" focusable="false"><path class="jerseySwatchBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="jerseySwatchCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>紫色</span></button>
         </div>
       </div>
 
@@ -22388,7 +22479,11 @@ const JERSEY_COLOR_OPTIONS={
   yellow:{fill:'#facc15',outline:'#ca8a04',collar:'#ffffff'},
   white:{fill:'#f8fafc',outline:'#94a3b8',collar:'#64748b'},
   red:{fill:'#dc2626',outline:'#991b1b',collar:'#ffffff'},
-  gray:{fill:'#94a3b8',outline:'#64748b',collar:'#f8fafc'}
+  gray:{fill:'#94a3b8',outline:'#64748b',collar:'#f8fafc'},
+  green:{fill:'#16a34a',outline:'#166534',collar:'#ffffff'},
+  black:{fill:'#111827',outline:'#020617',collar:'#f8fafc'},
+  orange:{fill:'#f97316',outline:'#c2410c',collar:'#ffffff'},
+  purple:{fill:'#7c3aed',outline:'#5b21b6',collar:'#ffffff'}
 };
 function normalizeJerseyColor(value){
   const key=String(value||'default');
@@ -22555,6 +22650,7 @@ function renderRosterModal(){
       btn.className='rosterChip';
       btn.textContent=`#${n}`;
       btn.setAttribute('aria-label',`移除背號 ${n}`);
+      btn.title=`點一下移除 #${n}`;
       btn.onclick=()=>removeRosterNumber(n);
       grid.appendChild(btn);
     });
@@ -23150,17 +23246,13 @@ function renderLongDurationInline(secOverride){
   const sec=Number.isFinite(Number(secOverride)) ? Math.floor(Number(secOverride)) : Math.floor(Number(elapsed())||0);
   const value=byId('longDurationInlineValue');
   if(value) value.textContent=fmtMatchClock(sec);
-  host.setAttribute('aria-label',`比賽已持續計時 ${fmtMatchClock(sec)}，請確認比賽是否仍在進行`);
+  host.setAttribute('aria-label',`計時時間異常偏長。已持續 ${fmtMatchClock(sec)}，請確認比賽是否仍在進行。`);
 }
 
 function dismissLongDurationInline(){
   // 只在目前頁面工作階段暫時隱藏；重新整理後若仍超過門檻會再次提醒。
   longDurationInlineDismissedStartEpoch=state.startEpoch||null;
   renderLongDurationInline();
-}
-
-function finishFromLongDurationInline(){
-  finishMatch();
 }
 
 function maybeOfferLongDurationNotice(){
@@ -25558,7 +25650,7 @@ function render(){
   const finishBtn=byId('finishBtn');
 
   startBtn.textContent=state.awaitingNextPeriod ? (state.nextPeriodType==='EXTRA_TIME'?'▶ 開始延長賽':'▶ 開始下半場') : '▶ 開始比賽';
-  finishBtn.textContent=state.penalty?.active ? '⚽ 記錄 PK' : state.currentPeriod===3 && state.started ? '■ 結束延長賽' : (state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 比賽結束');
+  finishBtn.textContent=state.penalty?.active ? '⚽ 記錄 PK' : state.currentPeriod===3 && state.started ? '■ 結束延長賽' : (state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 結束比賽');
 
   // 按鈕依比賽狀態啟用 / 禁用，避免現場誤觸。
   if(state.finished){
