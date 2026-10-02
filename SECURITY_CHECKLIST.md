@@ -1,3 +1,11 @@
+## v5.168 本次驗證
+
+- [x] 一般 navigate / reload 會在狀態 render 後回到頁首，避免 Safari 還原舊 scroll position。
+- [x] back / forward 導航不強制歸零，保留使用者原本閱讀位置。
+- [x] 首次 viewport settling 期間不執行賽後操作列自動補捲動，避免載入時被帶往中段。
+- [x] settling 完成後仍保留 v5.167 的底部按鈕安全露出機制。
+- [x] 僅調整 viewport / scroll 呈現，不變更比賽資料、計時、事件、摘要、CSV 或儲存格式。
+
 ## v5.167 本次驗證
 
 - [x] 三顆賽後操作按鈕仍為一般文件流，不使用 fixed / sticky。

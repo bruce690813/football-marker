@@ -19561,6 +19561,15 @@ html.iosBrowserUI body.resultMode.finalOutputVisible:not(.keyboardOpen) .finalTo
 }
 </style>
 
+<style id="v5168ReloadViewportResetPatch">
+/* v5.168：首次載入／重新整理期間停用 scroll anchoring，
+   配合 JS 將 iPhone Safari 起始位置穩定在真正頁首。 */
+html.stateTopLock,html.stateTopLock body{
+  scroll-behavior:auto!important;
+  overflow-anchor:none!important;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19575,7 +19584,7 @@ html.iosBrowserUI body.resultMode.finalOutputVisible:not(.keyboardOpen) .finalTo
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.167</span>
+      <span class="headerVersion">v5.168</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -26125,7 +26134,12 @@ function buildReportDOM(){
 
 
 let finalToolsSafeRevealRaf=0;
+// v5.168：重新整理／首次載入期間禁止賽後操作列的安全補捲動。
+// iPhone Safari 會嘗試還原重新整理前的 scroll position；若此時 visualViewport
+// 同時觸發 v5.167 的補捲動，畫面可能被帶到結果頁中段，看起來像「整頁縮到上面」。
+let initialViewportSettling=true;
 function ensureFinalToolsSafeVisibility(){
+  if(initialViewportSettling) return;
   if(!document.body.classList.contains('resultMode') || !document.body.classList.contains('finalOutputVisible')) return;
   if(document.body.classList.contains('keyboardOpen')) return;
   const card=document.querySelector('.finalToolsCard');
@@ -26189,9 +26203,9 @@ function syncVisualViewport(){
     document.documentElement.style.setProperty('--browser-bottom-gap', '0px');
     document.body.classList.remove('keyboardOpen');
   }
-  // v5.167：若 Safari 工具列剛展開而賽後按鈕已在可視區，
-  // 只補捲動必要距離，避免按鈕下緣被瀏覽器工具列遮住。
-  if(document.body.classList.contains('finalOutputVisible')) scheduleFinalToolsSafeVisibility();
+  // v5.168：初始載入期間不允許自動補捲動，避免 Safari reload scroll restoration
+  // 與 visualViewport 事件互相疊加。載入穩定後仍保留既有安全露出機制。
+  if(!initialViewportSettling && document.body.classList.contains('finalOutputVisible')) scheduleFinalToolsSafeVisibility();
 }
 if(window.visualViewport){
   window.visualViewport.addEventListener('resize', syncVisualViewport);
@@ -27518,6 +27532,63 @@ byId('assistCustomNumber')?.addEventListener('keydown',e=>{
 
 
 
+// =========================================================
+// v5.168：iPhone Safari 重新整理後固定從頁首開始
+// ---------------------------------------------------------
+// Safari 可能在 reload 後自動還原上一個 scroll position；而網址列／工具列的
+// visual viewport 還會在載入後數百毫秒內再次改變。這裡改成：
+// 1) 一般開啟與重新整理使用 manual scroll restoration。
+// 2) back/forward 保留瀏覽器原生回復位置。
+// 3) 以多段校正方式把首次載入穩定在頁首；期間關閉賽後安全補捲動。
+// =========================================================
+try{
+  if('scrollRestoration' in history) history.scrollRestoration='manual';
+}catch(e){}
+
+function initialNavigationShouldStartAtTop(){
+  try{
+    const nav=performance.getEntriesByType?.('navigation')?.[0];
+    if(nav) return nav.type!=='back_forward';
+  }catch(e){}
+  return true;
+}
+
+function hardResetPageScrollTop(){
+  const scroller=document.scrollingElement || document.documentElement || document.body;
+  if(scroller){ scroller.scrollTop=0; scroller.scrollLeft=0; }
+  if(document.documentElement){ document.documentElement.scrollTop=0; document.documentElement.scrollLeft=0; }
+  if(document.body){ document.body.scrollTop=0; document.body.scrollLeft=0; }
+  try{ window.scrollTo({top:0,left:0,behavior:'auto'}); }
+  catch(e){ try{ window.scrollTo(0,0); }catch(ignore){} }
+}
+
+const initialStartAtTop=initialNavigationShouldStartAtTop();
+function settleInitialViewportAtTop(){
+  if(!initialStartAtTop){
+    initialViewportSettling=false;
+    return;
+  }
+  const root=document.documentElement;
+  root?.classList?.add('stateTopLock');
+  const reset=()=>hardResetPageScrollTop();
+  reset();
+  requestAnimationFrame(()=>requestAnimationFrame(reset));
+  setTimeout(reset,80);
+  setTimeout(reset,220);
+  setTimeout(reset,480);
+  setTimeout(reset,820);
+  setTimeout(()=>{
+    reset();
+    initialViewportSettling=false;
+    root?.classList?.remove('stateTopLock');
+  },1200);
+}
+
+window.addEventListener('pageshow',e=>{
+  // bfcache 回上一頁時維持使用者原本位置；一般 navigate / reload 才回頁首。
+  if(!e.persisted && initialStartAtTop) settleInitialViewportAtTop();
+},{capture:true});
+
 document.addEventListener('DOMContentLoaded',()=>{
   syncIOSBrowserUIMode();
   const closeBtn=byId('reportCloseBtn');
@@ -27556,6 +27627,9 @@ document.querySelectorAll('.finalTools button').forEach(btn=>{
 bootstrapMatchRegistry();
 loadState();
 updateMatchRegistryFromState();
+// v5.168：狀態 render 完成後再校正一次，防止 Safari 在 DOM 高度建立完成後
+// 才套用 reload 前的 scroll position。
+if(initialStartAtTop) settleInitialViewportAtTop();
 
 function persistBeforeBackgroundSuspend(){
   if(recoverySwitchInProgress) return;
