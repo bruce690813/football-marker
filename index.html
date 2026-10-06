@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.161</title>
+<title>足球場邊記錄器 v5.180</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -19795,6 +19795,149 @@ html.stateTopLock,html.stateTopLock body{
 }
 </style>
 
+
+<style id="v5172ReportShareFontPatch">
+/* =========================================================
+   v5.172：摘要「分享／儲存圖片」文字尺寸優化
+
+   實機 iPhone Safari 畫面顯示此頁唯一主要 CTA 的文字仍偏小。
+   本版只提高文字層級，不改按鈕高度與摘要版面：
+   - 一般手機／桌面：16px
+   - 極窄螢幕（<=350px）：15.5px
+   - 44px 觸控高度、Safari 底部安全緩衝、分享／儲存流程皆不變。
+   ========================================================= */
+#reportModal .reportActions.oneReportAction #reportShareBtn{
+  font-size:16px!important;
+  font-weight:950!important;
+  line-height:1.15!important;
+  letter-spacing:.02em!important;
+}
+@media(max-width:350px){
+  #reportModal .reportActions.oneReportAction #reportShareBtn{
+    font-size:15.5px!important;
+  }
+}
+</style>
+
+
+<style id="v5174BestScorerBadgePatch">
+/* =========================================================
+   v5.177：摘要／分享圖片的最佳進球員圖示
+   - 球員進球統計中，最高進球數的球員（可並列）加上「🏅 最佳進球員」圖示。
+   - 只強調榜首，不改變原本進球統計排序與資料來源。
+   ========================================================= */
+#reportModal .scorerRow.bestScorer{
+  background:linear-gradient(180deg,rgba(72,54,16,.34),rgba(32,45,63,.96))!important;
+  box-shadow:inset 0 0 0 1px rgba(250,204,21,.18)!important;
+}
+#reportModal .scorerName{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  gap:4px!important;
+}
+#reportModal .scorerBestBadge{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  padding:2px 8px!important;
+  border-radius:999px!important;
+  background:rgba(250,204,21,.13)!important;
+  border:1px solid rgba(250,204,21,.26)!important;
+  color:#fcd34d!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  line-height:1.1!important;
+  letter-spacing:.02em!important;
+}
+#reportModal .scorerPlayerName{
+  display:block!important;
+  color:#eaf3fc!important;
+  font-weight:800!important;
+}
+#reportModal .scorerBalls{
+  display:block!important;
+  margin-top:1px!important;
+}
+@media(max-width:390px){
+  #reportModal .scorerBestBadge{font-size:10.5px!important;padding:2px 7px!important;}
+}
+</style>
+
+
+<style id="v5175SingleMatchMVPPatch">
+#reportModal .reportMVPCard{margin:2px 0 12px!important;padding:12px 14px!important;border-radius:14px!important;background:linear-gradient(180deg,rgba(58,84,37,.96),rgba(25,44,56,.98))!important;border:1px solid rgba(250,204,21,.48)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 8px 20px rgba(0,0,0,.18)!important}
+#reportModal .reportMVPHead{color:#ffd84d!important;font-size:18px!important;font-weight:950!important;line-height:1.18!important;letter-spacing:.02em!important}
+#reportModal .reportMVPNames{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-top:9px!important}
+#reportModal .reportMVPName{display:inline-flex!important;align-items:center!important;min-height:32px!important;padding:6px 10px!important;border-radius:999px!important;background:rgba(8,17,28,.26)!important;border:1px solid rgba(255,255,255,.10)!important;color:#f7fbff!important;font-size:14px!important;font-weight:850!important;line-height:1.1!important}
+@media(max-width:390px){#reportModal .reportMVPCard{padding:11px 12px!important}#reportModal .reportMVPHead{font-size:16.5px!important}#reportModal .reportMVPNames{gap:7px!important;margin-top:8px!important}#reportModal .reportMVPName{font-size:13px!important;min-height:30px!important;padding:5px 9px!important}}
+</style>
+
+
+<style id="v5177ResultAwareScorerHighlightPatch">
+/* =========================================================
+   v5.177：依比賽結果切換進球焦點名稱
+   - 勝場：沿用金色「單場MVP」。
+   - 平手／敗場：改為中性藍色「我方最多進球」，避免 MVP 語意過度延伸。
+   ========================================================= */
+#reportModal .reportMVPCard.topScorer{
+  background:linear-gradient(180deg,rgba(25,61,82,.96),rgba(24,43,58,.98))!important;
+  border-color:rgba(56,189,248,.44)!important;
+}
+#reportModal .reportMVPCard.topScorer .reportMVPHead{
+  color:#7dd3fc!important;
+}
+</style>
+
+
+<style id="v5178CompetitionStagePatch">
+/* v5.178：賽事階段／輪次（選填） */
+body.matchStatePre .stageMetaField{overflow:visible!important;z-index:1190}
+body.matchStatePre .stageMetaField:has(.stageMenu.open){z-index:1810}
+.stageInputWrap{position:relative;min-width:0;width:100%;height:100%;display:flex;align-items:center}
+body.matchStatePre .stageInputWrap input{padding-right:31px!important}
+.stageDropdownBtn{position:absolute;right:0;top:50%;transform:translateY(-50%);width:29px;height:32px;min-width:29px;padding:0;display:flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:#9fb5cd;font-size:18px;line-height:1;font-weight:950;box-shadow:none}
+.stageDropdownBtn.open,.stageDropdownBtn:active{background:rgba(56,189,248,.10);color:#d7ecff}
+.stageMenu{display:none;position:fixed;top:0;left:0;width:min(330px,calc(100vw - 24px));max-height:min(420px,calc(var(--vv-height,100dvh) - 24px));overflow-y:auto;-webkit-overflow-scrolling:touch;padding:9px;border:1px solid rgba(96,165,250,.46);border-radius:13px;background:rgba(16,27,42,.985);box-shadow:0 18px 38px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.06);z-index:1820}
+.stageMenu.open{display:block}
+.stageMenuTitle{padding:3px 5px 7px;color:#d7e5f4;font-size:12px;font-weight:950}
+.stageMenuHint{padding:0 5px 8px;color:#7f91a6;font-size:10.5px;line-height:1.35}
+.stageMenuGroupTitle{margin:7px 4px 5px;color:#8fb2cf;font-size:10.5px;font-weight:900}
+.stageMenuGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.stageMenuItem{min-width:0;min-height:39px;padding:7px 5px;border:1px solid rgba(77,109,140,.62);border-radius:9px;background:#132235;color:#eef6ff;font-size:12px;font-weight:900;box-shadow:none}
+.stageMenuItem.selected{border-color:rgba(56,189,248,.82);background:#163c59;color:#c9efff}
+.stageMenuItem:active{transform:scale(.97);background:#1b4666}
+.stageMenuManual{width:100%;min-height:40px;margin-top:8px;border:1px solid rgba(96,165,250,.35);border-radius:9px;background:#0e1b2b;color:#bcd8ee;font-size:12px;font-weight:900}
+.liveMetaStrip .competitionStageBadge{display:inline-flex;align-items:center;flex:0 0 auto;max-width:42%;padding:3px 8px;border-radius:999px;border:1px solid rgba(56,189,248,.34);background:rgba(20,72,103,.45);color:#8bdcff;font-size:11.5px;font-weight:950;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.liveMetaStrip .matchMetaDisplayValue.withStage{display:flex;align-items:center;gap:8px;min-width:0}
+.liveMetaStrip .matchMetaDisplayValue.withStage .competitionNameText{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#reportModal .reportStageInline{color:#8bdcff;font-weight:950}
+@media(max-width:390px){body.matchStatePre .preStageIcon{font-size:21px!important}.stageMenuGrid{gap:5px}.stageMenuItem{font-size:11.5px}.liveMetaStrip .competitionStageBadge{font-size:11px;max-width:45%;padding:3px 7px}}
+</style>
+
+
+<style id="v5179DayMatchNumberPatch">
+/* v5.179：本日場次採「系統自動建議、必要時才修改」的輕量設計。 */
+.dayMatchMeta{display:none}
+body.matchStatePre .dayMatchMeta{display:flex;align-items:center;min-width:0;min-height:36px;margin:7px 2px 3px;padding:5px 8px;border:1px solid rgba(76,103,130,.38);border-radius:10px;background:rgba(13,27,42,.46);color:#b7c6d6;gap:6px}
+.dayMatchMetaIcon{font-size:15px;line-height:1;opacity:.92}
+.dayMatchMetaLabel{font-size:11px;font-weight:850;color:#8fa4b8;white-space:nowrap}
+.dayMatchMetaValue{font-size:13px;font-weight:950;color:#eef6ff;white-space:nowrap}
+.dayMatchSourceBadge{display:inline-flex;align-items:center;min-height:20px;padding:2px 6px;border-radius:999px;border:1px solid rgba(56,189,248,.25);background:rgba(56,189,248,.08);color:#8bdcff;font-size:9.5px;font-weight:900;line-height:1;white-space:nowrap}
+.dayMatchSourceBadge.manual{border-color:rgba(250,204,21,.28);background:rgba(250,204,21,.08);color:#f5d76e}
+.dayMatchEditBtn{margin-left:auto;min-height:28px;padding:4px 9px;border:1px solid rgba(120,151,180,.30);border-radius:8px;background:rgba(15,31,48,.72);color:#c8d8e7;font-size:10.5px;font-weight:900;box-shadow:none}
+.dayMatchEditor{margin-left:auto;display:flex;align-items:center;gap:5px;color:#b8c8d8;font-size:11px;font-weight:850}
+.dayMatchEditor[hidden]{display:none!important}
+.dayMatchEditor input{width:48px!important;height:30px!important;min-height:30px!important;padding:3px 5px!important;border:1px solid rgba(56,189,248,.48)!important;border-radius:7px!important;background:#0c1b2a!important;color:#f5f9fd!important;text-align:center!important;font-size:16px!important;font-weight:900!important}
+.dayMatchDoneBtn,.dayMatchCancelBtn{min-height:30px;padding:4px 8px;border-radius:7px;font-size:10.5px;font-weight:900;box-shadow:none}
+.dayMatchDoneBtn{border:1px solid rgba(56,189,248,.44);background:#17415e;color:#d9f2ff}
+.dayMatchCancelBtn{border:1px solid rgba(120,151,180,.28);background:#142334;color:#aebdcb}
+.liveMetaStrip .dayMatchBadge{display:inline-flex;align-items:center;flex:0 0 auto;max-width:38%;padding:3px 8px;border-radius:999px;border:1px solid rgba(148,163,184,.28);background:rgba(71,85,105,.26);color:#cbd5e1;font-size:11px;font-weight:950;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.liveMetaStrip .matchMetaDisplayValue.withMetaBadges{display:flex;align-items:center;gap:7px;min-width:0}
+.liveMetaStrip .matchMetaDisplayValue.withMetaBadges .competitionNameText{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:390px){body.matchStatePre .dayMatchMeta{margin-top:6px;padding-left:7px;padding-right:7px;gap:5px}.dayMatchMetaLabel{font-size:10.5px}.dayMatchMetaValue{font-size:12.5px}.dayMatchEditBtn{padding-left:7px;padding-right:7px}.liveMetaStrip .dayMatchBadge{font-size:10.5px;padding:3px 7px}}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -19809,7 +19952,7 @@ html.stateTopLock,html.stateTopLock body{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.171</span>
+      <span class="headerVersion">v5.180</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -19825,6 +19968,14 @@ html.stateTopLock,html.stateTopLock body{
         <span class="preMetaIcon preCompetitionIcon" aria-hidden="true">🏆</span>
         <input id="competition" type="text" inputmode="text" lang="zh-Hant" placeholder="比賽賽事" maxlength="40" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="比賽賽事">
       </div>
+      <div class="preMetaField stageMetaField">
+        <span class="preMetaIcon preStageIcon" aria-hidden="true">☷</span>
+        <div class="stageInputWrap">
+          <input id="competitionStage" type="text" inputmode="text" lang="zh-Hant" placeholder="賽事階段／輪次（選填）" maxlength="24" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="賽事階段或輪次，可手動輸入或從常用選項選擇">
+          <button id="competitionStageDropdownBtn" class="stageDropdownBtn" type="button" aria-label="選擇賽事階段或輪次" aria-expanded="false" onclick="toggleCompetitionStageMenu(event)" onmousedown="event.preventDefault()">▾</button>
+        </div>
+        <div id="competitionStageMenu" class="stageMenu" role="menu" aria-label="常用賽事階段與輪次"></div>
+      </div>
       <div class="preMetaField venueMetaField">
         <span class="preMetaIcon preVenueIcon" aria-hidden="true">🏟️</span>
         <div class="venueInputWrap">
@@ -19832,6 +19983,21 @@ html.stateTopLock,html.stateTopLock body{
           <button id="venueDropdownBtn" class="venueDropdownBtn" type="button" aria-label="選擇最近使用場地" aria-expanded="false" onclick="toggleVenueMenu(event)" onmousedown="event.preventDefault()">▾</button>
         </div>
         <div id="venueMenu" class="venueMenu" role="menu" aria-label="最近使用場地"></div>
+      </div>
+    </div>
+
+    <div class="dayMatchMeta" id="dayMatchMeta" aria-label="本日場次">
+      <span class="dayMatchMetaIcon" aria-hidden="true">🗓</span>
+      <span class="dayMatchMetaLabel">本日場次</span>
+      <strong class="dayMatchMetaValue" id="dayMatchDisplay">第一場</strong>
+      <span class="dayMatchSourceBadge" id="dayMatchSourceBadge">自動</span>
+      <button class="dayMatchEditBtn" id="dayMatchEditBtn" type="button" onclick="beginDayMatchEdit()">修改</button>
+      <div class="dayMatchEditor" id="dayMatchEditor" hidden>
+        <span>第</span>
+        <input id="dayMatchNumberInput" type="number" min="1" max="99" step="1" inputmode="numeric" aria-label="本日第幾場">
+        <span>場</span>
+        <button class="dayMatchDoneBtn" type="button" onclick="applyDayMatchEdit()">完成</button>
+        <button class="dayMatchCancelBtn" type="button" onclick="cancelDayMatchEdit()">取消</button>
       </div>
     </div>
 
@@ -20152,10 +20318,14 @@ html.stateTopLock,html.stateTopLock body{
 <div class="modalBack" id="resultMetaEditModal">
   <div class="modal resultMetaEditCard">
     <h2 class="uiIconHeading"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span><span>修正比賽資料</span></h2>
-    <div class="resultMetaEditHint">全場後可補充或修正比賽賽事與比賽場地；不影響比分、事件時間、守門員或本場球員名單。</div>
+    <div class="resultMetaEditHint">全場後可補充或修正比賽賽事、賽事階段／輪次與比賽場地；不影響比分、事件時間、守門員或本場球員名單。</div>
     <div class="resultMetaField">
       <label for="resultCompetitionInput">🏆 比賽賽事</label>
       <input id="resultCompetitionInput" type="text" maxlength="40" placeholder="例如 2026格溫拜克盃 U10兒童足球賽">
+    </div>
+    <div class="resultMetaField">
+      <label for="resultCompetitionStageInput">☷ 賽事階段／輪次</label>
+      <input id="resultCompetitionStageInput" type="text" maxlength="24" placeholder="例如 8強、第7輪、冠亞軍">
     </div>
     <div class="resultMetaField">
       <label for="resultVenueInput">🏟️ 比賽場地</label>
@@ -20808,6 +20978,10 @@ html.stateTopLock,html.stateTopLock body{
         <div class="penaltySummary" id="reportPenalty"></div>
       </div>
 
+      <div id="reportMVPWrap" style="display:none">
+        <div class="reportMVPCard" id="reportMVPCard"></div>
+      </div>
+
       <div class="reportSectionTitle reportSectionTitlePrimary">球員進球統計</div>
       <div class="scorerStats" id="reportScorers"></div>
 
@@ -21044,6 +21218,9 @@ function registryEntryFromState(id,saved,updatedAt=Date.now()){
     ourTeam:String(saved.ourTeam||'我方').slice(0,30),
     oppTeam:String(saved.oppTeam||'對手').slice(0,30),
     competition:String(saved.competition||'').slice(0,40),
+    competitionStage:String(saved.competitionStage||'').slice(0,24),
+    dayMatchNumber:(Number.isInteger(Number(saved.dayMatchNumber)) && Number(saved.dayMatchNumber)>=1 && Number(saved.dayMatchNumber)<=99) ? Number(saved.dayMatchNumber) : null,
+    dayMatchNumberConfirmed:Boolean(saved.finished || saved.dayMatchNumberConfirmed===true),
     venue:String(saved.venue||'').slice(0,30),
     ourScore:Number(saved.ourScore)||0,
     oppScore:Number(saved.oppScore)||0,
@@ -21254,7 +21431,7 @@ function openMatchRecovery(){
     const meta=document.createElement('div');
     meta.className='matchRecoveryMeta';
     const status=m.awaitingNextPeriod?'中場／等待開賽':m.started?'比賽中':'未完成';
-    const detail=[recoveryDateText(m.updatedAt),status,m.competition,m.venue].filter(Boolean);
+    const detail=[recoveryDateText(m.updatedAt),status,m.competition,m.competitionStage,m.dayMatchNumber?formatDayMatchLabel(m.dayMatchNumber):'',m.venue].filter(Boolean);
     meta.textContent=detail.join(' · ');
 
     const hint=document.createElement('div');
@@ -21296,7 +21473,8 @@ let timeExpanded=false;
 let regulationEditorExpanded=false;
 
 let state={
-  ourTeam:'忠義國小', oppTeam:'', venue:'', competition:'',
+  ourTeam:'忠義國小', oppTeam:'', venue:'', competition:'', competitionStage:'',
+  dayMatchNumber:null, dayMatchNumberManual:false, dayMatchNumberLocked:false, dayMatchNumberConfirmed:false,
   started:false, finished:false,
   startEpoch:null, endEpoch:null, finalElapsed:0,
   regulationMinutes:null,
@@ -21327,6 +21505,178 @@ let state={
 };
 
 function byId(id){ return document.getElementById(id); }
+
+function validDayMatchNumber(value){
+  const n=Number(value);
+  return Number.isInteger(n) && n>=1 && n<=99 ? n : null;
+}
+function chineseNumberUnder100(value){
+  const n=validDayMatchNumber(value);
+  if(!n) return '';
+  const digit=['零','一','二','三','四','五','六','七','八','九'];
+  if(n<10) return digit[n];
+  if(n===10) return '十';
+  const tens=Math.floor(n/10), ones=n%10;
+  if(tens===1) return `十${ones?digit[ones]:''}`;
+  return `${digit[tens]}十${ones?digit[ones]:''}`;
+}
+function formatDayMatchLabel(value){
+  const n=validDayMatchNumber(value);
+  return n ? `第${chineseNumberUnder100(n)}場` : '';
+}
+function normalizedDayMatchTeam(value){
+  return String(value||'').trim().toLocaleLowerCase('zh-Hant-TW');
+}
+function savedMatchReferenceEpoch(saved){
+  const direct=Number(saved?.startEpoch)||0;
+  if(direct>0) return direct;
+  const first=Array.isArray(saved?.periods) ? Number(saved.periods?.[0]?.startEpoch)||0 : 0;
+  return first>0 ? first : 0;
+}
+function dayMatchStoredItemsForTeamDay(team,epoch){
+  const normalizedTeam=normalizedDayMatchTeam(team);
+  const targetEpoch=Number(epoch)||Date.now();
+  const items=[];
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const key=localStorage.key(i);
+      if(!key || !key.startsWith(MATCH_KEY_PREFIX)) continue;
+      const id=key.slice(MATCH_KEY_PREFIX.length);
+      if(!isValidMatchId(id)) continue;
+      const raw=localStorage.getItem(key);
+      if(!raw) continue;
+      let saved;
+      try{ saved=JSON.parse(raw); }catch(e){ continue; }
+      if(!saved || typeof saved!=='object' || Array.isArray(saved)) continue;
+      const start=savedMatchReferenceEpoch(saved);
+      if(!start || !isSameCalendarDay(start,targetEpoch)) continue;
+      if(normalizedDayMatchTeam(saved.ourTeam||'')!==normalizedTeam) continue;
+      items.push({id,start,saved});
+    }
+  }catch(e){}
+  return items;
+}
+function isConfirmedDayMatch(saved){
+  if(!saved || typeof saved!=='object') return false;
+  // v5.180：真正「比賽結束」後才正式計入本日場次。
+  // finished 同時做舊版相容：v5.179 以前已完成的比賽視為已確認。
+  return Boolean(saved.finished || saved.dayMatchNumberConfirmed===true);
+}
+function isReservedDayMatch(saved){
+  if(!saved || typeof saved!=='object' || isConfirmedDayMatch(saved)) return false;
+  // 開始比賽後先預留號碼，避免同一天另一場正在進行時撞到相同場次。
+  // 中場／等待延長賽／PK 階段 started 可能為 false，因此一併視為有效預留。
+  return Boolean(
+    saved.dayMatchNumberLocked &&
+    (saved.started || saved.awaitingNextPeriod || saved.penalty?.active || saved.startEpoch)
+  );
+}
+function formalMatchesForTeamDay(team,epoch){
+  // 「正式場次」只包含已完成／已確認的比賽。
+  return dayMatchStoredItemsForTeamDay(team,epoch).filter(x=>isConfirmedDayMatch(x.saved));
+}
+function reservedMatchesForTeamDay(team,epoch){
+  // 尚未完賽但已開始的比賽只占用「預留號碼」，不算正式完成場次。
+  return dayMatchStoredItemsForTeamDay(team,epoch).filter(x=>isReservedDayMatch(x.saved));
+}
+function suggestNextDayMatchNumber(team,epoch=Date.now()){
+  const formal=formalMatchesForTeamDay(team,epoch);
+  const reserved=reservedMatchesForTeamDay(team,epoch);
+  const occupied=[...formal,...reserved]
+    .map(x=>validDayMatchNumber(x.saved?.dayMatchNumber)||0)
+    .filter(Boolean);
+  const maxStored=occupied.length ? Math.max(...occupied) : 0;
+  // 沒有舊編號的完成場次仍至少依完成場數遞增；進行中的預留則避免號碼碰撞。
+  return Math.min(99,Math.max(1,Math.max(formal.length+reserved.length,maxStored)+1));
+}
+function inferExistingDayMatchNumber(team,epoch,id=MATCH_ID){
+  const formal=formalMatchesForTeamDay(team,epoch);
+  const reserved=reservedMatchesForTeamDay(team,epoch);
+  const items=[...formal,...reserved]
+    .filter((item,index,arr)=>arr.findIndex(x=>x.id===item.id)===index)
+    .sort((a,b)=>a.start-b.start || a.id.localeCompare(b.id));
+  const index=items.findIndex(x=>x.id===id);
+  if(index>=0) return Math.min(99,index+1);
+  return Math.min(99,Math.max(1,items.length||1));
+}
+function ensureDayMatchNumber({persist=false}={}){
+  let current=validDayMatchNumber(state.dayMatchNumber);
+  if(current){
+    state.dayMatchNumber=current;
+    if(typeof state.dayMatchNumberManual!=='boolean') state.dayMatchNumberManual=false;
+    if(typeof state.dayMatchNumberLocked!=='boolean') state.dayMatchNumberLocked=!!(state.started||state.finished||state.startEpoch);
+    if(typeof state.dayMatchNumberConfirmed!=='boolean') state.dayMatchNumberConfirmed=!!state.finished;
+    if(state.finished) state.dayMatchNumberConfirmed=true;
+    return current;
+  }
+  const team=String(state.ourTeam||localStorage.getItem(LAST_OUR_TEAM_KEY)||'忠義國小').trim()||'忠義國小';
+  const reference=Number(state.startEpoch)||Date.now();
+  if(state.started || state.finished || state.startEpoch){
+    current=inferExistingDayMatchNumber(team,reference,MATCH_ID);
+    state.dayMatchNumberLocked=true;
+  }else{
+    current=suggestNextDayMatchNumber(team,reference);
+    state.dayMatchNumberLocked=false;
+  }
+  state.dayMatchNumber=current;
+  state.dayMatchNumberManual=false;
+  state.dayMatchNumberConfirmed=!!state.finished;
+  if(persist){
+    try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){}
+  }
+  return current;
+}
+function refreshAutoDayMatchNumber(){
+  if(state.started || state.finished || state.dayMatchNumberLocked || state.dayMatchNumberManual) return;
+  const team=String(state.ourTeam||localStorage.getItem(LAST_OUR_TEAM_KEY)||'忠義國小').trim()||'忠義國小';
+  state.dayMatchNumber=suggestNextDayMatchNumber(team,Date.now());
+}
+function renderDayMatchMeta(){
+  const display=byId('dayMatchDisplay');
+  const source=byId('dayMatchSourceBadge');
+  const editBtn=byId('dayMatchEditBtn');
+  const editor=byId('dayMatchEditor');
+  if(!display || !source || !editBtn || !editor) return;
+  const n=ensureDayMatchNumber();
+  display.textContent=formatDayMatchLabel(n)||'第一場';
+  source.textContent=state.dayMatchNumberManual?'手動':'自動';
+  source.classList.toggle('manual',!!state.dayMatchNumberManual);
+  const editable=!state.started && !state.finished && !state.dayMatchNumberLocked;
+  editBtn.hidden=!editable;
+  if(!editable) editor.hidden=true;
+}
+function beginDayMatchEdit(){
+  if(state.started || state.finished || state.dayMatchNumberLocked) return;
+  const editor=byId('dayMatchEditor');
+  const input=byId('dayMatchNumberInput');
+  const editBtn=byId('dayMatchEditBtn');
+  if(!editor || !input) return;
+  input.value=validDayMatchNumber(state.dayMatchNumber)||1;
+  editor.hidden=false;
+  if(editBtn) editBtn.hidden=true;
+  setTimeout(()=>{ input.focus(); try{input.select();}catch(e){} },30);
+}
+function cancelDayMatchEdit(){
+  const editor=byId('dayMatchEditor');
+  const editBtn=byId('dayMatchEditBtn');
+  if(editor) editor.hidden=true;
+  if(editBtn && !state.started && !state.finished && !state.dayMatchNumberLocked) editBtn.hidden=false;
+}
+function applyDayMatchEdit(){
+  if(state.started || state.finished || state.dayMatchNumberLocked) return;
+  const input=byId('dayMatchNumberInput');
+  const n=validDayMatchNumber(input?.value);
+  if(!n){
+    showQuickNotice('場次格式不正確','本日場次請輸入 1～99 的整數');
+    input?.focus();
+    return;
+  }
+  state.dayMatchNumber=n;
+  state.dayMatchNumberManual=true;
+  cancelDayMatchEdit();
+  saveState();
+  render();
+}
 
 // v5.120：使用者可見的比賽時間統一採「整秒」基準。
 // Epoch 仍維持毫秒格式，讓既有 new Date(epoch) / 時區 / 跨日邏輯完全相容；
@@ -21566,6 +21916,8 @@ function validateMatchTextFields(){
 
   const competition=validateTextField('competition','比賽賽事',false,40);
   if(competition===null){ byId('competition').focus(); return false; }
+  const competitionStage=validateTextField('competitionStage','賽事階段／輪次',false,24);
+  if(competitionStage===null){ byId('competitionStage')?.focus(); return false; }
 
   return true;
 }
@@ -21615,6 +21967,91 @@ function deleteRecentVenue(value){
   const items=getRecentVenues().filter(v=>v!==venue);
   localStorage.setItem(RECENT_VENUES_KEY,JSON.stringify(items.slice(0,8)));
   renderVenueMenu();
+}
+
+const COMPETITION_STAGE_GROUPS=[
+  {title:'聯賽常用輪次',items:['第1輪','第2輪','第3輪','第4輪','第5輪','第6輪','第7輪','第8輪','第9輪','第10輪','第11輪','第12輪']},
+  {title:'盃賽／淘汰賽',items:['小組賽','32強','16強','8強','4強','冠亞軍','三四名','排名賽']},
+  {title:'其他常見階段',items:['例行賽','季後賽','冠軍組','排名組','保級組']}
+];
+function renderCompetitionStageMenu(){
+  const menu=byId('competitionStageMenu');
+  if(!menu) return;
+  const current=String(byId('competitionStage')?.value||state.competitionStage||'').trim();
+  let html='<div class="stageMenuTitle">選擇賽事階段／輪次</div><div class="stageMenuHint">選填；盃賽可選淘汰階段，聯賽可選輪次，也可自行輸入。</div>';
+  COMPETITION_STAGE_GROUPS.forEach(group=>{
+    html+=`<div class="stageMenuGroupTitle">${escapeHtml(group.title)}</div><div class="stageMenuGrid">`;
+    html+=group.items.map(value=>`<button class="stageMenuItem${current===value?' selected':''}" type="button" role="menuitem" data-stage-value="${escapeHtml(value)}">${escapeHtml(value)}</button>`).join('');
+    html+='</div>';
+  });
+  html+='<button class="stageMenuManual" type="button" data-stage-manual="1">自訂輸入…</button>';
+  menu.innerHTML=html;
+  menu.querySelectorAll('[data-stage-value]').forEach(btn=>btn.addEventListener('click',()=>chooseCompetitionStage(btn.getAttribute('data-stage-value')||'')));
+  menu.querySelector('[data-stage-manual="1"]')?.addEventListener('click',()=>{
+    closeCompetitionStageMenu();
+    const input=byId('competitionStage');
+    input?.focus();
+    try{input?.setSelectionRange(input.value.length,input.value.length)}catch(e){}
+  });
+}
+function ensureCompetitionStageMenuPortal(){
+  const menu=byId('competitionStageMenu');
+  if(!menu) return null;
+  if(menu.parentElement!==document.body) document.body.appendChild(menu);
+  return menu;
+}
+function positionCompetitionStageMenu(){
+  const menu=byId('competitionStageMenu');
+  const field=document.querySelector('.stageMetaField');
+  if(!menu||!field||!menu.classList.contains('open')) return;
+  const rect=field.getBoundingClientRect();
+  const vv=window.visualViewport;
+  const vw=vv?.width||window.innerWidth||document.documentElement.clientWidth;
+  const vh=vv?.height||window.innerHeight||document.documentElement.clientHeight;
+  const ox=vv?.offsetLeft||0, oy=vv?.offsetTop||0, gap=10;
+  const width=Math.min(330,Math.max(240,vw-gap*2));
+  menu.style.width=`${Math.round(width)}px`;
+  let left=rect.right-width;
+  left=Math.max(ox+gap,Math.min(left,ox+vw-width-gap));
+  const topEdge=oy+gap,bottomEdge=oy+vh-gap;
+  const below=Math.max(0,bottomEdge-(rect.bottom+6));
+  const above=Math.max(0,(rect.top-6)-topEdge);
+  const desired=Math.min(menu.scrollHeight||360,420);
+  let top,available;
+  if(below>=Math.min(desired,190)||below>=above){top=rect.bottom+6;available=below}else{available=above;top=rect.top-6-Math.min(desired,available)}
+  const maxH=Math.max(130,Math.min(420,available));
+  menu.style.maxHeight=`${Math.round(maxH)}px`;
+  top=Math.max(topEdge,Math.min(top,bottomEdge-Math.min(desired,maxH)));
+  menu.style.left=`${Math.round(left)}px`;menu.style.top=`${Math.round(top)}px`;
+}
+function openCompetitionStageMenu(){
+  if(state.started||state.finished) return;
+  closeVenueMenu();
+  const btn=byId('competitionStageDropdownBtn');
+  const menu=ensureCompetitionStageMenuPortal();
+  if(!btn||!menu) return;
+  renderCompetitionStageMenu();
+  menu.classList.add('open');btn.classList.add('open');btn.setAttribute('aria-expanded','true');
+  requestAnimationFrame(()=>{positionCompetitionStageMenu();requestAnimationFrame(positionCompetitionStageMenu)});
+}
+function closeCompetitionStageMenu(){
+  const menu=byId('competitionStageMenu'),btn=byId('competitionStageDropdownBtn');
+  menu?.classList.remove('open');
+  if(menu){menu.style.left='';menu.style.top='';menu.style.width='';menu.style.maxHeight=''}
+  btn?.classList.remove('open');btn?.setAttribute('aria-expanded','false');
+}
+function toggleCompetitionStageMenu(event){
+  event?.preventDefault();event?.stopPropagation();
+  if(byId('competitionStageMenu')?.classList.contains('open')) closeCompetitionStageMenu();
+  else openCompetitionStageMenu();
+}
+function chooseCompetitionStage(value){
+  const stage=String(value||'').trim().slice(0,24);
+  if(/[<>\r\n]/.test(stage)) return;
+  const input=byId('competitionStage');
+  if(input) input.value=stage;
+  state.competitionStage=stage;
+  saveState();closeCompetitionStageMenu();updatePreMetaInputFit(input);render();
 }
 
 function renderVenueMenu(){
@@ -21732,6 +22169,7 @@ function ensureVenueMenuPortal(){
 
 function openVenueMenu(){
   if(state.started || state.finished) return;
+  closeCompetitionStageMenu();
   const btn=byId('venueDropdownBtn');
   if(!btn) return;
 
@@ -21809,11 +22247,14 @@ function saveState(){
   const oppTeamValue=byId('oppTeam').value.trim();
   const venueValue=byId('venue').value.trim();
   const competitionValue=byId('competition').value.trim();
+  const competitionStageValue=byId('competitionStage')?.value.trim()||'';
   // 組字中的注音或直接輸入的注音符號不寫入本場資料與 LocalStorage。
   if(!containsBopomofo(ourTeamValue)) state.ourTeam=ourTeamValue;
   if(!containsBopomofo(oppTeamValue)) state.oppTeam=oppTeamValue;
   if(!containsBopomofo(venueValue)) state.venue=venueValue;
   if(!containsBopomofo(competitionValue)) state.competition=competitionValue;
+  if(!containsBopomofo(competitionStageValue)) state.competitionStage=competitionStageValue;
+  refreshAutoDayMatchNumber();
   state._savedAt=Date.now();
   localStorage.setItem(KEY, JSON.stringify(state));
   updateMatchRegistryFromState();
@@ -21876,6 +22317,13 @@ function loadState(){
   if(!('longDurationAckStartEpoch' in state)) state.longDurationAckStartEpoch=null;
   if(!('regulationPulseAckToken' in state)) state.regulationPulseAckToken='';
   if(!('competition' in state)) state.competition='';
+  if(!('competitionStage' in state)) state.competitionStage='';
+  if(!('dayMatchNumber' in state)) state.dayMatchNumber=null;
+  if(!('dayMatchNumberManual' in state)) state.dayMatchNumberManual=false;
+  if(!('dayMatchNumberLocked' in state)) state.dayMatchNumberLocked=!!(state.started||state.finished||state.startEpoch);
+  // v5.180 舊資料相容：既有已完成比賽視為已正式確認；未完成比賽維持預留狀態。
+  if(!('dayMatchNumberConfirmed' in state)) state.dayMatchNumberConfirmed=!!state.finished;
+  if(state.finished) state.dayMatchNumberConfirmed=true;
   if(Array.isArray(state.markers)){
     state.markers.forEach(m=>{
       if(!('assist_number' in m)) m.assist_number='';
@@ -21935,10 +22383,12 @@ function loadState(){
   if(canUseRememberedVenue && !state.venue && rememberedVenue){
     state.venue=rememberedVenue;
   }
+  ensureDayMatchNumber({persist:true});
   byId('ourTeam').value=state.ourTeam||'';
   byId('oppTeam').value=state.oppTeam||'';
   byId('venue').value=state.venue||'';
   byId('competition').value=state.competition||'';
+  if(byId('competitionStage')) byId('competitionStage').value=state.competitionStage||'';
   syncRegulationInputsFromState();
   buildNumberGrid();
   render();
@@ -22276,10 +22726,59 @@ function scorerStats(){
     .map(([name,goals])=>({name,goals}))
     .sort((a,b)=>b.goals-a.goals || a.name.localeCompare(b.name,'zh-Hant'));
 }
+function scorerMVPInfo(){
+  // v5.177：賽後進球焦點依比賽結果切換語意。
+  // 勝場＝單場 MVP；平手／敗場＝我方最多進球。
+  // 兩種情況都只統計「我方、非烏龍、具有可辨識背號」的正式進球。
+  if(!state.finished) return null;
+
+  const counts=new Map();
+  state.markers
+    .filter(m=>m.event==='GOAL' && m.team==='OUR' && !m.own_goal && m.player_number)
+    .forEach(m=>{
+      const name=`我方#${m.player_number}`;
+      counts.set(name,(counts.get(name)||0)+1);
+    });
+
+  const stats=[...counts.entries()]
+    .map(([name,goals])=>({name,goals}))
+    .sort((a,b)=>b.goals-a.goals || a.name.localeCompare(b.name,'zh-Hant'));
+  if(!stats.length) return null;
+
+  let result='DRAW';
+  if(state.penalty?.completed){
+    const ourPk=penaltyGoals('our'), oppPk=penaltyGoals('opp');
+    if(ourPk>oppPk) result='WIN';
+    else if(oppPk>ourPk) result='LOSS';
+  }else{
+    const our=Number(state.ourScore||0), opp=Number(state.oppScore||0);
+    if(our>opp) result='WIN';
+    else if(opp>our) result='LOSS';
+  }
+
+  const topGoals=stats[0].goals || 0;
+  const winners=stats.filter(s=>s.goals===topGoals);
+  const isTie=winners.length>1;
+  const kind=result==='WIN'?'mvp':'topScorer';
+  const label=kind==='mvp'?'單場MVP':'我方最多進球';
+  return {
+    topGoals,
+    winners,
+    isTie,
+    result,
+    kind,
+    title:`⚽ ${label}｜${isTie?`並列 ${topGoals} 球`:`${topGoals} 球`}`
+  };
+}
+function scorerMVPHTML(){
+  const info=scorerMVPInfo();
+  if(!info) return '';
+  return `<div class="reportMVPHead">${escapeHtml(info.title)}</div><div class="reportMVPNames">${info.winners.map(s=>`<span class="reportMVPName">${escapeHtml(s.name)}</span>`).join('')}</div>`;
+}
 function scorerStatsHTML(){
   const stats=scorerStats();
   if(!stats.length) return '<div class="reportEmpty">尚無可統計的球員背號進球資料</div>';
-  return stats.map(s=>`<div class="scorerRow"><div class="scorerName">${escapeHtml(s.name)} <span class="scorerBalls">${'⚽'.repeat(s.goals)}</span></div></div>`).join('');
+  return stats.map(s=>`<div class="scorerRow"><div class="scorerName"><span class="scorerPlayerName">${escapeHtml(s.name)}</span><span class="scorerBalls">${'⚽'.repeat(s.goals)}</span></div></div>`).join('');
 }
 
 function tick(){
@@ -23521,6 +24020,7 @@ function startMatch(){
   state.ourTeam=ourName;
   state.oppTeam=byId('oppTeam').value.trim();
   state.venue=byId('venue').value.trim();
+  state.competitionStage=byId('competitionStage')?.value.trim()||'';
 
   // 只有真的有輸入名稱才更新「最近我方隊名」。
   // 留白開賽時畫面先顯示「我方」，不會把空白覆蓋掉使用者之前的常用隊名。
@@ -23551,6 +24051,10 @@ function startMatch(){
     state.currentPeriod=1;
   }
 
+  if(!validDayMatchNumber(state.dayMatchNumber)) ensureDayMatchNumber();
+  state.dayMatchNumberLocked=true;
+  // v5.180：開始比賽只「預留」本日場次；正式確認要等全場／PK 完成。
+  if(!state.finished) state.dayMatchNumberConfirmed=false;
   state.started=true;
   state.startEpoch=actionEpoch;
   state.endEpoch=null;
@@ -23965,6 +24469,9 @@ function finishPenaltyShootout(){
   state.penalty.endEpoch=nowWholeMs();
   state.finished=true;
   state.started=false;
+  // v5.180：PK 完成才把預留場次正式確認。
+  state.dayMatchNumberConfirmed=true;
+  state.dayMatchNumberLocked=true;
   timeExpanded=false;
   state.endEpoch=state.penalty.endEpoch;
   state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
@@ -24005,6 +24512,9 @@ function confirmFinishFull(){
   state.endEpoch=pendingFinishEnd;
   state.started=false;
   state.finished=true;
+  // v5.180：只有真正完成全場，才將本日場次由「預留」轉為「正式確認」。
+  state.dayMatchNumberConfirmed=true;
+  state.dayMatchNumberLocked=true;
   rememberCurrentRosterAsPrevious();
   recordRecentRosterForMatch({matchId:MATCH_ID,roster:currentRosterNumbers(),goalkeeper:state.goalkeeperNumber,updatedAt:pendingFinishEnd||Date.now()});
   timeExpanded=false;
@@ -24045,12 +24555,14 @@ function newMatch(){
   const rememberedJerseyColor=normalizeJerseyColor(state.jerseyColor);
   const reg=Number(state.regulationMinutes);
   const rememberedRegulationMinutes=(Number.isInteger(reg) && reg>=1 && reg<=45) ? reg : null;
+  const nextDayMatchNumber=suggestNextDayMatchNumber(rememberedOurTeam||'忠義國小',Date.now());
 
   activateMatchId(createUniqueMatchId(),{writeUrl:true});
   MATCH_ENTRY_MODE='url';
 
   state={
-    ourTeam:rememberedOurTeam, oppTeam:'', venue:rememberedVenue, competition:rememberedCompetition,
+    ourTeam:rememberedOurTeam, oppTeam:'', venue:rememberedVenue, competition:rememberedCompetition, competitionStage:'',
+    dayMatchNumber:nextDayMatchNumber, dayMatchNumberManual:false, dayMatchNumberLocked:false, dayMatchNumberConfirmed:false,
     started:false, finished:false, startEpoch:null, endEpoch:null, finalElapsed:0,
     regulationMinutes:rememberedRegulationMinutes, ourScore:0, oppScore:0, markers:[],
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
@@ -24069,6 +24581,7 @@ function newMatch(){
   byId('oppTeamBox')?.classList.remove('editing');
   byId('venue').value=rememberedVenue;
   byId('competition').value=rememberedCompetition;
+  if(byId('competitionStage')) byId('competitionStage').value='';
   syncRegulationInputsFromState();
   timeExpanded=false;
   regulationEditorExpanded=false;
@@ -25412,22 +25925,45 @@ function renderLiveFocusUI(){
 
   if(shouldShow){
     const comp=String(state.competition||'').trim();
+    const stage=String(state.competitionStage||'').trim();
+    const dayMatchLabel=formatDayMatchLabel(state.dayMatchNumber);
     const venue=String(state.venue||'').trim();
     const editBtn=isResult
-      ? `<button type="button" class="resultMetaEditBtn metaGroupEditBtn" onclick="openResultMetaEdit()" aria-label="修正比賽賽事與比賽場地" title="修正比賽資料"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span></button>`
+      ? `<button type="button" class="resultMetaEditBtn metaGroupEditBtn" onclick="openResultMetaEdit()" aria-label="修正比賽賽事、賽事階段與比賽場地" title="修正比賽資料"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span></button>`
       : '';
 
-    strip.innerHTML=`
-      <div class="matchMetaDisplayRow competitionDisplayRow${comp?'':' empty'}">
-        <span class="matchMetaDisplayIcon" aria-hidden="true">🏆</span>
-        <span class="matchMetaDisplayValue">${escapeHtml(comp || '比賽賽事')}</span>
-      </div>
-      <div class="matchMetaDisplayRow venueDisplayRow${venue?'':' empty'}">
-        <span class="matchMetaDisplayIcon" aria-hidden="true">🏟️</span>
-        <span class="matchMetaDisplayValue">${escapeHtml(venue || '比賽場地')}</span>
-      </div>
-      ${editBtn}`;
-    strip.classList.add('show');
+    // v5.177：上半場／下半場／延長賽進行中，空白的賽事與場地不再佔版面。
+    // 有填資料時仍正常顯示；中場、等待延長賽、PK、全場維持原本資訊／補填入口。
+    const hideEmptyDuringActivePlay=isLive;
+    const metaRows=[];
+
+    if(comp || stage || !hideEmptyDuringActivePlay){
+      const mainCompetitionText=comp || (stage ? '賽事階段／輪次' : (dayMatchLabel ? '本日場次' : '比賽賽事'));
+      const stageBadge=stage ? `<span class="competitionStageBadge">${escapeHtml(stage)}</span>` : '';
+      const dayBadge=dayMatchLabel ? `<span class="dayMatchBadge">${escapeHtml(dayMatchLabel)}</span>` : '';
+      const hasBadges=Boolean(stageBadge || dayBadge);
+      metaRows.push(`
+        <div class="matchMetaDisplayRow competitionDisplayRow${(comp||stage||dayMatchLabel)?'':' empty'}">
+          <span class="matchMetaDisplayIcon" aria-hidden="true">🏆</span>
+          <span class="matchMetaDisplayValue${hasBadges?' withMetaBadges':''}"><span class="competitionNameText">${escapeHtml(mainCompetitionText)}</span>${stageBadge}${dayBadge}</span>
+        </div>`);
+    }
+
+    if(venue || !hideEmptyDuringActivePlay){
+      metaRows.push(`
+        <div class="matchMetaDisplayRow venueDisplayRow${venue?'':' empty'}">
+          <span class="matchMetaDisplayIcon" aria-hidden="true">🏟️</span>
+          <span class="matchMetaDisplayValue">${escapeHtml(venue || '比賽場地')}</span>
+        </div>`);
+    }
+
+    if(metaRows.length || editBtn){
+      strip.innerHTML=metaRows.join('')+editBtn;
+      strip.classList.add('show');
+    }else{
+      strip.innerHTML='';
+      strip.classList.remove('show');
+    }
   }else{
     strip.innerHTML='';
     strip.classList.remove('show');
@@ -25447,9 +25983,11 @@ function openResultMetaEdit(){
 
   const comp=byId('resultCompetitionInput');
   const venue=byId('resultVenueInput');
+  const stage=byId('resultCompetitionStageInput');
 
   // v4.87：全場編輯一律以目前 state 為唯一來源。
   if(comp) comp.value=state.competition||'';
+  if(stage) stage.value=state.competitionStage||'';
   if(venue) venue.value=state.venue||'';
 
   syncVisualViewport();
@@ -25468,12 +26006,19 @@ function saveResultMetaEdit(){
   if(!state.finished) return;
 
   const comp=String(byId('resultCompetitionInput')?.value||'').trim();
+  const stage=String(byId('resultCompetitionStageInput')?.value||'').trim();
   const venue=String(byId('resultVenueInput')?.value||'').trim();
   const invalid=/[<>\r\n]/;
 
   if(comp.length>40 || invalid.test(comp)){
     alert('比賽賽事請控制在 40 字內，且不可包含 <、> 或換行。');
     byId('resultCompetitionInput')?.focus();
+    return;
+  }
+
+  if(stage.length>24 || invalid.test(stage)){
+    alert('賽事階段／輪次請控制在 24 字內，且不可包含 <、> 或換行。');
+    byId('resultCompetitionStageInput')?.focus();
     return;
   }
 
@@ -25484,12 +26029,14 @@ function saveResultMetaEdit(){
   }
 
   state.competition=comp;
+  state.competitionStage=stage;
   state.venue=venue;
 
   // v4.87：同步回主畫面的原始欄位，再存 state。
   // 否則 saveState() 會從舊的 competition / venue input 讀值，
   // 把剛剛在全場編輯視窗輸入的新內容覆蓋掉。
   if(byId('competition')) byId('competition').value=comp;
+  if(byId('competitionStage')) byId('competitionStage').value=stage;
   if(byId('venue')) byId('venue').value=venue;
 
   // 賽後修正只更新本場資料。
@@ -25583,6 +26130,7 @@ function hasMeaningfulPreMatchSetup(){
   const currentOur=String(byId('ourTeam')?.value||state.ourTeam||'').trim();
   const currentOpp=String(byId('oppTeam')?.value||state.oppTeam||'').trim();
   const currentCompetition=String(byId('competition')?.value||state.competition||'').trim();
+  const currentStage=String(byId('competitionStage')?.value||state.competitionStage||'').trim();
   const currentVenue=String(byId('venue')?.value||state.venue||'').trim();
 
   /* v4.45：場地只要目前有值，就視為本場已存在賽前設定。
@@ -25591,6 +26139,7 @@ function hasMeaningfulPreMatchSetup(){
   return Boolean(
     currentOpp ||
     currentCompetition ||
+    currentStage ||
     currentVenue ||
     String(state.goalkeeperNumber||'') ||
     currentRosterNumbers().length ||
@@ -25630,6 +26179,7 @@ function updatePreMetaInputFit(input){
 
 function updateAllPreMetaFits(){
   updatePreMetaInputFit(byId('competition'));
+  updatePreMetaInputFit(byId('competitionStage'));
   updatePreMetaInputFit(byId('venue'));
 }
 
@@ -25659,7 +26209,7 @@ function resetPreMatchSetup(){
 
   if(!confirm(
     '重設賽前設定？\n\n' +
-    '將清除本場尚未開始的賽事名稱、場地、對手、名單、守門員、比賽時間與其他賽前設定。'
+    '將清除本場尚未開始的賽事名稱、賽事階段／輪次、場地、對手、名單、守門員、比賽時間與其他賽前設定。'
   )) return;
 
   hideMarkerUndo();
@@ -25674,6 +26224,7 @@ function resetPreMatchSetup(){
   state.ourTeam=rememberedOur;
   state.oppTeam='';
   state.competition='';
+  state.competitionStage='';
   state.venue='';
   state.goalkeeperNumber='';
   state.goalkeeperAutoRosterNumber='';
@@ -25701,6 +26252,7 @@ function resetPreMatchSetup(){
   if(byId('ourTeam')) byId('ourTeam').value=rememberedOur;
   if(byId('oppTeam')) byId('oppTeam').value='';
   if(byId('competition')) byId('competition').value='';
+  if(byId('competitionStage')) byId('competitionStage').value='';
   if(byId('venue')) byId('venue').value='';
 
   byId('ourTeamBox')?.classList.remove('editing');
@@ -25708,6 +26260,7 @@ function resetPreMatchSetup(){
   byId('ourTeam')?.classList.remove('requiredError','inputError','guidedInput');
   byId('oppTeam')?.classList.remove('inputError','guidedInput');
   byId('competition')?.classList.remove('guidedInput');
+  byId('competitionStage')?.classList.remove('guidedInput');
   byId('venue')?.classList.remove('guidedInput');
 
   guidedSetupStep=null;
@@ -25926,6 +26479,7 @@ function render(){
   renderQuickResult();
   renderWinnerBadge();
   renderLiveFocusUI();
+  renderDayMatchMeta();
   renderPreResetUI();
 
   // v4.04：Auto-fit 是 render 標準流程的一部分。
@@ -26287,12 +26841,15 @@ function buildReportDOM(){
   const reportStartEpoch=matchStartEpoch();
   const reportEndEpoch=matchEndEpoch();
   const crossedDay=isCrossDay(reportStartEpoch,reportEndEpoch);
-  byId('reportDate').textContent=`📅 ${matchDateLabel(reportStartEpoch,reportEndEpoch)}`;
+  const reportDayMatchLabel=formatDayMatchLabel(state.dayMatchNumber);
+  byId('reportDate').textContent=`📅 ${matchDateLabel(reportStartEpoch,reportEndEpoch)}${reportDayMatchLabel?`｜${reportDayMatchLabel}`:''}`;
   const reportCompetition=byId('reportCompetition');
   const reportCompetitionValue=String(state.competition||'').trim();
+  const reportStageValue=String(state.competitionStage||'').trim();
   if(reportCompetition){
-    reportCompetition.textContent=reportCompetitionValue?`🏆 ${reportCompetitionValue}`:'';
-    reportCompetition.style.display=reportCompetitionValue?'':'none';
+    const reportCompetitionText=[reportCompetitionValue,reportStageValue].filter(Boolean).join('｜');
+    reportCompetition.textContent=reportCompetitionText?`🏆 ${reportCompetitionText}`:'';
+    reportCompetition.style.display=reportCompetitionText?'':'none';
   }
   const reportVenue=byId('reportVenue');
   const reportVenueText=byId('reportVenueText');
@@ -26352,6 +26909,15 @@ function buildReportDOM(){
       reportDiff.className='diff reportDiff';
       reportDiff.style.display='none';
     }
+  }
+  const reportMVPWrap=byId('reportMVPWrap');
+  const reportMVPCard=byId('reportMVPCard');
+  const reportMVPHtml=scorerMVPHTML();
+  if(reportMVPWrap && reportMVPCard){
+    const reportMVPInfo=scorerMVPInfo();
+    reportMVPCard.innerHTML=reportMVPHtml;
+    reportMVPCard.classList.toggle('topScorer', reportMVPInfo?.kind==='topScorer');
+    reportMVPWrap.style.display=reportMVPHtml?'':'none';
   }
   byId('reportScorers').innerHTML=scorerStatsHTML();
   byId('reportTimeline').innerHTML=reportTimelineHTML();
@@ -26434,9 +27000,12 @@ function reportLines(){
   // v5.155：摘要圖片只顯示有實際內容的賽事／場地；日期固定保留。
   const metaCards=[];
   const competitionValue=String(state.competition||'').trim();
+  const stageValue=String(state.competitionStage||'').trim();
   const venueValue=String(state.venue||'').trim();
-  if(competitionValue) metaCards.push({label:'比賽賽事',icon:'🏆',value:competitionValue,full:true,summaryCard:true});
-  metaCards.push({label:'比賽日期',icon:'📅',value:matchDateLabel(start,end),full:true,summaryCard:true});
+  const competitionSummary=[competitionValue,stageValue].filter(Boolean).join('｜');
+  if(competitionSummary) metaCards.push({label:'比賽賽事／階段',icon:'🏆',value:competitionSummary,full:true,summaryCard:true});
+  const dayMatchLabel=formatDayMatchLabel(state.dayMatchNumber);
+  metaCards.push({label:'比賽日期',icon:'📅',value:`${matchDateLabel(start,end)}${dayMatchLabel?`｜${dayMatchLabel}`:''}`,full:true,summaryCard:true});
   if(venueValue) metaCards.push({label:'比賽場地',icon:'📍',value:venueValue,full:true,summaryCard:true});
   if(roster.length){
     metaCards.push({label:'本場球員',icon:'👕',value:roster.map(n=>'#'+n).join(' '),full:true,summaryCard:true});
@@ -26472,7 +27041,14 @@ function reportLines(){
     if(existing) existing.goals++;
     else scorers.set(e.actor,{name:e.actor,goals:1});
   }
-  if(scorers.size) lines.push({type:'scorerGrid',items:[...scorers.values()].sort((a,b)=>b.goals-a.goals)});
+  if(scorers.size){
+    const scorerItems=[...scorers.values()].sort((a,b)=>b.goals-a.goals || a.name.localeCompare(b.name,'zh-Hant'));
+    const mvpInfo=scorerMVPInfo();
+    if(mvpInfo){
+      lines.push({type:'mvpCard',kind:mvpInfo.kind,title:mvpInfo.title,names:mvpInfo.winners.map(s=>s.name)});
+    }
+    lines.push({type:'scorerGrid',items:scorerItems});
+  }
   lines.push({type:'timelineHeading',text:'比賽事件時間軸'});
   if(!entries.length){
     lines.push({type:'meta',text:'尚未標記事件'});
@@ -26628,6 +27204,10 @@ function reportCanvasLayout(lines,ctx){
       b.textRows=reportWrapText(ctx,line.text,content-16,font);b.height=b.textRows.length*32+10;
     }else if(line.type==='periodGrid'){
       b.height=Math.ceil(line.items.length/3)*78+4;
+    }else if(line.type==='mvpCard'){
+      b.titleRows=reportWrapText(ctx,line.title,content-24,'900 30px -apple-system, sans-serif');
+      b.nameRows=reportWrapText(ctx,(line.names||[]).join(' ｜ '),content-24,mainFont);
+      b.height=b.titleRows.length*34 + b.nameRows.length*32 + 28;
     }else if(line.type==='scorerGrid'){
       b.rows=[];b.height=48;
       for(let i=0;i<line.items.length;i+=2){
@@ -26727,6 +27307,12 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         text(p.label,x+12,top+8,21,'#7dd3fc',750);text(p.duration,x+12,top+34,22,'#b9c9d9',650);
         ctx.font=font(25,800);ctx.textAlign='right';ctx.textBaseline='top';ctx.fillStyle='#eef5fc';ctx.fillText(p.score,x+w-12,top+34);
       });
+    }else if(b.type==='mvpCard'){
+      const topScorer=b.kind==='topScorer';
+      ctx.fillStyle=topScorer?'#193d52':'#29412e';roundRect(ctx,pad,y,content,b.height-6,12,true,false);
+      ctx.strokeStyle=topScorer?'rgba(56,189,248,.46)':'rgba(250,204,21,.46)';ctx.lineWidth=2;roundRect(ctx,pad,y,content,b.height-6,12,false,true);
+      b.titleRows.forEach((value,j)=>text(value,pad+16,y+12+j*34,28,topScorer?'#7dd3fc':'#ffd84d',900));
+      b.nameRows.forEach((value,j)=>text(value,pad+16,y+14+b.titleRows.length*34+j*32,26,'#f7fbff',800));
     }else if(b.type==='scorerGrid'){
       text('球員進球統計',pad+8,y+4,29,'#7dd3fc',800);let rowY=y+42;
       b.rows.forEach(row=>{
@@ -26868,11 +27454,12 @@ function shareSummaryText(){
   const start=matchStartEpoch() || Date.now();
   const our=String(state.ourTeam||'我方').trim() || '我方';
   const opp=String(state.oppTeam||'').trim() || '對手';
-  // v5.153：LINE／訊息 App 的分享文字只保留「賽果＋日期時間」兩項關鍵識別資訊。
-  // 完整賽事、場地、球員與時間軸已在摘要圖片中呈現，避免文字泡泡與圖片重複。
+  const dayMatchLabel=formatDayMatchLabel(state.dayMatchNumber);
+  // v5.179：LINE／訊息 App 以「賽果＋日期／本日場次」辨識一天多場比賽。
+  // 星期採日期自動計算；本日場次為系統預填並在開賽後鎖定。
   return [
-    `⚽ ${our}　${state.ourScore}：${state.oppScore}　${opp}`,
-    `${shareSummaryShortDate(start)}（${shareSummaryWeekday(start)}）${shareSummaryShortTime(start)}`
+    `⚽ ${our} ${state.ourScore}：${state.oppScore} ${opp}`,
+    `${shareSummaryShortDate(start)} (${shareSummaryWeekday(start)})${dayMatchLabel?`｜${dayMatchLabel}`:''}`
   ].join('\n');
 }
 
@@ -26943,6 +27530,7 @@ function reportHTMLText(){
     const d=Math.round(state.finalElapsed-regulationTargetSeconds());
     diff=`<p><b>比賽時間：</b>${escapeHtml(regulationDisplayText())}　<b>${d<0?'提前':'超過'}：</b>${fmtMMSS(Math.abs(d))}</p>`;
   }
+  const mvpInfo=scorerMVPInfo();
   return `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>足球比賽摘要</title><style>
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;background:#0f1720;color:#f8fafc;margin:0;padding:24px}
 .wrap{max-width:720px;margin:auto}.card{background:#16202b;border:1px solid #334155;border-radius:18px;padding:22px;margin-bottom:16px}
@@ -27140,10 +27728,56 @@ body.resultMode.finalOutputVisible .finalToolsCard{
 }
 </style>
 
+
+<style id="v5174BestScorerBadgePatch">
+/* =========================================================
+   v5.177：摘要／分享圖片的最佳進球員圖示
+   - 球員進球統計中，最高進球數的球員（可並列）加上「🏅 最佳進球員」圖示。
+   - 只強調榜首，不改變原本進球統計排序與資料來源。
+   ========================================================= */
+#reportModal .scorerRow.bestScorer{
+  background:linear-gradient(180deg,rgba(72,54,16,.34),rgba(32,45,63,.96))!important;
+  box-shadow:inset 0 0 0 1px rgba(250,204,21,.18)!important;
+}
+#reportModal .scorerName{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  gap:4px!important;
+}
+#reportModal .scorerBestBadge{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  padding:2px 8px!important;
+  border-radius:999px!important;
+  background:rgba(250,204,21,.13)!important;
+  border:1px solid rgba(250,204,21,.26)!important;
+  color:#fcd34d!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  line-height:1.1!important;
+  letter-spacing:.02em!important;
+}
+#reportModal .scorerPlayerName{
+  display:block!important;
+  color:#eaf3fc!important;
+  font-weight:800!important;
+}
+#reportModal .scorerBalls{
+  display:block!important;
+  margin-top:1px!important;
+}
+@media(max-width:390px){
+  #reportModal .scorerBestBadge{font-size:10.5px!important;padding:2px 7px!important;}
+}
+</style>
+
 </head><body><div class="wrap">
-<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}</div>${state.competition?`<div>🏆 ${escapeHtml(state.competition)}</div>`:''}${state.venue?`<div>📍 ${escapeHtml(state.venue)}</div>`:''}</div></div>
+<div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}${formatDayMatchLabel(state.dayMatchNumber)?`｜${escapeHtml(formatDayMatchLabel(state.dayMatchNumber))}`:''}</div>${(state.competition||state.competitionStage)?`<div>🏆 ${escapeHtml([state.competition,state.competitionStage].filter(Boolean).join('｜'))}</div>`:''}${state.venue?`<div>📍 ${escapeHtml(state.venue)}</div>`:''}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</p>${state.halftimeStartEpoch?`<p><b>中場開始：</b>${escapeHtml(fmtClock(state.halftimeStartEpoch))}<br><b>中場結束：</b>${escapeHtml(state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--')}<br><b>中場休息：</b>${escapeHtml(fmtMMSS(halftimeElapsed()))}</p>`:''}${diff}</div>
+${mvpInfo?`<div class="card"><h2>${escapeHtml(mvpInfo.title)}</h2><p>${mvpInfo.winners.map(s=>escapeHtml(s.name)).join(' ｜ ')}</p></div>`:''}
 <div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
 <div class="card"><h2>其他精彩標記事件</h2><ul>${otherHtml}</ul></div>
@@ -27208,10 +27842,10 @@ function diffSecondsExport(){
 }
 function csvText(){
   saveState();
-  const rows=[['our_team','opponent_team','venue','competition','roster_numbers','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','assist_number','score_after','recorded_at']];
+  const rows=[['our_team','opponent_team','venue','competition','competition_stage','day_match_number','roster_numbers','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','assist_number','score_after','recorded_at']];
   if(state.markers.length===0){
     rows.push([
-      state.ourTeam, state.oppTeam, state.venue, state.competition, currentRosterNumbers().join('|'),
+      state.ourTeam, state.oppTeam, state.venue, state.competition, state.competitionStage, state.dayMatchNumber||'', currentRosterNumbers().join('|'),
       matchStartEpoch()?fmtDateTime(matchStartEpoch()):'',
       matchEndEpoch()?fmtDateTime(matchEndEpoch()):'',
       Math.floor(state.finished?state.finalElapsed:totalMatchElapsed()),
@@ -27224,7 +27858,7 @@ function csvText(){
     state.markers.forEach(m=>{
       const markerSeconds=wholeSecondMarkerSeconds(m.seconds);
       rows.push([
-        state.ourTeam, state.oppTeam, state.venue, state.competition, currentRosterNumbers().join('|'),
+        state.ourTeam, state.oppTeam, state.venue, state.competition, state.competitionStage, state.dayMatchNumber||'', currentRosterNumbers().join('|'),
         state.startEpoch?fmtDateTime(matchStartEpoch()):'',
         state.endEpoch?fmtDateTime(matchEndEpoch()):'',
         Math.floor(state.finished?state.finalElapsed:0),
@@ -27251,7 +27885,7 @@ function csvText(){
         const k=state.penalty[side]?.[i];
         if(!k || (!k.result && !k.number)) return;
         rows.push([
-          state.ourTeam,state.oppTeam,state.venue,state.competition,currentRosterNumbers().join('|'),
+          state.ourTeam,state.oppTeam,state.venue,state.competition,state.competitionStage,state.dayMatchNumber||'',currentRosterNumbers().join('|'),
           matchStartEpoch()?fmtDateTime(matchStartEpoch()):'',
           matchEndEpoch()?fmtDateTime(matchEndEpoch()):'',
           Math.floor(state.finished?state.finalElapsed:totalMatchElapsed()),
@@ -27289,7 +27923,7 @@ async function shareCSV(){
     try{
       await navigator.share({
         title:'足球精彩標記 CSV',
-        text:`${state.ourTeam||'我方'} ${state.ourScore}:${state.oppScore} ${state.oppTeam||'對手'}${state.competition?`｜${state.competition}`:''}｜${state.venue||'未填比賽場地'}`,
+        text:`${state.ourTeam||'我方'} ${state.ourScore}:${state.oppScore} ${state.oppTeam||'對手'}${state.competition?`｜${state.competition}`:''}${state.competitionStage?`｜${state.competitionStage}`:''}${formatDayMatchLabel(state.dayMatchNumber)?`｜${formatDayMatchLabel(state.dayMatchNumber)}`:''}｜${state.venue||'未填比賽場地'}`,
         files:[file]
       });
       return;
@@ -27310,7 +27944,7 @@ function isImeComposing(e){
   return Boolean(e?.isComposing || e?.keyCode===229 || e?.target?.dataset?.composing==='true');
 }
 
-const matchTextInputIds=['ourTeam','oppTeam','venue','competition'];
+const matchTextInputIds=['ourTeam','oppTeam','venue','competition','competitionStage'];
 matchTextInputIds.forEach(id=>{
   const el=byId(id);
   if(!el) return;
@@ -27328,7 +27962,7 @@ matchTextInputIds.forEach(id=>{
   });
 });
 
-['ourTeam','oppTeam','venue','competition'].forEach(id=>{
+['ourTeam','oppTeam','venue','competition','competitionStage'].forEach(id=>{
   byId(id).addEventListener('input', e=>{
     // 注音／倉頡等中文輸入法組字期間不重繪畫面。
     if(isImeComposing(e)) return;
@@ -27356,6 +27990,17 @@ function focusCompetitionField(){
   const el=byId('competition');
   if(!el) return;
   guidedSetupStep='competition';
+  setTimeout(()=>{
+    el.classList.add('guidedInput');
+    el.focus();
+    try{ el.setSelectionRange(el.value.length,el.value.length); }catch(e){}
+  },40);
+}
+
+function focusCompetitionStageField(){
+  const el=byId('competitionStage');
+  if(!el) return;
+  guidedSetupStep='competitionStage';
   setTimeout(()=>{
     el.classList.add('guidedInput');
     el.focus();
@@ -27405,13 +28050,11 @@ function advanceGuidedSetup(from){
     byId('oppTeamBox').classList.remove('editing');
     updateTeamNameDisplays();
 
-    // v5.159：由「新比賽」帶入上一場設定時，其餘欄位已保留，
-    // 對手輸入完成後直接結束導引，不再跳去重填賽事／場地。
+    // v5.178：新比賽會沿用賽事名稱與場地，但「賽事階段／輪次」刻意清空。
+    // 因此輸入新對手後，只再提醒確認本場階段／輪次，不要求重填其他沿用資料。
     if(nextMatchOpponentOnly){
-      nextMatchOpponentOnly=false;
-      guidedSetupStep=null;
       byId('oppTeam')?.classList.remove('guidedInput');
-      byId('oppTeam')?.blur();
+      focusCompetitionStageField();
       return true;
     }
 
@@ -27426,6 +28069,25 @@ function advanceGuidedSetup(from){
     state.competition=value;
     saveState();
     byId('competition').classList.remove('guidedInput');
+
+    focusCompetitionStageField();
+    return true;
+  }
+
+  if(from==='competitionStage'){
+    const value=validateTextField('competitionStage','賽事階段／輪次',false,24);
+    if(value===null) return false;
+
+    state.competitionStage=value;
+    saveState();
+    byId('competitionStage').classList.remove('guidedInput');
+
+    if(nextMatchOpponentOnly){
+      nextMatchOpponentOnly=false;
+      guidedSetupStep=null;
+      byId('competitionStage')?.blur();
+      return true;
+    }
 
     focusVenueField();
     return true;
@@ -27457,7 +28119,7 @@ function clearInactivePreMatchFieldFocus(activeId){
     byId(id+'Box')?.classList.remove('editing');
   });
 
-  ['competition','venue'].forEach(id=>{
+  ['competition','competitionStage','venue'].forEach(id=>{
     if(id===activeId) return;
     byId(id)?.classList.remove('guidedInput');
   });
@@ -27486,6 +28148,12 @@ byId('competition').addEventListener('focus', ()=>{
   clearInactivePreMatchFieldFocus('competition');
   if(isPreMatchGuidedSetup()) guidedSetupStep='competition';
   byId('competition').classList.add('guidedInput');
+});
+
+byId('competitionStage').addEventListener('focus', ()=>{
+  clearInactivePreMatchFieldFocus('competitionStage');
+  if(isPreMatchGuidedSetup()) guidedSetupStep='competitionStage';
+  byId('competitionStage').classList.add('guidedInput');
 });
 
 byId('venue').addEventListener('focus', ()=>{
@@ -27535,6 +28203,23 @@ byId('competition').addEventListener('keydown', e=>{
         saveState();
         e.target.blur();
       }
+    }
+  }
+});
+
+byId('competitionStage').addEventListener('keydown', e=>{
+  if(isImeComposing(e)) return;
+  if(e.key==='Enter'){
+    e.preventDefault();
+    if(isPreMatchGuidedSetup()){
+      guidedSetupStep='competitionStage';
+      advanceGuidedSetup('competitionStage');
+    }else{
+      const value=validateTextField('competitionStage','賽事階段／輪次',false,24);
+      if(value===null) return;
+      state.competitionStage=value;
+      saveState();
+      e.target.blur();
     }
   }
 });
@@ -27623,24 +28308,47 @@ byId('competition').addEventListener('blur', ()=>{
 });
 
 
+byId('competitionStage').addEventListener('blur', ()=>{
+  byId('competitionStage').classList.remove('guidedInput');
+
+  if(isPreMatchGuidedSetup() && guidedSetupStep==='competitionStage'){
+    setTimeout(()=>{
+      if(guidedSetupStep==='competitionStage') advanceGuidedSetup('competitionStage');
+    },80);
+    return;
+  }
+
+  const value=validateTextField('competitionStage','賽事階段／輪次',false,24);
+  if(value!==null){
+    state.competitionStage=value;
+    saveState();
+  }
+});
+
 document.addEventListener('click',e=>{
   const inField=e.target.closest?.('.venueMetaField');
   const inMenu=e.target.closest?.('#venueMenu');
   if(!inField && !inMenu) closeVenueMenu();
+  const inStageField=e.target.closest?.('.stageMetaField');
+  const inStageMenu=e.target.closest?.('#competitionStageMenu');
+  if(!inStageField && !inStageMenu) closeCompetitionStageMenu();
 });
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') closeVenueMenu();
+  if(e.key==='Escape'){ closeVenueMenu(); closeCompetitionStageMenu(); }
 });
 
 window.addEventListener('resize',()=>{
   if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
+  if(byId('competitionStageMenu')?.classList.contains('open')) positionCompetitionStageMenu();
 },{passive:true});
 window.addEventListener('scroll',()=>{
   if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
+  if(byId('competitionStageMenu')?.classList.contains('open')) positionCompetitionStageMenu();
 },{passive:true});
 window.visualViewport?.addEventListener('resize',()=>{
   if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
+  if(byId('competitionStageMenu')?.classList.contains('open')) positionCompetitionStageMenu();
 },{passive:true});
 window.visualViewport?.addEventListener('scroll',()=>{
   if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
