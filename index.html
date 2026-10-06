@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.187</title>
+<title>足球場邊記錄器 v5.188</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -19940,7 +19940,7 @@ body.matchStatePre .dayMatchMeta{display:flex;align-items:center;min-width:0;min
 
 
 <style id="v5181MetaBadgeSpacingFix">
-/* v5.187：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
+/* v5.188：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
 .liveMetaStrip .matchMetaDisplayValue.withMetaBadges{
   display:flex!important;
   flex-wrap:wrap!important;
@@ -19982,7 +19982,7 @@ body.matchStatePre .dayMatchMeta{display:flex;align-items:center;min-width:0;min
 
 <style id="v5182InlineCompetitionContextPatch">
 /* =========================================================
-   v5.187：賽事階段／本日場次改為同列純文字
+   v5.188：賽事階段／本日場次改為同列純文字
    例：黃蜂盃　小組賽｜第一場
    - 不使用徽章／膠囊樣式。
    - 右側「階段｜場次」不壓縮，賽事名稱過長時優先省略。
@@ -20017,13 +20017,13 @@ body.matchStatePre .dayMatchMeta{display:flex;align-items:center;min-width:0;min
 
 
 <style id="v5183CompetitionStageContextPatch">
-/* v5.187：階段／輪次選單依賽事名稱自動聚焦聯賽或盃賽選項。 */
+/* v5.188：階段／輪次選單依賽事名稱自動聚焦聯賽或盃賽選項。 */
 .stageMenuHint{max-width:100%;overflow-wrap:anywhere}
 </style>
 
 
 <style id="v5184PreDropdownAlignmentPatch">
-/* v5.187：修正賽前下拉箭頭外框與本日場次圖示對齊 */
+/* v5.188：修正賽前下拉箭頭外框與本日場次圖示對齊 */
 /* 場地欄位：下拉箭頭改回與賽事階段相同的純圖示樣式，不再有獨立外框 */
 body.matchStatePre .venueInputWrap input{padding-right:31px!important;}
 .venueDropdownBtn{
@@ -20099,7 +20099,7 @@ body.matchStatePre .dayMatchMeta{
 
 
 <style id="v5185DayMatchTypographyPatch">
-/* v5.187：本日場次文字尺寸提升，與其他賽前欄位維持一致層級 */
+/* v5.188：本日場次文字尺寸提升，與其他賽前欄位維持一致層級 */
 body.matchStatePre .dayMatchMeta{gap:8px!important;}
 body.matchStatePre .dayMatchMetaLabel{
   font-size:15.5px!important;
@@ -20137,11 +20137,48 @@ body.matchStatePre .dayMatchEditBtn{
 
 
 <style id="v5186MvpMedalIconPatch">
-/* v5.187：單場MVP／我方最多進球改用 ⚽ 標題＋🏅 球員圖示 */
+/* v5.188：單場MVP／我方最多進球改用 ⚽ 標題＋🏅 球員圖示 */
 #reportModal .reportMVPNames{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:7px!important;margin-top:9px!important}
 #reportModal .reportMVPName{display:flex!important;align-items:center!important;gap:7px!important;min-height:0!important;padding:0!important;border-radius:0!important;background:transparent!important;border:0!important;color:#f7fbff!important;font-size:16px!important;font-weight:900!important;line-height:1.2!important}
 #reportModal .reportMVPMedal{display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:18px!important;line-height:1!important;flex:0 0 auto!important}
 @media(max-width:390px){#reportModal .reportMVPName{font-size:15px!important}#reportModal .reportMVPMedal{font-size:17px!important}}
+</style>
+
+
+<style id="v5188DayMatchAlignmentPatch">
+/* v5.188：賽前資訊列統一圖示槽，修正「本日場次」文字水平對齊 */
+body.matchStatePre{--pre-meta-icon-slot:28px;}
+body.matchStatePre .preMetaIcon,
+body.matchStatePre .dayMatchMetaIcon{
+  width:var(--pre-meta-icon-slot)!important;
+  min-width:var(--pre-meta-icon-slot)!important;
+  flex:0 0 var(--pre-meta-icon-slot)!important;
+  margin-right:1px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+}
+/* 原本 dayMatchMeta 左右各有 2px margin，會讓整列與上方卡片邊界不同。 */
+body.matchStatePre .dayMatchMeta{
+  width:100%!important;
+  box-sizing:border-box!important;
+  margin:8px 0 3px!important;
+  padding-left:12px!important;
+  padding-right:12px!important;
+  gap:7px!important;
+}
+/* 文字與一般賽前欄位共用同一垂直起點與基準線。 */
+body.matchStatePre .dayMatchMetaLabel,
+body.matchStatePre .dayMatchMetaValue{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:24px!important;
+}
+@media(max-width:390px){
+  body.matchStatePre{--pre-meta-icon-slot:27px;}
+  body.matchStatePre .dayMatchMeta{padding-left:10px!important;padding-right:10px!important;gap:7px!important;}
+}
 </style>
 
 </head>
@@ -20158,7 +20195,7 @@ body.matchStatePre .dayMatchEditBtn{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.187</span>
+      <span class="headerVersion">v5.188</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -21764,7 +21801,7 @@ function dayMatchStoredItemsForTeamDay(team,epoch){
 }
 function isConfirmedDayMatch(saved){
   if(!saved || typeof saved!=='object') return false;
-  // v5.187：真正「比賽結束」後才正式計入本日場次。
+  // v5.188：真正「比賽結束」後才正式計入本日場次。
   // finished 同時做舊版相容：v5.179 以前已完成的比賽視為已確認。
   return Boolean(saved.finished || saved.dayMatchNumberConfirmed===true);
 }
@@ -22184,7 +22221,7 @@ function competitionStageMenuMode(){
   const name=String(byId('competition')?.value||state.competition||'').trim();
   if(!name) return 'all';
 
-  // v5.187：優先辨識盃賽，避免像「聯賽盃」同時含「聯賽」時被錯判成聯賽。
+  // v5.188：優先辨識盃賽，避免像「聯賽盃」同時含「聯賽」時被錯判成聯賽。
   // 常見中文「盃／杯」、淘汰賽、錦標賽與英文 Cup 均視為盃賽型態。
   if(/盃|杯|淘汰賽|錦標賽|\bcup\b/i.test(name)) return 'cup';
   if(/聯賽|\bleague\b/i.test(name)) return 'league';
@@ -22551,7 +22588,7 @@ function loadState(){
   if(!('dayMatchNumber' in state)) state.dayMatchNumber=null;
   if(!('dayMatchNumberManual' in state)) state.dayMatchNumberManual=false;
   if(!('dayMatchNumberLocked' in state)) state.dayMatchNumberLocked=!!(state.started||state.finished||state.startEpoch);
-  // v5.187 舊資料相容：既有已完成比賽視為已正式確認；未完成比賽維持預留狀態。
+  // v5.188 舊資料相容：既有已完成比賽視為已正式確認；未完成比賽維持預留狀態。
   if(!('dayMatchNumberConfirmed' in state)) state.dayMatchNumberConfirmed=!!state.finished;
   if(state.finished) state.dayMatchNumberConfirmed=true;
   if(Array.isArray(state.markers)){
@@ -22991,7 +23028,7 @@ function scorerMVPInfo(){
   const isTie=winners.length>1;
   const kind=result==='WIN'?'mvp':'topScorer';
   const label=kind==='mvp'?'單場MVP':'我方最多進球';
-  // v5.187：單場 MVP 依進球數補上足球常用稱號；僅套用 2～4 球，其他球數維持原格式。
+  // v5.188：單場 MVP 依進球數補上足球常用稱號；僅套用 2～4 球，其他球數維持原格式。
   const goalNickname=kind==='mvp' ? ({2:'梅開二度',3:'帽子戲法',4:'大四喜'}[topGoals]||'') : '';
   const goalText=isTie ? `並列 ${topGoals} 球` : `${topGoals} 球`;
   return {
@@ -24286,7 +24323,7 @@ function startMatch(){
 
   if(!validDayMatchNumber(state.dayMatchNumber)) ensureDayMatchNumber();
   state.dayMatchNumberLocked=true;
-  // v5.187：開始比賽只「預留」本日場次；正式確認要等全場／PK 完成。
+  // v5.188：開始比賽只「預留」本日場次；正式確認要等全場／PK 完成。
   if(!state.finished) state.dayMatchNumberConfirmed=false;
   state.started=true;
   state.startEpoch=actionEpoch;
@@ -24702,7 +24739,7 @@ function finishPenaltyShootout(){
   state.penalty.endEpoch=nowWholeMs();
   state.finished=true;
   state.started=false;
-  // v5.187：PK 完成才把預留場次正式確認。
+  // v5.188：PK 完成才把預留場次正式確認。
   state.dayMatchNumberConfirmed=true;
   state.dayMatchNumberLocked=true;
   timeExpanded=false;
@@ -24745,7 +24782,7 @@ function confirmFinishFull(){
   state.endEpoch=pendingFinishEnd;
   state.started=false;
   state.finished=true;
-  // v5.187：只有真正完成全場，才將本日場次由「預留」轉為「正式確認」。
+  // v5.188：只有真正完成全場，才將本日場次由「預留」轉為「正式確認」。
   state.dayMatchNumberConfirmed=true;
   state.dayMatchNumberLocked=true;
   rememberCurrentRosterAsPrevious();
@@ -28008,7 +28045,7 @@ body.resultMode.finalOutputVisible .finalToolsCard{
 
 
 <style id="v5181MetaBadgeSpacingFix">
-/* v5.187：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
+/* v5.188：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
 .liveMetaStrip .matchMetaDisplayValue.withMetaBadges{
   display:flex!important;
   flex-wrap:wrap!important;
