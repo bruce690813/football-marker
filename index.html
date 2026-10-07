@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.195</title>
+<title>足球場邊記錄器 v5.196</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -19940,7 +19940,7 @@ body.matchStatePre .dayMatchMeta{display:flex;align-items:center;min-width:0;min
 
 
 <style id="v5181MetaBadgeSpacingFix">
-/* v5.195：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
+/* v5.196：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
 .liveMetaStrip .matchMetaDisplayValue.withMetaBadges{
   display:flex!important;
   flex-wrap:wrap!important;
@@ -19982,7 +19982,7 @@ body.matchStatePre .dayMatchMeta{display:flex;align-items:center;min-width:0;min
 
 <style id="v5182InlineCompetitionContextPatch">
 /* =========================================================
-   v5.195：賽事階段／本日場次改為同列純文字
+   v5.196：賽事階段／本日場次改為同列純文字
    例：黃蜂盃　小組賽｜第一場
    - 不使用徽章／膠囊樣式。
    - 右側「階段｜場次」不壓縮，賽事名稱過長時優先省略。
@@ -20017,13 +20017,13 @@ body.matchStatePre .dayMatchMeta{display:flex;align-items:center;min-width:0;min
 
 
 <style id="v5183CompetitionStageContextPatch">
-/* v5.195：階段／輪次選單依賽事名稱自動聚焦聯賽或盃賽選項。 */
+/* v5.196：階段／輪次選單依賽事名稱自動聚焦聯賽或盃賽選項。 */
 .stageMenuHint{max-width:100%;overflow-wrap:anywhere}
 </style>
 
 
 <style id="v5184PreDropdownAlignmentPatch">
-/* v5.195：修正賽前下拉箭頭外框與本日場次圖示對齊 */
+/* v5.196：修正賽前下拉箭頭外框與本日場次圖示對齊 */
 /* 場地欄位：下拉箭頭改回與賽事階段相同的純圖示樣式，不再有獨立外框 */
 body.matchStatePre .venueInputWrap input{padding-right:31px!important;}
 .venueDropdownBtn{
@@ -20099,7 +20099,7 @@ body.matchStatePre .dayMatchMeta{
 
 
 <style id="v5185DayMatchTypographyPatch">
-/* v5.195：本日場次文字尺寸提升，與其他賽前欄位維持一致層級 */
+/* v5.196：本日場次文字尺寸提升，與其他賽前欄位維持一致層級 */
 body.matchStatePre .dayMatchMeta{gap:8px!important;}
 body.matchStatePre .dayMatchMetaLabel{
   font-size:15.5px!important;
@@ -20137,7 +20137,7 @@ body.matchStatePre .dayMatchEditBtn{
 
 
 <style id="v5186MvpMedalIconPatch">
-/* v5.195：單場MVP／我方最多進球改用 ⚽ 標題＋🏅 球員圖示 */
+/* v5.196：單場MVP／我方最多進球改用 ⚽ 標題＋🏅 球員圖示 */
 #reportModal .reportMVPNames{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:7px!important;margin-top:9px!important}
 #reportModal .reportMVPName{display:flex!important;align-items:center!important;gap:7px!important;min-height:0!important;padding:0!important;border-radius:0!important;background:transparent!important;border:0!important;color:#f7fbff!important;font-size:16px!important;font-weight:900!important;line-height:1.2!important}
 #reportModal .reportMVPMedal{display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:18px!important;line-height:1!important;flex:0 0 auto!important}
@@ -20146,7 +20146,7 @@ body.matchStatePre .dayMatchEditBtn{
 
 
 <style id="v5188DayMatchAlignmentPatch">
-/* v5.195：賽前資訊列統一圖示槽，修正「本日場次」文字水平對齊 */
+/* v5.196：賽前資訊列統一圖示槽，修正「本日場次」文字水平對齊 */
 body.matchStatePre{--pre-meta-icon-slot:28px;}
 body.matchStatePre .preMetaIcon,
 body.matchStatePre .dayMatchMetaIcon{
@@ -20183,7 +20183,7 @@ body.matchStatePre .dayMatchMetaValue{
 
 
 <style id="v5189DayMatchExactAlignmentPatch">
-/* v5.195：本日場次採用與上方 preMetaField 完全相同的圖示欄與文字起點 */
+/* v5.196：本日場次採用與上方 preMetaField 完全相同的圖示欄與文字起點 */
 body.matchStatePre .dayMatchMeta{
   padding-left:12px!important;
   padding-right:12px!important;
@@ -20218,7 +20218,7 @@ body.matchStatePre .dayMatchMetaIcon{
 
 
 <style id="v5190PreQuickVerticalGapPatch">
-/* v5.195：統一「本日場次 → 名單／守門員」與其他賽前欄位的垂直間距 */
+/* v5.196：統一「本日場次 → 名單／守門員」與其他賽前欄位的垂直間距 */
 body.matchStatePre .dayMatchMeta{
   margin-bottom:var(--pre-group-gap,9px)!important;
 }
@@ -20230,7 +20230,7 @@ body.matchStatePre .preQuickSetup{
 
 
 <style id="v5191PreMatchFlowPolish">
-/* v5.195：賽事身分 → 比賽條件 → 人員確認 → 開賽 */
+/* v5.196：賽事身分 → 比賽條件 → 人員確認 → 開賽 */
 body.matchStatePre .matchMetaRow,
 body.matchStatePre .dayMatchMeta,
 body.matchStatePre .preVenueStandalone,
@@ -20275,7 +20275,7 @@ body.matchStatePre .preQuickSetup{margin-bottom:var(--pre-group-gap,9px)!importa
 
 
 <style id="v5192RegulationExactAlignmentPatch">
-/* v5.195：比賽時間列與其他賽前欄位使用同一組水平對齊基準 */
+/* v5.196：比賽時間列與其他賽前欄位使用同一組水平對齊基準 */
 body.matchStatePre .preRegulationSection{
   grid-template-columns:max-content minmax(0,1fr)!important;
   column-gap:9px!important;
@@ -20344,7 +20344,7 @@ body.matchStatePre #preRegulationSection .regSelectWrap::after{
 
 
 <style id="v5194PreLayoutAndInlineDayMatchPatch">
-/* v5.195：延續 v5.193 的賽前資訊層級，並把本日場次改為原位直接編輯 */
+/* v5.196：延續 v5.193 的賽前資訊層級，並把本日場次改為原位直接編輯 */
 .layoutMount{display:none!important;}
 
 /* 本日場次：原位切換顯示值 / 數字輸入，不再展開第二組編輯器 */
@@ -20399,6 +20399,82 @@ body.matchStatePre .scoreRow{padding-top:4px!important;}
 }
 </style>
 
+
+<style id="v5196PreStatusDayMatchMvpTimePatch">
+/* v5.196：賽前狀態改為純文字、本日場次編輯精簡、MVP 增加進球分鐘 */
+
+/* A. 賽前狀態：取消膠囊，保留輕量狀態文字，避免貼近比分卡框線。 */
+body.matchStatePre .broadcastBar{
+  min-height:30px!important;
+  height:auto!important;
+  margin:0 0 3px!important;
+  padding:5px 0 1px!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.matchStatePre .broadcastStage{
+  width:auto!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.matchStatePre .broadcastStage .stageLabel{
+  color:#91a2b5!important;
+  font-size:14px!important;
+  font-weight:850!important;
+  line-height:1.2!important;
+  letter-spacing:.10em!important;
+}
+
+/* B. 本日場次：編輯時只顯示數字輸入，不再額外出現「第／場」。 */
+.dayMatchInlineSlot.editing::before,
+.dayMatchInlineSlot.editing::after{content:none!important;display:none!important;}
+.dayMatchInlineSlot.editing .dayMatchMetaValue{display:none!important;}
+.dayMatchInlineSlot.editing .dayMatchInlineInput{display:block!important;}
+.dayMatchInlineSlot.editing{gap:0!important;}
+.dayMatchInlineInput{
+  width:54px!important;
+  height:34px!important;
+  min-height:34px!important;
+  padding:2px 6px!important;
+  font-size:17px!important;
+}
+
+/* C. MVP：球員左側維持獎牌，右側補上足球轉播常見的進球分鐘 21′。 */
+#reportModal .reportMVPName{
+  width:100%!important;
+  box-sizing:border-box!important;
+  flex-wrap:wrap!important;
+}
+#reportModal .reportMVPPlayerText{white-space:nowrap!important;}
+#reportModal .reportMVPGoalTimes{
+  margin-left:auto!important;
+  display:inline-flex!important;
+  flex-wrap:wrap!important;
+  justify-content:flex-end!important;
+  align-items:center!important;
+  gap:6px!important;
+  color:#d8e3ee!important;
+  font-size:14px!important;
+  font-weight:850!important;
+  line-height:1.15!important;
+  letter-spacing:.02em!important;
+}
+#reportModal .reportMVPGoalMinute{white-space:nowrap!important;}
+
+@media(max-width:390px){
+  body.matchStatePre .broadcastStage .stageLabel{font-size:13.5px!important;}
+  .dayMatchInlineInput{width:50px!important;height:32px!important;min-height:32px!important;font-size:16px!important;}
+  #reportModal .reportMVPGoalTimes{font-size:13px!important;gap:5px!important;}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -20413,7 +20489,7 @@ body.matchStatePre .scoreRow{padding-top:4px!important;}
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.195</span>
+      <span class="headerVersion">v5.196</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -20444,7 +20520,7 @@ body.matchStatePre .scoreRow{padding-top:4px!important;}
       <span class="dayMatchMetaLabel">本日場次</span>
       <span class="dayMatchInlineSlot" id="dayMatchInlineSlot">
         <strong class="dayMatchMetaValue" id="dayMatchDisplay" role="button" tabindex="0" onclick="beginDayMatchEdit()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();beginDayMatchEdit();}" aria-label="修改本日場次">第一場</strong>
-        <input id="dayMatchNumberInput" class="dayMatchInlineInput" type="number" min="1" max="99" step="1" inputmode="numeric" aria-label="本日第幾場" hidden onkeydown="if(event.key==='Enter'){event.preventDefault();applyDayMatchEdit();}else if(event.key==='Escape'){event.preventDefault();cancelDayMatchEdit();}">
+        <input id="dayMatchNumberInput" class="dayMatchInlineInput" type="number" min="1" max="99" step="1" inputmode="numeric" aria-label="本日場次數字，例如 8" hidden onkeydown="if(event.key==='Enter'){event.preventDefault();applyDayMatchEdit();}else if(event.key==='Escape'){event.preventDefault();cancelDayMatchEdit();}">
       </span>
       <span class="dayMatchSourceBadge" id="dayMatchSourceBadge">自動</span>
       <button class="dayMatchEditBtn" id="dayMatchEditBtn" type="button" onclick="toggleDayMatchInlineEdit()">修改</button>
@@ -22018,7 +22094,7 @@ function dayMatchStoredItemsForTeamDay(team,epoch){
 }
 function isConfirmedDayMatch(saved){
   if(!saved || typeof saved!=='object') return false;
-  // v5.195：真正「比賽結束」後才正式計入本日場次。
+  // v5.196：真正「比賽結束」後才正式計入本日場次。
   // finished 同時做舊版相容：v5.179 以前已完成的比賽視為已確認。
   return Boolean(saved.finished || saved.dayMatchNumberConfirmed===true);
 }
@@ -22465,7 +22541,7 @@ function competitionStageMenuMode(){
   const name=String(byId('competition')?.value||state.competition||'').trim();
   if(!name) return 'all';
 
-  // v5.195：優先辨識盃賽，避免像「聯賽盃」同時含「聯賽」時被錯判成聯賽。
+  // v5.196：優先辨識盃賽，避免像「聯賽盃」同時含「聯賽」時被錯判成聯賽。
   // 常見中文「盃／杯」、淘汰賽、錦標賽與英文 Cup 均視為盃賽型態。
   if(/盃|杯|淘汰賽|錦標賽|\bcup\b/i.test(name)) return 'cup';
   if(/聯賽|\bleague\b/i.test(name)) return 'league';
@@ -22832,7 +22908,7 @@ function loadState(){
   if(!('dayMatchNumber' in state)) state.dayMatchNumber=null;
   if(!('dayMatchNumberManual' in state)) state.dayMatchNumberManual=false;
   if(!('dayMatchNumberLocked' in state)) state.dayMatchNumberLocked=!!(state.started||state.finished||state.startEpoch);
-  // v5.195 舊資料相容：既有已完成比賽視為已正式確認；未完成比賽維持預留狀態。
+  // v5.196 舊資料相容：既有已完成比賽視為已正式確認；未完成比賽維持預留狀態。
   if(!('dayMatchNumberConfirmed' in state)) state.dayMatchNumberConfirmed=!!state.finished;
   if(state.finished) state.dayMatchNumberConfirmed=true;
   if(Array.isArray(state.markers)){
@@ -23237,6 +23313,11 @@ function scorerStats(){
     .map(([name,goals])=>({name,goals}))
     .sort((a,b)=>b.goals-a.goals || a.name.localeCompare(b.name,'zh-Hant'));
 }
+function footballGoalMinute(seconds){
+  // 足球轉播慣例：00:00～00:59 顯示 1′，01:00～01:59 顯示 2′。
+  const sec=Math.max(0,Math.floor(Number(seconds)||0));
+  return `${Math.floor(sec/60)+1}′`;
+}
 function scorerMVPInfo(){
   // v5.177：賽後進球焦點依比賽結果切換語意。
   // 勝場＝單場 MVP；平手／敗場＝我方最多進球。
@@ -23248,11 +23329,18 @@ function scorerMVPInfo(){
     .filter(m=>m.event==='GOAL' && m.team==='OUR' && !m.own_goal && m.player_number)
     .forEach(m=>{
       const name=`我方#${m.player_number}`;
-      counts.set(name,(counts.get(name)||0)+1);
+      const current=counts.get(name)||{name,goals:0,goalSeconds:[]};
+      current.goals+=1;
+      current.goalSeconds.push(Math.max(0,Math.floor(Number(m.seconds)||0)));
+      counts.set(name,current);
     });
 
-  const stats=[...counts.entries()]
-    .map(([name,goals])=>({name,goals}))
+  const stats=[...counts.values()]
+    .map(item=>({
+      ...item,
+      goalSeconds:[...item.goalSeconds].sort((a,b)=>a-b),
+      goalTimes:[...item.goalSeconds].sort((a,b)=>a-b).map(footballGoalMinute)
+    }))
     .sort((a,b)=>b.goals-a.goals || a.name.localeCompare(b.name,'zh-Hant'));
   if(!stats.length) return null;
 
@@ -23272,7 +23360,7 @@ function scorerMVPInfo(){
   const isTie=winners.length>1;
   const kind=result==='WIN'?'mvp':'topScorer';
   const label=kind==='mvp'?'單場MVP':'我方最多進球';
-  // v5.195：單場 MVP 依進球數補上足球常用稱號；僅套用 2～4 球，其他球數維持原格式。
+  // v5.196：單場 MVP 依進球數補上足球常用稱號；僅套用 2～4 球，其他球數維持原格式。
   const goalNickname=kind==='mvp' ? ({2:'梅開二度',3:'帽子戲法',4:'大四喜'}[topGoals]||'') : '';
   const goalText=isTie ? `並列 ${topGoals} 球` : `${topGoals} 球`;
   return {
@@ -23287,7 +23375,8 @@ function scorerMVPInfo(){
 function scorerMVPHTML(){
   const info=scorerMVPInfo();
   if(!info) return '';
-  return `<div class="reportMVPHead">${escapeHtml(info.title)}</div><div class="reportMVPNames">${info.winners.map(s=>`<span class="reportMVPName"><span class="reportMVPMedal" aria-hidden="true">🏅</span><span class="reportMVPPlayerText">${escapeHtml(s.name)}</span></span>`).join('')}</div>`;
+  const showGoalTimes=info.kind==='mvp';
+  return `<div class="reportMVPHead">${escapeHtml(info.title)}</div><div class="reportMVPNames">${info.winners.map(s=>`<span class="reportMVPName"><span class="reportMVPMedal" aria-hidden="true">🏅</span><span class="reportMVPPlayerText">${escapeHtml(s.name)}</span>${showGoalTimes&&s.goalTimes?.length?`<span class="reportMVPGoalTimes" aria-label="進球時間 ${escapeHtml(s.goalTimes.join(' '))}">${s.goalTimes.map(t=>`<span class="reportMVPGoalMinute">${escapeHtml(t)}</span>`).join('')}</span>`:''}</span>`).join('')}</div>`;
 }
 function scorerStatsHTML(){
   const stats=scorerStats();
@@ -23364,7 +23453,7 @@ function syncRegulationPlacement(){
 
   if(preSection){
     preSection.hidden=hasBegun;
-    // v5.195：比賽時間會直接影響計時，因此賽前未設定時給予輕量提醒，但不阻擋開賽。
+    // v5.196：比賽時間會直接影響計時，因此賽前未設定時給予輕量提醒，但不阻擋開賽。
     preSection.classList.toggle('needsAttention', !hasBegun && !state.regulationMinutes);
   }
 
@@ -24571,7 +24660,7 @@ function startMatch(){
 
   if(!validDayMatchNumber(state.dayMatchNumber)) ensureDayMatchNumber();
   state.dayMatchNumberLocked=true;
-  // v5.195：開始比賽只「預留」本日場次；正式確認要等全場／PK 完成。
+  // v5.196：開始比賽只「預留」本日場次；正式確認要等全場／PK 完成。
   if(!state.finished) state.dayMatchNumberConfirmed=false;
   state.started=true;
   state.startEpoch=actionEpoch;
@@ -24987,7 +25076,7 @@ function finishPenaltyShootout(){
   state.penalty.endEpoch=nowWholeMs();
   state.finished=true;
   state.started=false;
-  // v5.195：PK 完成才把預留場次正式確認。
+  // v5.196：PK 完成才把預留場次正式確認。
   state.dayMatchNumberConfirmed=true;
   state.dayMatchNumberLocked=true;
   timeExpanded=false;
@@ -25030,7 +25119,7 @@ function confirmFinishFull(){
   state.endEpoch=pendingFinishEnd;
   state.started=false;
   state.finished=true;
-  // v5.195：只有真正完成全場，才將本日場次由「預留」轉為「正式確認」。
+  // v5.196：只有真正完成全場，才將本日場次由「預留」轉為「正式確認」。
   state.dayMatchNumberConfirmed=true;
   state.dayMatchNumberLocked=true;
   rememberCurrentRosterAsPrevious();
@@ -27592,7 +27681,7 @@ function reportLines(){
     const scorerItems=[...scorers.values()].sort((a,b)=>b.goals-a.goals || a.name.localeCompare(b.name,'zh-Hant'));
     const mvpInfo=scorerMVPInfo();
     if(mvpInfo){
-      lines.push({type:'mvpCard',kind:mvpInfo.kind,title:mvpInfo.title,names:mvpInfo.winners.map(s=>`🏅 ${s.name}`)});
+      lines.push({type:'mvpCard',kind:mvpInfo.kind,title:mvpInfo.title,names:mvpInfo.winners.map(s=>`🏅 ${s.name}${mvpInfo.kind==='mvp'&&s.goalTimes?.length?`  ${s.goalTimes.join(' ')}`:''}`)});
     }
     lines.push({type:'scorerGrid',items:scorerItems});
   }
@@ -28322,7 +28411,7 @@ body.resultMode.finalOutputVisible .finalToolsCard{
 
 
 <style id="v5181MetaBadgeSpacingFix">
-/* v5.195：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
+/* v5.196：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
 .liveMetaStrip .matchMetaDisplayValue.withMetaBadges{
   display:flex!important;
   flex-wrap:wrap!important;
@@ -28365,7 +28454,7 @@ body.resultMode.finalOutputVisible .finalToolsCard{
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}${formatDayMatchLabel(state.dayMatchNumber)?`｜${escapeHtml(formatDayMatchLabel(state.dayMatchNumber))}`:''}</div>${(state.competition||state.competitionStage)?`<div>🏆 ${escapeHtml([state.competition,state.competitionStage].filter(Boolean).join('｜'))}</div>`:''}${state.venue?`<div>📍 ${escapeHtml(state.venue)}</div>`:''}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</p>${state.halftimeStartEpoch?`<p><b>中場開始：</b>${escapeHtml(fmtClock(state.halftimeStartEpoch))}<br><b>中場結束：</b>${escapeHtml(state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--')}<br><b>中場休息：</b>${escapeHtml(fmtMMSS(halftimeElapsed()))}</p>`:''}${diff}</div>
-${mvpInfo?`<div class="card"><h2>${escapeHtml(mvpInfo.title)}</h2><p>${mvpInfo.winners.map(s=>`🏅 ${escapeHtml(s.name)}`).join('<br>')}</p></div>`:''}
+${mvpInfo?`<div class="card"><h2>${escapeHtml(mvpInfo.title)}</h2><p>${mvpInfo.winners.map(s=>`🏅 ${escapeHtml(s.name)}${mvpInfo.kind==='mvp'&&s.goalTimes?.length?`　${escapeHtml(s.goalTimes.join(' '))}`:''}`).join('<br>')}</p></div>`:''}
 <div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
 <div class="card"><h2>其他精彩標記事件</h2><ul>${otherHtml}</ul></div>
