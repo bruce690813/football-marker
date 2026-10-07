@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.200</title>
+<title>足球場邊記錄器 v6.2</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -20451,13 +20451,16 @@ body.matchStatePre .broadcastStage .stageLabel{
   width:100%!important;
   box-sizing:border-box!important;
   flex-wrap:wrap!important;
+  justify-content:flex-start!important;
 }
+#reportModal .reportMVPPlayerText{flex:0 0 auto!important;}
 #reportModal .reportMVPPlayerText{white-space:nowrap!important;}
 #reportModal .reportMVPGoalTimes{
-  margin-left:auto!important;
+  /* v6.2：進球時間緊跟球員背號後方，保留約兩格視覺間距，不再推到最右側。 */
+  margin-left:1.15em!important;
   display:inline-flex!important;
   flex-wrap:wrap!important;
-  justify-content:flex-end!important;
+  justify-content:flex-start!important;
   align-items:center!important;
   gap:6px!important;
   color:#d8e3ee!important;
@@ -20585,7 +20588,7 @@ body.matchStatePre .dayMatchEditBtn{margin-left:auto!important;}
 
 <style id="v5199FinalUiPolish">
 /* =========================================================
-   v5.200 Final UI Polish
+   v6.2 Final UI Polish
    目標：把賽前畫面收斂成同一套 Design System。
    不增加操作步驟；只統一字級、間距、框線、狀態權重與響應式細節。
    ========================================================= */
@@ -20841,7 +20844,7 @@ body.matchStatePre .venueDropdownBtn{right:0!important;}
 
 
 <style id="v5200PreResetAllPatch">
-/* v5.200：補回「重置所有賽前設定」，但維持 tertiary action，不與開始比賽搶焦點。 */
+/* v6.2：補回「重置所有賽前設定」，但維持 tertiary action，不與開始比賽搶焦點。 */
 .preResetAllRow{display:none;}
 body.matchStatePre .preResetAllRow{
   display:flex!important;
@@ -20896,6 +20899,102 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
 }
 </style>
 
+
+<style id="v61PlayerFocusPolish">
+/* v6.2：重置可發現性、賽前狀態可讀性，以及「小球員表現」導向的賽前焦點 */
+
+/* 1) 重置：移到主操作上方，維持次要但清楚可找到。 */
+body.matchStatePre .preResetAllRow{
+  display:flex!important;
+  justify-content:flex-end!important;
+  align-items:center!important;
+  min-height:38px!important;
+  margin:2px 2px 8px!important;
+}
+body.matchStatePre #preResetBtn.preResetAllBtn{
+  display:none!important;
+  min-height:38px!important;
+  height:38px!important;
+  padding:6px 12px!important;
+  border:1px solid rgba(102,128,154,.34)!important;
+  border-radius:9px!important;
+  background:rgba(13,28,44,.58)!important;
+  color:#b9c7d5!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+  font-size:14px!important;
+  font-weight:850!important;
+  line-height:1!important;
+  gap:6px!important;
+}
+body.matchStatePre #preResetBtn.preResetAllBtn.show{display:inline-flex!important;}
+body.matchStatePre #preResetBtn.preResetAllBtn .preResetIcon{
+  font-size:17px!important;
+  color:#91a9bf!important;
+}
+body.matchStatePre #preResetBtn.preResetAllBtn .preResetLabel{
+  font-size:14px!important;
+  font-weight:850!important;
+}
+body.matchStatePre #preResetBtn.preResetAllBtn:active{
+  background:rgba(33,52,72,.72)!important;
+  border-color:rgba(125,159,191,.46)!important;
+  color:#edf4fb!important;
+}
+
+/* 2) 「賽前」仍是次要狀態，但不應小到需要費力閱讀。 */
+body.matchStatePre .broadcastBar{
+  min-height:27px!important;
+  padding:2px 0 2px!important;
+  margin:0 0 5px!important;
+}
+body.matchStatePre #broadcastStageLabel{
+  color:#8799aa!important;
+  font-size:14.5px!important;
+  font-weight:850!important;
+  line-height:1.2!important;
+  letter-spacing:.08em!important;
+  gap:8px!important;
+}
+body.matchStatePre #broadcastStageLabel::before,
+body.matchStatePre #broadcastStageLabel::after{
+  width:18px!important;
+  background:rgba(122,145,168,.22)!important;
+}
+
+/* 3) 產品核心是記錄小球員表現：名單未設定時，優先給出清楚提示。 */
+body.matchStatePre #rosterQuickBtn:not(.set){
+  border-color:rgba(245,158,11,.56)!important;
+  background:linear-gradient(180deg,rgba(63,56,35,.42),rgba(26,43,60,.94))!important;
+  box-shadow:0 0 0 1px rgba(245,158,11,.05),inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+body.matchStatePre #rosterQuickBtn:not(.set) .preQuickLabel,
+body.matchStatePre #rosterQuickBtn:not(.set) #rosterQuickText{
+  color:#ffd98a!important;
+}
+/* 守門員也是球員表現資訊，但不是所有事件都依賴它，因此維持中性提醒。 */
+body.matchStatePre #keeperQuickBtn:not(.set){
+  border-color:rgba(67,96,126,.54)!important;
+}
+body.matchStatePre #keeperQuickBtn:not(.set) .preQuickLabel,
+body.matchStatePre #keeperQuickBtn:not(.set) #keeperQuickText{
+  color:#bcc9d5!important;
+}
+/* 比賽時間仍重要，但視覺強度略低於空名單，避免產品焦點只剩計時。 */
+body.matchStatePre .preRegulationSection.needsAttention{
+  border-color:rgba(245,158,11,.43)!important;
+  box-shadow:0 0 0 1px rgba(245,158,11,.035),inset 0 1px 0 rgba(255,255,255,.02)!important;
+}
+body.matchStatePre .preRegulationSection.needsAttention .preRegulationInlineTitle{
+  color:#f4c86f!important;
+}
+
+@media(max-width:390px){
+  body.matchStatePre #broadcastStageLabel{font-size:14px!important;}
+  body.matchStatePre #preResetBtn.preResetAllBtn{font-size:13.5px!important;padding-left:10px!important;padding-right:10px!important;}
+  body.matchStatePre #preResetBtn.preResetAllBtn .preResetLabel{font-size:13.5px!important;}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -20910,7 +21009,7 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.200</span>
+      <span class="headerVersion">v6.2</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -21140,14 +21239,14 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
       </div>
     </div>
 
+    <div class="preResetAllRow" id="preResetAllRow">
+      <button id="preResetBtn" class="preResetBtn preResetAllBtn" type="button" onclick="resetPreMatchSetup()" aria-label="重置賽前設定">
+        <span class="preResetIcon" aria-hidden="true">↻</span><span class="preResetLabel">重置賽前設定</span>
+      </button>
+    </div>
     <div class="controls">
       <button class="start" id="startBtn" onclick="startMatch()">▶ 開始比賽</button>
       <button class="finish" id="finishBtn" onclick="finishMatch()">■ 結束比賽</button>
-    </div>
-    <div class="preResetAllRow" id="preResetAllRow">
-      <button id="preResetBtn" class="preResetBtn preResetAllBtn" type="button" onclick="resetPreMatchSetup()" aria-label="重置所有賽前欄位">
-        <span class="preResetIcon" aria-hidden="true">↻</span><span class="preResetLabel">重置全部</span>
-      </button>
     </div>
     <div class="status" id="status">尚未開始</div>
   </div>
@@ -27261,9 +27360,9 @@ function resetPreMatchSetup(){
   if(state.started || state.finished || state.awaitingNextPeriod || state.penalty?.active) return;
 
   if(!confirm(
-    '重置所有賽前設定？\n\n' +
-    '將清除本場尚未開始的賽事名稱、賽事階段／輪次、本日場次手動值、場地、對手、名單、守門員、比賽時間、比分與其他賽前資料。\n\n' +
-    '我方隊名會保留為常用隊伍，本日場次會恢復自動判斷。'
+    '重置賽前設定？\n\n' +
+    '將清除本場賽事、階段／輪次、場地、對手、名單、守門員與比賽時間等賽前設定。\n\n' +
+    '我方隊名會保留，本日場次恢復自動判斷。'
   )) return;
 
   hideMarkerUndo();
