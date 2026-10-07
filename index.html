@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.13</title>
+<title>足球場邊記錄器 v6.16</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -20456,7 +20456,7 @@ body.matchStatePre .broadcastStage .stageLabel{
 #reportModal .reportMVPPlayerText{flex:0 0 auto!important;}
 #reportModal .reportMVPPlayerText{white-space:nowrap!important;}
 #reportModal .reportMVPGoalTimes{
-  /* v6.13：進球時間緊跟球員背號後方，保留約兩格視覺間距，不再推到最右側。 */
+  /* v6.16：進球時間緊跟球員背號後方，保留約兩格視覺間距，不再推到最右側。 */
   margin-left:1.15em!important;
   display:inline-flex!important;
   flex-wrap:wrap!important;
@@ -20588,7 +20588,7 @@ body.matchStatePre .dayMatchEditBtn{margin-left:auto!important;}
 
 <style id="v5199FinalUiPolish">
 /* =========================================================
-   v6.13 Final UI Polish
+   v6.16 Final UI Polish
    目標：把賽前畫面收斂成同一套 Design System。
    不增加操作步驟；只統一字級、間距、框線、狀態權重與響應式細節。
    ========================================================= */
@@ -20844,7 +20844,7 @@ body.matchStatePre .venueDropdownBtn{right:0!important;}
 
 
 <style id="v5200PreResetAllPatch">
-/* v6.13：補回「重置所有賽前設定」，但維持 tertiary action，不與開始比賽搶焦點。 */
+/* v6.16：補回「重置所有賽前設定」，但維持 tertiary action，不與開始比賽搶焦點。 */
 .preResetAllRow{display:none;}
 body.matchStatePre .preResetAllRow{
   display:flex!important;
@@ -20901,7 +20901,7 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
 
 
 <style id="v61PlayerFocusPolish">
-/* v6.13：重置可發現性、賽前狀態可讀性，以及「小球員表現」導向的賽前焦點 */
+/* v6.16：重置可發現性、賽前狀態可讀性，以及「小球員表現」導向的賽前焦點 */
 
 /* 1) 重置：移到主操作上方，維持次要但清楚可找到。 */
 body.matchStatePre .preResetAllRow{
@@ -20997,7 +20997,7 @@ body.matchStatePre .preRegulationSection.needsAttention .preRegulationInlineTitl
 
 
 <style id="v63PreMatchActionAndScorePolish">
-/* v6.13：賽前只保留真正可執行的操作，並縮減比分區高度。 */
+/* v6.16：賽前只保留真正可執行的操作，並縮減比分區高度。 */
 
 /* 1. 賽前不存在「結束比賽」：完全隱藏，主 CTA 改為單欄滿版。 */
 body.matchStatePre #finishBtn{display:none!important;}
@@ -21130,7 +21130,7 @@ body.matchStatePre #scoreEditBtn{display:none!important;}
 
 
 <style id="v64SingleStateActionPatch">
-/* v6.13：各比賽階段只顯示當下真正可執行的主要動作。 */
+/* v6.16：各比賽階段只顯示當下真正可執行的主要動作。 */
 .matchCard .controls.singleAction{
   grid-template-columns:minmax(0,1fr)!important;
   gap:0!important;
@@ -21161,7 +21161,7 @@ body.matchStatePenalty .controls.singleAction #finishBtn:not([hidden]){
 
 
 <style id="v65PreResetHarmonyPatch">
-/* v6.13：賽前主／次操作按鈕採同一幾何語言，避免重置按鈕外框與主 CTA 互相干擾。 */
+/* v6.16：賽前主／次操作按鈕採同一幾何語言，避免重置按鈕外框與主 CTA 互相干擾。 */
 body.matchStatePre #startBtn{
   width:100%!important;
   min-height:50px!important;
@@ -21209,7 +21209,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn:active{
 
 
 <style id="v66PreActionStackFix">
-/* v6.13：賽前主／次操作收回同一操作區，避免重置按鈕跨出主卡片或與外框重疊。 */
+/* v6.16：賽前主／次操作收回同一操作區，避免重置按鈕跨出主卡片或與外框重疊。 */
 body.matchStatePre .controls{
   display:flex!important;
   flex-direction:column!important;
@@ -21270,7 +21270,7 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
 
 
 <style id="v67PreActionSplitFix">
-/* v6.13：賽前主／次操作回到同一列雙欄，並徹底清除歷史 absolute 定位。 */
+/* v6.16：賽前主／次操作回到同一列雙欄，並徹底清除歷史 absolute 定位。 */
 body.matchStatePre .controls{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
@@ -21384,7 +21384,7 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
 
 
 <style id="v68PreActionGapAndBorderReduction">
-/* v6.13：雙欄操作加入真正可見間距，並降低賽前頁過多框線的視覺噪音。 */
+/* v6.16：雙欄操作加入真正可見間距，並降低賽前頁過多框線的視覺噪音。 */
 body.matchStatePre .controls{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
@@ -21462,7 +21462,7 @@ body.matchStatePre .broadcastScoreboard{
 
 
 <style id="v69PreActionPhysicalGapFix">
-/* v6.13：賽前雙操作採固定實體分隔，不再只依賴 grid gap。 */
+/* v6.16：賽前雙操作採固定實體分隔，不再只依賴 grid gap。 */
 body.matchStatePre .controls{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
@@ -21517,7 +21517,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn{
 
 
 <style id="v610PreBottomMatrixAlignment">
-/* v6.13：賽前底部四個操作統一成同一套 2×2 幾何規格。 */
+/* v6.16：賽前底部四個操作統一成同一套 2×2 幾何規格。 */
 body.matchStatePre{
   --pre-bottom-grid-gap:12px;
   --pre-bottom-control-h:52px;
@@ -21617,7 +21617,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn .preResetLabel{
 
 
 <style id="v611PreBottomDirectGridFix">
-/* v6.13：真正統一賽前底部四顆按鈕的幾何結構。
+/* v6.16：真正統一賽前底部四顆按鈕的幾何結構。
    重置按鈕改為 controls 的直接子元素，不再透過額外 wrapper 參與 Grid。 */
 body.matchStatePre{
   --pre-matrix-gap:14px;
@@ -21700,7 +21700,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn .preResetLabel{font-size:14px!imp
 
 <style id="v612PreBottomTrueGutterFix">
 /* =========================================================
-   v6.13：賽前底部 2×2 真實幾何對齊
+   v6.16：賽前底部 2×2 真實幾何對齊
    - 不再依賴 gap；中央改成獨立固定空白欄，避免深色按鈕吃掉 gap 的視覺。
    - 名單 / 守門員 / 開始比賽 / 重置賽前設定共用同一高度、圓角、欄寬。
    ========================================================= */
@@ -21829,7 +21829,7 @@ body.matchStatePre .preResetAllRow{display:none!important;}
 
 <style id="v613PreBottomSingleActionConflictFix">
 /* =========================================================
-   v6.13：賽前底部 2×2 最終幾何修正
+   v6.16：賽前底部 2×2 最終幾何修正
    真正原因：.matchCard .controls.singleAction 的舊規則 specificity
    高於先前 body.matchStatePre .controls，造成賽前 controls 仍被壓回單欄；
    reset 再指定到第 3 欄後，瀏覽器產生 implicit columns，形成大空白與不等寬。
@@ -21953,6 +21953,342 @@ body.matchStatePre .preResetAllRow{display:none!important;}
 }
 </style>
 
+
+<style id="v614TeamNameAndAttentionSemanticsPatch">
+/* =========================================================
+   v6.16：隊名完整顯示＋賽前提示色語意收斂
+   1) 含「足球隊」的長隊名拆成兩行時，保留完整字形與安全空間。
+   2) 土黃色只代表「重要且尚待處理」，不再代表「可輸入」。
+   3) 可輸入性由箭頭／修改鍵／placeholder／藍色 focus 表達。
+   ========================================================= */
+
+/* A. 長隊名：避免第一行最後一字貼邊或被 overflow 裁掉。 */
+body.matchStatePre .teamNameBox{
+  overflow:visible!important;
+}
+body.matchStatePre .teamNameDisplay.suffixSplit{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  padding:0 3px!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  font-size:15.5px!important;
+  line-height:1.18!important;
+  letter-spacing:-.05px!important;
+  text-align:center!important;
+}
+body.matchStatePre .teamNameDisplay.suffixSplit .teamNameLine{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  padding:0 1px!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  text-align:center!important;
+}
+body.matchStatePre .teamNameDisplay.suffixSplit .teamNameLine + .teamNameLine{
+  margin-top:3px!important;
+}
+
+/* B. 「可輸入」不使用土黃色：一般可操作欄位維持中性邊框。 */
+body.matchStatePre .preMetaField,
+body.matchStatePre .preVenueStandalone,
+body.matchStatePre .preRegulationSection,
+body.matchStatePre .preQuickSetup > button{
+  border-color:rgba(70,96,124,.44)!important;
+}
+
+/* C. 名單 0 人：因產品核心是記錄小球員表現，保留提醒，但改成細左側提示線＋數值色。 */
+body.matchStatePre #rosterQuickBtn:not(.set){
+  border-color:rgba(70,96,124,.50)!important;
+  background:linear-gradient(180deg,rgba(28,54,80,.88),rgba(20,42,64,.94))!important;
+  box-shadow:inset 3px 0 0 rgba(245,158,11,.76),inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+body.matchStatePre #rosterQuickBtn:not(.set) .preQuickLabel{
+  color:#d6e0ea!important;
+}
+body.matchStatePre #rosterQuickBtn:not(.set) #rosterQuickText{
+  color:#f1c873!important;
+}
+
+/* D. 比賽時間未設定：同樣使用細左側提示，不再整框土黃色。 */
+body.matchStatePre .preRegulationSection.needsAttention{
+  border-color:rgba(70,96,124,.50)!important;
+  box-shadow:inset 3px 0 0 rgba(245,158,11,.68),inset 0 1px 0 rgba(255,255,255,.02)!important;
+}
+body.matchStatePre .preRegulationSection.needsAttention .preRegulationInlineTitle{
+  color:#d6e0ea!important;
+}
+body.matchStatePre .preRegulationSection.needsAttention #regCompactValue,
+body.matchStatePre .preRegulationSection.needsAttention .regSelect{
+  color:#f1c873!important;
+}
+
+/* E. 正在操作時才用藍色 focus，形成清楚的第三種語意。 */
+body.matchStatePre .preMetaField:focus-within,
+body.matchStatePre .teamNameBox:focus-within,
+body.matchStatePre .preRegulationSection:focus-within{
+  border-color:rgba(56,189,248,.82)!important;
+  box-shadow:0 0 0 2px rgba(56,189,248,.13)!important;
+}
+
+@media(max-width:390px){
+  body.matchStatePre .teamNameDisplay.suffixSplit{
+    font-size:15px!important;
+    line-height:1.17!important;
+    padding-left:2px!important;
+    padding-right:2px!important;
+  }
+}
+@media(max-width:350px){
+  body.matchStatePre .teamNameDisplay.suffixSplit{
+    font-size:14px!important;
+    letter-spacing:-.1px!important;
+  }
+}
+</style>
+
+
+<style id="v615LiveFinishVisualBalancePatch">
+/* v6.16：LIVE 與「結束比賽」紅色層級收斂。
+   - LIVE 保留紅色狀態識別，但取消紅色外發光，避免雙層感。
+   - 結束比賽改為深色 destructive CTA，以珊瑚紅文字／細框傳達風險，不再使用整塊大紅。 */
+body.matchStateLive .broadcastStage .liveTag,
+body.matchStateSecondHalf .broadcastStage .liveTag,
+body.matchStateExtraActive .broadcastStage .liveTag{
+  background:linear-gradient(180deg,#ff5562 0%,#ef3f50 100%)!important;
+  border:1px solid rgba(255,133,143,.58)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 2px 6px rgba(0,0,0,.22)!important;
+  text-shadow:0 1px 1px rgba(0,0,0,.22)!important;
+}
+body.matchStateLive .livePill,
+body.matchStateSecondHalf .livePill,
+body.matchStateExtraActive .livePill{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 2px 6px rgba(0,0,0,.16)!important;
+}
+
+/* 進行中各階段的結束動作：保留 destructive 語意，但不以大面積紅色壓過比分與事件操作。 */
+body.matchStateLive #finishBtn:not([hidden]),
+body.matchStateSecondHalf #finishBtn:not([hidden]),
+body.matchStateExtraActive #finishBtn:not([hidden]){
+  background:linear-gradient(180deg,rgba(37,45,58,.98) 0%,rgba(24,32,44,.99) 100%)!important;
+  color:#ff9da6!important;
+  border:1px solid rgba(248,113,113,.50)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 3px 9px rgba(0,0,0,.16)!important;
+  text-shadow:none!important;
+}
+body.matchStateLive #finishBtn:not([hidden]):active,
+body.matchStateSecondHalf #finishBtn:not([hidden]):active,
+body.matchStateExtraActive #finishBtn:not([hidden]):active{
+  background:linear-gradient(180deg,rgba(72,37,45,.98) 0%,rgba(47,27,34,.99) 100%)!important;
+  border-color:rgba(248,113,113,.72)!important;
+  color:#ffc2c7!important;
+}
+</style>
+
+
+<style id="v616FinalStatsDashboardSimplify">
+/* =========================================================
+   v6.16：全場「本場事件統計」改為閱讀型 Dashboard
+   - 外層只保留一層群組框線
+   - 四項統計移除獨立卡片、彩色底板、陰影
+   - 使用淡分隔線建立四欄節奏
+   - 0 值降低權重，有資料時自動提高亮度
+   - 事件紀錄改為簡潔 footer row，不再像第二張卡片
+   ========================================================= */
+body.resultMode.finalOutputVisible .resultEventsGroup{
+  border-color:rgba(180,207,235,.16)!important;
+  background:linear-gradient(180deg,rgba(18,34,52,.64) 0%,rgba(9,20,33,.72) 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 6px 18px rgba(0,0,0,.14)!important;
+}
+body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard{
+  padding:9px 10px 8px!important;
+}
+body.resultMode.finalOutputVisible .quickResultTitle{
+  margin-bottom:7px!important;
+  font-size:16.5px!important;
+  color:#eaf2fb!important;
+}
+body.resultMode.finalOutputVisible .quickResultTitle::before{
+  width:3px!important;
+  height:17px!important;
+  box-shadow:none!important;
+  opacity:.90!important;
+}
+body.resultMode.finalOutputVisible .quickResultStats{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+body.resultMode.finalOutputVisible .quickResultStat,
+body.resultMode.finalOutputVisible .quickResultStat.hasData,
+body.resultMode.finalOutputVisible .quickResultStat.hasData:not(:disabled),
+body.resultMode.finalOutputVisible .quickResultStat:disabled{
+  position:relative!important;
+  box-sizing:border-box!important;
+  height:64px!important;
+  min-height:64px!important;
+  padding:5px 4px 4px!important;
+  margin:0!important;
+  gap:3px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  opacity:1!important;
+  filter:none!important;
+  overflow:visible!important;
+}
+body.resultMode.finalOutputVisible .quickResultStat + .quickResultStat{
+  border-left:1px solid rgba(181,207,234,.12)!important;
+}
+body.resultMode.finalOutputVisible .quickResultStat::before,
+body.resultMode.finalOutputVisible .quickResultStat::after{
+  display:none!important;
+  content:none!important;
+}
+body.resultMode.finalOutputVisible .quickResultLabel,
+body.resultMode.finalOutputVisible .quickResultStat:disabled .quickResultLabel{
+  gap:4px!important;
+  font-size:12.5px!important;
+  line-height:1.05!important;
+  font-weight:820!important;
+  color:#aebdcc!important;
+  opacity:.88!important;
+}
+body.resultMode.finalOutputVisible .quickResultIcon{
+  font-size:15px!important;
+  filter:none!important;
+  opacity:.82!important;
+}
+body.resultMode.finalOutputVisible .quickResultStat strong,
+body.resultMode.finalOutputVisible .quickResultStat:disabled strong{
+  margin-top:0!important;
+  font-size:28px!important;
+  line-height:1!important;
+  font-weight:930!important;
+  color:#aab7c5!important;
+  text-shadow:none!important;
+  opacity:.70!important;
+}
+body.resultMode.finalOutputVisible .quickResultStat.hasData strong{
+  color:#f4f8fc!important;
+  opacity:1!important;
+}
+body.resultMode.finalOutputVisible .quickResultStat.hasData .quickResultLabel,
+body.resultMode.finalOutputVisible .quickResultStat.hasData .quickResultIcon{
+  color:#dce7f1!important;
+  opacity:1!important;
+}
+body.resultMode.finalOutputVisible .quickResultStat.hasData:not(:disabled):active{
+  background:rgba(255,255,255,.035)!important;
+  transform:none!important;
+}
+
+/* 事件紀錄：只保留一條上分隔線＋單列內容，不再包一張工具卡。 */
+body.resultMode.finalOutputVisible .resultEventsGroup > #eventHubSection.recordOnly{
+  height:46px!important;
+  max-height:46px!important;
+  min-height:46px!important;
+  padding:0 10px!important;
+  margin:0!important;
+  border-top:1px solid rgba(181,207,234,.13)!important;
+  background:transparent!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection{
+  height:45px!important;
+  min-height:45px!important;
+  max-height:45px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordFullBtn,
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordFullBtn:disabled{
+  width:100%!important;
+  height:45px!important;
+  min-height:45px!important;
+  max-height:45px!important;
+  margin:0!important;
+  padding:0 2px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  opacity:1!important;
+  filter:none!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordCardMain{
+  gap:8px!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordIconWrap{
+  width:28px!important;
+  height:28px!important;
+  min-width:28px!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordIcon,
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordLabel{
+  color:#c2ceda!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordLabel{
+  font-weight:820!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordMeta,
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordFullBtn:disabled .recordMeta{
+  min-width:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#b8c5d1!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordCount{
+  color:#e6edf5!important;
+  font-size:16px!important;
+  font-weight:900!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordMetaSuffix{
+  color:#9facba!important;
+}
+
+@media(max-width:390px){
+  body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard{
+    padding:8px 8px 7px!important;
+  }
+  body.resultMode.finalOutputVisible .quickResultStat,
+  body.resultMode.finalOutputVisible .quickResultStat.hasData,
+  body.resultMode.finalOutputVisible .quickResultStat:disabled{
+    height:61px!important;
+    min-height:61px!important;
+    padding:4px 2px 3px!important;
+  }
+  body.resultMode.finalOutputVisible .quickResultLabel{
+    gap:3px!important;
+    font-size:11.8px!important;
+  }
+  body.resultMode.finalOutputVisible .quickResultIcon{font-size:14px!important;}
+  body.resultMode.finalOutputVisible .quickResultStat strong,
+  body.resultMode.finalOutputVisible .quickResultStat:disabled strong{
+    font-size:27px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -21967,7 +22303,7 @@ body.matchStatePre .preResetAllRow{display:none!important;}
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.13</span>
+      <span class="headerVersion">v6.16</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28672,7 +29008,7 @@ function render(){
   startBtn.textContent=state.awaitingNextPeriod ? (state.nextPeriodType==='EXTRA_TIME'?'▶ 開始延長賽':'▶ 開始下半場') : '▶ 開始比賽';
   finishBtn.textContent=state.penalty?.active ? '⚽ 記錄 PK' : state.currentPeriod===3 && state.started ? '■ 結束延長賽' : (state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 結束比賽');
 
-  // v6.13：每個狀態只顯示當下真正可執行的主要動作。
+  // v6.16：每個狀態只顯示當下真正可執行的主要動作。
   // 不再保留 disabled 的另一顆按鈕，降低現場操作認知負擔。
   const controls=startBtn?.closest('.controls');
   if(state.finished){
@@ -29949,6 +30285,44 @@ body.resultMode.finalOutputVisible .finalToolsCard{
   .liveMetaStrip .competitionMetaBadges{gap:7px!important;}
   .liveMetaStrip .competitionStageBadge,
   .liveMetaStrip .dayMatchBadge{padding:4px 8px!important;min-height:23px!important;}
+}
+</style>
+
+
+<style id="v615LiveFinishVisualBalancePatch">
+/* v6.16：LIVE 與「結束比賽」紅色層級收斂。
+   - LIVE 保留紅色狀態識別，但取消紅色外發光，避免雙層感。
+   - 結束比賽改為深色 destructive CTA，以珊瑚紅文字／細框傳達風險，不再使用整塊大紅。 */
+body.matchStateLive .broadcastStage .liveTag,
+body.matchStateSecondHalf .broadcastStage .liveTag,
+body.matchStateExtraActive .broadcastStage .liveTag{
+  background:linear-gradient(180deg,#ff5562 0%,#ef3f50 100%)!important;
+  border:1px solid rgba(255,133,143,.58)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 2px 6px rgba(0,0,0,.22)!important;
+  text-shadow:0 1px 1px rgba(0,0,0,.22)!important;
+}
+body.matchStateLive .livePill,
+body.matchStateSecondHalf .livePill,
+body.matchStateExtraActive .livePill{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 2px 6px rgba(0,0,0,.16)!important;
+}
+
+/* 進行中各階段的結束動作：保留 destructive 語意，但不以大面積紅色壓過比分與事件操作。 */
+body.matchStateLive #finishBtn:not([hidden]),
+body.matchStateSecondHalf #finishBtn:not([hidden]),
+body.matchStateExtraActive #finishBtn:not([hidden]){
+  background:linear-gradient(180deg,rgba(37,45,58,.98) 0%,rgba(24,32,44,.99) 100%)!important;
+  color:#ff9da6!important;
+  border:1px solid rgba(248,113,113,.50)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 3px 9px rgba(0,0,0,.16)!important;
+  text-shadow:none!important;
+}
+body.matchStateLive #finishBtn:not([hidden]):active,
+body.matchStateSecondHalf #finishBtn:not([hidden]):active,
+body.matchStateExtraActive #finishBtn:not([hidden]):active{
+  background:linear-gradient(180deg,rgba(72,37,45,.98) 0%,rgba(47,27,34,.99) 100%)!important;
+  border-color:rgba(248,113,113,.72)!important;
+  color:#ffc2c7!important;
 }
 </style>
 
