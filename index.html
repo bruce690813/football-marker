@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.12</title>
+<title>足球場邊記錄器 v6.13</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -20456,7 +20456,7 @@ body.matchStatePre .broadcastStage .stageLabel{
 #reportModal .reportMVPPlayerText{flex:0 0 auto!important;}
 #reportModal .reportMVPPlayerText{white-space:nowrap!important;}
 #reportModal .reportMVPGoalTimes{
-  /* v6.12：進球時間緊跟球員背號後方，保留約兩格視覺間距，不再推到最右側。 */
+  /* v6.13：進球時間緊跟球員背號後方，保留約兩格視覺間距，不再推到最右側。 */
   margin-left:1.15em!important;
   display:inline-flex!important;
   flex-wrap:wrap!important;
@@ -20588,7 +20588,7 @@ body.matchStatePre .dayMatchEditBtn{margin-left:auto!important;}
 
 <style id="v5199FinalUiPolish">
 /* =========================================================
-   v6.12 Final UI Polish
+   v6.13 Final UI Polish
    目標：把賽前畫面收斂成同一套 Design System。
    不增加操作步驟；只統一字級、間距、框線、狀態權重與響應式細節。
    ========================================================= */
@@ -20844,7 +20844,7 @@ body.matchStatePre .venueDropdownBtn{right:0!important;}
 
 
 <style id="v5200PreResetAllPatch">
-/* v6.12：補回「重置所有賽前設定」，但維持 tertiary action，不與開始比賽搶焦點。 */
+/* v6.13：補回「重置所有賽前設定」，但維持 tertiary action，不與開始比賽搶焦點。 */
 .preResetAllRow{display:none;}
 body.matchStatePre .preResetAllRow{
   display:flex!important;
@@ -20901,7 +20901,7 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
 
 
 <style id="v61PlayerFocusPolish">
-/* v6.12：重置可發現性、賽前狀態可讀性，以及「小球員表現」導向的賽前焦點 */
+/* v6.13：重置可發現性、賽前狀態可讀性，以及「小球員表現」導向的賽前焦點 */
 
 /* 1) 重置：移到主操作上方，維持次要但清楚可找到。 */
 body.matchStatePre .preResetAllRow{
@@ -20997,7 +20997,7 @@ body.matchStatePre .preRegulationSection.needsAttention .preRegulationInlineTitl
 
 
 <style id="v63PreMatchActionAndScorePolish">
-/* v6.12：賽前只保留真正可執行的操作，並縮減比分區高度。 */
+/* v6.13：賽前只保留真正可執行的操作，並縮減比分區高度。 */
 
 /* 1. 賽前不存在「結束比賽」：完全隱藏，主 CTA 改為單欄滿版。 */
 body.matchStatePre #finishBtn{display:none!important;}
@@ -21130,7 +21130,7 @@ body.matchStatePre #scoreEditBtn{display:none!important;}
 
 
 <style id="v64SingleStateActionPatch">
-/* v6.12：各比賽階段只顯示當下真正可執行的主要動作。 */
+/* v6.13：各比賽階段只顯示當下真正可執行的主要動作。 */
 .matchCard .controls.singleAction{
   grid-template-columns:minmax(0,1fr)!important;
   gap:0!important;
@@ -21161,7 +21161,7 @@ body.matchStatePenalty .controls.singleAction #finishBtn:not([hidden]){
 
 
 <style id="v65PreResetHarmonyPatch">
-/* v6.12：賽前主／次操作按鈕採同一幾何語言，避免重置按鈕外框與主 CTA 互相干擾。 */
+/* v6.13：賽前主／次操作按鈕採同一幾何語言，避免重置按鈕外框與主 CTA 互相干擾。 */
 body.matchStatePre #startBtn{
   width:100%!important;
   min-height:50px!important;
@@ -21209,7 +21209,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn:active{
 
 
 <style id="v66PreActionStackFix">
-/* v6.12：賽前主／次操作收回同一操作區，避免重置按鈕跨出主卡片或與外框重疊。 */
+/* v6.13：賽前主／次操作收回同一操作區，避免重置按鈕跨出主卡片或與外框重疊。 */
 body.matchStatePre .controls{
   display:flex!important;
   flex-direction:column!important;
@@ -21270,7 +21270,7 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
 
 
 <style id="v67PreActionSplitFix">
-/* v6.12：賽前主／次操作回到同一列雙欄，並徹底清除歷史 absolute 定位。 */
+/* v6.13：賽前主／次操作回到同一列雙欄，並徹底清除歷史 absolute 定位。 */
 body.matchStatePre .controls{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
@@ -21384,7 +21384,7 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
 
 
 <style id="v68PreActionGapAndBorderReduction">
-/* v6.12：雙欄操作加入真正可見間距，並降低賽前頁過多框線的視覺噪音。 */
+/* v6.13：雙欄操作加入真正可見間距，並降低賽前頁過多框線的視覺噪音。 */
 body.matchStatePre .controls{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
@@ -21462,7 +21462,7 @@ body.matchStatePre .broadcastScoreboard{
 
 
 <style id="v69PreActionPhysicalGapFix">
-/* v6.12：賽前雙操作採固定實體分隔，不再只依賴 grid gap。 */
+/* v6.13：賽前雙操作採固定實體分隔，不再只依賴 grid gap。 */
 body.matchStatePre .controls{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
@@ -21517,7 +21517,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn{
 
 
 <style id="v610PreBottomMatrixAlignment">
-/* v6.12：賽前底部四個操作統一成同一套 2×2 幾何規格。 */
+/* v6.13：賽前底部四個操作統一成同一套 2×2 幾何規格。 */
 body.matchStatePre{
   --pre-bottom-grid-gap:12px;
   --pre-bottom-control-h:52px;
@@ -21617,7 +21617,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn .preResetLabel{
 
 
 <style id="v611PreBottomDirectGridFix">
-/* v6.12：真正統一賽前底部四顆按鈕的幾何結構。
+/* v6.13：真正統一賽前底部四顆按鈕的幾何結構。
    重置按鈕改為 controls 的直接子元素，不再透過額外 wrapper 參與 Grid。 */
 body.matchStatePre{
   --pre-matrix-gap:14px;
@@ -21700,7 +21700,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn .preResetLabel{font-size:14px!imp
 
 <style id="v612PreBottomTrueGutterFix">
 /* =========================================================
-   v6.12：賽前底部 2×2 真實幾何對齊
+   v6.13：賽前底部 2×2 真實幾何對齊
    - 不再依賴 gap；中央改成獨立固定空白欄，避免深色按鈕吃掉 gap 的視覺。
    - 名單 / 守門員 / 開始比賽 / 重置賽前設定共用同一高度、圓角、欄寬。
    ========================================================= */
@@ -21826,6 +21826,133 @@ body.matchStatePre .preResetAllRow{display:none!important;}
 }
 </style>
 
+
+<style id="v613PreBottomSingleActionConflictFix">
+/* =========================================================
+   v6.13：賽前底部 2×2 最終幾何修正
+   真正原因：.matchCard .controls.singleAction 的舊規則 specificity
+   高於先前 body.matchStatePre .controls，造成賽前 controls 仍被壓回單欄；
+   reset 再指定到第 3 欄後，瀏覽器產生 implicit columns，形成大空白與不等寬。
+   本版直接覆寫 matchStatePre + matchCard + controls.singleAction。
+   ========================================================= */
+body.matchStatePre{
+  --pre-bottom-cell-gap:14px;
+  --pre-bottom-cell-h:56px;
+  --pre-bottom-cell-radius:14px;
+}
+
+/* 上排、下排使用同一套 2 欄公式。 */
+body.matchStatePre .matchCard .preQuickSetup,
+body.matchStatePre .matchCard .controls,
+body.matchStatePre .matchCard .controls.singleAction{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-auto-columns:minmax(0,1fr)!important;
+  grid-auto-flow:row!important;
+  gap:var(--pre-bottom-cell-gap)!important;
+  column-gap:var(--pre-bottom-cell-gap)!important;
+  row-gap:0!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  padding-left:0!important;
+  padding-right:0!important;
+  box-sizing:border-box!important;
+  align-items:stretch!important;
+  justify-items:stretch!important;
+}
+
+/* 明確取消先前所有 grid-column:3 / 跨欄規則。 */
+body.matchStatePre .matchCard .preQuickSetup > #rosterQuickBtn,
+body.matchStatePre .matchCard .controls > #startBtn{
+  grid-column:1!important;
+}
+body.matchStatePre .matchCard .preQuickSetup > #keeperQuickBtn,
+body.matchStatePre .matchCard .controls > #preResetBtn.show{
+  grid-column:2!important;
+}
+body.matchStatePre .matchCard .controls > #finishBtn{display:none!important;}
+body.matchStatePre .matchCard .controls > #preResetBtn:not(.show){display:none!important;}
+
+/* 無可重置資料時，開始比賽才滿版；有 reset 時永遠保持 1:1。 */
+body.matchStatePre .matchCard .controls.singleAction:not(:has(> #preResetBtn.show)),
+body.matchStatePre .matchCard .controls:not(:has(> #preResetBtn.show)){
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:0!important;
+}
+body.matchStatePre .matchCard .controls:not(:has(> #preResetBtn.show)) > #startBtn,
+body.matchStatePre .matchCard .controls.singleAction:not(:has(> #preResetBtn.show)) > #startBtn{
+  grid-column:1!important;
+}
+
+/* 四顆按鈕共用完全相同的外部幾何規格。 */
+body.matchStatePre .matchCard .preQuickSetup > #rosterQuickBtn,
+body.matchStatePre .matchCard .preQuickSetup > #keeperQuickBtn,
+body.matchStatePre .matchCard .controls > #startBtn,
+body.matchStatePre .matchCard .controls > #preResetBtn.preResetAllBtn{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:var(--pre-bottom-cell-h)!important;
+  min-height:var(--pre-bottom-cell-h)!important;
+  max-height:var(--pre-bottom-cell-h)!important;
+  margin:0!important;
+  border-radius:var(--pre-bottom-cell-radius)!important;
+  box-sizing:border-box!important;
+  position:static!important;
+  inset:auto!important;
+  transform:none!important;
+  align-self:stretch!important;
+  justify-self:stretch!important;
+}
+
+/* 主／次動作只以顏色和字級區分，不用尺寸區分。 */
+body.matchStatePre .matchCard .controls > #startBtn{
+  padding:0 9px!important;
+  font-size:17px!important;
+  font-weight:950!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 2px 5px rgba(12,145,132,.08)!important;
+}
+body.matchStatePre .matchCard .controls > #preResetBtn.preResetAllBtn,
+body.matchStatePre .matchCard .controls > #preResetBtn.preResetAllBtn.show{
+  display:inline-flex!important;
+  padding:0 7px!important;
+  gap:6px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid rgba(82,116,149,.50)!important;
+  background:linear-gradient(180deg,rgba(20,38,57,.94),rgba(13,28,43,.96))!important;
+  color:#9fb0c2!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035)!important;
+  font-size:14px!important;
+  font-weight:850!important;
+}
+body.matchStatePre .matchCard .controls > #preResetBtn .preResetIcon{font-size:17px!important;}
+body.matchStatePre .matchCard .controls > #preResetBtn .preResetLabel{
+  font-size:14px!important;
+  font-weight:850!important;
+  white-space:nowrap!important;
+}
+
+/* 舊 wrapper 永久退出賽前排版。 */
+body.matchStatePre .preResetAllRow{display:none!important;}
+
+@media(max-width:390px){
+  body.matchStatePre{--pre-bottom-cell-gap:12px;--pre-bottom-cell-h:54px;}
+  body.matchStatePre .matchCard .controls > #startBtn{font-size:16.5px!important;}
+  body.matchStatePre .matchCard .controls > #preResetBtn.preResetAllBtn,
+  body.matchStatePre .matchCard .controls > #preResetBtn .preResetLabel{font-size:13.5px!important;}
+}
+@media(max-width:350px){
+  body.matchStatePre{--pre-bottom-cell-gap:10px;--pre-bottom-cell-h:52px;}
+  body.matchStatePre .matchCard .controls > #startBtn{font-size:16px!important;}
+  body.matchStatePre .matchCard .controls > #preResetBtn.preResetAllBtn,
+  body.matchStatePre .matchCard .controls > #preResetBtn .preResetLabel{font-size:12.5px!important;}
+  body.matchStatePre .matchCard .controls > #preResetBtn.preResetAllBtn{gap:4px!important;padding-left:4px!important;padding-right:4px!important;}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -21840,7 +21967,7 @@ body.matchStatePre .preResetAllRow{display:none!important;}
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.12</span>
+      <span class="headerVersion">v6.13</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28545,7 +28672,7 @@ function render(){
   startBtn.textContent=state.awaitingNextPeriod ? (state.nextPeriodType==='EXTRA_TIME'?'▶ 開始延長賽':'▶ 開始下半場') : '▶ 開始比賽';
   finishBtn.textContent=state.penalty?.active ? '⚽ 記錄 PK' : state.currentPeriod===3 && state.started ? '■ 結束延長賽' : (state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 結束比賽');
 
-  // v6.12：每個狀態只顯示當下真正可執行的主要動作。
+  // v6.13：每個狀態只顯示當下真正可執行的主要動作。
   // 不再保留 disabled 的另一顆按鈕，降低現場操作認知負擔。
   const controls=startBtn?.closest('.controls');
   if(state.finished){
