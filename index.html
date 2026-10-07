@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v5.197</title>
+<title>足球場邊記錄器 v5.199</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -19940,7 +19940,7 @@ body.matchStatePre .dayMatchMeta{display:flex;align-items:center;min-width:0;min
 
 
 <style id="v5181MetaBadgeSpacingFix">
-/* v5.197：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
+/* v5.198：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
 .liveMetaStrip .matchMetaDisplayValue.withMetaBadges{
   display:flex!important;
   flex-wrap:wrap!important;
@@ -19982,7 +19982,7 @@ body.matchStatePre .dayMatchMeta{display:flex;align-items:center;min-width:0;min
 
 <style id="v5182InlineCompetitionContextPatch">
 /* =========================================================
-   v5.197：賽事階段／本日場次改為同列純文字
+   v5.198：賽事階段／本日場次改為同列純文字
    例：黃蜂盃　小組賽｜第一場
    - 不使用徽章／膠囊樣式。
    - 右側「階段｜場次」不壓縮，賽事名稱過長時優先省略。
@@ -20017,13 +20017,13 @@ body.matchStatePre .dayMatchMeta{display:flex;align-items:center;min-width:0;min
 
 
 <style id="v5183CompetitionStageContextPatch">
-/* v5.197：階段／輪次選單依賽事名稱自動聚焦聯賽或盃賽選項。 */
+/* v5.198：階段／輪次選單依賽事名稱自動聚焦聯賽或盃賽選項。 */
 .stageMenuHint{max-width:100%;overflow-wrap:anywhere}
 </style>
 
 
 <style id="v5184PreDropdownAlignmentPatch">
-/* v5.197：修正賽前下拉箭頭外框與本日場次圖示對齊 */
+/* v5.198：修正賽前下拉箭頭外框與本日場次圖示對齊 */
 /* 場地欄位：下拉箭頭改回與賽事階段相同的純圖示樣式，不再有獨立外框 */
 body.matchStatePre .venueInputWrap input{padding-right:31px!important;}
 .venueDropdownBtn{
@@ -20099,7 +20099,7 @@ body.matchStatePre .dayMatchMeta{
 
 
 <style id="v5185DayMatchTypographyPatch">
-/* v5.197：本日場次文字尺寸提升，與其他賽前欄位維持一致層級 */
+/* v5.198：本日場次文字尺寸提升，與其他賽前欄位維持一致層級 */
 body.matchStatePre .dayMatchMeta{gap:8px!important;}
 body.matchStatePre .dayMatchMetaLabel{
   font-size:15.5px!important;
@@ -20137,7 +20137,7 @@ body.matchStatePre .dayMatchEditBtn{
 
 
 <style id="v5186MvpMedalIconPatch">
-/* v5.197：單場MVP／我方最多進球改用 ⚽ 標題＋🏅 球員圖示 */
+/* v5.198：單場MVP／我方最多進球改用 ⚽ 標題＋🏅 球員圖示 */
 #reportModal .reportMVPNames{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:7px!important;margin-top:9px!important}
 #reportModal .reportMVPName{display:flex!important;align-items:center!important;gap:7px!important;min-height:0!important;padding:0!important;border-radius:0!important;background:transparent!important;border:0!important;color:#f7fbff!important;font-size:16px!important;font-weight:900!important;line-height:1.2!important}
 #reportModal .reportMVPMedal{display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:18px!important;line-height:1!important;flex:0 0 auto!important}
@@ -20146,7 +20146,7 @@ body.matchStatePre .dayMatchEditBtn{
 
 
 <style id="v5188DayMatchAlignmentPatch">
-/* v5.197：賽前資訊列統一圖示槽，修正「本日場次」文字水平對齊 */
+/* v5.198：賽前資訊列統一圖示槽，修正「本日場次」文字水平對齊 */
 body.matchStatePre{--pre-meta-icon-slot:28px;}
 body.matchStatePre .preMetaIcon,
 body.matchStatePre .dayMatchMetaIcon{
@@ -20183,7 +20183,7 @@ body.matchStatePre .dayMatchMetaValue{
 
 
 <style id="v5189DayMatchExactAlignmentPatch">
-/* v5.197：本日場次採用與上方 preMetaField 完全相同的圖示欄與文字起點 */
+/* v5.198：本日場次採用與上方 preMetaField 完全相同的圖示欄與文字起點 */
 body.matchStatePre .dayMatchMeta{
   padding-left:12px!important;
   padding-right:12px!important;
@@ -20218,7 +20218,7 @@ body.matchStatePre .dayMatchMetaIcon{
 
 
 <style id="v5190PreQuickVerticalGapPatch">
-/* v5.197：統一「本日場次 → 名單／守門員」與其他賽前欄位的垂直間距 */
+/* v5.198：統一「本日場次 → 名單／守門員」與其他賽前欄位的垂直間距 */
 body.matchStatePre .dayMatchMeta{
   margin-bottom:var(--pre-group-gap,9px)!important;
 }
@@ -20230,7 +20230,7 @@ body.matchStatePre .preQuickSetup{
 
 
 <style id="v5191PreMatchFlowPolish">
-/* v5.197：賽事身分 → 比賽條件 → 人員確認 → 開賽 */
+/* v5.198：賽事身分 → 比賽條件 → 人員確認 → 開賽 */
 body.matchStatePre .matchMetaRow,
 body.matchStatePre .dayMatchMeta,
 body.matchStatePre .preVenueStandalone,
@@ -20275,7 +20275,7 @@ body.matchStatePre .preQuickSetup{margin-bottom:var(--pre-group-gap,9px)!importa
 
 
 <style id="v5192RegulationExactAlignmentPatch">
-/* v5.197：比賽時間列與其他賽前欄位使用同一組水平對齊基準 */
+/* v5.198：比賽時間列與其他賽前欄位使用同一組水平對齊基準 */
 body.matchStatePre .preRegulationSection{
   grid-template-columns:max-content minmax(0,1fr)!important;
   column-gap:9px!important;
@@ -20344,7 +20344,7 @@ body.matchStatePre #preRegulationSection .regSelectWrap::after{
 
 
 <style id="v5194PreLayoutAndInlineDayMatchPatch">
-/* v5.197：延續 v5.193 的賽前資訊層級，並把本日場次改為原位直接編輯 */
+/* v5.198：延續 v5.193 的賽前資訊層級，並把本日場次改為原位直接編輯 */
 .layoutMount{display:none!important;}
 
 /* 本日場次：原位切換顯示值 / 數字輸入，不再展開第二組編輯器 */
@@ -20401,7 +20401,7 @@ body.matchStatePre .scoreRow{padding-top:4px!important;}
 
 
 <style id="v5196PreStatusDayMatchMvpTimePatch">
-/* v5.197：賽前狀態改為純文字、本日場次編輯精簡、MVP 增加進球分鐘 */
+/* v5.198：賽前狀態改為純文字、本日場次編輯精簡、MVP 增加進球分鐘 */
 
 /* A. 賽前狀態：取消膠囊，保留輕量狀態文字，避免貼近比分卡框線。 */
 body.matchStatePre .broadcastBar{
@@ -20477,7 +20477,7 @@ body.matchStatePre .broadcastStage .stageLabel{
 
 
 <style id="v5197PreVisualHierarchyPolish">
-/* v5.197：賽前 Dashboard 視覺層級精修
+/* v5.198：賽前 Dashboard 視覺層級精修
    1) 「賽前」降為純狀態文字＋短分隔線
    2) 黃色警示只保留給「比賽時間未設定」
    3) 已完成欄位降低框線存在感，讓待處理項目更容易被看見 */
@@ -20572,6 +20572,273 @@ body.matchStatePre .preRegulationSection:not(.needsAttention){
 }
 </style>
 
+
+<style id="v5198DayMatchSourceSimplifyPatch">
+/* v5.198：本日場次只呈現使用者需要的結果，不再顯示「自動／手動」來源標籤。 */
+body.matchStatePre .dayMatchSourceBadge{display:none!important;}
+body.matchStatePre .dayMatchMeta{column-gap:9px!important;}
+body.matchStatePre .dayMatchInlineSlot{margin-right:2px!important;}
+/* 修改鍵維持在最右側，讓「本日場次 → 第N場 → 修改」形成單一路徑。 */
+body.matchStatePre .dayMatchEditBtn{margin-left:auto!important;}
+</style>
+
+
+<style id="v5199FinalUiPolish">
+/* =========================================================
+   v5.199 Final UI Polish
+   目標：把賽前畫面收斂成同一套 Design System。
+   不增加操作步驟；只統一字級、間距、框線、狀態權重與響應式細節。
+   ========================================================= */
+body.matchStatePre{
+  --ui-space-1:4px;
+  --ui-space-2:8px;
+  --ui-space-3:12px;
+  --ui-space-4:16px;
+  --ui-space-6:24px;
+  --pre-group-gap:12px!important;
+  --pre-radius:12px;
+  --pre-border-rest:rgba(70,96,124,.58);
+  --pre-border-done:rgba(61,84,110,.38);
+  --pre-bg-rest:rgba(9,19,32,.80);
+  --pre-bg-done:rgba(8,17,29,.58);
+  --pre-text-main:#edf4fb;
+  --pre-text-secondary:#c5d1dd;
+  --pre-text-muted:#8798aa;
+  --pre-warning:#ffd27a;
+  --pre-focus:#38bdf8;
+}
+
+/* 1) 統一垂直節奏：所有主要賽前群組只使用 12 / 10 / 8px 三檔。 */
+body.matchStatePre .matchMetaRow,
+body.matchStatePre .dayMatchMeta,
+body.matchStatePre .broadcastScoreboard,
+body.matchStatePre .preVenueStandalone,
+body.matchStatePre .preRegulationSection,
+body.matchStatePre .preQuickSetup{
+  margin-top:0!important;
+  margin-bottom:var(--pre-group-gap)!important;
+}
+
+/* 2) 主要表單字級：內容 16px、placeholder 15px，避免歷代版本各自縮放。 */
+body.matchStatePre .preMetaField{
+  min-height:48px!important;
+  border-radius:var(--pre-radius)!important;
+  border-color:var(--pre-border-rest)!important;
+  background:var(--pre-bg-rest)!important;
+}
+body.matchStatePre .preMetaField input{
+  min-height:46px!important;
+  font-size:16px!important;
+  font-weight:850!important;
+  line-height:1.2!important;
+}
+body.matchStatePre .preMetaField input::placeholder{
+  font-size:15px!important;
+  font-weight:780!important;
+  color:var(--pre-text-muted)!important;
+}
+/* 已完成欄位降低框線存在感；正在輸入仍維持清楚 focus。 */
+body.matchStatePre .preMetaField:has(input:not(:placeholder-shown)):not(:focus-within){
+  border-color:var(--pre-border-done)!important;
+  background:var(--pre-bg-done)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.015)!important;
+}
+body.matchStatePre .preMetaField:focus-within{
+  border-color:rgba(56,189,248,.82)!important;
+  background:rgba(9,24,39,.96)!important;
+  box-shadow:0 0 0 2px rgba(56,189,248,.13)!important;
+}
+
+/* 3) 本日場次：結果本身是主資訊；修改是次要動作。 */
+body.matchStatePre .dayMatchMeta{
+  min-height:48px!important;
+  border-radius:var(--pre-radius)!important;
+  border-color:var(--pre-border-done)!important;
+  background:rgba(10,22,36,.48)!important;
+  box-shadow:none!important;
+}
+body.matchStatePre .dayMatchMetaLabel{
+  color:var(--pre-text-secondary)!important;
+  font-size:15px!important;
+  font-weight:820!important;
+  line-height:1.2!important;
+}
+body.matchStatePre .dayMatchMetaValue{
+  color:var(--pre-text-main)!important;
+  font-size:17px!important;
+  font-weight:950!important;
+  line-height:1.15!important;
+}
+body.matchStatePre .dayMatchEditBtn{
+  min-height:32px!important;
+  padding:4px 10px!important;
+  border-radius:8px!important;
+  border-color:rgba(94,121,148,.30)!important;
+  background:rgba(16,32,49,.60)!important;
+  color:#c8d4df!important;
+  font-size:12px!important;
+  font-weight:850!important;
+}
+
+/* 4) 賽前只是一種狀態：再降半級，避免與比分競爭。 */
+body.matchStatePre .broadcastBar{
+  min-height:22px!important;
+  padding:1px 0 1px!important;
+  margin:0 0 4px!important;
+}
+body.matchStatePre #broadcastStageLabel{
+  color:#788a9d!important;
+  font-size:12.5px!important;
+  font-weight:800!important;
+  line-height:1.15!important;
+  letter-spacing:.12em!important;
+  gap:7px!important;
+}
+body.matchStatePre #broadcastStageLabel::before,
+body.matchStatePre #broadcastStageLabel::after{
+  width:14px!important;
+  height:1px!important;
+  background:rgba(122,145,168,.20)!important;
+}
+
+/* 5) 對戰／比分是賽前畫面的視覺中心。 */
+body.matchStatePre .broadcastScoreboard{
+  border-color:rgba(65,93,121,.58)!important;
+  background:rgba(7,17,29,.58)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02)!important;
+}
+body.matchStatePre .scoreRow{
+  padding-top:5px!important;
+  padding-bottom:10px!important;
+  gap:10px!important;
+}
+body.matchStatePre .teamNameBox{
+  min-height:56px!important;
+  border-color:rgba(67,94,122,.52)!important;
+  background:rgba(8,18,31,.70)!important;
+}
+body.matchStatePre .teamNameDisplay{
+  color:#edf4fb!important;
+  font-size:17px!important;
+  font-weight:900!important;
+  line-height:1.15!important;
+}
+body.matchStatePre .teamNameDisplay.empty{color:#8495a8!important;}
+body.matchStatePre .scoreTile{
+  width:58px!important;
+  min-width:58px!important;
+  height:64px!important;
+  font-size:48px!important;
+  border-color:rgba(113,151,187,.34)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 4px 12px rgba(0,0,0,.14)!important;
+}
+body.matchStatePre .scoreTile.twoDigit{font-size:41px!important;}
+body.matchStatePre .scoreColon{
+  font-size:28px!important;
+  color:rgba(176,193,210,.46)!important;
+}
+
+/* 6) 比賽時間：只有未設定才使用黃色警示；已設定回到完成態。 */
+body.matchStatePre .preRegulationSection{
+  min-height:48px!important;
+  border-radius:var(--pre-radius)!important;
+}
+body.matchStatePre .preRegulationInlineTitle{
+  font-size:15.5px!important;
+  font-weight:900!important;
+  color:var(--pre-text-secondary)!important;
+}
+body.matchStatePre #preRegulationSection .regSelect{
+  font-size:16px!important;
+  font-weight:850!important;
+  color:var(--pre-text-main)!important;
+}
+body.matchStatePre .preRegulationSection:not(.needsAttention){
+  border-color:var(--pre-border-done)!important;
+  background:var(--pre-bg-done)!important;
+  box-shadow:none!important;
+}
+body.matchStatePre .preRegulationSection.needsAttention{
+  border-color:rgba(245,158,11,.56)!important;
+  box-shadow:0 0 0 1px rgba(245,158,11,.06),inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+body.matchStatePre .preRegulationSection.needsAttention .preRegulationInlineTitle{
+  color:var(--pre-warning)!important;
+}
+
+/* 7) 人員區：保持清楚，但未設定不使用警示色，避免和比賽時間搶訊號。 */
+body.matchStatePre .preQuickSetup{gap:var(--ui-space-2)!important;}
+body.matchStatePre .preQuickSetup > button{
+  min-height:52px!important;
+  border-radius:var(--pre-radius)!important;
+  border-color:rgba(67,96,126,.54)!important;
+  background:linear-gradient(180deg,rgba(28,54,80,.88),rgba(20,42,64,.94))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03)!important;
+}
+body.matchStatePre .preQuickSetup > button.set{
+  border-color:rgba(70,104,138,.46)!important;
+}
+body.matchStatePre .preQuickLabel{
+  color:#d6e0ea!important;
+  font-size:15.5px!important;
+  font-weight:900!important;
+}
+body.matchStatePre #rosterQuickText,
+body.matchStatePre #keeperQuickText{
+  color:#dce6f0!important;
+  font-size:16px!important;
+  font-weight:950!important;
+}
+body.matchStatePre .preQuickSetup > button:not(.set) #rosterQuickText,
+body.matchStatePre .preQuickSetup > button:not(.set) #keeperQuickText{
+  color:#b8c5d1!important;
+}
+
+/* 8) 所有小型右側控制元件統一尺寸與圓角。 */
+body.matchStatePre .stageDropdownBtn,
+body.matchStatePre .venueDropdownBtn,
+body.matchStatePre #preRegulationSection .regSelectWrap::after{
+  width:32px!important;
+  min-width:32px!important;
+  height:32px!important;
+  border-radius:8px!important;
+}
+body.matchStatePre .stageDropdownBtn,
+body.matchStatePre .venueDropdownBtn{right:0!important;}
+
+/* 9) 多尺寸校正：390 以下略收，350 以下再降一級，避免窄機換行。 */
+@media(max-width:390px){
+  body.matchStatePre{--pre-group-gap:10px!important;}
+  body.matchStatePre .preMetaField{min-height:46px!important;}
+  body.matchStatePre .preMetaField input{min-height:44px!important;font-size:15.5px!important;}
+  body.matchStatePre .preMetaField input::placeholder{font-size:14.5px!important;}
+  body.matchStatePre .dayMatchMetaLabel{font-size:14.5px!important;}
+  body.matchStatePre .dayMatchMetaValue{font-size:16.5px!important;}
+  body.matchStatePre .teamNameDisplay{font-size:16.5px!important;}
+  body.matchStatePre .scoreTile{width:56px!important;min-width:56px!important;height:62px!important;font-size:46px!important;}
+  body.matchStatePre .scoreTile.twoDigit{font-size:39px!important;}
+  body.matchStatePre .preQuickSetup > button{min-height:50px!important;}
+  body.matchStatePre .preQuickLabel{font-size:15px!important;}
+  body.matchStatePre #rosterQuickText,body.matchStatePre #keeperQuickText{font-size:15.5px!important;}
+}
+@media(max-width:350px){
+  body.matchStatePre{--pre-group-gap:8px!important;}
+  body.matchStatePre .preMetaField input{font-size:15px!important;}
+  body.matchStatePre .dayMatchMetaLabel{font-size:14px!important;}
+  body.matchStatePre .dayMatchMetaValue{font-size:16px!important;}
+  body.matchStatePre .dayMatchEditBtn{padding-left:8px!important;padding-right:8px!important;font-size:11.5px!important;}
+  body.matchStatePre .teamNameDisplay{font-size:15.5px!important;}
+  body.matchStatePre .scoreRow{gap:6px!important;padding-left:6px!important;padding-right:6px!important;}
+  body.matchStatePre .scoreTile{width:52px!important;min-width:52px!important;height:58px!important;font-size:43px!important;}
+  body.matchStatePre .scoreTile.twoDigit{font-size:37px!important;}
+  body.matchStatePre .scoreColon{font-size:25px!important;}
+  body.matchStatePre .preQuickSetup{gap:6px!important;}
+  body.matchStatePre .preQuickSetup > button{min-height:48px!important;padding-left:5px!important;padding-right:5px!important;}
+  body.matchStatePre .preQuickLabel{font-size:14px!important;}
+  body.matchStatePre #rosterQuickText,body.matchStatePre #keeperQuickText{font-size:14.5px!important;}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -20586,7 +20853,7 @@ body.matchStatePre .preRegulationSection:not(.needsAttention){
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v5.197</span>
+      <span class="headerVersion">v5.199</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -20619,7 +20886,7 @@ body.matchStatePre .preRegulationSection:not(.needsAttention){
         <strong class="dayMatchMetaValue" id="dayMatchDisplay" role="button" tabindex="0" onclick="beginDayMatchEdit()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();beginDayMatchEdit();}" aria-label="修改本日場次">第一場</strong>
         <input id="dayMatchNumberInput" class="dayMatchInlineInput" type="number" min="1" max="99" step="1" inputmode="numeric" aria-label="本日場次數字，例如 8" hidden onkeydown="if(event.key==='Enter'){event.preventDefault();applyDayMatchEdit();}else if(event.key==='Escape'){event.preventDefault();cancelDayMatchEdit();}">
       </span>
-      <span class="dayMatchSourceBadge" id="dayMatchSourceBadge">自動</span>
+      <span class="dayMatchSourceBadge" id="dayMatchSourceBadge" hidden aria-hidden="true">自動</span>
       <button class="dayMatchEditBtn" id="dayMatchEditBtn" type="button" onclick="toggleDayMatchInlineEdit()">修改</button>
     </div>
     <span id="preScoreboardMount" class="layoutMount" aria-hidden="true"></span>
@@ -22191,7 +22458,7 @@ function dayMatchStoredItemsForTeamDay(team,epoch){
 }
 function isConfirmedDayMatch(saved){
   if(!saved || typeof saved!=='object') return false;
-  // v5.197：真正「比賽結束」後才正式計入本日場次。
+  // v5.198：真正「比賽結束」後才正式計入本日場次。
   // finished 同時做舊版相容：v5.179 以前已完成的比賽視為已確認。
   return Boolean(saved.finished || saved.dayMatchNumberConfirmed===true);
 }
@@ -22638,7 +22905,7 @@ function competitionStageMenuMode(){
   const name=String(byId('competition')?.value||state.competition||'').trim();
   if(!name) return 'all';
 
-  // v5.197：優先辨識盃賽，避免像「聯賽盃」同時含「聯賽」時被錯判成聯賽。
+  // v5.198：優先辨識盃賽，避免像「聯賽盃」同時含「聯賽」時被錯判成聯賽。
   // 常見中文「盃／杯」、淘汰賽、錦標賽與英文 Cup 均視為盃賽型態。
   if(/盃|杯|淘汰賽|錦標賽|\bcup\b/i.test(name)) return 'cup';
   if(/聯賽|\bleague\b/i.test(name)) return 'league';
@@ -23005,7 +23272,7 @@ function loadState(){
   if(!('dayMatchNumber' in state)) state.dayMatchNumber=null;
   if(!('dayMatchNumberManual' in state)) state.dayMatchNumberManual=false;
   if(!('dayMatchNumberLocked' in state)) state.dayMatchNumberLocked=!!(state.started||state.finished||state.startEpoch);
-  // v5.197 舊資料相容：既有已完成比賽視為已正式確認；未完成比賽維持預留狀態。
+  // v5.198 舊資料相容：既有已完成比賽視為已正式確認；未完成比賽維持預留狀態。
   if(!('dayMatchNumberConfirmed' in state)) state.dayMatchNumberConfirmed=!!state.finished;
   if(state.finished) state.dayMatchNumberConfirmed=true;
   if(Array.isArray(state.markers)){
@@ -23457,7 +23724,7 @@ function scorerMVPInfo(){
   const isTie=winners.length>1;
   const kind=result==='WIN'?'mvp':'topScorer';
   const label=kind==='mvp'?'單場MVP':'我方最多進球';
-  // v5.197：單場 MVP 依進球數補上足球常用稱號；僅套用 2～4 球，其他球數維持原格式。
+  // v5.198：單場 MVP 依進球數補上足球常用稱號；僅套用 2～4 球，其他球數維持原格式。
   const goalNickname=kind==='mvp' ? ({2:'梅開二度',3:'帽子戲法',4:'大四喜'}[topGoals]||'') : '';
   const goalText=isTie ? `並列 ${topGoals} 球` : `${topGoals} 球`;
   return {
@@ -23550,7 +23817,7 @@ function syncRegulationPlacement(){
 
   if(preSection){
     preSection.hidden=hasBegun;
-    // v5.197：比賽時間會直接影響計時，因此賽前未設定時給予輕量提醒，但不阻擋開賽。
+    // v5.198：比賽時間會直接影響計時，因此賽前未設定時給予輕量提醒，但不阻擋開賽。
     preSection.classList.toggle('needsAttention', !hasBegun && !state.regulationMinutes);
   }
 
@@ -24757,7 +25024,7 @@ function startMatch(){
 
   if(!validDayMatchNumber(state.dayMatchNumber)) ensureDayMatchNumber();
   state.dayMatchNumberLocked=true;
-  // v5.197：開始比賽只「預留」本日場次；正式確認要等全場／PK 完成。
+  // v5.198：開始比賽只「預留」本日場次；正式確認要等全場／PK 完成。
   if(!state.finished) state.dayMatchNumberConfirmed=false;
   state.started=true;
   state.startEpoch=actionEpoch;
@@ -25173,7 +25440,7 @@ function finishPenaltyShootout(){
   state.penalty.endEpoch=nowWholeMs();
   state.finished=true;
   state.started=false;
-  // v5.197：PK 完成才把預留場次正式確認。
+  // v5.198：PK 完成才把預留場次正式確認。
   state.dayMatchNumberConfirmed=true;
   state.dayMatchNumberLocked=true;
   timeExpanded=false;
@@ -25216,7 +25483,7 @@ function confirmFinishFull(){
   state.endEpoch=pendingFinishEnd;
   state.started=false;
   state.finished=true;
-  // v5.197：只有真正完成全場，才將本日場次由「預留」轉為「正式確認」。
+  // v5.198：只有真正完成全場，才將本日場次由「預留」轉為「正式確認」。
   state.dayMatchNumberConfirmed=true;
   state.dayMatchNumberLocked=true;
   rememberCurrentRosterAsPrevious();
@@ -28508,7 +28775,7 @@ body.resultMode.finalOutputVisible .finalToolsCard{
 
 
 <style id="v5181MetaBadgeSpacingFix">
-/* v5.197：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
+/* v5.198：修正比賽中「賽事階段／輪次」與「本日場次」徽章過近、擠壓問題 */
 .liveMetaStrip .matchMetaDisplayValue.withMetaBadges{
   display:flex!important;
   flex-wrap:wrap!important;
