@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.16</title>
+<title>足球場邊記錄器 v6.19</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -20456,7 +20456,7 @@ body.matchStatePre .broadcastStage .stageLabel{
 #reportModal .reportMVPPlayerText{flex:0 0 auto!important;}
 #reportModal .reportMVPPlayerText{white-space:nowrap!important;}
 #reportModal .reportMVPGoalTimes{
-  /* v6.16：進球時間緊跟球員背號後方，保留約兩格視覺間距，不再推到最右側。 */
+  /* v6.19：進球時間緊跟球員背號後方，保留約兩格視覺間距，不再推到最右側。 */
   margin-left:1.15em!important;
   display:inline-flex!important;
   flex-wrap:wrap!important;
@@ -20588,7 +20588,7 @@ body.matchStatePre .dayMatchEditBtn{margin-left:auto!important;}
 
 <style id="v5199FinalUiPolish">
 /* =========================================================
-   v6.16 Final UI Polish
+   v6.19 Final UI Polish
    目標：把賽前畫面收斂成同一套 Design System。
    不增加操作步驟；只統一字級、間距、框線、狀態權重與響應式細節。
    ========================================================= */
@@ -20844,7 +20844,7 @@ body.matchStatePre .venueDropdownBtn{right:0!important;}
 
 
 <style id="v5200PreResetAllPatch">
-/* v6.16：補回「重置所有賽前設定」，但維持 tertiary action，不與開始比賽搶焦點。 */
+/* v6.19：補回「重置所有賽前設定」，但維持 tertiary action，不與開始比賽搶焦點。 */
 .preResetAllRow{display:none;}
 body.matchStatePre .preResetAllRow{
   display:flex!important;
@@ -20901,7 +20901,7 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
 
 
 <style id="v61PlayerFocusPolish">
-/* v6.16：重置可發現性、賽前狀態可讀性，以及「小球員表現」導向的賽前焦點 */
+/* v6.19：重置可發現性、賽前狀態可讀性，以及「小球員表現」導向的賽前焦點 */
 
 /* 1) 重置：移到主操作上方，維持次要但清楚可找到。 */
 body.matchStatePre .preResetAllRow{
@@ -20997,7 +20997,7 @@ body.matchStatePre .preRegulationSection.needsAttention .preRegulationInlineTitl
 
 
 <style id="v63PreMatchActionAndScorePolish">
-/* v6.16：賽前只保留真正可執行的操作，並縮減比分區高度。 */
+/* v6.19：賽前只保留真正可執行的操作，並縮減比分區高度。 */
 
 /* 1. 賽前不存在「結束比賽」：完全隱藏，主 CTA 改為單欄滿版。 */
 body.matchStatePre #finishBtn{display:none!important;}
@@ -21130,7 +21130,7 @@ body.matchStatePre #scoreEditBtn{display:none!important;}
 
 
 <style id="v64SingleStateActionPatch">
-/* v6.16：各比賽階段只顯示當下真正可執行的主要動作。 */
+/* v6.19：各比賽階段只顯示當下真正可執行的主要動作。 */
 .matchCard .controls.singleAction{
   grid-template-columns:minmax(0,1fr)!important;
   gap:0!important;
@@ -21161,7 +21161,7 @@ body.matchStatePenalty .controls.singleAction #finishBtn:not([hidden]){
 
 
 <style id="v65PreResetHarmonyPatch">
-/* v6.16：賽前主／次操作按鈕採同一幾何語言，避免重置按鈕外框與主 CTA 互相干擾。 */
+/* v6.19：賽前主／次操作按鈕採同一幾何語言，避免重置按鈕外框與主 CTA 互相干擾。 */
 body.matchStatePre #startBtn{
   width:100%!important;
   min-height:50px!important;
@@ -21209,7 +21209,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn:active{
 
 
 <style id="v66PreActionStackFix">
-/* v6.16：賽前主／次操作收回同一操作區，避免重置按鈕跨出主卡片或與外框重疊。 */
+/* v6.19：賽前主／次操作收回同一操作區，避免重置按鈕跨出主卡片或與外框重疊。 */
 body.matchStatePre .controls{
   display:flex!important;
   flex-direction:column!important;
@@ -21270,7 +21270,7 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
 
 
 <style id="v67PreActionSplitFix">
-/* v6.16：賽前主／次操作回到同一列雙欄，並徹底清除歷史 absolute 定位。 */
+/* v6.19：賽前主／次操作回到同一列雙欄，並徹底清除歷史 absolute 定位。 */
 body.matchStatePre .controls{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
@@ -21384,7 +21384,7 @@ body:not(.matchStatePre) .preResetAllRow{display:none!important;}
 
 
 <style id="v68PreActionGapAndBorderReduction">
-/* v6.16：雙欄操作加入真正可見間距，並降低賽前頁過多框線的視覺噪音。 */
+/* v6.19：雙欄操作加入真正可見間距，並降低賽前頁過多框線的視覺噪音。 */
 body.matchStatePre .controls{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
@@ -21462,7 +21462,7 @@ body.matchStatePre .broadcastScoreboard{
 
 
 <style id="v69PreActionPhysicalGapFix">
-/* v6.16：賽前雙操作採固定實體分隔，不再只依賴 grid gap。 */
+/* v6.19：賽前雙操作採固定實體分隔，不再只依賴 grid gap。 */
 body.matchStatePre .controls{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
@@ -21517,7 +21517,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn{
 
 
 <style id="v610PreBottomMatrixAlignment">
-/* v6.16：賽前底部四個操作統一成同一套 2×2 幾何規格。 */
+/* v6.19：賽前底部四個操作統一成同一套 2×2 幾何規格。 */
 body.matchStatePre{
   --pre-bottom-grid-gap:12px;
   --pre-bottom-control-h:52px;
@@ -21617,7 +21617,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn .preResetLabel{
 
 
 <style id="v611PreBottomDirectGridFix">
-/* v6.16：真正統一賽前底部四顆按鈕的幾何結構。
+/* v6.19：真正統一賽前底部四顆按鈕的幾何結構。
    重置按鈕改為 controls 的直接子元素，不再透過額外 wrapper 參與 Grid。 */
 body.matchStatePre{
   --pre-matrix-gap:14px;
@@ -21700,7 +21700,7 @@ body.matchStatePre #preResetBtn.preResetAllBtn .preResetLabel{font-size:14px!imp
 
 <style id="v612PreBottomTrueGutterFix">
 /* =========================================================
-   v6.16：賽前底部 2×2 真實幾何對齊
+   v6.19：賽前底部 2×2 真實幾何對齊
    - 不再依賴 gap；中央改成獨立固定空白欄，避免深色按鈕吃掉 gap 的視覺。
    - 名單 / 守門員 / 開始比賽 / 重置賽前設定共用同一高度、圓角、欄寬。
    ========================================================= */
@@ -21829,7 +21829,7 @@ body.matchStatePre .preResetAllRow{display:none!important;}
 
 <style id="v613PreBottomSingleActionConflictFix">
 /* =========================================================
-   v6.16：賽前底部 2×2 最終幾何修正
+   v6.19：賽前底部 2×2 最終幾何修正
    真正原因：.matchCard .controls.singleAction 的舊規則 specificity
    高於先前 body.matchStatePre .controls，造成賽前 controls 仍被壓回單欄；
    reset 再指定到第 3 欄後，瀏覽器產生 implicit columns，形成大空白與不等寬。
@@ -21956,7 +21956,7 @@ body.matchStatePre .preResetAllRow{display:none!important;}
 
 <style id="v614TeamNameAndAttentionSemanticsPatch">
 /* =========================================================
-   v6.16：隊名完整顯示＋賽前提示色語意收斂
+   v6.19：隊名完整顯示＋賽前提示色語意收斂
    1) 含「足球隊」的長隊名拆成兩行時，保留完整字形與安全空間。
    2) 土黃色只代表「重要且尚待處理」，不再代表「可輸入」。
    3) 可輸入性由箭頭／修改鍵／placeholder／藍色 focus 表達。
@@ -22058,16 +22058,16 @@ body.matchStatePre .preRegulationSection:focus-within{
 
 
 <style id="v615LiveFinishVisualBalancePatch">
-/* v6.16：LIVE 與「結束比賽」紅色層級收斂。
+/* v6.19：LIVE 與「結束比賽」紅色層級收斂。
    - LIVE 保留紅色狀態識別，但取消紅色外發光，避免雙層感。
    - 結束比賽改為深色 destructive CTA，以珊瑚紅文字／細框傳達風險，不再使用整塊大紅。 */
 body.matchStateLive .broadcastStage .liveTag,
 body.matchStateSecondHalf .broadcastStage .liveTag,
 body.matchStateExtraActive .broadcastStage .liveTag{
-  background:linear-gradient(180deg,#ff5562 0%,#ef3f50 100%)!important;
-  border:1px solid rgba(255,133,143,.58)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 2px 6px rgba(0,0,0,.22)!important;
-  text-shadow:0 1px 1px rgba(0,0,0,.22)!important;
+  background:#ef3f50!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
 }
 body.matchStateLive .livePill,
 body.matchStateSecondHalf .livePill,
@@ -22097,7 +22097,7 @@ body.matchStateExtraActive #finishBtn:not([hidden]):active{
 
 <style id="v616FinalStatsDashboardSimplify">
 /* =========================================================
-   v6.16：全場「本場事件統計」改為閱讀型 Dashboard
+   v6.19：全場「本場事件統計」改為閱讀型 Dashboard
    - 外層只保留一層群組框線
    - 四項統計移除獨立卡片、彩色底板、陰影
    - 使用淡分隔線建立四欄節奏
@@ -22289,6 +22289,134 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordMetaSuffix
 }
 </style>
 
+
+<style id="v617PreAttentionSimplifyPatch">
+/* v6.19：賽前提醒進一步收斂。
+   1) 移除比賽時間與名單左側土黃色提示條。
+   2) 名單 0 人、守門員未設定僅用文字暖色提醒；設定後自動恢復中性色。 */
+
+/* 名單：不再使用左側黃色提示條，卡片維持中性結構。 */
+body.matchStatePre #rosterQuickBtn:not(.set){
+  border-color:rgba(70,96,124,.50)!important;
+  background:linear-gradient(180deg,rgba(28,54,80,.88),rgba(20,42,64,.94))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+body.matchStatePre #rosterQuickBtn:not(.set) .preQuickLabel{
+  color:#d6e0ea!important;
+}
+body.matchStatePre #rosterQuickBtn:not(.set) #rosterQuickText{
+  color:#f1c873!important;
+}
+
+/* 守門員：未設定時使用與名單 0 人相同的文字提醒色；設定完成後由既有 set 狀態回到正常色。 */
+body.matchStatePre #keeperQuickBtn:not(.set){
+  border-color:rgba(70,96,124,.50)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+body.matchStatePre #keeperQuickBtn:not(.set) .preQuickLabel{
+  color:#d6e0ea!important;
+}
+body.matchStatePre #keeperQuickBtn:not(.set) #keeperQuickText{
+  color:#f1c873!important;
+}
+body.matchStatePre #keeperQuickBtn.set #keeperQuickText{
+  color:#d7e4ef!important;
+}
+
+/* 比賽時間：移除左側黃色提示條；未設定文字仍保留暖色，讓提醒只存在於內容本身。 */
+body.matchStatePre .preRegulationSection.needsAttention{
+  border-color:rgba(70,96,124,.50)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02)!important;
+}
+body.matchStatePre .preRegulationSection.needsAttention .preRegulationInlineTitle{
+  color:#d6e0ea!important;
+}
+body.matchStatePre .preRegulationSection.needsAttention #regCompactValue,
+body.matchStatePre .preRegulationSection.needsAttention .regSelect{
+  color:#f1c873!important;
+}
+</style>
+
+
+<style id="v618LiveSolidRedPatch">
+/* v6.19：LIVE 改為單一純紅色，不使用漸層、外框、內陰影或外發光。 */
+body.matchStateLive .broadcastStage .liveTag,
+body.matchStateSecondHalf .broadcastStage .liveTag,
+body.matchStateExtraActive .broadcastStage .liveTag{
+  background:#ef3f50!important;
+  background-image:none!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+}
+</style>
+
+
+<style id="v619RegulationDefaultFlatPatch">
+/* v6.19：賽前比賽時間預設 20 分鐘；時間列只保留一層外框。 */
+body.matchStatePre .preRegulationSection{
+  border:1px solid rgba(70,96,124,.50)!important;
+  background:rgba(9,18,32,.72)!important;
+  box-shadow:none!important;
+}
+body.matchStatePre .preRegulationSection.needsAttention{
+  border-color:rgba(70,96,124,.50)!important;
+  background:rgba(9,18,32,.72)!important;
+  box-shadow:none!important;
+}
+body.matchStatePre #preRegulationSection .regBox,
+body.matchStatePre #preRegulationSection .regEditor,
+body.matchStatePre #preRegulationSection .regRow,
+body.matchStatePre #preRegulationSection .regChooser,
+body.matchStatePre #preRegulationSection .regSelectWrap{
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.matchStatePre #preRegulationSection .regBox{
+  padding:0!important;
+  border-radius:0!important;
+}
+body.matchStatePre #preRegulationSection .regTitle,
+body.matchStatePre #preRegulationSection .diff{display:none!important;}
+body.matchStatePre #preRegulationSection .regSelect{
+  height:44px!important;
+  min-height:44px!important;
+  padding:7px 34px 7px 8px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  color:#e6eef7!important;
+  font-size:16px!important;
+  font-weight:900!important;
+}
+body.matchStatePre #preRegulationSection .regSelect:focus{
+  outline:none!important;
+  box-shadow:none!important;
+}
+body.matchStatePre #preRegulationSection .regSelectWrap::after{
+  right:0!important;
+  color:#9eb4c9!important;
+}
+/* 未設定時只讓文字本身提醒，不重新加第二層框線。 */
+body.matchStatePre .preRegulationSection.needsAttention .regSelect{
+  border:0!important;
+  color:#f1c873!important;
+  background:transparent!important;
+}
+/* 預設 20 分鐘是正常狀態，不使用警示色。 */
+body.matchStatePre .preRegulationInlineTitle{color:#d6e0ea!important;}
+@media(max-width:390px){
+  body.matchStatePre #preRegulationSection .regSelect{
+    padding-left:6px!important;
+    padding-right:32px!important;
+    font-size:15.5px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -22303,7 +22431,7 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordMetaSuffix
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.16</span>
+      <span class="headerVersion">v6.19</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -22372,7 +22500,7 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordMetaSuffix
                   <select id="regPreset" class="regSelect" aria-label="比賽時間選項" onchange="handleRegulationPresetChange()">
                     <option value="none">未設定</option>
                     <option value="15">15 分鐘</option>
-                    <option value="20">20 分鐘</option>
+                    <option value="20">20 分鐘（預設）</option>
                     <option value="25">25 分鐘</option>
                     <option value="45">45 分鐘</option>
                     <option value="custom">自訂分鐘</option>
@@ -22384,7 +22512,7 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly .recordMetaSuffix
                     <input id="regCustomMinutes" class="regCustomInput" type="number" min="1" max="45" step="1" inputmode="numeric" placeholder="請輸入 1–45" aria-label="自訂比賽時間（分鐘）" onchange="handleRegulationCustomChange()" onkeydown="if(event.key==='Enter'){event.preventDefault();handleRegulationCustomChange();this.blur();}">
                     <span class="regUnit">分鐘</span>
                   </div>
-                  <div class="regCustomHint">可輸入 1–45 分鐘整數，預設不帶值</div>
+                  <div class="regCustomHint">可輸入 1–45 分鐘整數</div>
                 </div>
               </div>
               <div class="regButtons">
@@ -23830,7 +23958,7 @@ let state={
   dayMatchNumber:null, dayMatchNumberManual:false, dayMatchNumberLocked:false, dayMatchNumberConfirmed:false,
   started:false, finished:false,
   startEpoch:null, endEpoch:null, finalElapsed:0,
-  regulationMinutes:null,
+  regulationMinutes:20,
   ourScore:0, oppScore:0,
   markers:[],
   currentPeriod:1,
@@ -26978,7 +27106,7 @@ function newMatch(){
   // 仍透過既有白名單正規化，避免未知值污染新場資料。
   const rememberedJerseyColor=normalizeJerseyColor(state.jerseyColor);
   const reg=Number(state.regulationMinutes);
-  const rememberedRegulationMinutes=(Number.isInteger(reg) && reg>=1 && reg<=45) ? reg : null;
+  const rememberedRegulationMinutes=(Number.isInteger(reg) && reg>=1 && reg<=45) ? reg : 20;
   const nextDayMatchNumber=suggestNextDayMatchNumber(rememberedOurTeam||'忠義國小',Date.now());
 
   activateMatchId(createUniqueMatchId(),{writeUrl:true});
@@ -28586,7 +28714,7 @@ function hasMeaningfulPreMatchSetup(){
     currentVenue ||
     String(state.goalkeeperNumber||'') ||
     currentRosterNumbers().length ||
-    Number(state.regulationMinutes||0) ||
+    (Number(state.regulationMinutes||0)!==0 && Number(state.regulationMinutes)!==20) ||
     Boolean(state.dayMatchNumberManual) ||
     (currentOur && currentOur!==rememberedOur)
   );
@@ -28653,8 +28781,8 @@ function resetPreMatchSetup(){
 
   if(!confirm(
     '重置賽前設定？\n\n' +
-    '將清除本場賽事、階段／輪次、場地、對手、名單、守門員與比賽時間等賽前設定。\n\n' +
-    '我方隊名會保留，本日場次恢復自動判斷。'
+    '將清除本場賽事、階段／輪次、場地、對手、名單與守門員等賽前設定。\n\n' +
+    '我方隊名會保留，本日場次恢復自動判斷；比賽時間恢復預設 20 分鐘。'
   )) return;
 
   hideMarkerUndo();
@@ -28675,7 +28803,7 @@ function resetPreMatchSetup(){
   state.goalkeeperAutoRosterNumber='';
   state.rosterNumbers=[];
   state.jerseyColor='default';
-  state.regulationMinutes=null;
+  state.regulationMinutes=20;
   state.dayMatchNumber=null;
   state.dayMatchNumberManual=false;
   state.dayMatchNumberLocked=false;
@@ -29008,7 +29136,7 @@ function render(){
   startBtn.textContent=state.awaitingNextPeriod ? (state.nextPeriodType==='EXTRA_TIME'?'▶ 開始延長賽':'▶ 開始下半場') : '▶ 開始比賽';
   finishBtn.textContent=state.penalty?.active ? '⚽ 記錄 PK' : state.currentPeriod===3 && state.started ? '■ 結束延長賽' : (state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 結束比賽');
 
-  // v6.16：每個狀態只顯示當下真正可執行的主要動作。
+  // v6.19：每個狀態只顯示當下真正可執行的主要動作。
   // 不再保留 disabled 的另一顆按鈕，降低現場操作認知負擔。
   const controls=startBtn?.closest('.controls');
   if(state.finished){
@@ -30290,16 +30418,16 @@ body.resultMode.finalOutputVisible .finalToolsCard{
 
 
 <style id="v615LiveFinishVisualBalancePatch">
-/* v6.16：LIVE 與「結束比賽」紅色層級收斂。
+/* v6.19：LIVE 與「結束比賽」紅色層級收斂。
    - LIVE 保留紅色狀態識別，但取消紅色外發光，避免雙層感。
    - 結束比賽改為深色 destructive CTA，以珊瑚紅文字／細框傳達風險，不再使用整塊大紅。 */
 body.matchStateLive .broadcastStage .liveTag,
 body.matchStateSecondHalf .broadcastStage .liveTag,
 body.matchStateExtraActive .broadcastStage .liveTag{
-  background:linear-gradient(180deg,#ff5562 0%,#ef3f50 100%)!important;
-  border:1px solid rgba(255,133,143,.58)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 2px 6px rgba(0,0,0,.22)!important;
-  text-shadow:0 1px 1px rgba(0,0,0,.22)!important;
+  background:#ef3f50!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
 }
 body.matchStateLive .livePill,
 body.matchStateSecondHalf .livePill,
