@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.22</title>
+<title>足球場邊記錄器 v6.23</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22562,6 +22562,24 @@ body.matchStatePre #startBtn{
 }
 </style>
 
+
+<style id="v623PreResetVisibilityFix">
+/* v6.23：主頁真正的重置按鈕可見性修正。
+   歷史 CSS 含多組 display:flex/inline-flex !important，會覆寫 HTML hidden。
+   因此 hidden 狀態在主頁 head 使用最高優先權強制 display:none。 */
+#preResetBtn[hidden],
+body.matchStatePre #preResetBtn[hidden],
+body.matchStatePre .matchCard .controls > #preResetBtn[hidden]{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+/* 只有 JS 判定真的有賽前資料可清除時，才允許它成為雙欄第二顆按鈕。 */
+body.matchStatePre .matchCard .controls.preDualAction > #preResetBtn:not([hidden]).show{
+  display:flex!important;
+  visibility:visible!important;
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -22576,7 +22594,7 @@ body.matchStatePre #startBtn{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.22</span>
+      <span class="headerVersion">v6.23</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28916,8 +28934,17 @@ function renderPreResetUI(){
   // v6.22：可用狀態必須同時控制 DOM hidden。
   // 只靠 .show / disabled 會被歷史 display:...!important 規則重新畫出來，
   // 造成「不能按但仍看得到」的幽靈重置按鈕。
-  btn.hidden=!available;
-  btn.classList.toggle('show',available);
+  // v6.23：hidden 之外，再用 inline !important 封死歷史 author CSS 的 display 覆寫。
+  // 不可重置時先隱藏，再移除 show；可重置時先解除 inline display 再顯示。
+  if(!available){
+    btn.hidden=true;
+    btn.classList.remove('show');
+    btn.style.setProperty('display','none','important');
+  }else{
+    btn.style.removeProperty('display');
+    btn.hidden=false;
+    btn.classList.add('show');
+  }
   btn.disabled=!available;
   btn.setAttribute('aria-hidden', String(!available));
   btn.setAttribute('aria-disabled', String(!available));
@@ -29330,6 +29357,7 @@ function render(){
     !state.penalty?.active &&
     hasMeaningfulPreMatchSetup();
   // v6.22：直接以 state / 賽前設定內容判斷雙欄，不再依賴 preResetBtn.show 的前一個 render 狀態。
+  // v6.23：preDualAction 的資料判斷與 preResetBtn 的 available 使用同一條件來源。
   controls?.classList.toggle('preDualAction', hasPreResetAction);
   controls?.classList.toggle('singleAction', !state.finished && !hasPreResetAction);
 
