@@ -1,3 +1,9 @@
+## v6.25 UI-only change
+
+- 本版只調整賽前視覺層級、框線透明度、比分區尺寸與狀態色 Design Token。
+- 不新增外部資源、網路請求、權限 API 或第三方程式碼。
+- 不變更 localStorage 比賽資料格式、事件記錄邏輯、計時／比分邏輯與匯出資料內容。
+
 ## v5.179 本次驗證
 
 - [x] 本日場次只統計同一我方隊伍、同一曆日且真正開始過的比賽；空白賽前草稿不占場次。
@@ -2192,3 +2198,6 @@ football_marker_vX_XX.zip
 - [ ] Safari 工具列展開時，頁面底部仍保有足夠捲動空間
 - [ ] 我方隊名僅在賽前可進入藍色編輯狀態
 - [ ] 開賽後點擊我方隊名不會顯示輸入框或藍色底線
+
+## v6.24 UI-only change
+- Full-time event-record styling only; no new external network calls, storage permissions, or executable dependencies.

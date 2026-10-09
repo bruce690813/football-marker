@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.23</title>
+<title>足球場邊記錄器 v6.25</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22580,6 +22580,130 @@ body.matchStatePre .matchCard .controls.preDualAction > #preResetBtn:not([hidden
   visibility:visible!important;
 }
 </style>
+
+
+<style id="v625PreMatchFinalPolish">
+/* =========================================================
+   v6.25 賽前 Final Polish
+   - 比分區再縮約 10–15%，保留長隊名完整顯示。
+   - 已完成欄位降低框線存在感；可填欄位以箭頭／修改鍵辨識。
+   - 暖黃色只代表「尚未完成且值得注意」；藍色只代表 focus。
+   ========================================================= */
+body.matchStatePre{
+  --v625-border-rest:rgba(70,96,124,.34);
+  --v625-border-done:rgba(70,96,124,.22);
+  --v625-bg-done:rgba(8,17,29,.48);
+  --v625-focus:#38bdf8;
+  --v625-attention:#f1c873;
+}
+
+/* 一般／完成／Focus 三種欄位狀態。 */
+body.matchStatePre .preMetaField,
+body.matchStatePre .dayMatchMeta,
+body.matchStatePre .preRegulationSection{
+  box-shadow:none!important;
+}
+body.matchStatePre .preMetaField{
+  border-color:var(--v625-border-rest)!important;
+}
+body.matchStatePre .preMetaField:has(input:not(:placeholder-shown)):not(:focus-within),
+body.matchStatePre .venueMetaField:has(input:not(:placeholder-shown)):not(:focus-within){
+  border-color:var(--v625-border-done)!important;
+  background:var(--v625-bg-done)!important;
+}
+/* 本日場次是系統／使用者既有結果，不需要再用強框提示。 */
+body.matchStatePre .dayMatchMeta{
+  border-color:var(--v625-border-done)!important;
+  background:rgba(8,17,29,.46)!important;
+}
+/* 20 分鐘預設值屬正常完成狀態，時間列保持安靜。 */
+body.matchStatePre .preRegulationSection:not(.needsAttention){
+  border-color:var(--v625-border-done)!important;
+  background:rgba(8,17,29,.50)!important;
+}
+body.matchStatePre .preQuickSetup > button.set{
+  border-color:var(--v625-border-done)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.018)!important;
+}
+body.matchStatePre .preQuickSetup > button:not(.set){
+  border-color:var(--v625-border-rest)!important;
+}
+/* 未完成只用內容文字提醒，不再用整圈黃色。 */
+body.matchStatePre #rosterQuickBtn:not(.set) #rosterQuickText,
+body.matchStatePre #keeperQuickBtn:not(.set) #keeperQuickText,
+body.matchStatePre .preRegulationSection.needsAttention #regCompactValue,
+body.matchStatePre .preRegulationSection.needsAttention .regSelect{
+  color:var(--v625-attention)!important;
+}
+body.matchStatePre .preRegulationSection.needsAttention{
+  border-color:var(--v625-border-rest)!important;
+  background:rgba(9,18,32,.68)!important;
+  box-shadow:none!important;
+}
+/* 正在編輯才使用唯一的互動藍色。 */
+body.matchStatePre .preMetaField:focus-within,
+body.matchStatePre .preRegulationSection:focus-within,
+body.matchStatePre .preQuickSetup > button:focus-visible,
+body.matchStatePre .dayMatchEditBtn:focus-visible{
+  border-color:rgba(56,189,248,.82)!important;
+  box-shadow:0 0 0 2px rgba(56,189,248,.13)!important;
+  outline:none!important;
+}
+
+/* 比分區再縮約 10–15%。長隊名的兩行安全規則沿用 v6.14。 */
+body.matchStatePre .broadcastBar{
+  min-height:27px!important;
+  padding:4px 0 0!important;
+}
+body.matchStatePre #broadcastStageLabel{
+  font-size:15px!important;
+  line-height:1.1!important;
+}
+body.matchStatePre .scoreRow{
+  padding:0 8px 6px!important;
+  gap:8px!important;
+}
+body.matchStatePre .teamNameBox{
+  min-height:46px!important;
+  border-radius:10px!important;
+}
+body.matchStatePre .teamNameDisplay:not(.suffixSplit){
+  font-size:16px!important;
+  line-height:1.08!important;
+}
+body.matchStatePre .scoreMid{
+  min-width:112px!important;
+}
+body.matchStatePre .scoreTile{
+  width:47px!important;
+  min-width:47px!important;
+  height:50px!important;
+  font-size:38px!important;
+  border-radius:10px!important;
+}
+body.matchStatePre .scoreTile.twoDigit{font-size:33px!important;}
+body.matchStatePre .scoreColon{font-size:23px!important;}
+
+@media(max-width:390px){
+  body.matchStatePre .broadcastBar{min-height:26px!important;padding-top:3px!important;}
+  body.matchStatePre #broadcastStageLabel{font-size:14.5px!important;}
+  body.matchStatePre .teamNameBox{min-height:45px!important;}
+  body.matchStatePre .teamNameDisplay:not(.suffixSplit){font-size:15.5px!important;}
+  body.matchStatePre .scoreMid{min-width:108px!important;}
+  body.matchStatePre .scoreTile{width:45px!important;min-width:45px!important;height:48px!important;font-size:36px!important;}
+  body.matchStatePre .scoreTile.twoDigit{font-size:31px!important;}
+  body.matchStatePre .scoreColon{font-size:22px!important;}
+}
+@media(max-width:350px){
+  body.matchStatePre .scoreRow{gap:6px!important;padding-left:5px!important;padding-right:5px!important;}
+  body.matchStatePre .teamNameBox{min-height:44px!important;}
+  body.matchStatePre .teamNameDisplay:not(.suffixSplit){font-size:14.5px!important;}
+  body.matchStatePre .scoreMid{min-width:102px!important;}
+  body.matchStatePre .scoreTile{width:43px!important;min-width:43px!important;height:46px!important;font-size:34px!important;}
+  body.matchStatePre .scoreTile.twoDigit{font-size:29px!important;}
+  body.matchStatePre .scoreColon{font-size:21px!important;}
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -22594,7 +22718,7 @@ body.matchStatePre .matchCard .controls.preDualAction > #preResetBtn:not([hidden
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.23</span>
+      <span class="headerVersion">v6.25</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -30649,6 +30773,136 @@ body.matchStateExtraActive #finishBtn:not([hidden]):active{
    防止歷史的 display:flex/inline-flex !important 將 disabled 按鈕重新畫出。 */
 #preResetBtn[hidden]{display:none!important;}
 body.matchStatePre .matchCard .controls.preDualAction > #preResetBtn:not([hidden]).show{display:flex!important;}
+</style>
+
+<style id="v624ResultEventRecordFlatRow">
+/* =========================================================
+   v6.24：全場「事件紀錄」改為真正的統計區 footer row
+   - 根因：舊規則使用 2 個 ID（#eventHubSection #recordSection），
+     specificity 高於 v6.16 的扁平化覆寫，因此舊的工具卡背景仍被畫出。
+   - 本版以相同 / 更高 specificity 在主頁最後覆寫，移除事件紀錄的
+     外框、漸層底板、筆數 badge 與陰影，只保留群組分隔線與文字。
+   ========================================================= */
+body.resultMode.finalOutputVisible .resultEventsGroup > #eventHubSection.recordOnly{
+  height:46px!important;
+  min-height:46px!important;
+  max-height:46px!important;
+  margin:0!important;
+  padding:0 14px!important;
+  border:0!important;
+  border-top:1px solid rgba(181,207,234,.12)!important;
+  border-radius:0 0 20px 20px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:hidden!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection{
+  height:45px!important;
+  min-height:45px!important;
+  max-height:45px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn,
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:disabled{
+  width:100%!important;
+  height:45px!important;
+  min-height:45px!important;
+  max-height:45px!important;
+  margin:0!important;
+  padding:0 2px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+  transform:none!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:disabled{
+  opacity:.72!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:not(:disabled){
+  opacity:1!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:not(:disabled):active{
+  background:rgba(255,255,255,.025)!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordCardMain{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordIconWrap,
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:disabled .recordIconWrap{
+  width:26px!important;
+  height:26px!important;
+  min-width:26px!important;
+  flex:0 0 26px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordIcon,
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:disabled .recordIcon{
+  color:#9fb0c0!important;
+  font-size:17px!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordLabel,
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:disabled .recordLabel{
+  color:#aebdcc!important;
+  font-size:16.5px!important;
+  line-height:1!important;
+  font-weight:820!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:not(:disabled) .recordLabel{
+  color:#d7e1ea!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordMeta,
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:disabled .recordMeta{
+  min-width:0!important;
+  width:auto!important;
+  height:auto!important;
+  padding:0!important;
+  gap:3px!important;
+  display:inline-flex!important;
+  align-items:baseline!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#9facba!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordCount,
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:disabled .recordCount{
+  color:#b6c3cf!important;
+  font-size:16px!important;
+  font-weight:900!important;
+  line-height:1!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordFullBtn:not(:disabled) .recordCount{
+  color:#eef4fa!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
+  color:#92a1b0!important;
+  font-size:11.5px!important;
+  font-weight:800!important;
+}
+@media(max-width:390px){
+  body.resultMode.finalOutputVisible .resultEventsGroup > #eventHubSection.recordOnly{
+    padding:0 12px!important;
+  }
+  body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordLabel{
+    font-size:16px!important;
+  }
+}
 </style>
 </head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}${formatDayMatchLabel(state.dayMatchNumber)?`｜${escapeHtml(formatDayMatchLabel(state.dayMatchNumber))}`:''}</div>${(state.competition||state.competitionStage)?`<div>🏆 ${escapeHtml([state.competition,state.competitionStage].filter(Boolean).join('｜'))}</div>`:''}${state.venue?`<div>📍 ${escapeHtml(state.venue)}</div>`:''}</div></div>
