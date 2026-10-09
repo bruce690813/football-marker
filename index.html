@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.28</title>
+<title>足球場邊記錄器 v6.29</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22861,7 +22861,7 @@ body.resultMode #scoreEditBtn:focus-visible{
 
 <style id="v628PreShortTeamNameSizing">
 /* =========================================================
-   v6.28：賽前短隊名動態放大（主頁 authoritative patch）
+   v6.29：賽前短隊名動態放大（主頁 authoritative patch）
    根因修正：v6.27 的放大規則誤插入匯出 HTML 模板，主頁未套用。
    - 1～4 字：明顯放大，提高對戰雙方辨識度。
    - 5～6 字：中等放大。
@@ -22889,6 +22889,47 @@ body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
   body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){font-size:16.5px!important;}
 }
 </style>
+
+<style id="v629PreTeamNameFitPatch">
+/* =========================================================
+   v6.29：賽前短隊名完整顯示 + 實際寬度自動縮字
+   根因：v5.102 殘留 text-overflow:ellipsis!important；
+         v6.28 放大 1～4 字後，Safari 寬度不足時直接顯示省略號。
+   原則：短／中隊名禁止省略號，先用較大字級；若實際寬度不足，
+         由 JS 逐步微縮直到完整顯示。
+   ========================================================= */
+body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit):not(.empty),
+body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  padding:0 1px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  text-align:center!important;
+  letter-spacing:-.1px!important;
+}
+body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit):not(.empty){
+  font-size:var(--pre-team-fit-size,21px)!important;
+  line-height:1.06!important;
+  font-weight:950!important;
+}
+body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
+  font-size:var(--pre-team-fit-size,18.5px)!important;
+  line-height:1.07!important;
+  font-weight:920!important;
+}
+@media(max-width:390px){
+  body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit):not(.empty){font-size:var(--pre-team-fit-size,20px)!important;}
+  body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){font-size:var(--pre-team-fit-size,17.5px)!important;}
+}
+@media(max-width:350px){
+  body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit):not(.empty){font-size:var(--pre-team-fit-size,18.5px)!important;}
+  body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){font-size:var(--pre-team-fit-size,16.5px)!important;}
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -22903,7 +22944,7 @@ body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.28</span>
+      <span class="headerVersion">v6.29</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28826,6 +28867,44 @@ function closeLogModal(){
   currentLogFilter=null;
 }
 
+function fitPreMatchTeamNameDisplay(el){
+  if(!el) return;
+  if(!document.body.classList.contains('matchStatePre') ||
+     el.classList.contains('empty') ||
+     el.classList.contains('suffixSplit') ||
+     (!el.classList.contains('shortName') && !el.classList.contains('mediumName'))){
+    el.style.removeProperty('--pre-team-fit-size');
+    return;
+  }
+
+  const isShort=el.classList.contains('shortName');
+  const vw=Math.max(document.documentElement.clientWidth||0, window.innerWidth||0);
+  let target;
+  let minimum;
+  if(isShort){
+    target = vw<=350 ? 18.5 : (vw<=390 ? 20 : 21);
+    minimum = 16.5;
+  }else{
+    target = vw<=350 ? 16.5 : (vw<=390 ? 17.5 : 18.5);
+    minimum = 14.5;
+  }
+
+  el.style.setProperty('--pre-team-fit-size', target+'px');
+
+  // 等 Safari 完成本輪 Grid 排版後再量實際可用寬度。
+  requestAnimationFrame(()=>{
+    if(!el.isConnected || !document.body.classList.contains('matchStatePre')) return;
+    const available=el.clientWidth;
+    if(!available) return;
+    let size=target;
+    // scrollWidth 會保留完整文字實際寬度；逐級微縮，避免任何省略號。
+    while(size>minimum && el.scrollWidth>available+0.5){
+      size=Math.max(minimum, size-0.5);
+      el.style.setProperty('--pre-team-fit-size', size+'px');
+    }
+  });
+}
+
 function updateTeamNameDisplays(){
   const our=(byId('ourTeam')?.value || state.ourTeam || '').trim();
   const opp=(byId('oppTeam')?.value || state.oppTeam || '').trim();
@@ -28871,6 +28950,8 @@ function updateTeamNameDisplays(){
 
   applyTeamNameLayout(ourDisplay, our, '我方');
   applyTeamNameLayout(oppDisplay, opp, '對手');
+  fitPreMatchTeamNameDisplay(ourDisplay);
+  fitPreMatchTeamNameDisplay(oppDisplay);
 }
 
 function canReviewTeamNameEdit(){
