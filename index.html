@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.34</title>
+<title>足球場邊記錄器 v6.35</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22946,7 +22946,7 @@ body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
 
 <style id="v630VisualPolishAndResultRecordIntegration">
 /* =========================================================
-   v6.34：賽前視覺精修 + 全場事件紀錄融合
+   v6.35：賽前視覺精修 + 全場事件紀錄融合
    1) Header「說明」降為輕量輔助按鈕，不與品牌標題競爭。
    2) 賽前主 CTA 稍微扁平；雙欄時開始／重置維持完全同高。
    3) 暖黃色只做柔和的未完成提醒，不與主 CTA 搶焦點。
@@ -23140,6 +23140,115 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
   body.resultMode #eventHubSection.recordOnly #recordSection .recordLabel{font-size:16px!important;}
 }
 </style>
+
+<style id="v635RosterModalBottomActionsPatch">
+/* =========================================================
+   v6.35：本場球員名單底部操作可完整顯示
+   - 真正套用於主頁 <head>，不是匯出 HTML 模板。
+   - Modal 改成 Header / Scroll / Footer 三列 Grid。
+   - 可捲動區與底部工具列之間保留明確安全距離。
+   ========================================================= */
+#rosterModal .rosterModalPanel{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  overflow:hidden!important;
+  height:auto!important;
+  max-height:min(760px,calc(var(--vv-height,100dvh) - 36px))!important;
+}
+#rosterModal .rosterModalFixedHead{
+  grid-row:1!important;
+  min-height:0!important;
+}
+#rosterModal .rosterModalScroll{
+  grid-row:2!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior:contain!important;
+  padding-bottom:22px!important;
+  scroll-padding-bottom:30px!important;
+}
+#rosterModal .rosterModalScroll::after{
+  content:"";
+  display:block;
+  width:100%;
+  height:18px;
+  flex:0 0 18px;
+  pointer-events:none;
+}
+#rosterModal .rosterUtilityRow{
+  position:relative!important;
+  z-index:1!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:10px!important;
+  width:100%!important;
+  margin:16px 0 0!important;
+  padding:0!important;
+}
+#rosterModal .rosterResetLearnedBtn,
+#rosterModal .rosterClearBtn{
+  width:100%!important;
+  min-width:0!important;
+  min-height:44px!important;
+  margin:0!important;
+  padding:8px 10px!important;
+  white-space:nowrap!important;
+}
+#rosterModal .rosterModalFooter{
+  grid-row:3!important;
+  position:relative!important;
+  inset:auto!important;
+  z-index:20!important;
+  flex:none!important;
+  margin:0!important;
+  transform:none!important;
+  padding:10px 18px calc(12px + env(safe-area-inset-bottom,0px))!important;
+  border-top:1px solid #dbe3ee!important;
+  background:#f6f7fb!important;
+  box-shadow:0 -8px 18px rgba(15,23,42,.05)!important;
+}
+#rosterModal .rosterDoneBtn{
+  margin:0!important;
+  min-height:50px!important;
+}
+@media(max-width:390px){
+  #rosterModal .rosterModalPanel{
+    max-height:min(760px,calc(var(--vv-height,100dvh) - 28px))!important;
+  }
+  #rosterModal .rosterModalScroll{
+    padding-bottom:20px!important;
+    scroll-padding-bottom:28px!important;
+  }
+  #rosterModal .rosterModalScroll::after{
+    height:16px!important;
+  }
+  #rosterModal .rosterUtilityRow{
+    gap:8px!important;
+  }
+  #rosterModal .rosterResetLearnedBtn,
+  #rosterModal .rosterClearBtn{
+    font-size:11.5px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+  #rosterModal .rosterModalFooter{
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+}
+@media(max-height:720px){
+  #rosterModal .rosterModalPanel{
+    max-height:calc(var(--vv-height,100dvh) - 20px)!important;
+  }
+  #rosterModal .rosterModalScroll{
+    padding-bottom:18px!important;
+    scroll-padding-bottom:26px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -23154,7 +23263,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.34</span>
+      <span class="headerVersion">v6.35</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -26790,6 +26899,7 @@ function renderRosterModal(){
 }
 
 function openRosterModal(){
+  syncVisualViewport();
   if(state.finished){
     alert('本場比賽已結束，球員名單已鎖定。');
     return;
@@ -26802,6 +26912,11 @@ function openRosterModal(){
   const input=byId('rosterInput');
   if(input) input.value='';
   byId('rosterModal').classList.add('open');
+  requestAnimationFrame(()=>{
+    syncVisualViewport();
+    const scroll=byId('rosterModal')?.querySelector('.rosterModalScroll');
+    if(scroll) scroll.scrollTop=0;
+  });
 }
 
 function closeRosterModal(){
@@ -31411,7 +31526,7 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
 
 <style id="v633RosterModalFooterVisibilityPatch">
 /* =========================================================
-   v6.34：本場球員名單底部操作不再被「完成」Footer 遮蔽
+   v6.35：本場球員名單底部操作不再被「完成」Footer 遮蔽
    根因：iPhone Safari 的 dynamic visual viewport 下，舊版 flex panel
    在高度壓縮時可能讓可捲動區的最後一列繪製到 footer 下方。
    改用明確三列 Grid：Header / Scroll / Footer，並替內容底部保留安全空間。
