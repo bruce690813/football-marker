@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.32</title>
+<title>足球場邊記錄器 v6.33</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -1862,6 +1862,23 @@ body.matchStateLive .new{
   max-height:2.12em;
 }
 
+/* v6.33：12 字以上超長隊名允許最多三行，完整顯示優先。 */
+.teamNameDisplay.ultraLongName{
+  font-size:clamp(14px,3.8vw,16px);
+  line-height:1.05;
+  letter-spacing:-.25px;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  line-clamp:3;
+  white-space:normal;
+  overflow:hidden;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  text-overflow:clip;
+  max-height:3.15em;
+}
+
 /* 非賽前狀態也啟用隊名字體自動貼合，避免「忠義國小」等四字隊名在部分 iPhone 寬度被裁切。 */
 body:not(.matchStatePre) .teamNameDisplay.shortName:not(.suffixSplit):not(.empty){
   font-size:var(--team-fit-size,23px)!important;
@@ -1874,6 +1891,16 @@ body:not(.matchStatePre) .teamNameDisplay.longName:not(.suffixSplit):not(.empty)
 }
 body:not(.matchStatePre) .teamNameDisplay.veryLongName:not(.suffixSplit):not(.empty){
   font-size:var(--team-fit-size,17px)!important;
+}
+body:not(.matchStatePre) .teamNameDisplay.ultraLongName:not(.suffixSplit):not(.empty){
+  font-size:15px!important;
+  line-height:1.05!important;
+  -webkit-line-clamp:3!important;
+  line-clamp:3!important;
+  max-height:3.15em!important;
+  white-space:normal!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
 }
 
 /* =========================
@@ -22948,7 +22975,7 @@ body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
 
 <style id="v630VisualPolishAndResultRecordIntegration">
 /* =========================================================
-   v6.32：賽前視覺精修 + 全場事件紀錄融合
+   v6.33：賽前視覺精修 + 全場事件紀錄融合
    1) Header「說明」降為輕量輔助按鈕，不與品牌標題競爭。
    2) 賽前主 CTA 稍微扁平；雙欄時開始／重置維持完全同高。
    3) 暖黃色只做柔和的未完成提醒，不與主 CTA 搶焦點。
@@ -23156,7 +23183,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.32</span>
+      <span class="headerVersion">v6.33</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -29092,8 +29119,10 @@ function fitTeamNameDisplay(el){
   const isMedium=el.classList.contains('mediumName');
   const isLong=el.classList.contains('longName');
   const isVeryLong=el.classList.contains('veryLongName');
+  const isUltraLong=el.classList.contains('ultraLongName');
 
   // 只針對單行顯示的短、中、稍長隊名做自動縮放；兩行與超長名稱維持既有規則。
+  if(isUltraLong) return;
   if(!isShort && !isMedium && !isLong && !isVeryLong) return;
 
   const vw=Math.max(document.documentElement.clientWidth||0, window.innerWidth||0);
@@ -29152,7 +29181,7 @@ function updateTeamNameDisplays(){
   function applyTeamNameLayout(el,name,fallback){
     if(!el) return;
     const clean=(name||'').trim();
-    el.classList.remove('empty','shortName','mediumName','longName','veryLongName','suffixSplit','latinName');
+    el.classList.remove('empty','shortName','mediumName','longName','veryLongName','ultraLongName','suffixSplit','latinName');
 
     if(!clean){
       el.textContent=fallback;
@@ -29181,8 +29210,9 @@ function updateTeamNameDisplays(){
     el.textContent=clean;
     el.classList.toggle('shortName', clean.length<=4);
     el.classList.toggle('mediumName', clean.length>=5 && clean.length<7);
-    el.classList.toggle('longName', clean.length>=7 && clean.length<9);
-    el.classList.toggle('veryLongName', clean.length>=9);
+    el.classList.toggle('longName', clean.length>=7 && clean.length<10);
+    el.classList.toggle('veryLongName', clean.length>=10 && clean.length<12);
+    el.classList.toggle('ultraLongName', clean.length>=12);
   }
 
   applyTeamNameLayout(ourDisplay, our, '我方');
