@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.38</title>
+<title>足球場邊記錄器 v6.39</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22946,7 +22946,7 @@ body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
 
 <style id="v630VisualPolishAndResultRecordIntegration">
 /* =========================================================
-   v6.38：賽前視覺精修 + 全場事件紀錄融合
+   v6.39：賽前視覺精修 + 全場事件紀錄融合
    1) Header「說明」降為輕量輔助按鈕，不與品牌標題競爭。
    2) 賽前主 CTA 稍微扁平；雙欄時開始／重置維持完全同高。
    3) 暖黃色只做柔和的未完成提醒，不與主 CTA 搶焦點。
@@ -23143,7 +23143,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v635RosterModalBottomActionsPatch">
 /* =========================================================
-   v6.38：本場球員名單底部操作可完整顯示
+   v6.39：本場球員名單底部操作可完整顯示
    - 真正套用於主頁 <head>，不是匯出 HTML 模板。
    - Modal 改成 Header / Scroll / Footer 三列 Grid。
    - 可捲動區與底部工具列之間保留明確安全距離。
@@ -23252,7 +23252,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v637RosterFooterStructurePatch">
 /* =========================================================
-   v6.38：本場球員名單 Footer 結構修正
+   v6.39：本場球員名單 Footer 結構修正
    1. 使用真正換行，避免字面 \n 顯示在頁面上方。
    2. 次要操作列與主要「完成」按鈕固定 14px 垂直間距。
    ========================================================= */
@@ -23347,7 +23347,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v638RemovePagePitchBackground">
 /* =========================================================
-   v6.38：移除頁面底層足球場線稿
+   v6.39：移除頁面底層足球場線稿
    - body::before：半場線 / 中圈 / 中點
    - body::after ：下半部球場外框 / 禁區線
    - 不影響最上方綠色足球場 Header
@@ -23359,6 +23359,118 @@ body::after{
   background:none!important;
   border:0!important;
   opacity:0!important;
+}
+</style>
+
+
+<style id="v639UnifiedPreInfoHeightAndMVPPolish">
+/* =========================================================
+   v6.39
+   1) 賽前五個資訊列統一為同一實體高度。
+   2) 單場 MVP 改為深藍底＋細金框，降低土金色面積。
+   ========================================================= */
+body.matchStatePre{
+  --pre-info-row-h:48px;
+}
+
+/* 五列：比賽賽事／賽事階段／本日場次／比賽場地／比賽時間 */
+body.matchStatePre .matchMetaRow > .preMetaField,
+body.matchStatePre .dayMatchMeta,
+body.matchStatePre .preVenueStandalone,
+body.matchStatePre .preRegulationSection{
+  height:var(--pre-info-row-h)!important;
+  min-height:var(--pre-info-row-h)!important;
+  max-height:var(--pre-info-row-h)!important;
+  box-sizing:border-box!important;
+  align-items:center!important;
+}
+
+/* 一般文字欄位與場地欄位：內層不得再把外框撐高。 */
+body.matchStatePre .matchMetaRow > .preMetaField,
+body.matchStatePre .preVenueStandalone{
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
+body.matchStatePre .matchMetaRow > .preMetaField input,
+body.matchStatePre .preVenueStandalone input{
+  height:46px!important;
+  min-height:46px!important;
+  max-height:46px!important;
+  box-sizing:border-box!important;
+}
+body.matchStatePre .stageInputWrap,
+body.matchStatePre .venueInputWrap{
+  height:100%!important;
+  min-height:0!important;
+}
+
+/* 本日場次：固定 48px，維持內容置中。 */
+body.matchStatePre .dayMatchMeta{
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
+body.matchStatePre .dayMatchMetaIcon,
+body.matchStatePre .dayMatchMetaLabel,
+body.matchStatePre .dayMatchInlineSlot,
+body.matchStatePre .dayMatchSourceBadge,
+body.matchStatePre .dayMatchEditBtn{
+  align-self:center!important;
+}
+
+/* 比賽時間原先有 6px 上下 padding + 44px select，會把整列撐高。
+   改為同樣 48px 外框，內容高度由內層吸收。 */
+body.matchStatePre .preRegulationSection{
+  padding:0 12px!important;
+  grid-template-columns:max-content minmax(0,1fr)!important;
+  column-gap:9px!important;
+}
+body.matchStatePre .preRegulationInlineTitle,
+body.matchStatePre .preRegulationHost,
+body.matchStatePre #preRegulationSection .regBox,
+body.matchStatePre #preRegulationSection .regEditor,
+body.matchStatePre #preRegulationSection .regRow,
+body.matchStatePre #preRegulationSection .regChooser,
+body.matchStatePre #preRegulationSection .regSelectWrap{
+  min-height:0!important;
+  height:100%!important;
+  align-items:center!important;
+  box-sizing:border-box!important;
+}
+body.matchStatePre #preRegulationSection .regSelect{
+  height:46px!important;
+  min-height:46px!important;
+  max-height:46px!important;
+  box-sizing:border-box!important;
+}
+
+/* 單場 MVP：改為和摘要頁一致的深藍層次。
+   金色只留在標題與細框，不再用大面積橄欖／土金底。 */
+#reportModal .reportMVPCard:not(.topScorer){
+  background:linear-gradient(180deg,rgba(17,38,58,.98),rgba(10,25,41,.99))!important;
+  border:1px solid rgba(244,196,65,.42)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 6px 16px rgba(0,0,0,.14)!important;
+}
+#reportModal .reportMVPCard:not(.topScorer) .reportMVPHead{
+  color:#f7d45a!important;
+}
+#reportModal .reportMVPCard:not(.topScorer) .reportMVPName{
+  color:#edf5ff!important;
+}
+
+@media(max-width:390px){
+  body.matchStatePre{--pre-info-row-h:46px;}
+  body.matchStatePre .matchMetaRow > .preMetaField input,
+  body.matchStatePre .preVenueStandalone input,
+  body.matchStatePre #preRegulationSection .regSelect{
+    height:44px!important;
+    min-height:44px!important;
+    max-height:44px!important;
+  }
+  body.matchStatePre .preRegulationSection{
+    padding-left:10px!important;
+    padding-right:10px!important;
+    column-gap:7px!important;
+  }
 }
 </style>
 
@@ -23376,7 +23488,7 @@ body::after{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.38</span>
+      <span class="headerVersion">v6.39</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -31639,7 +31751,7 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
 
 <style id="v633RosterModalFooterVisibilityPatch">
 /* =========================================================
-   v6.38：本場球員名單底部操作不再被「完成」Footer 遮蔽
+   v6.39：本場球員名單底部操作不再被「完成」Footer 遮蔽
    根因：iPhone Safari 的 dynamic visual viewport 下，舊版 flex panel
    在高度壓縮時可能讓可捲動區的最後一列繪製到 footer 下方。
    改用明確三列 Grid：Header / Scroll / Footer，並替內容底部保留安全空間。
