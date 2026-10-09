@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.25</title>
+<title>足球場邊記錄器 v6.26</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22584,7 +22584,7 @@ body.matchStatePre .matchCard .controls.preDualAction > #preResetBtn:not([hidden
 
 <style id="v625PreMatchFinalPolish">
 /* =========================================================
-   v6.25 賽前 Final Polish
+   v6.26 賽前 Final Polish
    - 比分區再縮約 10–15%，保留長隊名完整顯示。
    - 已完成欄位降低框線存在感；可填欄位以箭頭／修改鍵辨識。
    - 暖黃色只代表「尚未完成且值得注意」；藍色只代表 focus。
@@ -22704,6 +22704,160 @@ body.matchStatePre .scoreColon{font-size:23px!important;}
   body.matchStatePre .scoreColon{font-size:21px!important;}
 }
 </style>
+
+
+<style id="v626AllStatesBorderPolish">
+/* =========================================================
+   v6.26：非賽前狀態框線 Final Polish
+   - 比賽中／中場／下半場／等待延長／延長賽／全場，
+     與賽前共用「一般資訊安靜、狀態與操作才突出」的視覺語意。
+   - 不削弱 LIVE、計時、比分與主要操作的辨識度。
+   ========================================================= */
+body.matchStateLive,
+body.matchStateHalftime,
+body.matchStateSecondHalf,
+body.matchStateExtraWait,
+body.matchStateExtraActive,
+body.resultMode{
+  --v626-border-rest:rgba(70,96,124,.32);
+  --v626-border-done:rgba(70,96,124,.20);
+  --v626-divider:rgba(111,145,177,.14);
+  --v626-surface:rgba(8,17,29,.50);
+}
+
+/* 1. 最外層比賽卡：拿掉綠／紅外發光，只留很淡的群組框。 */
+body.matchStateLive .matchCard,
+body.matchStateHalftime .matchCard,
+body.matchStateSecondHalf .matchCard,
+body.matchStateExtraWait .matchCard,
+body.matchStateExtraActive .matchCard,
+body.resultMode .matchCard,
+body.resultMode .matchCard.finishedState{
+  border-color:var(--v626-border-done)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 8px 20px rgba(0,0,0,.15)!important;
+}
+
+/* 2. 比分／計時資訊卡仍保留群組感，但框線退到次要層級。 */
+body.matchStateLive .broadcastScoreboard,
+body.matchStateHalftime .broadcastScoreboard,
+body.matchStateSecondHalf .broadcastScoreboard,
+body.matchStateExtraWait .broadcastScoreboard,
+body.matchStateExtraActive .broadcastScoreboard,
+body.resultMode .broadcastScoreboard{
+  border-color:var(--v626-border-rest)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+body.matchStateLive .broadcastBar,
+body.matchStateHalftime .broadcastBar,
+body.matchStateSecondHalf .broadcastBar,
+body.matchStateExtraWait .broadcastBar,
+body.matchStateExtraActive .broadcastBar,
+body.resultMode .broadcastBar{
+  border-bottom-color:var(--v626-divider)!important;
+}
+
+/* 狀態膠囊仍用狀態色，但只保留單層細框，不再發光。 */
+body.matchStateLive .broadcastStage,
+body.matchStateSecondHalf .broadcastStage,
+body.matchStateExtraActive .broadcastStage{
+  border-color:rgba(57,183,117,.28)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+body.matchStateHalftime .broadcastStage,
+body.matchStateExtraWait .broadcastStage{
+  border-color:rgba(56,189,248,.26)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+body.resultMode .broadcastStage,
+body.resultMode .broadcastStage.full{
+  border-color:rgba(248,113,113,.30)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+
+/* 3. 已完成的賽事／場地資訊列：比賽開始後視為已完成資料，使用 done border。 */
+body.matchStateLive .liveMetaStrip.show,
+body.matchStateHalftime .liveMetaStrip.show,
+body.matchStateSecondHalf .liveMetaStrip.show,
+body.matchStateExtraWait .liveMetaStrip.show,
+body.matchStateExtraActive .liveMetaStrip.show,
+body.resultMode .liveMetaStrip.show{
+  border-color:var(--v626-border-done)!important;
+  background:var(--v626-surface)!important;
+  box-shadow:none!important;
+}
+
+/* 名單／守門員快速資訊仍可點，但不需用亮框提醒。 */
+body.matchStateLive .liveQuickSetup button,
+body.matchStateHalftime .liveQuickSetup button,
+body.matchStateSecondHalf .liveQuickSetup button,
+body.matchStateExtraWait .liveQuickSetup button,
+body.matchStateExtraActive .liveQuickSetup button{
+  border-color:var(--v626-border-rest)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+
+/* 4. 時間紀錄：保留可展開操作，但外框與分隔線跟賽前同一權重。 */
+body.matchStateLive .timeSummary,
+body.matchStateHalftime .timeSummary,
+body.matchStateSecondHalf .timeSummary,
+body.matchStateExtraWait .timeSummary,
+body.matchStateExtraActive .timeSummary,
+body.resultMode .timeSummary{
+  border-color:var(--v626-border-rest)!important;
+  box-shadow:none!important;
+}
+body.matchStateLive .timeHead,
+body.matchStateHalftime .timeHead,
+body.matchStateSecondHalf .timeHead,
+body.matchStateExtraWait .timeHead,
+body.matchStateExtraActive .timeHead,
+body.resultMode .timeHead{
+  border-bottom-color:var(--v626-divider)!important;
+}
+
+/* 5. 隊名與中間比分周邊：資訊框淡化，但數位比分牌本身維持可讀性。 */
+body.matchStateLive .teamNameBox,
+body.matchStateHalftime .teamNameBox,
+body.matchStateSecondHalf .teamNameBox,
+body.matchStateExtraWait .teamNameBox,
+body.matchStateExtraActive .teamNameBox,
+body.resultMode .teamNameBox{
+  border-color:var(--v626-border-done)!important;
+  box-shadow:none!important;
+}
+body.matchStateLive .scoreMid,
+body.matchStateHalftime .scoreMid,
+body.matchStateSecondHalf .scoreMid,
+body.matchStateExtraWait .scoreMid,
+body.matchStateExtraActive .scoreMid,
+body.resultMode .scoreMid{
+  border-color:rgba(70,96,124,.28)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.018)!important;
+}
+
+/* 6. 全場統計：閱讀型 Dashboard 再降一級框線，操作列不動。 */
+body.resultMode.finalOutputVisible .resultEventsGroup{
+  border-color:rgba(70,96,124,.18)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 6px 16px rgba(0,0,0,.10)!important;
+}
+body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard{
+  border-color:transparent!important;
+  box-shadow:none!important;
+}
+body.resultMode.finalOutputVisible #eventHubSection.recordOnly{
+  border-top-color:var(--v626-divider)!important;
+}
+
+/* 7. Focus 仍是唯一的互動藍色；低對比框線不影響鍵盤／點擊回饋。 */
+body.matchStateHalftime .teamNameEditBtn:focus-visible,
+body.matchStateExtraWait .teamNameEditBtn:focus-visible,
+body.resultMode .teamNameEditBtn:focus-visible,
+body.resultMode #scoreEditBtn:focus-visible{
+  outline:2px solid #38bdf8!important;
+  outline-offset:2px!important;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -22718,7 +22872,7 @@ body.matchStatePre .scoreColon{font-size:23px!important;}
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.25</span>
+      <span class="headerVersion">v6.26</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">

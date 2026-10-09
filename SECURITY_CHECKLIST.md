@@ -1,4 +1,4 @@
-## v6.25 UI-only change
+## v6.26 UI-only change
 
 - 本版只調整賽前視覺層級、框線透明度、比分區尺寸與狀態色 Design Token。
 - 不新增外部資源、網路請求、權限 API 或第三方程式碼。
