@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.27</title>
+<title>足球場邊記錄器 v6.28</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22858,6 +22858,37 @@ body.resultMode #scoreEditBtn:focus-visible{
 }
 </style>
 
+
+<style id="v628PreShortTeamNameSizing">
+/* =========================================================
+   v6.28：賽前短隊名動態放大（主頁 authoritative patch）
+   根因修正：v6.27 的放大規則誤插入匯出 HTML 模板，主頁未套用。
+   - 1～4 字：明顯放大，提高對戰雙方辨識度。
+   - 5～6 字：中等放大。
+   - 7 字以上：沿用既有安全縮字／換行規則。
+   - empty placeholder 不放大。
+   ========================================================= */
+body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit):not(.empty){
+  font-size:21px!important;
+  line-height:1.06!important;
+  letter-spacing:0!important;
+  font-weight:950!important;
+}
+body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
+  font-size:18.5px!important;
+  line-height:1.07!important;
+  letter-spacing:0!important;
+  font-weight:920!important;
+}
+@media(max-width:390px){
+  body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit):not(.empty){font-size:20px!important;}
+  body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){font-size:17.5px!important;}
+}
+@media(max-width:350px){
+  body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit):not(.empty){font-size:18.5px!important;}
+  body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){font-size:16.5px!important;}
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -22872,7 +22903,7 @@ body.resultMode #scoreEditBtn:focus-visible{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.27</span>
+      <span class="headerVersion">v6.28</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -31060,35 +31091,7 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
 }
 </style>
 
-<style id="v627PreShortTeamNameSizing">
-/* =========================================================
-   v6.27：賽前短隊名動態放大
-   - 1～4 字：空間充足，提升辨識度。
-   - 5～6 字：中等字級。
-   - 7 字以上：沿用既有安全縮字規則。
-   - empty placeholder 不套 shortName，避免「對手」提示搶焦點。
-   ========================================================= */
-body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit){
-  font-size:19px!important;
-  line-height:1.08!important;
-  letter-spacing:0!important;
-  font-weight:900!important;
-}
-body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit){
-  font-size:17px!important;
-  line-height:1.08!important;
-  letter-spacing:0!important;
-  font-weight:880!important;
-}
-@media(max-width:390px){
-  body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit){font-size:18px!important;}
-  body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit){font-size:16.5px!important;}
-}
-@media(max-width:350px){
-  body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit){font-size:17px!important;}
-  body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit){font-size:15.5px!important;}
-}
-</style>
+
 </head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}${formatDayMatchLabel(state.dayMatchNumber)?`｜${escapeHtml(formatDayMatchLabel(state.dayMatchNumber))}`:''}</div>${(state.competition||state.competitionStage)?`<div>🏆 ${escapeHtml([state.competition,state.competitionStage].filter(Boolean).join('｜'))}</div>`:''}${state.venue?`<div>📍 ${escapeHtml(state.venue)}</div>`:''}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
