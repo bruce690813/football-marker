@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.33</title>
+<title>足球場邊記錄器 v6.34</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -1862,23 +1862,6 @@ body.matchStateLive .new{
   max-height:2.12em;
 }
 
-/* v6.33：12 字以上超長隊名允許最多三行，完整顯示優先。 */
-.teamNameDisplay.ultraLongName{
-  font-size:clamp(14px,3.8vw,16px);
-  line-height:1.05;
-  letter-spacing:-.25px;
-  display:-webkit-box;
-  -webkit-box-orient:vertical;
-  -webkit-line-clamp:3;
-  line-clamp:3;
-  white-space:normal;
-  overflow:hidden;
-  overflow-wrap:anywhere;
-  word-break:break-word;
-  text-overflow:clip;
-  max-height:3.15em;
-}
-
 /* 非賽前狀態也啟用隊名字體自動貼合，避免「忠義國小」等四字隊名在部分 iPhone 寬度被裁切。 */
 body:not(.matchStatePre) .teamNameDisplay.shortName:not(.suffixSplit):not(.empty){
   font-size:var(--team-fit-size,23px)!important;
@@ -1891,16 +1874,6 @@ body:not(.matchStatePre) .teamNameDisplay.longName:not(.suffixSplit):not(.empty)
 }
 body:not(.matchStatePre) .teamNameDisplay.veryLongName:not(.suffixSplit):not(.empty){
   font-size:var(--team-fit-size,17px)!important;
-}
-body:not(.matchStatePre) .teamNameDisplay.ultraLongName:not(.suffixSplit):not(.empty){
-  font-size:15px!important;
-  line-height:1.05!important;
-  -webkit-line-clamp:3!important;
-  line-clamp:3!important;
-  max-height:3.15em!important;
-  white-space:normal!important;
-  overflow:hidden!important;
-  text-overflow:clip!important;
 }
 
 /* =========================
@@ -16831,19 +16804,17 @@ body.resultMode.finalOutputVisible .finalToolsCard{
   bottom:auto!important;
   transform:none!important;
   width:100%!important;
-  margin:8px 0 4px!important;
-  padding:7px!important;
-  border-radius:18px!important;
-  background:linear-gradient(180deg,rgba(13,25,42,.88),rgba(9,19,33,.92))!important;
-  border:1px solid rgba(104,137,177,.34)!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.055),
-    0 9px 20px rgba(0,0,0,.18)!important;
+  margin:12px 0 4px!important;
+  padding:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
 }
 body.resultMode.finalOutputVisible .toolGrid.finalTools.finalToolsThree{
   display:grid!important;
   grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:7px!important;
+  gap:8px!important;
   margin:0!important;
   width:100%!important;
 }
@@ -22975,7 +22946,7 @@ body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
 
 <style id="v630VisualPolishAndResultRecordIntegration">
 /* =========================================================
-   v6.33：賽前視覺精修 + 全場事件紀錄融合
+   v6.34：賽前視覺精修 + 全場事件紀錄融合
    1) Header「說明」降為輕量輔助按鈕，不與品牌標題競爭。
    2) 賽前主 CTA 稍微扁平；雙欄時開始／重置維持完全同高。
    3) 暖黃色只做柔和的未完成提醒，不與主 CTA 搶焦點。
@@ -23183,7 +23154,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.33</span>
+      <span class="headerVersion">v6.34</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -29119,10 +29090,8 @@ function fitTeamNameDisplay(el){
   const isMedium=el.classList.contains('mediumName');
   const isLong=el.classList.contains('longName');
   const isVeryLong=el.classList.contains('veryLongName');
-  const isUltraLong=el.classList.contains('ultraLongName');
 
   // 只針對單行顯示的短、中、稍長隊名做自動縮放；兩行與超長名稱維持既有規則。
-  if(isUltraLong) return;
   if(!isShort && !isMedium && !isLong && !isVeryLong) return;
 
   const vw=Math.max(document.documentElement.clientWidth||0, window.innerWidth||0);
@@ -29181,7 +29150,7 @@ function updateTeamNameDisplays(){
   function applyTeamNameLayout(el,name,fallback){
     if(!el) return;
     const clean=(name||'').trim();
-    el.classList.remove('empty','shortName','mediumName','longName','veryLongName','ultraLongName','suffixSplit','latinName');
+    el.classList.remove('empty','shortName','mediumName','longName','veryLongName','suffixSplit','latinName');
 
     if(!clean){
       el.textContent=fallback;
@@ -29210,9 +29179,8 @@ function updateTeamNameDisplays(){
     el.textContent=clean;
     el.classList.toggle('shortName', clean.length<=4);
     el.classList.toggle('mediumName', clean.length>=5 && clean.length<7);
-    el.classList.toggle('longName', clean.length>=7 && clean.length<10);
-    el.classList.toggle('veryLongName', clean.length>=10 && clean.length<12);
-    el.classList.toggle('ultraLongName', clean.length>=12);
+    el.classList.toggle('longName', clean.length>=7 && clean.length<9);
+    el.classList.toggle('veryLongName', clean.length>=9);
   }
 
   applyTeamNameLayout(ourDisplay, our, '我方');
@@ -31440,6 +31408,51 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
 </style>
 
 
+
+<style id="v633RosterModalFooterVisibilityPatch">
+/* =========================================================
+   v6.34：本場球員名單底部操作不再被「完成」Footer 遮蔽
+   根因：iPhone Safari 的 dynamic visual viewport 下，舊版 flex panel
+   在高度壓縮時可能讓可捲動區的最後一列繪製到 footer 下方。
+   改用明確三列 Grid：Header / Scroll / Footer，並替內容底部保留安全空間。
+   ========================================================= */
+#rosterModal .rosterModalPanel{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  overflow:hidden!important;
+}
+#rosterModal .rosterModalFixedHead{
+  grid-row:1!important;
+  min-height:0!important;
+}
+#rosterModal .rosterModalScroll{
+  grid-row:2!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+  padding-bottom:calc(34px + env(safe-area-inset-bottom,0px))!important;
+  scroll-padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important;
+}
+#rosterModal .rosterUtilityRow{
+  position:relative!important;
+  z-index:1!important;
+  margin-bottom:10px!important;
+}
+#rosterModal .rosterModalFooter{
+  grid-row:3!important;
+  position:relative!important;
+  z-index:5!important;
+  margin:0!important;
+  transform:none!important;
+}
+@media(max-height:720px){
+  #rosterModal .rosterModalScroll{
+    padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))!important;
+    scroll-padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))!important;
+  }
+}
+</style>
 </head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}${formatDayMatchLabel(state.dayMatchNumber)?`｜${escapeHtml(formatDayMatchLabel(state.dayMatchNumber))}`:''}</div>${(state.competition||state.competitionStage)?`<div>🏆 ${escapeHtml([state.competition,state.competitionStage].filter(Boolean).join('｜'))}</div>`:''}${state.venue?`<div>📍 ${escapeHtml(state.venue)}</div>`:''}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
