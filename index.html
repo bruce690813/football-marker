@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.39</title>
+<title>足球場邊記錄器 v6.41</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22946,7 +22946,7 @@ body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
 
 <style id="v630VisualPolishAndResultRecordIntegration">
 /* =========================================================
-   v6.39：賽前視覺精修 + 全場事件紀錄融合
+   v6.41：賽前視覺精修 + 全場事件紀錄融合
    1) Header「說明」降為輕量輔助按鈕，不與品牌標題競爭。
    2) 賽前主 CTA 稍微扁平；雙欄時開始／重置維持完全同高。
    3) 暖黃色只做柔和的未完成提醒，不與主 CTA 搶焦點。
@@ -23143,7 +23143,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v635RosterModalBottomActionsPatch">
 /* =========================================================
-   v6.39：本場球員名單底部操作可完整顯示
+   v6.41：本場球員名單底部操作可完整顯示
    - 真正套用於主頁 <head>，不是匯出 HTML 模板。
    - Modal 改成 Header / Scroll / Footer 三列 Grid。
    - 可捲動區與底部工具列之間保留明確安全距離。
@@ -23252,7 +23252,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v637RosterFooterStructurePatch">
 /* =========================================================
-   v6.39：本場球員名單 Footer 結構修正
+   v6.41：本場球員名單 Footer 結構修正
    1. 使用真正換行，避免字面 \n 顯示在頁面上方。
    2. 次要操作列與主要「完成」按鈕固定 14px 垂直間距。
    ========================================================= */
@@ -23347,7 +23347,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v638RemovePagePitchBackground">
 /* =========================================================
-   v6.39：移除頁面底層足球場線稿
+   v6.41：移除頁面底層足球場線稿
    - body::before：半場線 / 中圈 / 中點
    - body::after ：下半部球場外框 / 禁區線
    - 不影響最上方綠色足球場 Header
@@ -23365,7 +23365,7 @@ body::after{
 
 <style id="v639UnifiedPreInfoHeightAndMVPPolish">
 /* =========================================================
-   v6.39
+   v6.41
    1) 賽前五個資訊列統一為同一實體高度。
    2) 單場 MVP 改為深藍底＋細金框，降低土金色面積。
    ========================================================= */
@@ -23474,6 +23474,102 @@ body.matchStatePre #preRegulationSection .regSelect{
 }
 </style>
 
+
+<style id="v641ResultMetaAndBottomDividerPatch">
+/* =========================================================
+   v6.41：全場賽事列與底部工具列精修
+   1. 賽事名稱｜階段｜本日場次緊鄰排列，不再把「第一場」推到最右側。
+   2. 修改圖示固定在賽事列最右端，避免和本日場次重疊。
+   3. 移除三顆全場工具按鈕上方的殘留水平線。
+   ========================================================= */
+body.resultMode .liveMetaStrip .competitionDisplayRow{
+  padding-right:10px!important;
+}
+body.resultMode .liveMetaStrip .competitionDisplayRow .matchMetaDisplayValue.withInlineContext{
+  flex:1 1 auto!important;
+  display:flex!important;
+  align-items:baseline!important;
+  justify-content:flex-start!important;
+  gap:0!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+body.resultMode .liveMetaStrip .competitionDisplayRow .competitionNameText{
+  flex:0 1 auto!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+body.resultMode .liveMetaStrip .competitionDisplayRow .competitionInlineContext{
+  flex:0 0 auto!important;
+  margin-left:2px!important;
+  color:#aebfd1!important;
+  font-size:.9em!important;
+  font-weight:850!important;
+  white-space:nowrap!important;
+}
+body.resultMode .liveMetaStrip .competitionDisplayRow .metaGroupEditBtn{
+  position:static!important;
+  inset:auto!important;
+  transform:none!important;
+  flex:0 0 38px!important;
+  width:38px!important;
+  min-width:38px!important;
+  height:38px!important;
+  min-height:38px!important;
+  margin:-3px -4px -3px 4px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  color:#8295aa!important;
+  box-shadow:none!important;
+  opacity:.82!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+body.resultMode .liveMetaStrip .competitionDisplayRow .metaGroupEditBtn:active{
+  transform:scale(.94)!important;
+  background:rgba(74,144,199,.12)!important;
+  color:#a9c8df!important;
+  opacity:1!important;
+}
+body.resultMode .liveMetaStrip .competitionDisplayRow .metaGroupEditBtn .uiEditIcon{
+  width:15px!important;
+  height:15px!important;
+}
+
+/* 三顆底部工具列上方不再出現 resultEventsGroup 的底邊線。 */
+body.resultMode.finalOutputVisible .resultEventsGroup{
+  border-bottom:0!important;
+}
+body.resultMode.finalOutputVisible .finalToolsCard,
+body.resultMode.finalOutputVisible .toolGrid.finalTools.finalToolsThree{
+  border-top:0!important;
+  box-shadow:none!important;
+}
+
+@media(max-width:390px){
+  body.resultMode .liveMetaStrip .competitionDisplayRow{
+    padding-right:8px!important;
+  }
+  body.resultMode .liveMetaStrip .competitionDisplayRow .competitionInlineContext{
+    font-size:.86em!important;
+  }
+  body.resultMode .liveMetaStrip .competitionDisplayRow .metaGroupEditBtn{
+    flex-basis:36px!important;
+    width:36px!important;
+    min-width:36px!important;
+    height:36px!important;
+    min-height:36px!important;
+    margin-left:2px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -23488,7 +23584,7 @@ body.matchStatePre #preRegulationSection .regSelect{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.39</span>
+      <span class="headerVersion">v6.41</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -23863,7 +23959,7 @@ body.matchStatePre #preRegulationSection .regSelect{
     </div>
     <div class="resultMetaField">
       <label for="resultCompetitionStageInput">☷ 賽事階段／輪次</label>
-      <input id="resultCompetitionStageInput" type="text" maxlength="24" placeholder="例如 8強、第7輪、冠亞軍">
+      <input id="resultCompetitionStageInput" type="text" maxlength="24" placeholder="例如 8強賽、第7輪、冠軍賽">
     </div>
     <div class="resultMetaField">
       <label for="resultVenueInput">🏟️ 比賽場地</label>
@@ -25536,8 +25632,7 @@ function deleteRecentVenue(value){
 
 const COMPETITION_STAGE_GROUPS=[
   {key:'league',title:'聯賽常用輪次',items:['第1輪','第2輪','第3輪','第4輪','第5輪','第6輪','第7輪','第8輪','第9輪','第10輪','第11輪','第12輪']},
-  {key:'cup',title:'盃賽／淘汰賽',items:['小組賽','32強','16強','8強','4強','冠亞軍','三四名','排名賽']},
-  {key:'other',title:'其他常見階段',items:['例行賽','季後賽','冠軍組','排名組','保級組']}
+  {key:'cup',title:'盃賽／淘汰賽',items:['小組賽','32強賽','16強賽','8強賽','4強賽','冠軍賽','三四名賽']}
 ];
 function competitionStageMenuMode(){
   const name=String(byId('competition')?.value||state.competition||'').trim();
@@ -29625,7 +29720,8 @@ function renderLiveFocusUI(){
       let showContext=false;
 
       if(comp){
-        // 有正式賽事名稱時，才使用獎盃圖示；階段／本日場次作為次要脈絡。
+        // v6.41：賽事名稱、階段與本日場次改成真正連續文字脈絡。
+        // 例：希望冷杯｜8強賽｜第一場；沒有階段時則為 希望冷杯｜第一場。
         const contextParts=[stage,dayMatchLabel].filter(Boolean);
         contextText=contextParts.join('｜');
         mainCompetitionText=comp;
@@ -29634,7 +29730,7 @@ function renderLiveFocusUI(){
         // 沒有賽事名稱但有階段／輪次時，不把階段冒充成賽事名稱。
         metaIcon='☷';
         mainCompetitionText=stage;
-        contextText=dayMatchLabel ? `本日${dayMatchLabel}` : '';
+        contextText=dayMatchLabel ? dayMatchLabel : '';
         showContext=Boolean(contextText);
       }else if(dayMatchLabel){
         // 只有本日場次時，明確標示「本日第 N 場」，避免誤認成賽事名稱。
@@ -29645,7 +29741,8 @@ function renderLiveFocusUI(){
       metaRows.push(`
         <div class="matchMetaDisplayRow competitionDisplayRow${(comp||stage||dayMatchLabel)?'':' empty'}">
           <span class="matchMetaDisplayIcon" aria-hidden="true">${metaIcon}</span>
-          <span class="matchMetaDisplayValue${showContext?' withInlineContext':''}"><span class="competitionNameText">${escapeHtml(mainCompetitionText)}</span>${showContext?`<span class="competitionInlineContext">${escapeHtml(contextText)}</span>`:''}</span>
+          <span class="matchMetaDisplayValue${showContext?' withInlineContext':''}"><span class="competitionNameText">${escapeHtml(mainCompetitionText)}</span>${showContext?`<span class="competitionInlineContext">｜${escapeHtml(contextText)}</span>`:''}</span>
+          ${editBtn}
         </div>`);
     }
 
@@ -29658,7 +29755,7 @@ function renderLiveFocusUI(){
     }
 
     if(metaRows.length || editBtn){
-      strip.innerHTML=metaRows.join('')+editBtn;
+      strip.innerHTML=metaRows.join('');
       strip.classList.add('show');
     }else{
       strip.innerHTML='';
@@ -31751,7 +31848,7 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
 
 <style id="v633RosterModalFooterVisibilityPatch">
 /* =========================================================
-   v6.39：本場球員名單底部操作不再被「完成」Footer 遮蔽
+   v6.41：本場球員名單底部操作不再被「完成」Footer 遮蔽
    根因：iPhone Safari 的 dynamic visual viewport 下，舊版 flex panel
    在高度壓縮時可能讓可捲動區的最後一列繪製到 footer 下方。
    改用明確三列 Grid：Header / Scroll / Footer，並替內容底部保留安全空間。
