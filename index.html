@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.35</title>
+<title>足球場邊記錄器 v6.36</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22946,7 +22946,7 @@ body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
 
 <style id="v630VisualPolishAndResultRecordIntegration">
 /* =========================================================
-   v6.35：賽前視覺精修 + 全場事件紀錄融合
+   v6.36：賽前視覺精修 + 全場事件紀錄融合
    1) Header「說明」降為輕量輔助按鈕，不與品牌標題競爭。
    2) 賽前主 CTA 稍微扁平；雙欄時開始／重置維持完全同高。
    3) 暖黃色只做柔和的未完成提醒，不與主 CTA 搶焦點。
@@ -23143,7 +23143,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v635RosterModalBottomActionsPatch">
 /* =========================================================
-   v6.35：本場球員名單底部操作可完整顯示
+   v6.36：本場球員名單底部操作可完整顯示
    - 真正套用於主頁 <head>，不是匯出 HTML 模板。
    - Modal 改成 Header / Scroll / Footer 三列 Grid。
    - 可捲動區與底部工具列之間保留明確安全距離。
@@ -23249,7 +23249,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 }
 </style>
 
-</head>
+\n<style id="v636RosterFooterStructurePatch">\n/* =========================================================\n   v6.36：名單底部操作改為固定 Footer 的雙層結構\n   根因：重設／清空原先仍是 scroll 內容最後一列；iPhone Safari\n   visual viewport 重算時，最後一列可能停在 scroll 底緣並被 Footer 截住。\n   修正：把兩顆次要操作移到 Footer 內，「完成」上方固定顯示。\n   ========================================================= */\n#rosterModal .rosterModalPanel{\n  display:grid!important;\n  grid-template-rows:auto minmax(0,1fr) auto!important;\n  overflow:hidden!important;\n}\n#rosterModal .rosterModalScroll{\n  min-height:0!important;\n  overflow-y:auto!important;\n  overflow-x:hidden!important;\n  -webkit-overflow-scrolling:touch!important;\n  padding-bottom:18px!important;\n  scroll-padding-bottom:18px!important;\n}\n#rosterModal .rosterModalScroll::after{\n  display:none!important;\n  content:none!important;\n}\n#rosterModal .rosterModalFooter{\n  grid-row:3!important;\n  position:relative!important;\n  inset:auto!important;\n  z-index:20!important;\n  display:block!important;\n  flex:none!important;\n  margin:0!important;\n  padding:10px 18px calc(12px + env(safe-area-inset-bottom,0px))!important;\n  background:#f6f7fb!important;\n  border-top:1px solid #dbe3ee!important;\n  box-shadow:0 -8px 18px rgba(15,23,42,.05)!important;\n}\n#rosterModal .rosterModalFooter .rosterUtilityFooterRow{\n  display:grid!important;\n  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;\n  gap:10px!important;\n  width:100%!important;\n  margin:0 0 10px!important;\n  padding:0!important;\n}\n#rosterModal .rosterModalFooter .rosterResetLearnedBtn,\n#rosterModal .rosterModalFooter .rosterClearBtn{\n  width:100%!important;\n  min-width:0!important;\n  min-height:42px!important;\n  margin:0!important;\n  padding:7px 8px!important;\n  border-radius:11px!important;\n  white-space:nowrap!important;\n  font-size:12px!important;\n  line-height:1.15!important;\n}\n#rosterModal .rosterModalFooter .rosterDoneBtn{\n  width:100%!important;\n  min-height:50px!important;\n  margin:0!important;\n}\n@media(max-width:390px){\n  #rosterModal .rosterModalFooter{\n    padding:9px 14px calc(10px + env(safe-area-inset-bottom,0px))!important;\n  }\n  #rosterModal .rosterModalFooter .rosterUtilityFooterRow{\n    gap:8px!important;\n    margin-bottom:9px!important;\n  }\n  #rosterModal .rosterModalFooter .rosterResetLearnedBtn,\n  #rosterModal .rosterModalFooter .rosterClearBtn{\n    min-height:40px!important;\n    font-size:11.5px!important;\n    padding-left:5px!important;\n    padding-right:5px!important;\n  }\n}\n@media(max-height:720px){\n  #rosterModal .rosterModalFooter{\n    padding-top:8px!important;\n    padding-bottom:calc(9px + env(safe-area-inset-bottom,0px))!important;\n  }\n  #rosterModal .rosterModalFooter .rosterUtilityFooterRow{\n    margin-bottom:8px!important;\n  }\n  #rosterModal .rosterModalFooter .rosterResetLearnedBtn,\n  #rosterModal .rosterModalFooter .rosterClearBtn{\n    min-height:38px!important;\n  }\n  #rosterModal .rosterModalFooter .rosterDoneBtn{\n    min-height:48px!important;\n  }\n}\n</style>\n</head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
   <div id="appBootError" role="alert">
@@ -23263,7 +23263,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.35</span>
+      <span class="headerVersion">v6.36</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -24014,13 +24014,13 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
       </div>
       <div id="rosterInlineStatus" class="rosterInlineStatus" aria-live="polite"></div>
 
-      <div class="rosterUtilityRow">
-        <button class="rosterResetLearnedBtn" type="button" onclick="resetLearnedRosterPool()">↺ 重設快捷背號</button>
-        <button class="rosterClearBtn" type="button" onclick="clearRoster()">↻ 清空名單</button>
-      </div>
     </div>
 
     <div class="rosterModalFooter">
+      <div class="rosterUtilityRow rosterUtilityFooterRow">
+        <button class="rosterResetLearnedBtn" type="button" onclick="resetLearnedRosterPool()">↺ 重設快捷背號</button>
+        <button class="rosterClearBtn" type="button" onclick="clearRoster()">↻ 清空名單</button>
+      </div>
       <button class="rosterDoneBtn" type="button" onclick="closeRosterModal()">完成</button>
     </div>
   </div>
@@ -31526,7 +31526,7 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
 
 <style id="v633RosterModalFooterVisibilityPatch">
 /* =========================================================
-   v6.35：本場球員名單底部操作不再被「完成」Footer 遮蔽
+   v6.36：本場球員名單底部操作不再被「完成」Footer 遮蔽
    根因：iPhone Safari 的 dynamic visual viewport 下，舊版 flex panel
    在高度壓縮時可能讓可捲動區的最後一列繪製到 footer 下方。
    改用明確三列 Grid：Header / Scroll / Footer，並替內容底部保留安全空間。
