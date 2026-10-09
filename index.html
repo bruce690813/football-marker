@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.26</title>
+<title>足球場邊記錄器 v6.27</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22584,7 +22584,7 @@ body.matchStatePre .matchCard .controls.preDualAction > #preResetBtn:not([hidden
 
 <style id="v625PreMatchFinalPolish">
 /* =========================================================
-   v6.26 賽前 Final Polish
+   v6.27 賽前 Final Polish
    - 比分區再縮約 10–15%，保留長隊名完整顯示。
    - 已完成欄位降低框線存在感；可填欄位以箭頭／修改鍵辨識。
    - 暖黃色只代表「尚未完成且值得注意」；藍色只代表 focus。
@@ -22708,7 +22708,7 @@ body.matchStatePre .scoreColon{font-size:23px!important;}
 
 <style id="v626AllStatesBorderPolish">
 /* =========================================================
-   v6.26：非賽前狀態框線 Final Polish
+   v6.27：非賽前狀態框線 Final Polish
    - 比賽中／中場／下半場／等待延長／延長賽／全場，
      與賽前共用「一般資訊安靜、狀態與操作才突出」的視覺語意。
    - 不削弱 LIVE、計時、比分與主要操作的辨識度。
@@ -22872,7 +22872,7 @@ body.resultMode #scoreEditBtn:focus-visible{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.26</span>
+      <span class="headerVersion">v6.27</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28805,7 +28805,7 @@ function updateTeamNameDisplays(){
   function applyTeamNameLayout(el,name,fallback){
     if(!el) return;
     const clean=(name||'').trim();
-    el.classList.remove('empty','mediumName','longName','veryLongName','suffixSplit','latinName');
+    el.classList.remove('empty','shortName','mediumName','longName','veryLongName','suffixSplit','latinName');
 
     if(!clean){
       el.textContent=fallback;
@@ -28832,7 +28832,8 @@ function updateTeamNameDisplays(){
     }
 
     el.textContent=clean;
-    el.classList.toggle('mediumName', clean.length>=4 && clean.length<7);
+    el.classList.toggle('shortName', clean.length<=4);
+    el.classList.toggle('mediumName', clean.length>=5 && clean.length<7);
     el.classList.toggle('longName', clean.length>=7 && clean.length<9);
     el.classList.toggle('veryLongName', clean.length>=9);
   }
@@ -31056,6 +31057,36 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
   body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .recordLabel{
     font-size:16px!important;
   }
+}
+</style>
+
+<style id="v627PreShortTeamNameSizing">
+/* =========================================================
+   v6.27：賽前短隊名動態放大
+   - 1～4 字：空間充足，提升辨識度。
+   - 5～6 字：中等字級。
+   - 7 字以上：沿用既有安全縮字規則。
+   - empty placeholder 不套 shortName，避免「對手」提示搶焦點。
+   ========================================================= */
+body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit){
+  font-size:19px!important;
+  line-height:1.08!important;
+  letter-spacing:0!important;
+  font-weight:900!important;
+}
+body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit){
+  font-size:17px!important;
+  line-height:1.08!important;
+  letter-spacing:0!important;
+  font-weight:880!important;
+}
+@media(max-width:390px){
+  body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit){font-size:18px!important;}
+  body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit){font-size:16.5px!important;}
+}
+@media(max-width:350px){
+  body.matchStatePre .teamNameDisplay.shortName:not(.suffixSplit){font-size:17px!important;}
+  body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit){font-size:15.5px!important;}
 }
 </style>
 </head><body><div class="wrap">
