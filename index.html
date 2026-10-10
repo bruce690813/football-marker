@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.47</title>
+<title>足球場邊記錄器 v6.48</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22946,7 +22946,7 @@ body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
 
 <style id="v630VisualPolishAndResultRecordIntegration">
 /* =========================================================
-   v6.47：賽前視覺精修 + 全場事件紀錄融合
+   v6.48：賽前視覺精修 + 全場事件紀錄融合
    1) Header「說明」降為輕量輔助按鈕，不與品牌標題競爭。
    2) 賽前主 CTA 稍微扁平；雙欄時開始／重置維持完全同高。
    3) 暖黃色只做柔和的未完成提醒，不與主 CTA 搶焦點。
@@ -23143,7 +23143,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v635RosterModalBottomActionsPatch">
 /* =========================================================
-   v6.47：本場球員名單底部操作可完整顯示
+   v6.48：本場球員名單底部操作可完整顯示
    - 真正套用於主頁 <head>，不是匯出 HTML 模板。
    - Modal 改成 Header / Scroll / Footer 三列 Grid。
    - 可捲動區與底部工具列之間保留明確安全距離。
@@ -23252,7 +23252,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v637RosterFooterStructurePatch">
 /* =========================================================
-   v6.47：本場球員名單 Footer 結構修正
+   v6.48：本場球員名單 Footer 結構修正
    1. 使用真正換行，避免字面 \n 顯示在頁面上方。
    2. 次要操作列與主要「完成」按鈕固定 14px 垂直間距。
    ========================================================= */
@@ -23347,7 +23347,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v638RemovePagePitchBackground">
 /* =========================================================
-   v6.47：移除頁面底層足球場線稿
+   v6.48：移除頁面底層足球場線稿
    - body::before：半場線 / 中圈 / 中點
    - body::after ：下半部球場外框 / 禁區線
    - 不影響最上方綠色足球場 Header
@@ -23365,7 +23365,7 @@ body::after{
 
 <style id="v639UnifiedPreInfoHeightAndMVPPolish">
 /* =========================================================
-   v6.47
+   v6.48
    1) 賽前五個資訊列統一為同一實體高度。
    2) 單場 MVP 改為深藍底＋細金框，降低土金色面積。
    ========================================================= */
@@ -23477,7 +23477,7 @@ body.matchStatePre #preRegulationSection .regSelect{
 
 <style id="v641ResultMetaAndBottomDividerPatch">
 /* =========================================================
-   v6.47：全場賽事列與底部工具列精修
+   v6.48：全場賽事列與底部工具列精修
    1. 賽事名稱｜階段｜本日場次緊鄰排列，不再把「第一場」推到最右側。
    2. 修改圖示固定在賽事列最右端，避免和本日場次重疊。
    3. 移除三顆全場工具按鈕上方的殘留水平線。
@@ -23573,7 +23573,7 @@ body.resultMode.finalOutputVisible .toolGrid.finalTools.finalToolsThree{
 
 <style id="v642ContinuousCompetitionContextPatch">
 /* =========================================================
-   v6.47：比賽中 / 下半場 / 延長賽的賽事列改為連續資訊
+   v6.48：比賽中 / 下半場 / 延長賽的賽事列改為連續資訊
    - 無階段：賽事名稱｜第一場
    - 有階段：賽事名稱｜8強賽｜第一場
    - 不再在賽事名稱與階段 / 場次之間留額外視覺間隔。
@@ -23616,7 +23616,7 @@ body.matchStateExtraActive .liveMetaStrip .competitionDisplayRow .competitionInl
 
 <style id="v643InMatchRhythmAndBottomSafePatch">
 /* =========================================================
-   v6.47 進行中／中場版型節奏統一
+   v6.48 進行中／中場版型節奏統一
    ---------------------------------------------------------
    A. 比賽中／下半場／延長賽：
       - 同一套資訊列、名單列、計時列、結束按鈕、事件按鈕高度。
@@ -23975,7 +23975,7 @@ body.matchStateExtraWait #recordSection{
 
 <style id="v644MVPGoalTimeAlignmentPatch">
 /* =========================================================
-   v6.47：單場 MVP 並列球員的進球時間對齊
+   v6.48：單場 MVP 並列球員的進球時間對齊
    ---------------------------------------------------------
    每列固定為：
    [獎牌] [球員背號] [進球時間]
@@ -24063,7 +24063,7 @@ body.matchStateExtraWait #recordSection{
 
 <style id="v645LiveRecordSafariSafePatch">
 /* =========================================================
-   v6.47：事件紀錄避免被 iPhone Safari 底部工具列遮住
+   v6.48：事件紀錄避免被 iPhone Safari 底部工具列遮住
    ---------------------------------------------------------
    根因：
    Safari 底部工具列是覆蓋在 layout viewport 上方；
@@ -24176,7 +24176,7 @@ body.matchStateExtraWait .liveViewportBottomSpacer{
 
 <style id="v646TimeRecordSingleLinePatch">
 /* =========================================================
-   v6.47：比賽中 / 下半場 / 延長賽「時間紀錄」單列化
+   v6.48：比賽中 / 下半場 / 延長賽「時間紀錄」單列化
    ---------------------------------------------------------
    目標：
    - ⏱ 時間紀錄　規定 20 分鐘　　　　　展開
@@ -24348,7 +24348,7 @@ body.matchStateExtraActive .timeSummary:not(.open) .timeTitleBlock:has(.timeStat
 
 <style id="v647RecordNaturalFlowPatch">
 /* =========================================================
-   v6.47：事件紀錄恢復正常文件流，取消 sticky 浮動
+   v6.48：事件紀錄恢復正常文件流，取消 sticky 浮動
    ---------------------------------------------------------
    根因：
    v6.45 為避免 Safari 底部工具列遮蔽，將 recordSection
@@ -24440,6 +24440,202 @@ body.matchStateExtraActive #recordSection{
 }
 </style>
 
+
+<style id="v648SafariLiveEventCompactPatch">
+/* =========================================================
+   v6.48：iPhone Safari 進行中事件區實體縮短
+   ---------------------------------------------------------
+   v6.47 已取消 sticky，但「事件紀錄」仍可能落在 Safari
+   浮動工具列下方。原因是：
+   eventHub 後方的 spacer 只增加「可捲距離」，不會改變
+   事件紀錄在目前 viewport 中的實際 Y 位置。
+
+   本版改為：
+   1. 事件紀錄保持正常文件流，絕不 sticky / fixed。
+   2. 比賽中／下半場／延長賽共用同一套 compact event rhythm。
+   3. 主事件、牌卡、分隔間距與紀錄列實體縮短，
+      讓事件紀錄本身直接往上移。
+   4. 可點擊元件仍維持至少約 44px。
+   5. v6.47 的實體 bottom spacer 繼續保留作第二層保護。
+   ========================================================= */
+
+/* 再次鎖死：事件紀錄只能存在正常文件流。 */
+body.matchStateLive #eventHubSection #recordSection,
+body.matchStateSecondHalf #eventHubSection #recordSection,
+body.matchStateExtraActive #eventHubSection #recordSection,
+html.iosBrowserUI body.matchStateLive #eventHubSection #recordSection,
+html.iosBrowserUI body.matchStateSecondHalf #eventHubSection #recordSection,
+html.iosBrowserUI body.matchStateExtraActive #eventHubSection #recordSection{
+  position:relative!important;
+  inset:auto!important;
+  top:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  left:auto!important;
+  z-index:auto!important;
+  transform:none!important;
+}
+
+/* 進行中的 event hub 外框只保留必要呼吸空間。 */
+body.matchStateLive #eventHubSection,
+body.matchStateSecondHalf #eventHubSection,
+body.matchStateExtraActive #eventHubSection{
+  max-height:none!important;
+  padding:5px 10px 6px!important;
+  margin-bottom:8px!important;
+}
+
+/* 四個主事件：維持大按鈕，但比 v6.47 再收斂。 */
+body.matchStateLive #eventHubSection .events,
+body.matchStateSecondHalf #eventHubSection .events,
+body.matchStateExtraActive #eventHubSection .events{
+  gap:4px!important;
+}
+body.matchStateLive #eventHubSection .event,
+body.matchStateSecondHalf #eventHubSection .event,
+body.matchStateExtraActive #eventHubSection .event{
+  height:50px!important;
+  min-height:50px!important;
+  max-height:50px!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
+
+/* 黃／紅牌：44px，保留完整可點擊高度。 */
+body.matchStateLive #eventHubSection #disciplineSection,
+body.matchStateSecondHalf #eventHubSection #disciplineSection,
+body.matchStateExtraActive #eventHubSection #disciplineSection{
+  margin-top:4px!important;
+  padding-top:4px!important;
+}
+body.matchStateLive #eventHubSection #disciplineSection .cardEventBtn,
+body.matchStateSecondHalf #eventHubSection #disciplineSection .cardEventBtn,
+body.matchStateExtraActive #eventHubSection #disciplineSection .cardEventBtn{
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
+
+/* 事件紀錄：同樣維持 44px，且緊接牌卡後方。 */
+body.matchStateLive #eventHubSection #recordSection,
+body.matchStateSecondHalf #eventHubSection #recordSection,
+body.matchStateExtraActive #eventHubSection #recordSection{
+  margin-top:4px!important;
+  padding-top:4px!important;
+  padding-left:0!important;
+  padding-right:0!important;
+  padding-bottom:0!important;
+}
+body.matchStateLive #eventHubSection #recordSection .recordFullBtn,
+body.matchStateSecondHalf #eventHubSection #recordSection .recordFullBtn,
+body.matchStateExtraActive #eventHubSection #recordSection .recordFullBtn{
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  margin:0!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
+
+/* 文字／icon 微幅收斂，但不犧牲辨識度。 */
+body.matchStateLive #eventHubSection .eventTop,
+body.matchStateSecondHalf #eventHubSection .eventTop,
+body.matchStateExtraActive #eventHubSection .eventTop{
+  font-size:18px!important;
+}
+body.matchStateLive #eventHubSection .eventIcon,
+body.matchStateSecondHalf #eventHubSection .eventIcon,
+body.matchStateExtraActive #eventHubSection .eventIcon{
+  font-size:22px!important;
+}
+body.matchStateLive #eventHubSection .disciplineLabel,
+body.matchStateSecondHalf #eventHubSection .disciplineLabel,
+body.matchStateExtraActive #eventHubSection .disciplineLabel{
+  font-size:17px!important;
+}
+body.matchStateLive #eventHubSection #recordSection .recordLabel,
+body.matchStateSecondHalf #eventHubSection #recordSection .recordLabel,
+body.matchStateExtraActive #eventHubSection #recordSection .recordLabel{
+  font-size:17.5px!important;
+}
+
+/* Safari 有工具列時，再把事件模組與上方 match card 的間距收斂 2px。
+   不使用負 margin，避免卡片互相重疊。 */
+@supports (-webkit-touch-callout:none){
+  html.iosBrowserUI body.matchStateLive #eventHubSection,
+  html.iosBrowserUI body.matchStateSecondHalf #eventHubSection,
+  html.iosBrowserUI body.matchStateExtraActive #eventHubSection{
+    margin-top:6px!important;
+  }
+}
+
+/* 小 iPhone：仍維持 44px 觸控下限，只再收水平/垂直空隙。 */
+@media(max-width:390px){
+  body.matchStateLive #eventHubSection,
+  body.matchStateSecondHalf #eventHubSection,
+  body.matchStateExtraActive #eventHubSection{
+    padding:4px 9px 5px!important;
+  }
+
+  body.matchStateLive #eventHubSection .events,
+  body.matchStateSecondHalf #eventHubSection .events,
+  body.matchStateExtraActive #eventHubSection .events{
+    gap:3px!important;
+  }
+
+  body.matchStateLive #eventHubSection .event,
+  body.matchStateSecondHalf #eventHubSection .event,
+  body.matchStateExtraActive #eventHubSection .event{
+    height:48px!important;
+    min-height:48px!important;
+    max-height:48px!important;
+  }
+
+  body.matchStateLive #eventHubSection #disciplineSection,
+  body.matchStateSecondHalf #eventHubSection #disciplineSection,
+  body.matchStateExtraActive #eventHubSection #disciplineSection,
+  body.matchStateLive #eventHubSection #recordSection,
+  body.matchStateSecondHalf #eventHubSection #recordSection,
+  body.matchStateExtraActive #eventHubSection #recordSection{
+    margin-top:3px!important;
+    padding-top:3px!important;
+  }
+
+  body.matchStateLive #eventHubSection #disciplineSection .cardEventBtn,
+  body.matchStateSecondHalf #eventHubSection #disciplineSection .cardEventBtn,
+  body.matchStateExtraActive #eventHubSection #disciplineSection .cardEventBtn,
+  body.matchStateLive #eventHubSection #recordSection .recordFullBtn,
+  body.matchStateSecondHalf #eventHubSection #recordSection .recordFullBtn,
+  body.matchStateExtraActive #eventHubSection #recordSection .recordFullBtn{
+    height:44px!important;
+    min-height:44px!important;
+    max-height:44px!important;
+  }
+}
+
+/* 視窗高度較吃緊（Safari 上下工具列都展開）：
+   只壓縮非觸控留白，不把任何按鈕壓到 44px 以下。 */
+@media(max-height:760px) and (max-width:430px){
+  body.matchStateLive #eventHubSection,
+  body.matchStateSecondHalf #eventHubSection,
+  body.matchStateExtraActive #eventHubSection{
+    padding-top:3px!important;
+    padding-bottom:4px!important;
+  }
+  body.matchStateLive #eventHubSection #disciplineSection,
+  body.matchStateSecondHalf #eventHubSection #disciplineSection,
+  body.matchStateExtraActive #eventHubSection #disciplineSection,
+  body.matchStateLive #eventHubSection #recordSection,
+  body.matchStateSecondHalf #eventHubSection #recordSection,
+  body.matchStateExtraActive #eventHubSection #recordSection{
+    margin-top:2px!important;
+    padding-top:2px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -24454,7 +24650,7 @@ body.matchStateExtraActive #recordSection{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.47</span>
+      <span class="headerVersion">v6.48</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -30592,7 +30788,7 @@ function renderLiveFocusUI(){
       let showContext=false;
 
       if(comp){
-        // v6.47：賽事名稱、階段與本日場次改成真正連續文字脈絡。
+        // v6.48：賽事名稱、階段與本日場次改成真正連續文字脈絡。
         // 例：希望冷杯｜8強賽｜第一場；沒有階段時則為 希望冷杯｜第一場。
         const contextParts=[stage,dayMatchLabel].filter(Boolean);
         contextText=contextParts.join('｜');
@@ -32725,7 +32921,7 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
 
 <style id="v633RosterModalFooterVisibilityPatch">
 /* =========================================================
-   v6.47：本場球員名單底部操作不再被「完成」Footer 遮蔽
+   v6.48：本場球員名單底部操作不再被「完成」Footer 遮蔽
    根因：iPhone Safari 的 dynamic visual viewport 下，舊版 flex panel
    在高度壓縮時可能讓可捲動區的最後一列繪製到 footer 下方。
    改用明確三列 Grid：Header / Scroll / Footer，並替內容底部保留安全空間。
