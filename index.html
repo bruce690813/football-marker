@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.49</title>
+<title>足球場邊記錄器 v6.51</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -22946,7 +22946,7 @@ body.matchStatePre .teamNameDisplay.mediumName:not(.suffixSplit):not(.empty){
 
 <style id="v630VisualPolishAndResultRecordIntegration">
 /* =========================================================
-   v6.49：賽前視覺精修 + 全場事件紀錄融合
+   v6.50：賽前視覺精修 + 全場事件紀錄融合
    1) Header「說明」降為輕量輔助按鈕，不與品牌標題競爭。
    2) 賽前主 CTA 稍微扁平；雙欄時開始／重置維持完全同高。
    3) 暖黃色只做柔和的未完成提醒，不與主 CTA 搶焦點。
@@ -23143,7 +23143,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v635RosterModalBottomActionsPatch">
 /* =========================================================
-   v6.49：本場球員名單底部操作可完整顯示
+   v6.50：本場球員名單底部操作可完整顯示
    - 真正套用於主頁 <head>，不是匯出 HTML 模板。
    - Modal 改成 Header / Scroll / Footer 三列 Grid。
    - 可捲動區與底部工具列之間保留明確安全距離。
@@ -23252,7 +23252,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v637RosterFooterStructurePatch">
 /* =========================================================
-   v6.49：本場球員名單 Footer 結構修正
+   v6.50：本場球員名單 Footer 結構修正
    1. 使用真正換行，避免字面 \n 顯示在頁面上方。
    2. 次要操作列與主要「完成」按鈕固定 14px 垂直間距。
    ========================================================= */
@@ -23347,7 +23347,7 @@ body.resultMode #eventHubSection.recordOnly #recordSection .recordMetaSuffix{
 
 <style id="v638RemovePagePitchBackground">
 /* =========================================================
-   v6.49：移除頁面底層足球場線稿
+   v6.50：移除頁面底層足球場線稿
    - body::before：半場線 / 中圈 / 中點
    - body::after ：下半部球場外框 / 禁區線
    - 不影響最上方綠色足球場 Header
@@ -23365,7 +23365,7 @@ body::after{
 
 <style id="v639UnifiedPreInfoHeightAndMVPPolish">
 /* =========================================================
-   v6.49
+   v6.50
    1) 賽前五個資訊列統一為同一實體高度。
    2) 單場 MVP 改為深藍底＋細金框，降低土金色面積。
    ========================================================= */
@@ -23477,7 +23477,7 @@ body.matchStatePre #preRegulationSection .regSelect{
 
 <style id="v641ResultMetaAndBottomDividerPatch">
 /* =========================================================
-   v6.49：全場賽事列與底部工具列精修
+   v6.50：全場賽事列與底部工具列精修
    1. 賽事名稱｜階段｜本日場次緊鄰排列，不再把「第一場」推到最右側。
    2. 修改圖示固定在賽事列最右端，避免和本日場次重疊。
    3. 移除三顆全場工具按鈕上方的殘留水平線。
@@ -23573,7 +23573,7 @@ body.resultMode.finalOutputVisible .toolGrid.finalTools.finalToolsThree{
 
 <style id="v642ContinuousCompetitionContextPatch">
 /* =========================================================
-   v6.49：比賽中 / 下半場 / 延長賽的賽事列改為連續資訊
+   v6.50：比賽中 / 下半場 / 延長賽的賽事列改為連續資訊
    - 無階段：賽事名稱｜第一場
    - 有階段：賽事名稱｜8強賽｜第一場
    - 不再在賽事名稱與階段 / 場次之間留額外視覺間隔。
@@ -23616,7 +23616,7 @@ body.matchStateExtraActive .liveMetaStrip .competitionDisplayRow .competitionInl
 
 <style id="v643InMatchRhythmAndBottomSafePatch">
 /* =========================================================
-   v6.49 進行中／中場版型節奏統一
+   v6.50 進行中／中場版型節奏統一
    ---------------------------------------------------------
    A. 比賽中／下半場／延長賽：
       - 同一套資訊列、名單列、計時列、結束按鈕、事件按鈕高度。
@@ -23975,7 +23975,7 @@ body.matchStateExtraWait #recordSection{
 
 <style id="v644MVPGoalTimeAlignmentPatch">
 /* =========================================================
-   v6.49：單場 MVP 並列球員的進球時間對齊
+   v6.50：單場 MVP 並列球員的進球時間對齊
    ---------------------------------------------------------
    每列固定為：
    [獎牌] [球員背號] [進球時間]
@@ -24063,7 +24063,7 @@ body.matchStateExtraWait #recordSection{
 
 <style id="v645LiveRecordSafariSafePatch">
 /* =========================================================
-   v6.49：事件紀錄避免被 iPhone Safari 底部工具列遮住
+   v6.50：事件紀錄避免被 iPhone Safari 底部工具列遮住
    ---------------------------------------------------------
    根因：
    Safari 底部工具列是覆蓋在 layout viewport 上方；
@@ -24176,7 +24176,7 @@ body.matchStateExtraWait .liveViewportBottomSpacer{
 
 <style id="v646TimeRecordSingleLinePatch">
 /* =========================================================
-   v6.49：比賽中 / 下半場 / 延長賽「時間紀錄」單列化
+   v6.50：比賽中 / 下半場 / 延長賽「時間紀錄」單列化
    ---------------------------------------------------------
    目標：
    - ⏱ 時間紀錄　規定 20 分鐘　　　　　展開
@@ -24348,7 +24348,7 @@ body.matchStateExtraActive .timeSummary:not(.open) .timeTitleBlock:has(.timeStat
 
 <style id="v647RecordNaturalFlowPatch">
 /* =========================================================
-   v6.49：事件紀錄恢復正常文件流，取消 sticky 浮動
+   v6.50：事件紀錄恢復正常文件流，取消 sticky 浮動
    ---------------------------------------------------------
    根因：
    v6.45 為避免 Safari 底部工具列遮蔽，將 recordSection
@@ -24443,7 +24443,7 @@ body.matchStateExtraActive #recordSection{
 
 <style id="v648SafariLiveEventCompactPatch">
 /* =========================================================
-   v6.49：iPhone Safari 進行中事件區實體縮短
+   v6.50：iPhone Safari 進行中事件區實體縮短
    ---------------------------------------------------------
    v6.47 已取消 sticky，但「事件紀錄」仍可能落在 Safari
    浮動工具列下方。原因是：
@@ -24639,7 +24639,7 @@ body.matchStateExtraActive #eventHubSection #recordSection .recordLabel{
 
 <style id="v649DynamicLiveViewportFitPatch">
 /* =========================================================
-   v6.49：進行中畫面「動態版面密度」
+   v6.50：進行中畫面「動態版面密度」
    ---------------------------------------------------------
    問題：
    v6.48 只固定縮短事件區；有場地時會多一列資訊，
@@ -24900,6 +24900,149 @@ body.matchStateExtraActive .liveViewportBottomSpacer{
 }
 </style>
 
+
+<style id="v650MetaRowBreathingRoomPatch">
+/* =========================================================
+   v6.50：比賽賽事／比賽場地高度回調
+   ---------------------------------------------------------
+   目標：
+   - Compact：34px -> 38px
+   - Ultra Compact：31px -> 35px
+   - 增加的高度不從底部事件區拿，而是回收周圍 gap / margin
+   - 保留 v6.49 動態 Compact / Ultra Compact 判斷
+   ========================================================= */
+
+/* ---------- Compact ---------- */
+body.liveViewportCompact.matchStateLive .liveMetaStrip.show,
+body.liveViewportCompact.matchStateSecondHalf .liveMetaStrip.show,
+body.liveViewportCompact.matchStateExtraActive .liveMetaStrip.show{
+  gap:2px!important;
+  margin-top:0!important;
+  margin-bottom:1px!important;
+}
+
+body.liveViewportCompact.matchStateLive .liveMetaStrip .matchMetaDisplayRow,
+body.liveViewportCompact.matchStateSecondHalf .liveMetaStrip .matchMetaDisplayRow,
+body.liveViewportCompact.matchStateExtraActive .liveMetaStrip .matchMetaDisplayRow{
+  height:38px!important;
+  min-height:38px!important;
+  max-height:38px!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+  align-items:center!important;
+}
+
+body.liveViewportCompact.matchStateLive .liveMetaStrip .matchMetaDisplayValue,
+body.liveViewportCompact.matchStateSecondHalf .liveMetaStrip .matchMetaDisplayValue,
+body.liveViewportCompact.matchStateExtraActive .liveMetaStrip .matchMetaDisplayValue{
+  line-height:1.15!important;
+}
+
+body.liveViewportCompact.matchStateLive .liveQuickSetup,
+body.liveViewportCompact.matchStateSecondHalf .liveQuickSetup,
+body.liveViewportCompact.matchStateExtraActive .liveQuickSetup{
+  gap:7px!important;
+  margin-top:2px!important;
+  margin-bottom:3px!important;
+}
+
+body.liveViewportCompact.matchStateLive .scoreRow,
+body.liveViewportCompact.matchStateSecondHalf .scoreRow,
+body.liveViewportCompact.matchStateExtraActive .scoreRow{
+  padding-top:3px!important;
+  padding-bottom:3px!important;
+}
+
+/* ---------- Ultra Compact ---------- */
+body.liveViewportUltra.matchStateLive .liveMetaStrip.show,
+body.liveViewportUltra.matchStateSecondHalf .liveMetaStrip.show,
+body.liveViewportUltra.matchStateExtraActive .liveMetaStrip.show{
+  gap:1px!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+
+body.liveViewportUltra.matchStateLive .liveMetaStrip .matchMetaDisplayRow,
+body.liveViewportUltra.matchStateSecondHalf .liveMetaStrip .matchMetaDisplayRow,
+body.liveViewportUltra.matchStateExtraActive .liveMetaStrip .matchMetaDisplayRow{
+  height:35px!important;
+  min-height:35px!important;
+  max-height:35px!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+  align-items:center!important;
+}
+
+body.liveViewportUltra.matchStateLive .liveMetaStrip .matchMetaDisplayValue,
+body.liveViewportUltra.matchStateSecondHalf .liveMetaStrip .matchMetaDisplayValue,
+body.liveViewportUltra.matchStateExtraActive .liveMetaStrip .matchMetaDisplayValue{
+  font-size:13.2px!important;
+  line-height:1.12!important;
+}
+
+body.liveViewportUltra.matchStateLive .liveQuickSetup,
+body.liveViewportUltra.matchStateSecondHalf .liveQuickSetup,
+body.liveViewportUltra.matchStateExtraActive .liveQuickSetup{
+  margin-top:1px!important;
+  margin-bottom:1px!important;
+}
+
+body.liveViewportUltra.matchStateLive .scoreRow,
+body.liveViewportUltra.matchStateSecondHalf .scoreRow,
+body.liveViewportUltra.matchStateExtraActive .scoreRow{
+  padding-top:1px!important;
+  padding-bottom:1px!important;
+}
+
+/* 不碰事件紀錄與底部安全機制：
+   v6.49 的 dynamic fitter / spacer 仍保留。 */
+</style>
+
+
+<style id="v651MetaTypographyPatch">
+/* v6.51: v6.50 基底微調。保留 Compact 38px / Ultra 35px；不修改事件區或底部工具列。 */
+/* 賽事名稱與場地名稱小幅增大；舞台／場次仍採次要資訊字級。 */
+body.liveViewportCompact.matchStateLive .liveMetaStrip .matchMetaDisplayValue,
+body.liveViewportCompact.matchStateSecondHalf .liveMetaStrip .matchMetaDisplayValue,
+body.liveViewportCompact.matchStateExtraActive .liveMetaStrip .matchMetaDisplayValue{
+  font-size:14.5px!important;
+  line-height:1.15!important;
+  min-width:0!important;
+}
+body.liveViewportCompact.matchStateLive .liveMetaStrip .competitionInlineContext,
+body.liveViewportCompact.matchStateSecondHalf .liveMetaStrip .competitionInlineContext,
+body.liveViewportCompact.matchStateExtraActive .liveMetaStrip .competitionInlineContext{
+  font-size:12px!important;
+  line-height:1.15!important;
+}
+body.liveViewportUltra.matchStateLive .liveMetaStrip .matchMetaDisplayValue,
+body.liveViewportUltra.matchStateSecondHalf .liveMetaStrip .matchMetaDisplayValue,
+body.liveViewportUltra.matchStateExtraActive .liveMetaStrip .matchMetaDisplayValue{
+  font-size:13.75px!important;
+  line-height:1.12!important;
+  min-width:0!important;
+}
+body.liveViewportUltra.matchStateLive .liveMetaStrip .competitionInlineContext,
+body.liveViewportUltra.matchStateSecondHalf .liveMetaStrip .competitionInlineContext,
+body.liveViewportUltra.matchStateExtraActive .liveMetaStrip .competitionInlineContext{
+  font-size:11.5px!important;
+  line-height:1.12!important;
+}
+/* 長賽事名稱只省略主名稱，保留階段／場次；縮窄時不外溢。 */
+body.liveViewportCompact .liveMetaStrip .competitionDisplayRow .competitionNameText,
+body.liveViewportUltra .liveMetaStrip .competitionDisplayRow .competitionNameText{
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+body.liveViewportCompact .liveMetaStrip .competitionDisplayRow .competitionInlineContext,
+body.liveViewportUltra .liveMetaStrip .competitionDisplayRow .competitionInlineContext{
+  flex-shrink:0!important;
+  white-space:nowrap!important;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -24914,7 +25057,7 @@ body.matchStateExtraActive .liveViewportBottomSpacer{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.49</span>
+      <span class="headerVersion">v6.51</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -31052,7 +31195,7 @@ function renderLiveFocusUI(){
       let showContext=false;
 
       if(comp){
-        // v6.49：賽事名稱、階段與本日場次改成真正連續文字脈絡。
+        // v6.50：賽事名稱、階段與本日場次改成真正連續文字脈絡。
         // 例：希望冷杯｜8強賽｜第一場；沒有階段時則為 希望冷杯｜第一場。
         const contextParts=[stage,dayMatchLabel].filter(Boolean);
         contextText=contextParts.join('｜');
@@ -33189,7 +33332,7 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
 
 <style id="v633RosterModalFooterVisibilityPatch">
 /* =========================================================
-   v6.49：本場球員名單底部操作不再被「完成」Footer 遮蔽
+   v6.50：本場球員名單底部操作不再被「完成」Footer 遮蔽
    根因：iPhone Safari 的 dynamic visual viewport 下，舊版 flex panel
    在高度壓縮時可能讓可捲動區的最後一列繪製到 footer 下方。
    改用明確三列 Grid：Header / Scroll / Footer，並替內容底部保留安全空間。
