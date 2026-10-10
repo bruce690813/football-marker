@@ -1,19 +1,2212 @@
-# 足球場邊記錄器 v6.52 — 發版檢查
+# v6.51 發版安全確認
+- [x] 完整沿用使用者提供的 v6.50 原始程式。
+- [x] 本次未修改原有 JavaScript 的資料處理／儲存／匯出流程。
+- [x] 更新頁面 `<title>` 與主畫面版本號。
+- [x] Compact / Ultra 欄位高度繼承 v6.50 原設定；新增 CSS 僅微調字級與截斷方式。
+- [ ] 尚待 iPhone Safari 實機回歸測試，尤其底部工具列及長賽事名稱。
 
-## 版本同步
-- [x] ZIP、HTML 標題與畫面版本一致。
-- [x] README 與本版功能說明同步更新。
-- [x] 未改變 v6.51 整合版的 JSON schema，保留原本 LocalStorage key。
+---
 
-## 操作與安全
-- [x] 既有名稱與背號輸入仍使用清理、長度／區間限制。
-- [x] 新增比分的 HTML 片段只使用已限制在 0～99 的數值。
-- [x] CSV 仍保留避免公式注入的跳脫邏輯。
-- [x] 未加入外部追蹤、CDN、遠端 API、額外第三方 JavaScript。
-- [x] 比賽紀錄仍預設留在目前瀏覽器本機；使用者可自行匯出備份。
+## v6.26 UI-only change
 
-## UI／流程
-- [x] 比賽中／中場／下半場／延長賽共用同一套 CSS 設計。
-- [x] Compact/Ultra Compact 賽事欄位高度維持 38px/35px。
-- [x] 主內容獨立捲動，固定工具列不蓋住事件按鈕。
-- [x] Playwright Chromium 行動尺寸初步測試通過；未代替 iPhone Safari 實機驗收。
+- 本版只調整賽前視覺層級、框線透明度、比分區尺寸與狀態色 Design Token。
+- 不新增外部資源、網路請求、權限 API 或第三方程式碼。
+- 不變更 localStorage 比賽資料格式、事件記錄邏輯、計時／比分邏輯與匯出資料內容。
+
+## v5.179 本次驗證
+
+- [x] 本日場次只統計同一我方隊伍、同一曆日且真正開始過的比賽；空白賽前草稿不占場次。
+- [x] 系統自動場次可於賽前手動修改，輸入範圍限制為 1～99；比賽開始後即鎖定。
+- [x] 已鎖定的場次不會因之後新增、刪除或補登其他比賽而在摘要／分享時重新編號。
+- [x] 舊版已開始／已完成資料若缺少場次，會依同隊同日實際開始時間推定一次並保存。
+- [x] 分享文字、摘要圖片、HTML 摘要與 CSV 使用同一個已保存的本日場次。
+- [x] CSV 僅新增 `day_match_number` 欄位，不改變比分、事件、計時、PK 與球員統計邏輯。
+- [x] 本日場次不包含個資、定位或外部網路請求，資料仍只保存在既有 LocalStorage Match state。
+
+## v5.173 本次驗證
+
+- [x] 上半場、下半場、延長賽進行中：賽事與場地皆空白時，不產生空白資訊列。
+- [x] 上述進行中狀態只填其中一項時，只顯示有資料的那一項。
+- [x] 賽前仍保留「比賽賽事／比賽場地」輸入欄位。
+- [x] 中場、等待延長賽、PK、全場結果與賽後補填流程維持既有行為。
+- [x] 不變更比分、計時、事件、摘要圖片、CSV 或 LocalStorage 資料格式。
+
+## v5.171 本次驗證
+
+- [x] 全場三顆賽後按鈕仍為一般文件流，不使用 fixed / sticky / transform 抬升。
+- [x] 不新增 `scrollBy` / `scrollTo` / `scrollIntoView` 等自動捲動行為。
+- [x] iOS Safari 頁尾安全距離改為 bottom-gap 動態值加小幅 fallback，不再保留 220px 大型固定空白。
+- [x] PWA／standalone 只保留基本尾端呼吸空間。
+- [x] 不修改比分、計時、事件、摘要、CSV、新比賽與資料儲存格式。
+
+## v5.170 本次驗證
+
+- [x] 全場頁三顆賽後操作仍為正常文件流，不使用 fixed / sticky。
+- [x] 不新增 scrollBy / scrollTo / scrollIntoView，自動捲動行為維持停用。
+- [x] 只在手機較矮可視高度調整 CSS 垂直密度，不變更比分、計時、事件、摘要、CSV、新比賽與儲存格式。
+- [x] 三顆賽後按鈕仍維持至少 44px 觸控高度。
+- [x] 全場頁底部 spacer 仍存在，保留 Safari 工具列安全捲動距離。
+
+## v5.169 本次驗證
+
+- Safari 手動上下捲動不再觸發程式自動 `scrollBy()`。
+- 全場結果頁可自由捲回頁首，不會卡在統計／工具按鈕附近。
+- Reload 頁首校正縮短為初始 frame，不持續干預使用者操作。
+
+- [x] 一般 navigate / reload 會在狀態 render 後回到頁首，避免 Safari 還原舊 scroll position。
+- [x] back / forward 導航不強制歸零，保留使用者原本閱讀位置。
+- [x] 首次 viewport settling 期間不執行賽後操作列自動補捲動，避免載入時被帶往中段。
+- [x] settling 完成後仍保留 v5.167 的底部按鈕安全露出機制。
+- [x] 僅調整 viewport / scroll 呈現，不變更比賽資料、計時、事件、摘要、CSV 或儲存格式。
+
+## v5.167 本次驗證
+
+- [x] 三顆賽後操作按鈕仍為一般文件流，不使用 fixed / sticky。
+- [x] 手機結果頁有獨立真實 bottom spacer，可在 Safari 工具列覆蓋時繼續向下捲動。
+- [x] 自動安全補捲動只在賽後操作列已進入可視區且確實與安全底線重疊時觸發。
+- [x] PWA／standalone 不保留 Safari 瀏覽器工具列距離；鍵盤開啟時不執行補捲動。
+- [x] 不修改比分、計時、事件、摘要、CSV、新比賽與資料儲存流程。
+
+## v5.166 本次驗證
+
+- [x] 全場賽後三顆操作按鈕恢復一般文件流，不再使用 fixed / sticky 覆蓋其他內容。
+- [x] iPhone Safari 以按鈕後方 spacer 與 scroll-padding 提供可捲動安全距離。
+- [x] 僅調整 CSS 版面位置，不變更比分、計時、事件、摘要、CSV、新比賽與資料儲存。
+- [x] PWA／standalone 與鍵盤行為維持既有邏輯。
+
+## v5.165 本次驗證
+
+- [x] Safari 底部安全抬升只作用於 iOS 瀏覽器模式的全場結果頁。
+- [x] PWA／standalone 模式不額外抬升，不影響獨立 App 版面。
+- [x] 鍵盤開啟時固定操作列維持隱藏，避免遮住輸入。
+- [x] 僅調整 CSS 可視位置與頁尾 spacer，不改比分、計時、事件、匯出與資料儲存。
+- [x] 三顆按鈕仍保有既有觸控高度與資訊層級。
+
+## v5.164 本次驗證
+
+- [x] 長時間計時提示為非阻斷資訊區，不再存在第二個結束比賽入口。
+- [x] 關閉提醒只設定本頁工作階段的暫時隱藏狀態，不停止計時、不改比分、不改事件。
+- [x] 唯一的一般全場結束 CTA 維持既有 `finishMatch()` 流程；下半場／延長賽情境操作不變。
+- [x] 無新增外部依賴、網路請求或資料儲存欄位。
+
+## v5.163 本次驗證
+
+- 球衣顏色白名單擴充為 10 色：default / blue / yellow / white / red / gray / green / black / orange / purple。
+- 新增色仍經 normalizeJerseyColor() 白名單驗證，未知值自動回退 default。
+- 僅擴充呈現與狀態值，不改動比分、計時、名單、事件與匯出邏輯。
+
+- [x] `#99`、`#98` 等雙位數背號文字不再被移除標記覆蓋。
+- [x] 移除標記改為絕對定位的獨立圓形 badge，不參與背號文字排版。
+- [x] chip 整體仍是唯一可點擊目標；`×` 本身不攔截 pointer event。
+- [x] 本場名單、近期 5 場學習與守門員同步邏輯未變更。
+- [x] JavaScript syntax check 通過。
+
+## v5.161 最近 5 場活躍背號檢查
+
+- [x] 近期歷史最多保存 5 場，並以 Match ID 去重。
+- [x] 背號只接受 1–99 整數，歷史寫入前去重與排序。
+- [x] 快捷背號最多顯示 24 個；超量時依出場頻率、守門員使用與近期程度挑選。
+- [x] 只有已完成比賽才更新近期歷史；單一事件或名單視窗操作不直接污染長期快捷背號。
+- [x] PK 完成與一般全場完成都會寫入近期歷史。
+- [x] 建立新比賽前有去重式備援同步，不會因重複執行產生同場兩筆。
+- [x] 重設快捷背號只清除本機近期學習資料，不刪除本場名單或歷史 Match。
+- [x] v5.160 舊資料採一次性安全遷移，避免升級後突然失去所有自訂背號。
+- [x] JavaScript syntax check 通過。
+
+
+
+### v5.160 快捷背號學習模式檢查
+- 學習背號仍僅接受 1–99 的整數並做去重、排序與白名單式正規化。
+- 重設快捷背號只移除本機 localStorage 的學習池，不修改目前比賽資料與既有歷史 Match。
+- 未建立學習池前，單一事件／守門員背號不會誤初始化整個常用背號池。
+- 本場取消球員不會直接刪除長期常用背號，避免資料因單場出勤狀態被誤刪。
+
+## v5.159 本次驗證
+
+- 守門員由 #7 改為 #21，若 #7 是系統因守門員設定自動加入，名單會由 `[7]` 正確變成 `[21]`。
+- 若 #7 原本是使用者手動選入名單，改守門員為 #21 後 #7 仍保留，避免誤刪正式名單成員。
+- 清除守門員時，只移除自動加入的守門員背號；手動名單不受影響。
+- 新比賽沿用守門員與名單來源資訊，避免跨場切換守門員時累積幽靈球員。
+
+## v5.158 本次驗證
+
+- [x] iOS Safari 瀏覽器模式辨識不新增外部依賴或網路請求。
+- [x] 賽後三顆操作列只在全場結果模式固定於 Safari 工具列上方。
+- [x] PWA / standalone 模式不套用額外 Safari toolbar offset。
+- [x] 鍵盤開啟時固定操作列維持隱藏，避免干擾輸入。
+- [x] 頁尾 spacer 同步加高，最後一段內容仍可完整捲到操作列上方。
+
+## v5.157 本次驗證
+
+- [x] 「新比賽」建立新的獨立 Match ID，上一場資料仍完整保存。
+- [x] 沿用我方球隊名稱、比賽賽事、比賽場地、球員名單、守門員、規定比賽時間與球衣顏色。
+- [x] 球衣顏色仍經 `normalizeJerseyColor()` 白名單正規化後帶入新場。
+- [x] 對手名稱清空，畫面回到預設「對手」。
+- [x] 比分、事件、計時、段落、延長賽與 PK 狀態全部歸零。
+- [x] 建立新比賽後輸入焦點直接落在對手欄位。
+- [x] JavaScript syntax check 通過。
+
+## v5.155 本次驗證
+
+- [x] 摘要未填賽事／場地時，對應欄位完全隱藏。
+- [x] 分享／儲存圖片未填賽事／場地時，不產生空白卡片或 placeholder。
+- [x] 未設定規定比賽時間時，摘要不顯示「未設定比賽時間」。
+- [x] 已設定規定比賽時間時，時間差異資訊仍正常顯示。
+- [x] 比賽日期固定保留；球員名單維持有資料才顯示。
+- [x] JavaScript syntax check 通過。
+
+## v5.154 本次驗證
+
+- [x] 本版僅加入 UI / UX CSS polish，未更動比賽資料 schema、計時、事件記錄、CSV 或分享資料邏輯。
+- [x] 主要操作元件保留／補強至少 44px 觸控目標。
+- [x] `focus-visible` 只影響鍵盤焦點，不在一般手機點擊後留下突兀外框。
+- [x] Modal 動效遵守 `prefers-reduced-motion`。
+- [x] 不新增第三方套件、外部字型、網路請求或追蹤程式。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：實機確認 Modal blur、長文字與網址列展開／收合時的畫面一致性。
+
+## v5.153 本次驗證
+
+- LINE 分享文字：確認僅首行保留 ⚽，第二行使用全形空白呈現賽果，日期包含星期，賽事與場地不重複置頂。
+
+- [x] LINE 分享文字移除欄位名稱與所有 `｜` 分隔符號。
+- [x] 場地分享圖示統一使用與摘要畫面相同的 `📍`。
+- [x] 未填賽事／場地仍整列省略，不輸出 placeholder。
+- [x] 儲存圖片模式仍不附帶分享文字。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari／LINE：實機確認換行與 emoji 顯示一致。
+
+## v5.149 本次驗證
+
+- 球衣顏色 `gray` 僅接受既定 palette key，仍經 `normalizeJerseyColor()` 白名單驗證。
+- 灰色色票不新增外部資源、網路請求或第三方程式碼。
+- 既有資料未含 `gray` 時維持原狀；未知色彩值仍回退 `default`。
+
+## v5.148 本次驗證
+
+- [x] LINE 分享文字改為一個欄位一行：標題、比分、日期時間、賽事、場地互不混排。
+- [x] 比分使用全形冒號 `：`，時間維持半形冒號 `:`。
+- [x] 日期列固定包含開賽時間，方便同一天多場辨識。
+- [x] 未填賽事／場地整列省略，不輸出 placeholder。
+- [x] 儲存圖片模式仍不附帶分享文字。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari／LINE：實機確認分享文字換行與圖片可同時送出。
+
+
+## v5.147 本次驗證
+
+- [x] 分享圖片隊名先縮字後換行，短／中長隊名優先維持單行。
+- [x] 換行候選排除以 `)`、`）` 等結尾符號開頭的第二行，避免孤立括號。
+- [x] LINE 分享文字包含日期、雙方與比分；對手未填時額外包含開賽時間。
+- [x] 已填賽事／場地會加入第二行分享文字；未填欄位不輸出 placeholder。
+- [x] 儲存圖片模式維持不附帶文字。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari／LINE：實機確認圖片與兩行分享文字可同時送出。
+
+
+## v5.146 本次驗證
+
+- [x] 名單 Modal 高度改用 `--vv-height`，不再只依賴 `90vh`。
+- [x] 上下保留可見緩衝，Header 與 Footer 不貼住 Safari 可視區邊界。
+- [x] 可捲動內容仍可完整查看球衣色票、快捷背號、其他背號與清空名單。
+- [x] 「完成」按鈕保留至少 44px 觸控高度。
+- [x] 本次僅調整 UI CSS，未變更名單、球衣顏色或資料儲存邏輯。
+- [ ] iPhone Safari：實機確認網址列展開／收合兩種狀態的上下呼吸空間。
+
+
+## v5.145 本次驗證
+
+- [x] 螢幕摘要只有 GOAL 事件建立右側比分元素。
+- [x] 射門／撲救／防守／牌卡不顯示比分，也不保留比分欄空間。
+- [x] 進球比分僅用暖黃色文字，不使用膠囊底色、邊框或圓角框。
+- [x] 儲存圖片同步只在 GOAL 事件顯示比分，且使用純黃色文字。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：實機確認時間軸長文字與進球比分不重疊。
+
+
+## v5.144 本次驗證
+
+- [x] 儲存圖片與螢幕摘要共用 `reportTimelineEntries()` / `reportTimelineCompactParts()` 事件來源。
+- [x] 圖片時間軸僅 GOAL 事件顯示比分；非進球事件不再顯示重複比分。
+- [x] 圖片時間軸採單列事件格式，助攻資訊與進球者同列。
+- [x] 基本資料順序與螢幕摘要一致：賽事、日期、場地、球員。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：實際產生一張長摘要圖片，確認中文／Emoji 字型與換行結果。
+
+
+## v5.134 本次驗證
+
+- [x] 全場比分列縮減非必要水平 padding / gap，不變更比分數值與操作邏輯。
+- [x] 純英文／拉丁字母隊名新增 `latinName` 顯示分類，不修改實際隊名資料。
+- [x] 中文隊名原有 suffixSplit / longName / veryLongName 判斷保留。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：確認 `MONSTER` / `MONOSTER` 等英文隊名完整顯示。
+- [ ] iPhone Safari：確認中英文混合長隊名不與中央比分重疊。
+
+
+## v5.129 本次驗證
+
+- [x] 3 小時長時間提醒由阻斷式 Modal 改為時間紀錄內 inline 提醒。
+- [x] 提醒顯示時不修改 `state.started`、`startEpoch` 或 elapsed 計算。
+- [x] 提醒不鎖 body scroll，不遮住事件操作按鈕。
+- [x] 「結束比賽」仍呼叫既有 `finishMatch()` 流程。
+- [x] × 僅暫時隱藏目前頁面工作階段，不寫入比賽資料。
+- [x] 重新整理後若仍超過 3 小時，提醒可再次出現。
+- [x] 中場 / 等待下一階段 / 全場結束不顯示長時間提醒。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：確認提醒出現時仍可正常點擊進球、射門、撲救、防守及牌卡。
+- [ ] iPhone Safari：確認收合與展開時間紀錄時提醒均不造成版面溢位。
+
+## v5.128 本次驗證
+
+- [x] 時間紀錄標題由「中場紀錄」改為「中場休息紀錄」。
+- [x] 中場開始／結束時間顯示邏輯未修改。
+- [x] 中場休息 duration 計算未修改。
+- [x] 實際比賽時間仍不計入中場休息。
+- [x] JavaScript syntax check 通過。
+
+## v5.127 歷史驗證
+
+- [x] 上半場開始 / 結束顯示於同一列。
+- [x] 中場開始 / 結束顯示於同一列。
+- [x] 下半場開始 / 結束顯示於同一列。
+- [x] 延長賽開始 / 結束顯示於同一列。
+- [x] 各階段標題顯示合計時間。
+- [x] 中場合計時間取自 halftimeElapsed()。
+- [x] 進行中的下半場 / 延長賽合計時間可即時更新。
+- [x] 實際比賽時間計算邏輯未修改。
+- [x] 比賽日期、規定時間、CSV、摘要、Match ID 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：確認 390px 左右寬度時開始 / 結束不截字。
+- [ ] iPhone Safari：確認超過 24 小時或跨日時間仍正常顯示。
+
+## v5.126 歷史驗證
+
+- [x] 左右大禁區線寬提高至 1.75，opacity 提高至 .40。
+- [x] 左右小禁區線寬提高至 1.85，opacity 提高至 .42。
+- [x] 禁區弧 / 十二碼點維持低權重。
+- [x] 球門、中線、中圈與中央足球未修改。
+- [x] Header 標題 / 說明安全區未修改。
+- [x] 比賽、事件、時間、CSV 與場地還原邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：確認禁區在一般亮度下一眼可辨識。
+- [ ] iPhone Safari：確認禁區不會比球門 / 標題更搶眼。
+
+
+## v5.125 本次驗證
+
+- [x] 本場 `venue:''` 重新整理後維持空白。
+- [x] 已開始比賽不會讀取 `LAST_VENUE_KEY` 回填場地。
+- [x] 已結束比賽不會讀取 `LAST_VENUE_KEY` 回填場地。
+- [x] 真正新比賽仍可沿用既有 remembered venue 行為。
+- [x] 舊版 state 若根本沒有 `venue` 欄位，賽前仍保留相容性預填。
+- [x] 最近使用場地下拉清單邏輯未修改。
+- [x] JavaScript syntax check 通過。
+
+# SECURITY_CHECKLIST.md
+# v5.126 驗證範圍：Header 左右大 / 小禁區線辨識度精修。
+# 足球場邊記錄器 — 發版安全與同步檢查清單
+
+
+
+
+## v5.124 本次驗證
+
+- [x] `事件紀錄` 主入口已由 `☰` 改為線性文件清單 SVG。
+- [x] 隊名、比分／隊名、賽事資料等修改入口改為線性鉛筆 SVG。
+- [x] 動態切換「比分／隊名 / 修正比分」時，不會因 `textContent` 清掉 SVG。
+- [x] 事件紀錄 Modal 標題與空白狀態同步改為文件清單 SVG。
+- [x] 摘要 / CSV / 新比賽既有 SVG 保持不變。
+- [x] 足球事件 Emoji / 彩色具象圖示保持不變。
+- [x] JavaScript syntax check 通過。
+
+## v5.123 本次驗證
+
+- [x] 一般尺寸四張統計卡固定為 74px 高。
+- [x] 390px 以下固定為 72px 高。
+- [x] 四張卡仍維持單列四欄。
+- [x] 圓角縮小，避免胖厚感。
+- [x] icon / label 視覺權重降低。
+- [x] 統計數字仍為每張卡第一視覺層級。
+- [x] 分類色仍保留（進球 / 射門 / 撲救 / 防守）。
+- [x] 邊框與陰影強度降低。
+- [x] 卡片高度仍高於 44px 觸控基準。
+- [x] 未修改事件統計、drill-down、時間、CSV 或比賽狀態邏輯。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：確認 74px 卡片仍有明確卡片感。
+- [ ] iPhone Safari：確認數字掃讀性與四卡分離感。
+- [ ] iPhone Safari：確認全場首屏垂直空間比 v5.122 更俐落。
+
+## v5.122 歷史驗證
+
+- [x] 新增 `wholeSecondMarkerSeconds()`，事件相對秒數統一向下取整。
+- [x] 歷史 marker `seconds` 有小數時會安全轉為整秒。
+- [x] 歷史 marker `time` 依整秒 `seconds` 重新同步。
+- [x] CSV `time` 與 `seconds` 共用相同 `markerSeconds`。
+- [x] 不再使用 `Math.round(m.seconds)` 造成 `00:05 / 6` 不一致。
+- [x] CSV `duration_seconds` 明確使用整秒值。
+- [x] marker `recorded_at` 保留原始毫秒 timestamp。
+- [x] Match ID、`_savedAt`、Registry `updatedAt` 邏輯未修改。
+- [x] marker 遷移寫回 localStorage 不更新 `_savedAt` / Registry `updatedAt`。
+- [x] JavaScript syntax check 通過。
+- [x] 範例 `seconds=5.7` 會得到 `time=00:05`、`seconds=5`。
+- [ ] iPhone Safari：載入舊比賽後匯出 CSV，確認事件 `time` / `seconds` 一致。
+- [ ] iPhone Safari：確認 `recorded_at` 仍保留原始毫秒。
+- [ ] iPhone Safari：新比賽標記事件後匯出 CSV，確認畫面 / 摘要 / CSV 事件時間一致。
+
+## v5.121 歷史驗證
+
+- [x] `normalizeUnfinishedTimingToWholeSeconds()` 升級為 `normalizeMatchTimingToWholeSeconds()`。
+- [x] 已完成歷史比賽不再直接略過。
+- [x] period 同時具有 start/end 時，先對齊整秒再重算 duration。
+- [x] period 缺少 start/end 時不猜測，沿用既有 duration 並安全取整秒。
+- [x] finished + periods 存在時，`finalElapsed` 由各 period duration 重新加總。
+- [x] 中場休息不計入 `finalElapsed`。
+- [x] 等待延長賽空檔不計入 `finalElapsed`。
+- [x] PK 時間不計入 `finalElapsed`。
+- [x] `_savedAt` 不因時間資料遷移而更新。
+- [x] Registry `updatedAt` 不因時間資料遷移而更新。
+- [x] Match ID 生成邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] 範例 22:16:57→22:17:03、22:17:08→22:17:10、22:17:34→22:17:39 重算為 6+2+5=13 秒。
+- [ ] iPhone Safari：開啟舊已完成比賽，確認原 `00:11` 重新顯示為 `00:13`。
+- [ ] iPhone Safari：重新整理頁面，確認重算結果穩定不再變動。
+- [ ] iPhone Safari：確認摘要 / CSV / 時間紀錄使用相同 `finalElapsed`。
+
+## v5.120 歷史驗證
+
+- [x] 新增 `nowWholeMs()`，比賽時間 epoch 毫秒尾數固定為 `000`。
+- [x] 主比賽開始 / 結束改為整秒。
+- [x] 中場開始 / 結束與中場休息秒數改為整秒。
+- [x] 下半場開始與中場結束共用同一個 action epoch，避免跨秒假空檔。
+- [x] 延長賽沿用各階段整秒計時。
+- [x] PK 開始 / 結束改為整秒。
+- [x] 結束某段時，duration 直接由該段 start/end 的同一組整秒邊界計算。
+- [x] `elapsed()` 仍以系統時間差計算，不使用 interval 累加。
+- [x] Match ID 備援值仍保留 `Date.now()` 毫秒精度。
+- [x] `_savedAt` 仍保留 `Date.now()` 毫秒精度。
+- [x] Registry `updatedAt` 仍保留 `Date.now()` 毫秒精度。
+- [x] 已完成歷史比賽不做時間遷移。
+- [x] 尚未完成的 v5.119 比賽會在載入時對齊整秒。
+- [x] JavaScript syntax check 通過。
+- [ ] iPhone Safari：開始 6 秒後結束，確認開始 / 結束人工相減與該段時間一致。
+- [ ] iPhone Safari：中場 5 秒後開始下半場，確認中場結束與下半場開始同秒。
+- [ ] iPhone Safari：鎖螢幕 / 背景後恢復，確認計時不因 timer throttling 變慢。
+
+## v5.119 本次驗證
+
+- [x] PK 完成後上方狀態列只顯示「全場」。
+- [x] PK 比數仍保留在主比分區下方的 PK 標籤。
+- [x] 勝方徽章顯示邏輯未修改。
+- [x] PK 記錄、摘要、CSV 與勝方判定邏輯未修改。
+- [x] JavaScript syntax check 通過。
+
+## v5.117 本次驗證
+
+- [x] 說明按鈕上移 3px。
+- [x] 最小寬度調整為約 58px。
+- [x] 邊框與陰影降低視覺重量。
+- [x] 保留 `ⓘ 說明` 文字。
+- [x] Header 其他元素未修改。
+- [x] JavaScript syntax check 通過。
+
+## v5.116 歷史驗證
+
+- [x] v5.115 左右禁區資訊安全區尺寸未放大。
+- [x] 左右球門加入前框 / 後框 / 縱深。
+- [x] 球網改成低對比透視線，不使用外部圖片。
+- [x] 大禁區線透明度低於小禁區。
+- [x] 禁區弧與十二碼點進一步淡化。
+- [x] 新增低透明上下邊線，增強完整球場感。
+- [x] 草皮維持 8 條割草紋並增加細微橫向紋理。
+- [x] 中圈附近微亮、左右端略暗。
+- [x] 標題安全 scrim 保留並降低色塊感。
+- [x] 中圈、中央足球、標題、版本號與說明按鈕位置未修改。
+- [x] 無新增外部資源。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari：確認球門更像真實球門但不搶標題。
+- [ ] iPhone Safari：確認大 / 小禁區主次層級清楚。
+- [ ] iPhone Safari：確認左右場線不與標題或說明按鈕重疊。
+- [ ] iPhone Safari：確認草皮增強後文字仍維持高可讀性。
+
+## v5.115 歷史驗證
+
+- [x] 左大禁區內側線由 157.14 收至 110.00。
+- [x] 右大禁區採完全鏡像位置 890.00。
+- [x] 小禁區與大禁區深度仍維持 1:3。
+- [x] 十二碼點與禁區弧同步套用 70% x 軸縮放。
+- [x] 禁區弧仍位於大禁區外側。
+- [x] 大禁區線透明度降低，避免與前景資訊競爭。
+- [x] 標題後方加入低透明局部 scrim。
+- [x] 中圈、中線、中央足球位置未改動。
+- [x] 標題、版本號與說明按鈕位置未改動。
+- [x] v5.114 其他功能未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari：確認左大禁區不再穿過「足球場邊記錄器」。
+- [ ] iPhone Safari：確認右大禁區與「說明」保有明確留白。
+- [ ] iPhone Safari：確認左右大小禁區仍清楚辨識。
+
+## v5.114 歷史驗證
+
+- [x] 大禁區深度依 16.5m / 105m 比例換算。
+- [x] 小禁區深度依 5.5m / 105m 比例換算。
+- [x] 大小禁區深度維持 1:3。
+- [x] 大禁區寬度依球門 7.32m + 兩側各 16.5m 換算。
+- [x] 小禁區寬度依球門 7.32m + 兩側各 5.5m 換算。
+- [x] 左右十二碼點依 11m 換算並淡化加入。
+- [x] 禁區弧改用 9.15m 半徑的 SVG elliptical arc。
+- [x] 左右禁區弧均位於大禁區外側。
+- [x] 中圈刻意保留接近正圓，不做超寬 Header 的橢圓投影。
+- [x] 一般版中圈約 38px 直徑。
+- [x] 390px 以下中圈約 36px 直徑。
+- [x] 球門縮小但保留 UI 可辨識度。
+- [x] v5.113 賽前重設邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari：確認小禁區相較大禁區明顯縮小。
+- [ ] iPhone Safari：確認大禁區向中場延伸後不干擾標題可讀性。
+- [ ] iPhone Safari：確認左右禁區弧方向與實際足球場一致。
+- [ ] iPhone Safari：確認縮小後中圈與中央足球仍有足夠留白。
+
+## v5.113 歷史驗證
+
+- [x] 賽前重設仍位於狀態列右側。
+- [x] 重設按鈕只在 `hasMeaningfulPreMatchSetup()` 為 true 時顯示。
+- [x] 無可重設資料時 `disabled=true`、`aria-hidden=true`。
+- [x] 可視按鈕高度約 33–34px。
+- [x] 透明 pseudo hit-area 擴大約至 44px。
+- [x] 使用深藍透明底與淡藍灰描邊，不使用危險紅色。
+- [x] `↻` 圖示亮度高於文字，提升操作辨識。
+- [x] 重設確認訊息明確列出主要清除項目。
+- [x] 原 `resetPreMatchSetup()` 清除邏輯未更動。
+- [x] 開始比賽 Primary CTA 樣式未更動。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari：有賽前資料時確認「重設」明顯但不搶主 CTA。
+- [ ] iPhone Safari：無可重設資料時確認按鈕不顯示。
+- [ ] iPhone Safari：確認重設按鈕容易點擊且不擋住「賽前」文字。
+
+## v5.112 歷史驗證
+
+- [x] Header DOM 結構未修改。
+- [x] 中圈足球仍固定在 `50% / 50%`。
+- [x] 中圈足球一般版縮為 23.5px。
+- [x] 390px 以下中圈足球縮為 21.5px。
+- [x] 版本號位置向下 2px。
+- [x] 版本號明度由約 72% 降為約 67%。
+- [x] 說明按鈕寬度與左右 padding 已小幅收斂。
+- [x] 說明按鈕背景 / 邊框 / 陰影視覺重量降低。
+- [x] 左右球門安全區與半寫實球場 SVG 未修改。
+- [x] v5.111 中場比分／隊名整合邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari 實機確認中圈足球縮小後仍位於中圈正中央。
+- [ ] iPhone Safari 實機確認版本號與標題間距更自然。
+- [ ] iPhone Safari 實機確認「說明」按鈕變輕但仍清楚可點。
+
+## v5.111 歷史驗證
+
+- [x] 中場狀態左右 `.teamNameEditBtn` 已隱藏。
+- [x] 等待延長賽狀態左右 `.teamNameEditBtn` 已隱藏。
+- [x] 中場中央入口顯示「✎ 比分／隊名」。
+- [x] 等待延長賽中央入口顯示「✎ 比分／隊名」。
+- [x] 中場 Score Modal 顯示本隊 / 對手名稱欄位。
+- [x] 中場可同時儲存雙方隊名與比分。
+- [x] 中場隊名仍沿用 `validateTeamNameValue()` 驗證。
+- [x] 中場 / 等待延長賽共用全場的整合 Modal 視覺。
+- [x] 比賽進行中仍不開放人工修正比分。
+- [x] v5.110 摘要 X 與說明頁 X 統一樣式保留。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari 實機確認中場左右大型修改按鈕已消失。
+- [ ] iPhone Safari 實機確認中場「比分／隊名」可正常修改四個欄位。
+
+## v5.110 歷史驗證
+
+- [x] 摘要右上角符號統一為 `✕`。
+- [x] 摘要關閉鍵保留 44px 觸控範圍。
+- [x] 可視圓鈕縮於 44px hit area 內。
+- [x] 背景、邊框、X 顏色與說明頁採相同視覺語言。
+- [x] 舊版方形 close button 的 border / background / shadow 已覆蓋。
+- [x] 小螢幕不再降成 38px 方形按鈕。
+- [x] 觸控裝置不留下多餘 focus ring。
+- [x] `closeReport()` 與 touch/click 綁定邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari 實機確認摘要 X 與說明頁 X 的圓鈕尺寸、顏色與視覺重量一致。
+
+## v5.109 歷史驗證
+
+- [x] 左側禁區弧線由禁區線向球場中央方向凸出。
+- [x] 右側禁區弧線由禁區線向球場中央方向凸出。
+- [x] 禁區弧線不再落在禁區矩形內部。
+- [x] 一般螢幕與 `max-width:390px` 使用相同修正版 SVG。
+- [x] 左右球門、球網、大禁區、小禁區位置未變更。
+- [x] 中線、中圈、中央足球與 Header 文字版面未變更。
+- [x] v5.108 的「比分／隊名」整合與三顆賽後按鈕保留。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] iPhone Safari 實機確認左右禁區弧線均在禁區外側。
+
+## v5.108 歷史驗證
+
+- [x] 全場左右 `.teamNameEditBtn` 已隱藏。
+- [x] 中場 / 等待延長賽原隊名修改入口未移除。
+- [x] 全場中央入口顯示「比分／隊名」。
+- [x] 全場 Score Modal 新增雙方隊名欄位。
+- [x] 儲存隊名前同步主畫面 input，避免 `saveState()` 以舊值覆寫。
+- [x] 隊名沿用既有 `validateTeamNameValue()` 驗證。
+- [x] PK 完成後比分欄位鎖定，但仍可修正隊名。
+- [x] 摘要 / 匯出 CSV / 新比賽改為 3 欄同列。
+- [x] 三個工具使用 inline SVG，不依賴外部資源。
+- [x] 390px 以下按鈕高度維持 48px。
+- [x] v5.107 Header 半寫實球場保留。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：全場左右不再出現大型「修改」按鈕。
+- [ ] 實機：「比分／隊名」可同時修改雙方隊名與比分。
+- [ ] 實機：摘要 / CSV / 新比賽在 390px iPhone 維持一列。
+- [ ] 實機：Safari 工具列展開後仍可完整點擊三顆按鈕。
+
+## v5.107 歷史驗證
+
+- [x] Header DOM 配置維持 v5.106，不更動標題 / 版本 / 說明的位置。
+- [x] 草皮改為 CSS gradient，不需要外部圖片。
+- [x] 左右球門改用內嵌 SVG，包含門柱與低透明球網。
+- [x] 大禁區 / 小禁區 / 禁區弧線均包含在 SVG。
+- [x] 中線 / 中圈仍使用 CSS，保持不同螢幕下的幾何穩定。
+- [x] 左右 goal-safe area 未修改。
+- [x] 中圈足球仍固定 50% / 50%。
+- [x] 不加入持續動畫。
+- [x] 不加入外部網路資源。
+- [x] 比分、事件、計時、摘要、CSV、Match ID 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：左右球門完整且能看出淡球網。
+- [ ] 實機：標題可讀性不應因草皮 / 白線升級而下降。
+- [ ] 實機：中圈足球仍位於中圈正中央。
+- [ ] 實機：390px iPhone Header 不出現文字與球門互相覆蓋。
+
+## v5.106 歷史驗證
+
+- [x] 左側沒有第二顆足球圖示。
+- [x] 中圈只保留一顆 `.headerCenterBall`。
+- [x] 足球固定 `left:50% / top:50%`，不受左右文字寬度影響。
+- [x] 版本號已移至品牌標題下方。
+- [x] 右側按鈕文字改為 `說明`。
+- [x] 左右設定 `goal-safe area`，內容不進入球門區。
+- [x] 390px 以下仍保留左右安全區。
+- [x] 極窄 350px 以下有字級 / 按鈕降級策略。
+- [x] Header 在賽前 / LIVE / 中場 / 全場不套用額外動畫。
+- [x] 比分、事件、計時、摘要、CSV、Match ID 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：左右球門完整露出，不被標題 / 說明按鈕遮住。
+- [ ] 實機：⚽ 位於中圈正中央。
+- [ ] 實機：版本號位於「足球場邊記錄器」正下方。
+- [ ] 實機：390px iPhone 確認標題與「ⓘ 說明」不互相擠壓。
+
+## v5.105 歷史驗證
+
+- [x] 標題左側原本的足球 emoji 已移除。
+- [x] Header 中圈新增單一 `.headerCenterBall`。
+- [x] 中圈足球使用 absolute positioning，不占左右 flex 寬度。
+- [x] 左側產品名稱仍完整顯示。
+- [x] 右側版本號與「這是什麼？」按鈕保留。
+- [x] 中圈足球無動畫、無點擊事件、`aria-hidden=true`。
+- [x] 390px / 350px 以下有尺寸降級，避免擠壓左右文字。
+- [x] 比賽狀態、比分、事件、計時、摘要、CSV 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：iPhone Safari 確認 ⚽ 位於背景中圈中心。
+- [ ] 實機：確認品牌名稱、版本號、「這是什麼？」不互相重疊。
+- [ ] 實機：確認賽前 / LIVE / 中場 / 全場 Header 位置一致。
+
+## v5.104 歷史驗證
+
+- [x] 全場 `reviewEditing` 外框套用與賽前一致的 focus token。
+- [x] 全場 review input 不再顯示內層 border / outline / shadow。
+- [x] 全場 review input 字級為 15.5px、padding 2px。
+- [x] `忠義國小` 四字在全場修改模式下可完整顯示。
+- [x] 全場未修改時的大字隊名展示未變更。
+- [x] 修改按鈕在 review 編輯期間仍隱藏。
+- [x] 比賽中不開放隊名修改的規則未變更。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：全場點「我方修改」，確認只有外層出現青藍 focus 框。
+- [ ] 實機：全場點「對手修改」，確認樣式與我方完全一致。
+- [ ] 實機：確認 `忠義國小` 四字完整顯示、不截字。
+
+## v5.103 歷史驗證
+
+- [x] `.quickResultStat::before` 彩色頂條已移除。
+- [x] 四張統計卡仍保留進球 / 射門 / 撲救 / 防守的原有分類色。
+- [x] 全場模式卡片高度由原本 92px 級距縮為 82px。
+- [x] 卡片圓角、陰影與邊框厚度均已收斂。
+- [x] 主統計數字仍維持 33px，沒有因縮卡片而降低主要資訊辨識。
+- [x] 小型 iPhone 仍維持四卡一列。
+- [x] 四張卡片的 data-event / 點擊行為未修改。
+- [x] 比分、計時、事件、摘要、CSV、Match ID 與 LocalStorage 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：全場頁確認四張卡片無上方彩色蓋子。
+- [ ] 實機：確認卡片縮短後，圖示 / 標題 / 大數字仍沒有擠壓或換行。
+- [ ] 實機：確認四種事件卡點擊後仍可正常查看對應紀錄。
+
+## v5.102 歷史驗證
+
+- [x] 賽前 `.teamNameDisplay` 強制為 15.5px，覆蓋舊版 20px `!important` 規則。
+- [x] 賽前 `teamNameEditor` 與 display 使用相同 15.5px。
+- [x] `mediumName` 不再把 4～6 字的賽前隊名重新放大。
+- [x] display / input 左右 padding 均為 2px。
+- [x] 長隊名仍保留逐級縮字與 overflow 防護。
+- [x] v5.101 單一 Active Focus 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：`忠義國小` 未點選時完整顯示四個字。
+- [ ] 實機：點選本隊後，字級與文字位置不應明顯跳動。
+- [ ] 實機：5～8 字隊名確認不會撐破比分區。
+
+## v5.101 歷史驗證
+
+- [x] `editing` 不再等同藍色 focus 高亮。
+- [x] 賽前隊名欄位藍色高亮只由 `:focus-within` 決定。
+- [x] 新增 `clearInactivePreMatchFieldFocus(activeId)` 清理其他欄位的殘留 editing / guidedInput 狀態。
+- [x] 點場地時，本隊 / 對手不應同時保留藍框。
+- [x] 點對手時，本隊不應同時保留藍框。
+- [x] 點賽事名稱時，兩個隊名欄位不應保留藍框。
+- [x] Guided Setup、Enter / ✓ 流程未移除。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：依序點場地 → 本隊 → 對手 → 賽事名稱，確認每次只有目前欄位亮藍框。
+
+## v5.100 歷史驗證
+
+- [x] 版本號已更新為 `v5.100`。
+- [x] 賽前狀態下，`.preMetaField:focus-within` 與 `.teamNameBox.editing / reviewEditing / :focus-within` 使用同一組 focus token。
+- [x] 賽前狀態下，`.teamNameBox` 的預設 border / radius / background 已和 `.preMetaField` 對齊。
+- [x] 賽前狀態下，本隊 / 對手顯示文字改為與賽事 / 場地一致的字級、字重與對齊。
+- [x] 調整只限 `body.matchStatePre`，不影響比賽中 / 中場 / 下半場 / 延長賽 / 全場畫面。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：依序點擊「賽事名稱 / 場地 / 本隊 / 對手」，四者的 focus 視覺應完全一致。
+- [ ] 實機：進入比賽中後，本隊 / 對手顯示區仍維持既有比分畫面樣式，未被賽前輸入樣式污染。
+
+## v5.99 歷史驗證
+
+- [x] `#ourTeam` input 不再顯示獨立底線 / 邊框 / 陰影。
+- [x] `#oppTeam` input 不再顯示獨立底線 / 邊框 / 陰影。
+- [x] `teamNameBox.editing` / `reviewEditing` / `:focus-within` 由外層表達焦點。
+- [x] 我方與對手輸入加入 `autocorrect="off"` 與 `spellcheck="false"`。
+- [x] 長隊名縮字、空值顯示「對手」、review 編輯流程未移除。
+- [x] 賽事名稱 / 場地的 v5.98 單一外框邏輯保留。
+- [x] Match ID、多場比賽、摘要、CSV、計時、事件統計未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：iPhone Safari 點擊「忠義國小 / 對手」編輯時，只看到外層隊名區高亮，不再出現內層長方形輸入框。
+- [ ] 實機：中場 / 全場透過「✎ 修改」進入 review 編輯，確認同樣維持單一外框。
+
+## v5.98 歷史驗證
+
+- [x] 賽前 `#competition` input 不再顯示獨立長方形 border / outline / box-shadow。
+- [x] 賽前 `#venue` input 不再顯示獨立長方形 border / outline / box-shadow。
+- [x] `preMetaField:focus-within` 仍提供清楚的整列焦點狀態。
+- [x] `guidedInput` 的全域邏輯未刪除，只在賽前 metadata input 做 CSS 覆蓋。
+- [x] 場地右側下拉按鈕與最近場地選單未修改。
+- [x] iOS input 加入 `autocorrect="off"` 與 `spellcheck="false"`。
+- [x] 文字內容、maxlength、enterkeyhint 與表單流程未修改。
+- [x] v5.97 七狀態 Design System、v5.96 超時視覺、v5.95 超時位置均保留。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、摘要、圖片、CSV 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：iPhone Safari 點擊賽事名稱，確認只有外層卡片發亮，文字區不再有第二層長方形框。
+- [ ] 實機：點擊場地輸入及下拉箭頭，確認焦點樣式與最近場地選單正常。
+
+## v5.97 歷史驗證
+
+- [x] 本版只新增 CSS 視覺覆蓋，不修改比賽資料與事件邏輯。
+- [x] 賽前群組間距收斂，但主要按鈕觸控高度未縮小。
+- [x] 賽前狀態條高度收斂約 4px。
+- [x] 比賽中 / 下半場 / 延長賽使用相同的 17px 狀態字與 28px 主時間。
+- [x] 中場使用 16px 狀態字 / 28px 計時。
+- [x] 等待延長賽使用 15.5px 狀態字 / 29px 計時。
+- [x] 全場使用 17px 狀態字 / 27px 主時間。
+- [x] 本場事件統計卡垂直空間略為壓縮。
+- [x] 未新增任何新的主要顏色或狀態色彩。
+- [x] 小型 iPhone 優先縮 gap / padding，不過度縮小主要文字。
+- [x] v5.96 超時字級 / 色彩、v5.95 超時位置、v5.93 Pulse、v5.92 長時間防爆均保留。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、摘要、圖片、CSV 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：逐一驗收賽前、比賽中、中場、下半場、等待延長賽、延長賽、全場。
+- [ ] 實機：確認 iPhone 390px 以下各狀態主要文字未換行或互相擠壓。
+
+## v5.96 歷史驗證
+
+- [x] 超時資訊一般尺寸為 13px / font-weight 950。
+- [x] 主計時使用 `#FF686E`。
+- [x] 超時資訊使用同色系較柔的 `#FF858A`。
+- [x] 規定時間維持灰藍色次要層級。
+- [x] 390px 以下超時文字為 12.5px。
+- [x] 350px 以下超時文字為 12px。
+- [x] v5.95 超時位置、v5.93 Pulse、v5.92 長時間防爆未修改。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、摘要、圖片、CSV 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+
+## v5.95 歷史驗證
+
+- [x] 超時資訊不再以 scoreboard 下方獨立一列顯示。
+- [x] 「時間紀錄」標題列新增第二行狀態資訊。
+- [x] 正常狀態顯示「規定 X 分鐘」。
+- [x] 距規定時間 60 秒內顯示「剩 MM:SS」。
+- [x] 規定時間到顯示「時間到」。
+- [x] 超時顯示「超時 +MM:SS / +H:MM:SS」。
+- [x] 超時狀態文字使用紅色，不只依靠顏色外框判斷。
+- [x] scoreboard 原有 regulationHint DOM 保留，但永遠不佔視覺空間。
+- [x] v5.93 外框 Pulse 3 次提醒邏輯保留。
+- [x] v5.92 長時間 H:MM:SS 與防 overflow 邏輯保留。
+- [x] 主計時與超時仍共用同一幀整數秒，維持 v5.91 同步修正。
+- [x] 小螢幕優先保留超時狀態與「展開」控制。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、摘要、圖片、CSV 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：正常狀態確認顯示「規定 X 分鐘」且無額外 scoreboard 列。
+- [ ] 實機：00:30 → 00:00 → 超時，確認第二行狀態平順切換。
+- [ ] 實機：小型 iPhone 確認「超時 +xx:xx」與「展開」不互相擠壓。
+
+## v5.94 歷史驗證
+
+- [x] About /「這是什麼？」已完全移除 Recovery 按鈕。
+- [x] 正常根網址進入不顯示 Recovery。
+- [x] 正常有效 `#match=` 進入不顯示 Recovery。
+- [x] 只有 URL 指定 Match ID 但本機資料不存在時，才標記 `MATCH_RECOVERY_REQUIRED`。
+- [x] 缺少 Match 資料時不會把空白 state 寫回原遺失 ID。
+- [x] 缺少 Match 資料時先建立新的安全 Match ID。
+- [x] 有其他本機可復原紀錄時，只先顯示小型異常提示。
+- [x] 使用者主動按「資料復原」後，才顯示 Recovery 清單。
+- [x] 沒有其他本機資料時，不顯示 Recovery 清單。
+- [x] Recovery 清單改以「資料復原」語意呈現，不再把所有技術 state 稱為日常「未完成比賽」。
+- [x] Recovery 切換舊場的 v5.90 autosave 競態修正仍保留。
+- [x] Match Registry 與舊 Session 掃描能力仍保留。
+- [x] v5.93 超時 Pulse 與 v5.92 長時間防爆邏輯均保留。
+- [x] 比分、事件、烏龍球、摘要、圖片、CSV 與計時邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：正常開啟「這是什麼？」確認不再看到 Recovery。
+- [ ] 實機：有效 Match URL reload 確認直接恢復、不出現 Recovery。
+- [ ] 實機：模擬不存在的 Match URL，確認只有真正異常時才出現資料復原提示。
+
+## v5.93 歷史驗證
+
+- [x] 規定時間 `diff <= 0` 時可觸發外框 Pulse。
+- [x] 同一 `startEpoch / currentPeriod / regulationMinutes` Token 只提醒一次。
+- [x] Pulse 約 1.25 秒一次，共 3 次，約 4 秒內停止。
+- [x] Pulse 結束後維持既有靜態超時紅框，不持續動畫。
+- [x] 動畫只使用外框 pseudo-element 與 box-shadow，不改背景。
+- [x] 不動畫比分、LIVE 標籤、比賽中標題與主計時文字。
+- [x] 不使用 scale，避免整張卡片跳動。
+- [x] 支援 `prefers-reduced-motion: reduce`，Reduce Motion 下不播放動畫。
+- [x] Reduce Motion 下改為短暫靜態高亮外框。
+- [x] 新 period / 新 regulationMinutes 可形成新的 Token 並再次提醒。
+- [x] v5.91 主計時與超時秒數同步邏輯保留。
+- [x] v5.92 H:MM:SS 長時間防爆排版保留。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、摘要、圖片與 CSV 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：規定時間 1 分鐘，確認 00:59 → 01:00 時只 Pulse 3 次。
+- [ ] 實機：Pulse 停止後等待數分鐘，確認不再持續閃。
+- [ ] 實機：iPhone 開啟「減少動態效果」，確認只呈現靜態高亮。
+
+## v5.92 歷史驗證
+
+- [x] `< 1 小時` 主計時仍維持 `MM:SS`。
+- [x] `≥ 1 小時` 主計時改為 `H:MM:SS`。
+- [x] `1148:15` 對應秒數會顯示為 `19:08:15`。
+- [x] 長時間 LIVE 列改用三欄 Grid，避免時間與「比賽中」重疊。
+- [x] LIVE / 狀態 / 時間元素皆加入縮放與 `min-width:0` 防 overflow。
+- [x] `≥ 100 小時` 具備第二級縮字保護。
+- [x] 超時提示 `≥ 1 小時` 同樣改為 `H:MM:SS`。
+- [x] 超時提示具備長字串 max-width / ellipsis 防護。
+- [x] 計時數字使用 `tabular-nums`。
+- [x] 單一段落 `≥ 3 小時` 重新進入頁面／回前景時會提示一次。
+- [x] 「繼續計時」只確認異常，不修改 startEpoch。
+- [x] 「結束比賽」沿用既有 finishMatch 流程，不直接改寫 finished 狀態。
+- [x] 程式不會因超長時間自動停止比賽。
+- [x] LocalStorage 仍保存完整 timestamp / 秒數，未截斷資料。
+- [x] v5.91 主計時／超時共用同一份 timerSec 的同步修正仍保留。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、摘要、圖片與 CSV 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：測試 59:59 → 1:00:00 切換時版面不跳位。
+- [ ] 實機：模擬 19:08:15 時 LIVE / 比賽中 / 時間均不重疊。
+- [ ] 實機：超過 3 小時後背景返回，確認只提示一次。
+
+## v5.91 歷史驗證
+
+- [x] 主計時器仍由 `requestAnimationFrame(tick)` 更新。
+- [x] `tick()` 每幀取得單一 `timerSec`。
+- [x] 主計時器與 `renderRegulationTimeAlert()` 共用同一份 `timerSec`。
+- [x] 主計時與超時提示皆以 `Math.floor()` 後的同一整數秒為顯示基準。
+- [x] 已移除獨立的 `setInterval(renderRegulationTimeAlert, 1000)`。
+- [x] `render()` 中的狀態刷新呼叫仍保留，用於開始、結束與設定變更後立即刷新樣式。
+- [x] 規定時間計算公式 `regulationSeconds - elapsedSeconds` 未改變。
+- [x] 比分、事件、烏龍球、Match ID、Recovery、CSV、摘要與 LocalStorage 邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：規定 20:00，觀察 19:59 → 20:00 → 20:01 邊界。
+- [ ] 實機：長時間超時後確認主計時與超時值仍維持精確差值。
+
+## v5.90 歷史驗證
+
+- [x] 啟動流程不再自動呼叫 Recovery Modal。
+- [x] 根網址正常開啟時直接建立新的 URL Match ID。
+- [x] 既有 `#match=...` 仍直接載入指定比賽。
+- [x] Recovery 僅從「這是什麼？」次要入口手動開啟。
+- [x] 沒有其他未完成比賽時，不顯示 Recovery 入口。
+- [x] `continueRecoveredMatch()` 不再先切換全域 Match KEY。
+- [x] 切換舊場前會先保存目前場。
+- [x] Recovery reload 過程會暫停 `visibilitychange/pagehide` autosave。
+- [x] 修正 v5.89 可能把目前空白 state 覆蓋到目標比賽的競態。
+- [x] `saveState()` 新增 `_savedAt` 真實儲存時間。
+- [x] `inferSavedUpdatedAt()` 不再以 `Date.now()` 強迫舊資料顯示為最新。
+- [x] Match Registry 啟動時從真正 match state 重建。
+- [x] 舊比賽 LocalStorage 本體不因 Registry 重建而刪除。
+- [x] URL Match ID、比分、事件、烏龍球、摘要、圖片、CSV 與計時邏輯未改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機：乾淨根網址開啟後確認不再自動出現 Recovery 視窗。
+- [ ] 實機：從「這是什麼？」手動找回舊比賽，確認比分與事件正確載入。
+- [ ] 實機：兩個不同 `#match=` 分頁長時間背景後，確認仍各自恢復。
+
+## v5.89 歷史驗證
+
+- [x] 比賽正式身分改為 URL `#match=<Match ID>`。
+- [x] 目前 Match key 改為 `football_marker_v218_match_<Match ID>`。
+- [x] `sessionStorage` 不再作為目前版本唯一的比賽身分來源。
+- [x] 從 v5.87 / v5.88 升級時，可沿用仍存在的舊 tab Session ID。
+- [x] 會掃描舊 `football_marker_v218_session_<id>` 並複製至新 Match key。
+- [x] 舊 Session key 不刪除。
+- [x] 更舊的 `football_marker_v218` 可進入復原清單。
+- [x] 建立 Match Registry，保存最近比賽的 Match ID、隊伍、比分、狀態與最後更新時間。
+- [x] 乾淨網址進入時，如存在未完成比賽，會先顯示復原選擇，而非直接覆蓋／遺忘舊場。
+- [x] 「＋ 新比賽」先保存舊場，再產生新的 Match ID。
+- [x] `visibilitychange` 切到背景時會再次保存 state。
+- [x] `pagehide` 時會再次保存 state。
+- [x] 原本以 timestamp 計算 elapsed time 的邏輯保持不變。
+- [x] 比分、事件、烏龍球、摘要、圖片與 CSV 內容邏輯未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實體 iPhone：同 Safari 開兩個不同 Match ID，各自記錄後長時間背景，再逐一返回確認仍是各自比賽。
+- [ ] 實體 iPhone：直接開乾淨根網址，確認能看到未完成比賽復原視窗。
+- [ ] 實體 iPhone：按「＋ 新比賽」後確認網址產生新 Match ID，舊網址重新開啟仍能找到舊場。
+
+## v5.88 歷史驗證
+
+- [x] 本版只修改摘要 Modal 的 CSS 與三個區塊標題 class，不修改資料邏輯。
+- [x] 摘要頁標題亮度與字重提高。
+- [x] 時間紀錄區塊標題降一級視覺權重。
+- [x] 時間資訊卡高度、padding 與字級略為壓縮。
+- [x] 球員進球統計與比賽事件時間軸標題提升視覺層級。
+- [x] 底部分享操作區由約 64px 壓縮至約 58px。
+- [x] 「分享／儲存圖片」按鈕仍維持至少 44px 觸控高度。
+- [x] 390px 以下具備額外空間收斂。
+- [x] 比分、計時、事件、烏龍球、Session、CSV、圖片產生與 LocalStorage 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 建議實體 iPhone 驗收：摘要首屏能比 v5.87 更早看到「球員進球統計」與「比賽事件時間軸」。
+- [ ] 建議實體 iPhone 驗收：底部分享按鈕按壓範圍仍自然、無誤觸。
+
+## v5.87 歷史驗證
+
+- [x] 比賽 state 不再使用固定 `football_marker_v218` 作為目前版本的寫入 key。
+- [x] 每個分頁以 `sessionStorage` 保存自己的 Match Session ID。
+- [x] 比賽資料使用 `football_marker_v218_session_<Session ID>` 寫入 `localStorage`。
+- [x] 不同分頁產生不同 Session ID 時，比分、事件、計時、PK、烏龍球與賽事資訊互不覆寫。
+- [x] 同一分頁重新整理時，`sessionStorage` Session ID 不變，可還原同一場比賽。
+- [x] v5.86 舊 `football_marker_v218` 資料只遷移一次，避免每個新分頁都複製同一場比賽。
+- [x] 遷移不刪除舊 key，降低版本切換資料遺失風險。
+- [x] `LAST_OUR_TEAM_KEY`、最近場地、常用背號與上次名單等偏好資料仍維持跨分頁共用。
+- [x] 「＋ 新比賽」只重設目前 Session，不影響其他分頁。
+- [x] 比分、事件、烏龍球、摘要、圖片、CSV 與 UI 操作邏輯未改動。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實機建議：同 Safari 開兩個分頁，各自開始不同比分，來回切換並各自重新整理確認不串場。
+- [ ] 實機建議：iOS 將其中一頁切到背景數分鐘後再返回，確認仍還原該分頁 Session。
+
+## v5.86 歷史驗證
+
+- [x] 僅調整賽後「摘要 / 匯出 CSV / 新比賽」字級與字重。
+- [x] 摘要一般尺寸為 19px。
+- [x] 匯出 CSV 與新比賽一般尺寸為 18px。
+- [x] 390px 以下自動降為 18px / 17px / 17px。
+- [x] 350px 以下自動降為 17px / 16px / 16px。
+- [x] 按鈕高度、排列、顏色與 click 事件未修改。
+- [x] 比分、計時、烏龍球、事件紀錄、摘要內容、CSV、LocalStorage 均未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 建議實體 iPhone 驗收「匯出 CSV」在較小螢幕仍維持單行。
+
+## v5.85 歷史驗證
+
+- [x] 僅調整賽後工具區的視覺樣式，不修改任何比賽資料或事件邏輯。
+- [x] 「摘要」改為電光藍 Primary CTA。
+- [x] 「匯出 CSV」仍維持灰藍次要層級。
+- [x] 「＋ 新比賽」仍維持深色第三層級。
+- [x] 未改動進球綠、射門黃、撲救藍、防守紫、結束/警示紅等既有色彩語意。
+- [x] 摘要按鈕具備 active 與 focus-visible 狀態。
+- [x] 比分、計時、烏龍球、事件紀錄、摘要內容、CSV、LocalStorage 均未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 建議於實體 iPhone Safari 驗收亮度、日光下可讀性與按壓回饋。
+
+## v5.84 歷史驗證
+
+- [x] 事件紀錄已移除「比分給對方」提示。
+- [x] 事件紀錄仍保留「烏龍球」事件名稱。
+- [x] 事件紀錄仍保留事件當時比分。
+- [x] 比賽摘要中的烏龍球與比分歸屬資訊未修改。
+- [x] 本場事件統計中的烏龍球標籤未修改。
+- [x] 烏龍球比分計算、事件編輯、復原、刪除、CSV 與 LocalStorage 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+
+## v5.83 歷史驗證
+
+- [x] 「本場事件統計 → 進球細節」會讀取 `own_goal` 欄位。
+- [x] 烏龍球明細列會顯示「烏龍球」標籤。
+- [x] 烏龍球有背號時保留背號，沒有背號時維持 `—`。
+- [x] 烏龍球球隊顯示使用 `markerPlayerTeamDisplay()`，代表發生烏龍的球員所屬球隊。
+- [x] 無障礙文字包含「烏龍球」及實際比分歸屬球隊。
+- [x] 一般進球助攻顯示不受影響。
+- [x] 射門、撲救、防守細節不受影響。
+- [x] 摘要、事件紀錄、比分計算、事件編輯、CSV 與 LocalStorage 未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 建議實機各測一筆：一般進球、我方烏龍、對手烏龍。
+
+## v5.82 歷史驗證
+
+- [x] 摘要時間軸不再只依 `event=GOAL` 顯示「進球」，改為使用 `typeLabel`。
+- [x] `own_goal=true` 的事件於摘要明確顯示「⚽ 烏龍球」。
+- [x] 烏龍球 actor 會附加「（烏龍）」。
+- [x] 烏龍球摘要補充「比分計入我方／對手」。
+- [x] 分享／儲存圖片沿用同一份 timeline entry，會帶入烏龍球 typeLabel 與比分歸屬文字。
+- [x] 一般進球仍顯示「⚽ 進球」，助攻資訊不受影響。
+- [x] 黃牌／紅牌專屬卡片樣式不受影響。
+- [x] 已移除摘要時間軸說明「依事件順序排列，間距不代表時間長度；右側為事件當時比分。」
+- [x] LocalStorage key、比分計算、烏龍球資料欄位、事件編輯、CSV 與其他既有流程未修改。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實體 iPhone Safari 建議驗收一般進球與烏龍球各一筆的摘要／分享圖片顯示。
+
+## v5.81 歷史驗證
+
+- [x] 以 v5.80 完整離線版為基底，不加入任何外部載入器。
+- [x] 一般進球流程「我方 / 對手」維持原操作。
+- [x] 新增次要入口「↩ 烏龍球」，避免與高頻一般進球並列造成誤觸。
+- [x] 烏龍球第二步要求選擇發生烏龍的球員所屬球隊。
+- [x] 烏龍球比分自動加給相反球隊。
+- [x] 我方烏龍可從本場名單選背號；對手烏龍背號可略過。
+- [x] 烏龍球不進入助攻流程。
+- [x] 烏龍球不計入一般球員進球統計。
+- [x] 事件紀錄、摘要時間軸與進球紀錄會標示「烏龍球」。
+- [x] 復原 / 刪除仍依 `marker.team`（實際得分方）回退比分。
+- [x] 編輯事件支援「一般進球 / 烏龍球」，切換後可正確重新計算比分。
+- [x] 舊版沒有 `own_goal` 欄位的進球資料仍視為一般進球。
+- [x] LocalStorage key、既有事件 schema、Canvas/CSV 主流程均保留。
+- [x] JavaScript syntax check 通過。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實體 iPhone Safari 需再確認烏龍球雙層 Modal 的實際觸控感受。
+- [ ] 建議實機測試：我方烏龍、對手烏龍、復原、刪除、事後編輯各一次。
+
+## v5.80 歷史驗證
+
+- [x] 直接由使用者提供的 v5.79 `index.html` 修改。
+- [x] 未加入 GitHub Raw、jsDelivr、`fetch()` 或 `document.write()` 外層載入器。
+- [x] `<title>` 與主畫面版本顯示同步更新為 v5.80。
+- [x] 主畫面已移除 `#saveImageBtn`。
+- [x] `.toolGrid.finalTools` 已改為兩欄，保留「摘要」與「匯出 CSV」。
+- [x] `＋ 新比賽` 的既有 HTML、ID 與事件未更動。
+- [x] `#reportCloseBtn` 沿用原 ID，只移到摘要右上角並改為 `×`。
+- [x] 摘要底部只保留 `#reportShareBtn`「分享／儲存圖片」。
+- [x] 快速使用指南已同步新流程。
+- [x] JavaScript inline scripts 已完成 Node.js syntax check。
+- [x] `#reportCloseBtn` 僅存在 1 個；`#saveImageBtn` 已不存在。
+- [x] LocalStorage key `football_marker_v218` 未修改。
+- [x] 比分、計時、事件、PK、Canvas 長圖、CSV 與資料結構未修改。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`。
+- [ ] 實體 iPhone Safari 系統分享面板仍需裝置驗收。
+- [ ] 完整打一場比賽的實機回歸仍需裝置驗收。
+
+## v5.79 歷史驗證
+
+- [x] 摘要視窗加入比賽日期，並以雙欄資訊、緊湊時間卡、三欄段落比分及三欄射手統計呈現。
+- [x] 儲存圖片在原有賽事欄合併日期；20 筆範例仍為單張 1080px 寬圖片，完整保留全部事件。
+- [x] 日期取自 `matchStartEpoch()`；同日顯示一個完整年月日，跨日顯示起訖兩個完整年月日。
+- [x] 摘要與圖片的射手均使用「我方／對手」；中場休息只在時間資訊出現一次。
+- [x] 長賽事、長場地、50 人名單及跨日日期均完成換行與內容完整性檢查。
+- [x] 既有九種比賽狀態、資料還原、事件排序、180 筆單張長圖、CSV 唯一檔名及隊名修改限制檢查通過。
+- [ ] Chromium／WebKit 手機視窗及實體 iPhone 系統分享面板仍須在裝置上確認。
+
+## v5.78 歷史驗證
+
+- [x] 既有九種比賽狀態、啟動保護、資料還原與儲存失敗檢查通過。
+- [x] 原生 Canvas 重現 20 筆範例，產生一張 1080 × 2305 PNG，全部事件、助攻及當時比分保留。
+- [x] 範例第一筆事件從 y=772 開始，資料改為雙欄、各段比分及球員進球統計橫排。
+- [x] 40 筆及 180 筆混合事件繪製成功；大量事件維持單張，沒有遺漏、重複或切斷末筆事件。
+- [x] 長賽事、場地、跨日時間及 50 人名單均可換行；背號與時間盡量完整換行，不截斷內容。
+- [x] 圖片控制在 800 萬像素及 16000px 高度的內部記憶體預算，必要時等比例縮小；不是對所有裝置能力的保證。
+- [x] 模擬首張 bitmap 失敗後，重試完整長圖成功；繪製暫存畫布會縮回 1 × 1 釋放大型緩衝區。
+- [x] 單一 PNG 檔名及單一下載連結、摘要關閉流程檢查通過。
+- [x] 匯出前後比賽資料一致，CSV 命名、計時、事件記錄、儲存與背景影像未更動。
+- [x] 中場、等待延長賽及全場才開放主動修改隊名；比賽中及 PK 中仍鎖定。
+- [x] 隊名修改按鈕改為正常排版，置於名稱下方，移除絕對定位並保留 44px 高度。
+- [ ] Chromium／WebKit 手機視窗驗證未完成：目前環境沒有可執行的瀏覽器。
+- [ ] 實體 iPhone 系統分享面板、相簿接收長圖及隊名版面須於裝置驗收。
+
+## v5.77 歷史驗證
+
+- [x] 既有九種比賽狀態、啟動保護、損壞資料及儲存失敗回歸測試。
+- [x] 階段排序、時間排序、同秒原始順序、助攻與原始比分均保留。
+- [x] 摘要與 PNG 使用相同事件資料，不修改 state.markers 或既有儲存鍵。
+- [x] 180 筆事件分頁無遺漏或重複，每頁重複隊名及比分。
+- [x] 無事件顯示空狀態，不產生假數據；PK 仍獨立呈現。
+- [x] 隊伍與助攻文字經 HTML 跳脫；牌卡顏色不改變隊伍節點色。
+- [x] CSV 命名及既有功能回歸通過。
+- [x] 原生 Canvas 實際繪製 40 筆混合事件，多頁 PNG 尺寸有界、分頁檔名不重複。
+- [x] 下載連結數量與圖片頁數一致，摘要關閉流程測試通過。
+- [ ] Chromium／WebKit 手機尺寸檢查：環境未安裝瀏覽器，下載逾時，未完成。
+- 實體 iPhone 的系統分享面板與相簿儲存仍須於裝置上驗收。
+
+## v5.76 本次驗證結果
+
+- [x] 快速指南文字、箭頭、外框與背景亮度同步降低，仍能被辨識為可點擊的次要操作。
+- [x] 快速指南觸控高度仍至少為 44px，窄螢幕標籤及無障礙名稱均維持不變。
+- [x] 高對比模式保留較強文字與外框對比，不因一般模式降亮而降低可及性。
+- [x] 紅衣球員區域以約 4% 的柔和局部光影提亮，沒有對整張照片套用亮度濾鏡。
+- [x] 內嵌背景影像、理念文字大小、頁尾高度、球員與球門構圖均未改動。
+- [x] 說明視窗不顯示重複版本號，主畫面標題列已同步為 v5.76。
+- [x] JavaScript、比分、計時、事件、PK、摘要、CSV 唯一檔名與資料保存均維持不變。
+
+## v5.75 本次驗證結果
+
+- [x] 第一行理念文字放大至 15px，第二行放大至 12px，層級仍清楚且未合併成單行。
+- [x] 390px、350px 以下與矮螢幕均保留專屬字級，不與快速指南重疊。
+- [x] 頁尾輔助列總高度未增加，未壓縮白天比賽照片或遮擋我方球員。
+- [x] 快速指南完整按鈕仍維持至少 44px 觸控高度，窄螢幕仍可顯示簡短標籤。
+- [x] 說明視窗不顯示重複版本號，主畫面標題列已同步為 v5.75。
+- [x] 背景影像、JavaScript 邏輯、比分、計時、事件、PK、摘要、CSV 與資料保存均維持不變。
+
+## v5.74 本次驗證結果
+
+- [x] 理念文案已從比賽照片區移至頁尾輔助列左側，照片區未留下空白 DOM 或透明點擊層。
+- [x] 理念文案保持非互動，沒有誤導性的按鈕外框、箭頭或點擊事件。
+- [x] 快速使用指南位於輔助列右側，完整按鈕的觸控高度至少為 44px。
+- [x] 350px 以下窄螢幕只縮短可見按鈕文字，`aria-label` 仍為「開啟快速使用指南」。
+- [x] 說明視窗內不再重複顯示版本號，主畫面標題列維持可辨識的 v5.74。
+- [x] 「開始記錄比賽」仍為頁尾唯一主要 CTA，位置、關閉流程與安全區不變。
+- [x] 白天球場、完整球員、球門、球網中央唯一足球、人物柔焦及既有視覺素材未改動。
+- [x] 比分、計時、45 分鐘設定、事件、PK、摘要、CSV 唯一檔名與資料保存回歸測試通過。
+
+## v5.73 本次驗證結果
+
+- [x] 我方球員維持自然單腳接觸草地的射門姿勢，沒有懸空、跳躍或不自然的浮貼感。
+- [x] 我方球員頭部、身體、雙臂、黑色短褲、雙腿、紅襪及兩隻球鞋均完整保留。
+- [x] 背景改為下緣對齊，直式手機裁切時球員最低點與固定頁尾之間保有較完整的草地安全區。
+- [x] 看台粉紅色降低飽和度與亮度，並以少量灰粉、玫瑰粉及柔和紫紅不規則分散。
+- [x] 三張功能卡透明度降低約 4%，白字及次要文字仍保有足夠對比。
+- [x] 理念文字遮罩與頁尾漸層已柔化，不再形成突兀的水平深色切線。
+- [x] 球門、球網中央唯一足球、人物數量、服裝規格、臉部柔焦及日間場景維持不變。
+- [x] 版本號及所有比分、計時、事件、PK、摘要、匯出與資料保存回歸測試通過。
+
+## v5.72 本次驗證結果
+
+- [x] 看台不同排位分散穿插少量粉紅、玫瑰粉與低彩度紫紅短袖上衣。
+- [x] 粉紅上衣未搭配深藍色袖子、長袖內搭、外套、手臂套或其他對比袖色。
+- [x] 其餘觀眾保留白、灰、藍等原有服裝，看台未形成整片相同制服。
+- [x] 看台人物維持遠景比例與自然柔焦，沒有新增清楚可辨識五官、姓名、文字或商標。
+- [x] 我方球員髮型、修長身形、短袖短褲、場邊家長、對手與守門員均維持。
+- [x] 球門、球網中央唯一足球、場上人數、日間光線及整體構圖均維持不變。
+- [x] 900 × 1600 WebP 直接嵌入單一 HTML，不新增外部網址、字型、程式或追蹤請求。
+- [x] 版本號及所有比分、計時、事件、PK、摘要、匯出與資料保存回歸測試通過。
+
+## v5.71 本次驗證結果
+
+- [x] 我方球員髮型為兩側極短、耳側乾淨，上方斜側梳，不再呈現蓬鬆或刺蝟頭輪廓。
+- [x] 我方球員維持修長少年身形、短袖紅衣、黑色短褲、紅襪與深紅球鞋。
+- [x] 未使用長袖內搭、手臂套、壓縮褲、緊身褲或長褲，手臂及小腿自然露出。
+- [x] 場邊少數家長加入粉紅／紫紅及深藍上衣配色，人物數量、位置與加油動作未改變。
+- [x] 未複製參考照片中的清楚臉孔、身份、背號、隊徽、姓名、贊助商、文字或商標。
+- [x] 球員與家長臉部保持自然柔焦，沒有清楚可辨識五官。
+- [x] 場上人數、對手、守門員、球門及球網中央唯一足球維持不變。
+- [x] 版本號及所有比分、計時、事件、PK、摘要、匯出與資料保存回歸測試通過。
+
+## v5.70 本次驗證結果
+
+- [x] 我方球員調整為纖細少年身形、較小的兒童比例及短而蓬鬆的黑髮輪廓。
+- [x] 我方球員採短袖紅衣、黑色短褲、紅襪與深紅球鞋，手臂及小腿自然露出。
+- [x] 未使用長袖內搭、手臂套、壓縮褲、緊身褲或其他內搭層。
+- [x] 未複製參考照片中的清楚臉孔、背號、隊徽、姓名、贊助商、文字或商標。
+- [x] 四名場上球員臉部仍維持自然柔焦，沒有清楚可辨識五官。
+- [x] 場上人數、對手與守門員配色、球門、球網中央唯一足球、體育場及家長應援構圖均維持。
+- [x] 900 × 1600 WebP 直接嵌入單一 HTML，不新增外部網址、字型、程式或追蹤請求。
+- [x] 版本號及所有比分、計時、事件、PK、摘要、匯出與資料保存回歸測試通過。
+
+## v5.69 本次驗證結果
+
+- [x] 四名場上球員的臉部已使用自然景深與輕微動態模糊柔化，沒有清楚可辨識的五官。
+- [x] 臉部未使用馬賽克、遮蔽條、純色覆蓋或不自然的空白臉。
+- [x] 球員頭部輪廓、髮型、視線方向、動作與紅／深藍／暗青球衣配色均保留。
+- [x] 場上仍維持一名我方球員、兩名對手及一名守門員，沒有新增人物或第二顆足球。
+- [x] 球門、球網中央離地足球、白天體育場、觀眾席及家長應援構圖均維持。
+- [x] 900 × 1600 WebP 直接嵌入單一 HTML，不新增外部網址、字型、程式或追蹤請求。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.69。
+- [x] 注音提示、階段式隊名修改、視窗關閉、多場 CSV 唯一檔名、比分、計時、事件、PK、摘要及 LocalStorage 回歸測試通過。
+
+## v5.68 本次驗證結果
+
+- [x] 背景新增一名紅衣我方射門球員、兩名深藍對手及一名暗青色守門員，人物數量與角色清楚。
+- [x] 我方球衣僅參考紅、黑、紅襪的配色，不含原照片中的臉孔、背號、姓名、隊徽或商標。
+- [x] 四名球員皆為中景小比例，左下理念文字區未放置大型人物臉孔或身體。
+- [x] 全場只存在一顆足球，仍位於右下球網中央並保持離地；球門、球網與破網受力未被遮擋。
+- [x] 白天體育場、觀眾席、家長應援與深藍資訊卡層級均保留。
+- [x] 900 × 1600 WebP 直接內嵌單一 HTML，不新增外部網址、字型、程式或追蹤請求。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.68。
+- [x] 注音提示、階段式隊名修改、視窗關閉、多場 CSV 唯一檔名、比分、計時、事件、PK、摘要及 LocalStorage 回歸測試通過。
+
+## v5.67 本次驗證結果
+
+- [x] 白天背景已加入校園／社區體育場的低型觀眾席、中央遮棚及適量觀眾。
+- [x] 場邊家長以中景比例呈現拍手、舉手及錄影動作，未遮擋標題、功能卡、理念文案或主要按鈕。
+- [x] 人物及場館均為重新建立的通用場景，不含參考照片中的可辨識姓名、校名、商標、球衣文字或廣告看板。
+- [x] 右下球門、離地足球及球網受力位置維持清楚，沒有新增角球線或第二顆足球。
+- [x] 深藍卡片與局部遮罩已依較複雜背景微調，文字對比及 44px 關閉觸控範圍均保留。
+- [x] 900 × 1600 WebP 直接內嵌單一 HTML，不新增外部資源、網址、追蹤程式或網路請求。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.67。
+- [x] 注音提示、階段式隊名修改、視窗關閉、多場 CSV 唯一檔名、比分、計時、事件、PK、摘要及 LocalStorage 回歸測試通過。
+
+## v5.66 本次驗證結果
+
+- [x] 「這是什麼？」視窗背景改為 900 × 1600 的白天社區／校園足球場 WebP。
+- [x] 足球位於球網中央且離開地面，網面由撞擊位置向後鼓起，可辨識為破門進球。
+- [x] 球門與足球位於右下安全區，未遮擋標題、功能卡、理念文案、快速指南或主要操作按鈕。
+- [x] 白天高亮背景上仍保留深藍頁首遮罩、玻璃卡片與頁尾漸層，文字對比未降低。
+- [x] 舊角球 SVG、草地白漆濾鏡與獨立足球已從目前 DOM 移除，不會重複顯示或攔截操作。
+- [x] 新 WebP 直接內嵌於單一 HTML，不引用外部網址、不增加部署路徑與網路請求。
+- [x] v5.65 的非阻塞注音提示、視窗關閉流程與含秒數的多場 CSV 檔名均保留。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.66。
+- [x] 比分、計時、45 分鐘預設、事件、PK、摘要、LocalStorage 及匯出內容回歸測試通過。
+
+## v5.65 本次驗證結果
+
+- [x] 注音符號驗證不再呼叫原生 `alert()` 或在 `blur` 驗證期間立即重新聚焦。
+- [x] 錯誤改由頁面內提示顯示，關閉或等待提示消失不會再次觸發驗證循環。
+- [x] 注音與聲調符號仍不會寫入比賽資料及 LocalStorage。
+- [x] 匯出時間戳使用本場開始日期與時分秒，不再只有日期。
+- [x] 相同隊伍與比分、不同開始時間的兩場比賽會產生不同 CSV 檔名。
+- [x] 同一場比賽重複匯出會維持同一識別時間，方便辨識為同一場資料。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.65。
+- [x] 比分、計時、45 分鐘預設、事件、PK、摘要、LocalStorage 及匯出內容回歸測試通過。
+
+## v5.64 本次驗證結果
+
+- [x] 比賽進行中、延長賽進行中及 PK 點球期間不顯示隊名修正按鈕。
+- [x] 中場、等待延長賽與全場顯示雙方隊名的鉛筆修正按鈕。
+- [x] 非賽前狀態直接點隊名不會進入編輯，必須主動點擊鉛筆按鈕。
+- [x] 隊名修正仍套用注音、聲調符號、字數及禁止字元驗證。
+- [x] 修正後名稱寫回本場狀態，事件紀錄、摘要圖片與 CSV 會使用同一份最新名稱。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.64。
+- [x] 比分、計時、45 分鐘預設、事件、PK、摘要、LocalStorage 及匯出格式回歸測試通過。
+
+## v5.63 本次驗證結果
+
+- [x] 快速使用指南已移除「💡 場邊小技巧」標題、說明文字及其容器。
+- [x] 我方、對手、賽事名稱與場地均標示為繁體中文文字輸入欄位。
+- [x] 注音組字期間不執行畫面重繪，Enter／完成鍵亦不會被誤判為欄位完成。
+- [x] 四個文字欄位完成時會攔下 Unicode 注音符號與注音擴充符號，且不會寫入 LocalStorage。
+- [x] 比賽中隊名鎖定方式維持 v5.62，本版未加入新的修改入口。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.63。
+- [x] 比分、計時、45 分鐘預設、事件、PK、摘要、LocalStorage 及匯出格式回歸測試通過。
+
+## v5.62 本次驗證結果
+
+- [x] 角球主漆已取消規律長段虛線，改為與背景中央線相同的連續白漆結構。
+- [x] 內嵌 SVG 使用靜態雜訊位移打散漆線邊緣，沒有新增網路請求、外部套件或獨立素材檔。
+- [x] 表面漆改用三層內嵌不規則草葉向量筆觸，不再呈現規律方塊狀斷點。
+- [x] 底層、主層及草葉紋理寬度調整為 18.2px、12.4px 與 18.2px，並維持低平均亮度以融入夜間草皮。
+- [x] 草葉圖樣為靜態內嵌向量內容，不執行程式、不載入外部網址。
+- [x] 角球 90° 邊界、四分之一圓弧、足球大小與位置、理念文字、卡片與按鈕均未更動。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.62。
+- [x] 45 分鐘預設、計時、比分、事件、PK、摘要、LocalStorage 及匯出格式回歸測試通過。
+- [ ] iPhone Safari 實機的角球線與照片中央線最終融合度：需更新至 v5.62 後確認。
+
+## v5.61 本次驗證結果
+
+- [x] 快速使用指南未再出現「先選比賽時間」，所有賽前設定資訊均以同一層級並列。
+- [x] 第一步已完整包含隊伍、賽事與場地、名單、守門員及比賽時間，未遺漏目前可設定項目。
+- [x] 場邊小技巧允許依現場狀況填寫，並保留時間緊迫時優先記準哨音與事件的實務建議。
+- [x] 角球底漆、主漆及表面漆線寬已調整為 12px、7.2px 與 2.4px，總體視覺寬度接近照片中央線。
+- [x] 角球線採低透明度寬底、低亮度主漆及不規則微斷續表面漆，降低向量線與照片草皮的材質落差。
+- [x] 角球線 90° 邊界、四分之一圓弧、足球大小與位置、理念文字及其他版面均未更動。
+- [x] 45 分鐘預設及時間紀錄標籤尺寸維持 v5.60，功能測試仍通過。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.61。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的角球線與照片中央線融合度：需更新至 v5.61 後確認。
+
+## v5.60 本次驗證結果
+
+- [x] 角球邊界與四分之一圓弧主漆線已由 3.2px 加粗為 4.4px，底漆及顆粒層同步調整為 7.2px 與 1.35px。
+- [x] 角球標線仍沿用既有灰白色與透明度，90° 邊界、圓弧幾何、足球大小及位置均未更動。
+- [x] 比賽時間選單已新增 45 分鐘，賽前選取會立即儲存並維持為標準預設值。
+- [x] 開賽後時間紀錄列的比賽時間標籤已放大，一般手機為 13px、390px 以下為 12px。
+- [x] 快速使用指南已整併重複的賽前步驟，五步驟依實際比賽操作順序重新編排。
+- [x] 指南已明確說明賽前選取比賽時間後立即生效，未再出現需要按「套用」的錯誤描述。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.60。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的角球線粗度、45 分鐘標籤與指南換行：需更新至 v5.60 後確認。
+
+## v5.59 本次驗證結果
+
+- [x] 快速使用指南頁首已移除 `QUICK GUIDE` 與教學副標，只保留中文主標題。
+- [x] 五個步驟均已依目前操作流程更新，第一步為設定比賽時間。
+- [x] 比賽時間選項、套用按鈕與可稍後補填的說明符合目前程式行為。
+- [x] 事件類型、賽程切換、全場統計與三種輸出方式的名稱均與目前介面一致。
+- [x] 指南仍保留五個有序步驟、場邊小技巧、返回介紹及開始記錄比賽按鈕。
+- [x] 移除兩行頁首文字後已重新校正標題上下留白，窄螢幕與短螢幕皆有對應規則。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.59。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的指南文字換行與底部按鈕安全距離：需更新至 v5.59 後確認。
+
+## v5.58 本次驗證結果
+
+- [x] 角球邊界線及四分之一圓弧的主漆線寬均由 2.25px 調整為 3.2px。
+- [x] 低透明底漆與草地顆粒層同步調整為 5.8px 與 1.05px，視覺粗度接近背景中央場線。
+- [x] 角球線顏色及透明度未提高，不會因加粗重新變成醒目的亮白管線。
+- [x] 90° 邊界、半徑 78 的四分之一圓弧、足球大小與位置均未更動。
+- [x] 標題、理念文字、功能卡、快速指南、按鈕與比賽操作程式未更動。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.58。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的角球線與中央線視覺粗度：需更新至 v5.58 後確認。
+
+## v5.57 本次驗證結果
+
+- [x] 鞋釘足跡元素已由目前 HTML 結構移除，不會保留空白、焦點或朗讀內容。
+- [x] 角球區仍保留 90° 邊界與半徑 78 的四分之一圓弧，沒有更動正確足球場幾何。
+- [x] 角球線寬底漆、主漆及顆粒層的寬度、亮度與透明度均已降低，接近背景中央場線。
+- [x] 顆粒線已改為細、稀疏、低透明的不規則節奏，不再呈現明顯虛線感。
+- [x] 足球一般、390px 以下及短螢幕尺寸分別為 76px、70px、60px，約比前版增加 11–13%。
+- [x] 足球既有位置、接地陰影及角球弧關係保留，前景草葉高度依足球尺寸同步調整。
+- [x] 標題、理念文字、功能卡、快速指南、按鈕與比賽操作程式未更動。
+- [x] 本次調整全部使用內嵌 CSS 與既有內嵌素材，不引用外部網址或新增素材路徑。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.57。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的場線融合度、足球比例及短螢幕裁切：需更新至 v5.57 後確認。
+
+## v5.56 本次驗證結果
+
+- [x] 角球邊界使用連續路徑形成 90° 角，內側圓弧為四分之一圓，未改成 V 字形。
+- [x] 邊界線與圓弧均包含低透明寬底漆、草灰白主漆及不規則斷續顆粒線三個圖層。
+- [x] 主漆未使用純白，顆粒層採不規則 `stroke-dasharray`，兼顧辨識度與草地質感。
+- [x] 圓弧半徑由 67 擴大為 78，角球標線一般手機寬度同步由 46% 擴為 50%。
+- [x] 角球線位於足球下方，足球會遮住部分圓弧；接地陰影及前景草葉圖層均維持。
+- [x] 足球大小、位置、鞋釘足跡、理念文字、卡片與按鈕配置均未更動。
+- [x] 新增線條全部使用內嵌 SVG 與 CSS，不引用照片、外部網址或新增素材路徑。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.56。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的白漆顆粒感、角球弧辨識度與短螢幕裁切：需更新至 v5.56 後確認。
+
+## v5.55 本次驗證結果
+
+- [x] v5.54 的一般足跡元素已由目前 HTML 結構移除，不會再顯示模糊腳印。
+- [x] 新足跡使用一組兩枚內嵌 SVG 足球鞋底，每枚均包含清楚的鞋底輪廓與六個鞋釘印。
+- [x] 足跡一般、390px 以下及短螢幕尺寸分別為 60px、55px、50px，約為前版的 125%。
+- [x] 足跡使用草灰色、約 35% 透明度，已取消 `blur` 與 `screen` 混色，不引用外部素材。
+- [x] 足跡沿理念文字往右下方足球排列，元素維持 `aria-hidden` 且不攔截點擊。
+- [x] 足球相較前版下移 3px、左移 2px；一般、390px 以下及短螢幕規則同步調整。
+- [x] 足球前景草葉遮覆範圍已加高、加寬，球體、角球線及操作元件圖層關係不變。
+- [x] 標題、功能卡、理念文案、快速指南及主要按鈕的位置與內容均維持不變。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.55。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的鞋釘足跡辨識度、足球接地感及短螢幕裁切：需更新至 v5.55 後確認。
+
+## v5.54 本次驗證結果
+
+- [x] 「記錄每一場成長足跡」文字保留，文字旁的系統 `👣` Emoji 已移除。
+- [x] 草地上新增兩枚低彩度獨立足跡，元素設為 `aria-hidden`、不可聚焦且不攔截點擊。
+- [x] 足跡使用內嵌 SVG 幾何圖形，不引用外部圖示、網址或新增素材路徑。
+- [x] 理念文案、足球與角球線已整組下移，一般、390px 以下及短螢幕具有各自位置規則。
+- [x] 功能卡框線及陰影已收斂，標題與內文對比維持不變。
+- [x] 說明標籤已改為「免安裝・開網頁即用」，無 `APP` 大寫或使用者可見的 `App` 字樣。
+- [x] 五個說明頁功能圖示仍維持 `🌐／🎬／📊／⏱／📖` 原始樣式。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.54。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的足跡對比、角球位置與短螢幕裁切：需更新至 v5.54 後確認。
+
+## v5.53 本次驗證結果
+
+- [x] 寫實足球與角球標線已同步往右下微移，足球更靠近右下角球區。
+- [x] 一般手機、390px 以下及短螢幕均有獨立位置規則，並保留裁切安全空間。
+- [x] 理念主句已改為「記錄每一場成長足跡」，第二句「為孩子的足球時光留下回憶」維持不變。
+- [x] 足跡 Emoji 為純裝飾並設為 `aria-hidden`，不增加螢幕閱讀器的重複朗讀。
+- [x] 五個說明頁功能圖示仍維持 `🌐／🎬／📊／⏱／📖` 原始樣式。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.53。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的角球位置、足跡 Emoji 字型及不同螢幕裁切：需更新至 v5.53 後確認。
+
+## v5.52 本次驗證結果
+
+- [x] 說明頁五個青藍色 SVG 圖示已由目前 HTML 結構移除。
+- [x] 線上工具、三張功能卡及快速指南已恢復 `🌐／🎬／📊／⏱／📖` 原始圖示。
+- [x] Emoji 圖示不會進入 Tab 焦點；輔助文字與按鈕標籤仍維持原有語意。
+- [x] 功能卡標題恢復單行配置，說明文字取消 SVG 版本的 39px／36px 左側縮排。
+- [x] `MATCHDAY TOOL` 仍維持移除，中文產品名稱仍是唯一主標題。
+- [x] 角球弧、68px／62px／54px 響應式足球、接地陰影、草葉遮覆與草地反光均保留。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.52。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的 Emoji 字型外觀、角球構圖與不同螢幕留白：需更新至 v5.52 後確認。
+
+## v5.51 本次驗證結果
+
+- [x] `MATCHDAY TOOL` 已由目前 HTML 結構移除，中文產品名稱成為唯一主標題。
+- [x] 線上工具、三張功能卡與快速指南均使用同一套內嵌線性 SVG，不依賴系統 Emoji 外觀。
+- [x] SVG 僅作裝飾並維持 `aria-hidden`，不增加朗讀內容、Tab 焦點或點擊攔截。
+- [x] 足球一般尺寸為 68px，390px 以下為 62px，短螢幕為 54px，均具有獨立位置與留白規則。
+- [x] 角球邊線與弧線位於球體後方，球體陰影與草葉位於正確圖層，不會遮擋文字或操作元件。
+- [x] 足球沿用 v5.50 的透明 WebP；背景、圖示、角球線及球體全部內嵌 HTML，不新增部署路徑。
+- [x] 關閉按鈕維持 44 × 44px 觸控範圍，視覺圓鈕與框線已降低層級，鍵盤及觸控焦點行為不變。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.51。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的角球透視、足球大小、草葉遮覆與不同螢幕留白：需更新至 v5.51 後確認。
+
+## v5.50 本次驗證結果
+
+- [x] 系統 Emoji 足球已由目前 HTML 結構移除，改用具有 alpha 透明度的寫實 WebP。
+- [x] 320 × 320 足球素材直接以 Base64 嵌入 HTML，不引用外部網址或新增部署路徑。
+- [x] 內嵌足球 WebP 具備正確 RIFF／WEBP 檔頭，檔案大小適合手機載入。
+- [x] 足球維持 `aria-hidden`、空白替代文字及不可拖曳，不會加入額外朗讀或操作項目。
+- [x] 接地陰影朝左下延伸，前景草葉位於球體上層且不攔截點擊。
+- [x] 一般、390px 以下及短螢幕均具有各自的足球尺寸、位置與理念區高度。
+- [x] 觸控裝置不再顯示開啟視窗後的焦點圓環；鍵盤 `focus-visible` 樣式仍保留。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.50。
+- [x] 背景 WebP 仍直接嵌入 HTML；比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的足球色溫、草葉遮擋、接地陰影及不同螢幕留白：需更新至 v5.50 後確認。
+
+## v5.49 本次驗證結果
+
+- [x] 足球維持裝飾元素與 `aria-hidden`，不會攔截點擊或進入鍵盤焦點。
+- [x] 足球已縮小並降低亮度、彩度，接地陰影及前景草色遮覆均由偽元素呈現。
+- [x] 理念文字、裝飾線與足球已同步下移，中下方留白重新分配。
+- [x] 關閉按鈕仍保留 44 × 44px 觸控區，可見圓鈕縮小且未影響操作範圍。
+- [x] 功能卡片框線、陰影及底色已弱化，標題和主要 CTA 的層級仍明確。
+- [x] 390px 以下及短螢幕具有各自的足球、理念區與間距規則。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.49。
+- [x] 背景 WebP 仍直接嵌入 HTML，沒有新增外部圖片或 `assets` 路徑依賴。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的足球接地感、不同螢幕留白及卡片可讀性：需更新至 v5.49 後確認。
+
+## v5.48 本次驗證結果
+
+- [x] 「場邊一按，精彩片刻不漏接。」已由 HTML 結構移除，不會占用空間或被輔助技術讀取。
+- [x] v5.47 的自製足球 SVG 及其球面漸層、拼片路徑均已由 HTML 移除。
+- [x] 新足球使用彩色 Emoji 字型序列，並維持獨立草皮定位與 `aria-hidden` 裝飾語意。
+- [x] 足球落地陰影由獨立偽元素呈現，不會攔截點擊。
+- [x] 390px 以下及短螢幕具有各自尺寸與位置規則。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.48。
+- [x] 背景 WebP 仍直接嵌入 HTML，沒有新增外部圖片或 `assets` 路徑依賴。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的 Apple Emoji 外觀、落地陰影及頁首高度：需更新至 v5.48 後確認。
+
+## v5.47 本次驗證結果
+
+- [x] 理念區不再使用功能卡片的背景、邊框、圓角、陰影或背景模糊。
+- [x] 理念文字仍保留可讀性遮罩，但遮罩為無邊界的局部漸層，不會切斷草皮背景。
+- [x] 足球 SVG 與文字群組為不同元素，並設為 `aria-hidden`、不可取得焦點及不可攔截點擊。
+- [x] 足球 SVG 使用獨立漸層 ID，DOM 中未產生重複 ID。
+- [x] 足球配置於右下草皮並含落地陰影；390px 以下及短螢幕具有縮放規則。
+- [x] 版本號、頁首版本與說明視窗頁尾均同步為 v5.47。
+- [x] 背景 WebP 仍直接嵌入 HTML，沒有新增外部圖片或 `assets` 路徑依賴。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的足球落地感、理念文字對比與不同瀏覽器字型：需更新至 v5.47 後確認。
+
+## v5.46 本次驗證結果
+
+- [x] 內嵌背景素材為 900 × 1500 WebP，與手機說明視窗比例相符，CSS 不再使用 `100% 100%` 拉伸。
+- [x] 夜間球場的天空、燈光、看台、中央球門、中線與底部場線皆保留在安全構圖內。
+- [x] 關閉按鈕固定右上並維持至少 44 × 44px 觸控範圍，不再與 `MATCHDAY TOOL` 重疊。
+- [x] 三張功能卡使用精簡文案，並保留合理換行規則，避免孤字落在下一列。
+- [x] 卡片框線亮度降低，理念區與頁尾增加間距；頁尾不再模糊放大白色場線。
+- [x] 說明視窗支援 Esc 關閉、Tab 焦點循環、關閉後焦點返回與減少動態偏好。
+- [x] WebP 圖片維持 Base64 內嵌，HTML 不引用 `assets` 路徑或外部圖片網址。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的背景裁切、文字換行、焦點操作及頁尾可讀性：需更新至 v5.46 後確認。
+
+## v5.45 本次驗證結果
+
+- [x] 足球場背景使用完整視窗比例呈現，天空、燈光、中央球門、中線及角球區不再遭 `cover` 裁切。
+- [x] 全域遮罩、頁首遮罩及內容背景均降低不透明度，球場元素辨識度更接近核准示意圖。
+- [x] 功能卡、理念卡與底部區域仍保有足夠深藍底色及文字對比。
+- [x] WebP 圖片維持 Base64 內嵌，解碼後 RIFF／WEBP 檔頭及圖片位元組均未變更。
+- [x] HTML 不引用 `assets/about-stadium.webp` 或外部圖片網址。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的背景比例、文字對比與底部角球區顯示：需更新至 v5.45 後確認。
+
+## v5.44 本次驗證結果
+
+- [x] 原創足球場 WebP 已轉為 Base64 Data URL 並直接嵌入 `index.html`。
+- [x] 嵌入後的圖片位元組仍具有正確 RIFF／WEBP 檔頭，未變更圖片品質。
+- [x] HTML 不再引用 `assets/about-stadium.webp` 或任何外部圖片網址。
+- [x] 單獨開啟或部署 `index.html` 即可完整顯示全景足球場背景。
+- [x] 深藍遮罩、玻璃卡片、手機裁切與文字對比規則維持 v5.43 設計。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的圖片解碼、記憶體占用與全景顯示：需更新至 v5.44 後確認。
+
+## v5.43 本次驗證結果
+
+- [x] 整個說明視窗共用本機原創 `assets/about-stadium.webp` 足球場背景。
+- [x] 背景素材為 680 × 1480 WebP，ZIP 內含素材，不依賴外部網址或第三方服務。
+- [x] 頁首、功能卡、理念區與底部操作區使用半透明深藍閱讀層，白色及淺藍文字維持清楚對比。
+- [x] v5.42 的內嵌 SVG 只作相容標記並以 CSS 隱藏，不會和全景背景重疊。
+- [x] 小螢幕版面採中央裁切，背景仍涵蓋整個視窗，主要文字與按鈕位置不變。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的全景構圖、玻璃層對比與捲動效能：需更新至 v5.43 後確認。
+
+## v5.42 本次驗證結果
+
+- [x] 說明視窗頁首包含原創 `aboutStadiumScene` SVG 足球場背景。
+- [x] SVG 設為 `aria-hidden` 且不可取得焦點，不干擾輔助閱讀。
+- [x] 背景上方保留深藍雙層遮罩，標題、簡介與按鈕維持高對比。
+- [x] 小於 390px 的螢幕使用獨立裁切與較強文字區遮罩。
+- [x] 未引用外部圖片、字型或網路資源，維持單一 HTML 與離線使用。
+- [x] 所有 SVG 漸層 ID 唯一，原有 DOM ID 檢查通過。
+- [x] 比分、計時、事件、PK、摘要、LocalStorage 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的球場構圖、文字對比與效能：需更新至 v5.42 後確認。
+
+## v5.41 本次驗證結果
+
+- [x] 全場「本場事件統計」標題與四張統計卡片的間距調整為 12px。
+- [x] 430px × 950px 以下的短螢幕版面使用 10px 間距。
+- [x] 四張統計卡片的高度、排列與點選明細功能沒有變更。
+- [x] 全場統計與事件紀錄仍共用 `resultEventsGroup` 外框。
+- [x] Safari 底部安全空間與「＋新比賽」按鈕位置規則沒有變更。
+- [x] LocalStorage、比分、事件內容、計時、PK 與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的標題間距及頁尾可見性：需更新至 v5.41 後確認。
+
+## v5.40 本次驗證結果
+
+- [x] PK 視窗的次要按鈕顯示為「返回比賽畫面」，不再顯示「暫時關閉」。
+- [x] 輔助說明明確標示返回後 PK 資料會保留。
+- [x] 返回前仍執行 `savePenaltyInputs()`，接著保存狀態並重新繪製畫面。
+- [x] 返回操作不會執行 `finishPenaltyShootout()`，不會提前結束 PK 或比賽。
+- [x] 延長賽平手決策維持「全場結束／PK 點球／取消」。
+- [x] 完成 PK 的平手防呆及「⚽ 記錄 PK」重新開啟入口維持不變。
+- [x] LocalStorage、比分、事件內容、計時與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的按鈕文字與重新開啟 PK 流程：需更新至 v5.40 後確認。
+
+## v5.39 本次驗證結果
+
+- [x] 比賽中、下半場與延長賽的主卡下方固定保留 10px 間距。
+- [x] 延長賽與其他主要狀態切換會清除焦點、停用捲動錨定並分段校正到頁首。
+- [x] 沒有新增自動滑到事件區或頁尾的行為。
+- [x] 全場統計與事件紀錄位於同一個 `resultEventsGroup` 外框內。
+- [x] 全場兩個內層模組移除重複背景、邊框與陰影，使用單一外框及中間分隔線。
+- [x] 非全場狀態使用 `display: contents`，原有事件操作區結構及功能不受共同外框影響。
+- [x] LocalStorage、計時、比分、事件內容、摘要與匯出資料結構沒有變更。
+- [ ] iPhone Safari 實機的延長賽頁首及全場共同外框驗證：需更新至 v5.39 後確認。
+
+## v5.38 本次驗證結果
+
+- [x] 全場工具順序維持「摘要／儲存圖片／匯出 CSV」在上、「＋新比賽」在下。
+- [x] 950px 以下手機視窗收斂全場狀態、比分、統計、紀錄及工具區的非核心垂直留白。
+- [x] 摘要、圖片、CSV、新比賽與事件紀錄按鈕均維持至少 44px 觸控高度。
+- [x] 沒有新增自動滑到底部或 `scrollIntoView` 行為。
+- [x] v5.37 的深藍灰＋珊瑚紅全場配色與頁尾實體安全空間維持不變。
+- [x] LocalStorage 資料結構、計時、比分、事件與匯出功能沒有變更。
+- [ ] iPhone Safari 實機的底部工具列展開／收合驗證：需更新至 v5.38 後確認。
+
+## v5.37 本次驗證結果
+
+- [x] 確認等待延長賽後執行頁首定位，沒有自動滑到下方功能區。
+- [x] 中場等待狀態也使用相同頁首定位邏輯，避免 Safari 保留舊捲動錨點。
+- [x] 比賽中、下半場與延長賽使用真正的文件流底部安全空間，事件紀錄列可滑到 Safari 工具列上方。
+- [x] 全場輸出區保留真正的文件流安全空間，並維持輸出工具在前、「＋新比賽」在後的操作順序。
+- [x] 手機版主要操作按鈕仍維持至少 44px 觸控高度。
+- [x] 全場狀態使用深藍灰底、珊瑚紅描邊；LIVE 的亮紅色標示沒有變更。
+- [x] LocalStorage 資料結構、事件資料、計時與匯出功能沒有變更。
+- [ ] iPhone Safari 實機的底部工具列遮蔽與全場新配色驗證：需更新至 v5.37 後確認。
+
+## v5.36 本次驗證結果
+
+- [x] 全場工具卡固定先顯示摘要、儲存圖片、匯出 CSV，再顯示「＋新比賽」。
+- [x] 手機與一般寬度皆使用相同順序，不再被舊版響應式 `order` 規則反轉。
+- [x] 「＋新比賽」降低視覺強度，仍維持至少 48px 觸控高度。
+- [x] 建立新比賽前原有的資料清除確認視窗維持不變。
+- [x] Safari 底部安全空間、狀態還原、LocalStorage 與匯出功能維持不變。
+- [ ] iPhone Safari 實機的全場操作順序與底部工具列遮蔽驗證：需更新至 v5.36 後確認。
+
+## v5.35 本次驗證結果
+
+- [x] 重整時不再輸出或顯示「正在還原比賽資料…」文字。
+- [x] 資料完成還原前仍隱藏主畫面並鎖定操作，避免閃出預設「賽前 0:0」。
+- [x] 正常載入完成後才解除遮蔽；載入失敗時仍顯示錯誤說明與重新整理按鈕。
+- [x] 賽前、比賽中、中場、下半場、等待延長、延長賽、PK、全場及全場 PK 狀態還原測試通過。
+- [x] 版本顯示、ZIP 內容及原有 LocalStorage 儲存鍵維持一致。
+- [ ] iPhone Safari 實機的重整視覺驗證：需更新至 v5.35 後確認。
+
+## v5.34 本次驗證結果
+
+- [x] 進球、射門、撲救、防守四種篩選明細共用相同固定欄寬，背號統一靠左對齊。
+- [x] 有／無助攻、背號或比分時，背號欄的起始位置保持一致。
+- [x] 320–430px 響應式欄位仍保留單列結構與長隊名省略處理。
+- [x] 版本顯示、ZIP 內容及原有 LocalStorage 儲存鍵維持一致。
+- [ ] iPhone Safari 實機視覺驗證：需更新至 v5.34 後確認。
+
+## v5.33 本次驗證結果
+
+- [x] 開始比賽、開始下半場、開始延長賽及全場完成後，程式不再呼叫功能區／輸出區的 `scrollIntoView()`，改為回到頁首。
+- [x] 進球、射門、撲救、防守四種篩選明細共用相同單列 DOM 與 CSS Grid，無第二、第三列容器。
+- [x] 背號空白、助攻有／無、比分有／無及長隊伍名稱均維持單列；長名稱使用省略號。
+- [x] 版本顯示、ZIP 內容及原有 LocalStorage 儲存鍵維持一致。
+- [ ] iPhone Safari 實機的狀態切換、工具列展開／收合及 320–430px 單列寬度視覺驗證：需更新至 v5.33 後確認。
+
+## v5.32 驗證結果（保留）
+
+- [x] 兩段內嵌 JavaScript 語法檢查通過；新增 DOM ID 無重複。
+- [x] 使用 DOM／儲存模擬執行完整主程式，檢查賽前、比賽中、中場、下半場、等待延長、延長賽、PK，以及有／無 PK 的全場還原。
+- [x] 完成還原、時間更新與首次排版前，主畫面保持隱藏且不可操作；首次顯示不播放狀態切換動畫。
+- [x] 全場 2:2、PK 1:0、時間 01:45 的測試資料可還原，事件操作收起、結果統計開啟。
+- [x] 正常測試資料在還原前後未被改寫；原有儲存鍵維持不變。
+- [x] JSON 損壞、非物件資料、儲存讀取失敗或主程式未完成時，保留錯誤提示並阻止未初始化的操作，不刪除原資料。
+- [ ] iPhone Safari 實機重整、低速網路與工具列展開／收合的視覺驗證：本次未執行，需更新至 v5.32 後確認。
+
+以下保留完整發版檢查表；未勾選項目不代表本次已重新測試。
+
+> 目的：每次更新版本時，除了功能與 UI/UX，也固定檢查資料安全、輸入驗證、
+> 瀏覽器儲存、匯出內容與版本檔案是否同步，避免新版只更新 index.html 而漏掉相關說明或安全項目。
+
+---
+
+## 1. 發版檔案同步
+
+每次 ZIP 發版必須至少包含：
+
+- [ ] `index.html`
+- [ ] `README.md`
+- [ ] `SECURITY_CHECKLIST.md`
+
+版本更新時同步確認：
+
+- [ ] `index.html` 畫面顯示版本號已更新
+- [ ] HTML `<title>` 的版本號與 ZIP 檔名一致
+- [ ] 主畫面右上角實際顯示版本號與 ZIP 檔名一致
+- [ ] 「這是什麼？」About 視窗版本號與 ZIP 檔名一致
+- [ ] `README.md` 版本與本次異動內容已更新
+- [ ] `README.md` 第一行 H1 必須精準等於目前版本，例如 `# 足球場邊記錄器 v5.01`
+- [ ] `SECURITY_CHECKLIST.md` 若有新增安全規則或資料處理方式，已同步更新
+- [ ] ZIP 內三個文件皆為本次最新版本，不混入舊檔
+- [ ] ZIP 檔名版本與網頁版本一致
+
+---
+
+## 2. 使用者輸入驗證
+
+- [ ] 我方球隊名稱長度限制正常
+- [ ] 對手球隊名稱長度限制正常
+- [ ] 賽事名稱長度限制正常
+- [ ] 場地長度限制正常
+- [ ] 球員背號僅接受合理整數範圍
+- [ ] 比分僅接受合理整數範圍
+- [ ] 規定時間僅接受合理分鐘數
+- [ ] 不接受 `<`、`>`、換行等不必要字元
+- [ ] 使用者輸入內容顯示到畫面時不直接當成 HTML 執行
+- [ ] 編輯既有資料時套用與新增相同的驗證規則
+
+---
+
+## 3. LocalStorage / 本機資料
+
+- [ ] 不儲存密碼、Token、帳號憑證等敏感資訊
+- [ ] LocalStorage 僅保存比賽必要資料與使用偏好
+- [ ] 新比賽重設時不誤刪應保留的常用設定
+- [ ] 新比賽重設時會清掉上一場不應延續的比賽狀態
+- [ ] 空白欄位不會意外覆蓋使用者原本的常用設定
+- [ ] 網頁重新整理後，比賽進行中資料可正確恢復
+- [ ] 已結束比賽重新整理後不會被舊設定覆蓋
+
+---
+
+## 4. 比賽狀態與資料完整性
+
+依序檢查：
+
+- [ ] 賽前
+- [ ] 上半場 / 比賽中
+- [ ] 中場
+- [ ] 下半場
+- [ ] 全場
+
+並確認：
+
+- [ ] 開始時間只在正確操作時寫入
+- [ ] 結束時間只在確認結束時寫入
+- [ ] 中場開始 / 結束紀錄不重複
+- [ ] 下半場重新計時邏輯正確
+- [ ] 全場後事件按鈕不能再新增紀錄
+- [ ] 比分與進球事件保持一致
+- [ ] 編輯 / 刪除進球事件時比分同步正確
+- [ ] 紅牌、黃牌、射門、撲救、防守等事件不影響比分
+- [ ] 守門員設定變更不破壞既有事件資料
+- [ ] 賽後補填賽事名稱 / 場地可立即更新所有相關顯示
+
+---
+
+## 5. 事件紀錄操作
+
+- [ ] 單一「管理」入口可正常開啟
+- [ ] 編輯事件可正常進入
+- [ ] 刪除事件有二次確認
+- [ ] 取消刪除不會誤刪資料
+- [ ] 刪除後事件序號重新顯示正確
+- [ ] 本場事件統計的唯讀細節不顯示編輯 / 刪除控制
+- [ ] 進球事件顯示比分但不重複顯示得分變化
+- [ ] 黃牌 / 紅牌使用長方形卡片圖示
+- [ ] 關鍵事件視覺不影響文字可讀性
+
+---
+
+## 6. CSV / 摘要 / 圖片輸出
+
+- [ ] CSV 內容不含未預期的 HTML 或腳本內容
+- [ ] 使用者輸入欄位在 CSV 中有妥善處理
+- [ ] 摘要內容與主畫面比分一致
+- [ ] 摘要進球助攻資訊不被截斷
+- [ ] 摘要時間資訊沒有重複
+- [ ] 場地圖示與場地文字顯示正確
+- [ ] 分享 / 儲存圖片可正常完成
+- [ ] 圖片內容沒有被 Safari 工具列截住
+
+---
+
+## 7. iPhone Safari / 行動裝置 QA
+
+至少檢查：
+
+- [ ] 一般 iPhone 寬度
+- [ ] 小螢幕 iPhone
+- [ ] Dynamic Island 機型
+- [ ] Safari 上下工具列展開狀態
+- [ ] Safari 上下工具列收合狀態
+
+確認：
+
+- [ ] Modal 不超出 viewport
+- [ ] 底部按鈕不被 Safari 工具列遮住
+- [ ] `＋ 新比賽` 滑到底後完整可見
+- [ ] 底部保留 safe-area 空間
+- [ ] 鍵盤彈出時輸入欄位仍可看到
+- [ ] Modal 捲動不會帶動背景頁面
+- [ ] 44px 以上主要觸控區域容易點擊
+- [ ] 橫向或縮放不造成主要版面破壞
+
+---
+
+## 8. JavaScript / 基本程式檢查
+
+每次產出新版至少執行：
+
+- [ ] JavaScript syntax check PASS
+- [ ] 沒有重複 function 定義造成新版邏輯被舊版覆蓋
+- [ ] 沒有殘留舊版版本號
+- [ ] 新增 DOM id 沒有重複
+- [ ] 事件 handler 對應 function 存在
+- [ ] 不使用 `eval()` 或動態執行不可信字串
+- [ ] 不將使用者輸入直接拼接成可執行 script
+- [ ] Console 無明顯 runtime error
+
+---
+
+## 9. 發版前最後確認
+
+- [ ] 實際建立一場測試比賽
+- [ ] 我方隊名空白也可立即開始計時
+- [ ] 空白我方顯示為「我方」
+- [ ] 稍後補隊名可正確更新
+- [ ] 至少建立進球、射門、撲救、防守、黃牌、紅牌各一筆
+- [ ] 開啟事件紀錄確認版面
+- [ ] 測試編輯一筆事件
+- [ ] 測試刪除一筆事件
+- [ ] 結束上半場 → 中場 → 下半場 → 全場
+- [ ] 開啟摘要確認資料正確
+- [ ] 匯出 CSV
+- [ ] 儲存 / 分享圖片
+- [ ] 建立新比賽後上一場資料不殘留
+- [ ] ZIP 解壓後可直接使用
+
+---
+
+## 固定發版結構
+
+```text
+football_marker_vX_XX.zip
+├── index.html
+├── README.md
+└── SECURITY_CHECKLIST.md
+```
+
+如本次更新涉及新的資料欄位、儲存方式、輸出格式、外部資源或安全行為，
+必須同步更新此清單。
+
+
+### 最新功能 regression check
+
+- [ ] 摘要場地圖示為目前最新版
+- [ ] 摘要進球助攻資訊可完整顯示
+- [ ] 全場後補填賽事名稱 / 場地可立即更新
+- [ ] 進球 / 黃牌 / 紅牌選擇球隊使用統一配色
+- [ ] 摘要總時間不重複
+- [ ] 進球事件比分位於事件主體，不顯示「關鍵事件」
+- [ ] 事件紀錄使用單一管理按鈕
+- [ ] 我方隊名空白仍可立即開賽
+- [ ] 黃牌 / 紅牌事件 icon 為長方形
+- [ ] 不顯示進球「得分變化」區塊
+
+
+### v4.94 事件紀錄 Compact Layout QA
+
+- [ ] 完整事件紀錄每筆最多兩列
+- [ ] 第一列順序為「時段（如有）→ 時間 → 球隊」
+- [ ] 第二列為事件主體、比分與助攻
+- [ ] 長球隊名稱使用單行省略，不會產生第三列
+- [ ] 進球比分仍顯示在事件主體旁
+- [ ] 助攻過長時省略，不會把卡片撐成第三列
+- [ ] 管理按鈕視覺約 34px，但實際觸控區至少 44×44px
+- [ ] 管理按鈕仍可正常開啟編輯 / 刪除 Action Sheet
+- [ ] 黃牌 / 紅牌長方形牌卡維持正確
+- [ ] 小尺寸 iPhone 上事件卡不發生文字重疊
+
+
+### v4.95 事件紀錄資訊層級 QA
+
+- [ ] 完整事件紀錄仍維持每筆最多兩列
+- [ ] 第一列順序為「時段（如有）→ 時間 → 球隊 → 球員背號」
+- [ ] 第二列順序為「事件圖示 → 事件名稱 → 比分 / 助攻」
+- [ ] 球員背號在長隊名情況下仍完整顯示
+- [ ] 長球隊名稱優先使用省略號，不擠掉時間或背號
+- [ ] 沒有球員背號的事件不保留多餘空格
+- [ ] 黃牌 / 紅牌長方形圖示仍位於第二列固定事件位置
+- [ ] 進球比分與助攻不產生第三列
+- [ ] 管理按鈕仍可正常開啟 Action Sheet
+- [ ] 管理按鈕實際觸控範圍至少 44×44px
+
+
+### v4.96 黃牌 / 紅牌視覺 QA
+
+- [ ] 黃牌 icon 為高飽和黃色，不呈現偏白或奶油黃色
+- [ ] 紅牌 icon 為高飽和紅色，不呈現偏粉紅
+- [ ] 黃牌與紅牌在深色背景下仍有足夠對比
+- [ ] 左側黃 / 紅 accent 與卡片 icon 顏色一致
+- [ ] 紅牌事件時間可辨識為紅色，不誤認為粉紅色
+- [ ] 黃牌 / 紅牌仍維持直立長方形比例
+- [ ] 事件名稱仍保持白色可讀性
+- [ ] v4.95 兩列事件紀錄資訊順序沒有回退
+- [ ] 管理按鈕與 Action Sheet 功能沒有受影響
+
+
+### v4.97 事件紀錄版面 QA
+
+- [ ] 球隊名稱與球員背號位於同一個 WHO 群組
+- [ ] 短隊名時背號緊接隊名，不被推到事件卡右側
+- [ ] 長隊名縮略時球員背號仍完整顯示
+- [ ] 第一列仍維持「時間 → 球隊 → 背號」
+- [ ] 第二列仍維持「事件圖示 → 事件名稱 → 比分 / 助攻」
+- [ ] 紅牌事件卡背景與一般事件相同，不整張染紅
+- [ ] 紅牌左側 accent 仍為高飽和紅色
+- [ ] 紅牌長方形 icon 仍為高飽和紅色
+- [ ] 紅牌時間仍有足夠紅色辨識度
+- [ ] 黃牌色彩強化沒有回退
+
+
+### v4.98 名單 / 守門員位置一致性 QA
+
+- [ ] 賽前：左側為名單，右側為守門員
+- [ ] 比賽中：左側為名單，右側為守門員
+- [ ] 中場：左側為名單，右側為守門員
+- [ ] 下半場：左側為名單，右側為守門員
+- [ ] 等待延長賽：左側為名單，右側為守門員
+- [ ] 延長賽進行中：左側為名單，右側為守門員
+- [ ] 名單文字顯示為「名單 N人」
+- [ ] 守門員文字顯示為「守門員 #N / 未設定」
+- [ ] 點左側一定開啟名單設定
+- [ ] 點右側一定開啟守門員設定
+- [ ] 小螢幕 iPhone 不發生文字互相擠壓或換行
+
+
+### v5.00 PK / 跨狀態資訊一致性 QA
+
+- [ ] 賽前賽事名稱 / 場地 icon 位置正常
+- [ ] 比賽中賽事名稱 / 場地使用相同資訊列
+- [ ] 中場賽事名稱 / 場地使用相同資訊列
+- [ ] 下半場賽事名稱 / 場地使用相同資訊列
+- [ ] 延長賽賽事名稱 / 場地使用相同資訊列
+- [ ] PK 不顯示賽前兩個獨立 input
+- [ ] PK 顯示與其他狀態相同的「賽事 · 場地」資訊列
+- [ ] PK 賽事 / 場地 icon 不上飄、不錯位
+- [ ] PK 顯示左側名單、右側守門員
+- [ ] PK 可正常開啟名單 modal
+- [ ] PK 可正常開啟守門員 modal
+- [ ] 賽前 / 比賽中 / 中場 / 下半場 / 延長賽 / PK 的賽事、場地、名單、守門員字級一致
+- [ ] 主畫面版本號仍可見
+- [ ] About Header 不再突出顯示版本 badge
+- [ ] About 底部仍可確認版本
+
+
+### v5.01 快速使用指南 QA
+
+- [ ] 「這是什麼？」內顯示「快速使用指南」次要按鈕
+- [ ] 「開始記錄比賽」仍為主要 CTA
+- [ ] 點快速指南後 About modal 正確切換到 Quick Guide modal
+- [ ] 快速指南包含 5 個步驟
+- [ ] 快速指南包含場邊小技巧
+- [ ] 「返回介紹」可回到 About modal
+- [ ] 「開始記錄比賽」可正常關閉指南並回主畫面
+- [ ] 關閉 X 可直接關閉指南
+- [ ] 開啟 modal 時背景頁面不可捲動
+- [ ] 關閉 modal 後背景捲動恢復
+- [ ] iPhone Safari 下指南 footer 不被底部工具列遮住
+- [ ] 短螢幕下內容可捲動，Footer CTA 仍固定可見
+
+
+### v5.02 About Footer UI QA
+
+- [ ] 快速使用指南與版本資訊位於同一列
+- [ ] 快速使用指南不是全寬實心按鈕
+- [ ] 快速使用指南實際觸控高度至少 44px
+- [ ] 快速使用指南顯示 `›` 作為次要導航提示
+- [ ] 版本只顯示 `v5.02`，不單獨佔一列
+- [ ] 版本字級與顏色低於快速指南
+- [ ] 輔助資訊列與主要 CTA 有明確留白
+- [ ] `開始記錄比賽` 仍是唯一 Primary CTA
+- [ ] 快速指南功能可正常開啟
+- [ ] iPhone Safari 下 Footer 不被底部工具列遮擋
+
+
+### v5.03 事件時間一致性 QA
+
+- [ ] 進球時間與一般事件時間字級一致
+- [ ] 撲救時間與一般事件時間字級一致
+- [ ] 射門時間與一般事件時間字級一致
+- [ ] 防守時間與一般事件時間字級一致
+- [ ] 黃牌時間不使用特殊亮黃
+- [ ] 紅牌時間不使用紅色
+- [ ] 所有事件時間統一為 `#FACC15`
+- [ ] 所有事件時間統一為 16px / 950
+- [ ] 所有事件時間不使用 text-shadow
+- [ ] 上半場 / 下半場等時段 pill 顏色維持不變
+- [ ] 事件本身的 accent / icon / 比分視覺仍正常
+
+
+### v5.04 全場 Safari Bottom Safe Area QA
+
+- [ ] 全場頁進入時不自動向上捲動
+- [ ] 全場標題 / 賽事名稱 / 場地不因底部修正被往上拉
+- [ ] Safari 底部工具列完全展開時 `＋ 新比賽` 可完整滑出
+- [ ] `＋ 新比賽` 底部與 Safari 工具列保有可視安全距離
+- [ ] Safari 工具列收合後仍可正常捲到頁尾
+- [ ] `＋ 新比賽` 維持正常文件流，不使用 fixed
+- [ ] `＋ 新比賽` 不使用 transform 上移
+- [ ] 不使用自動 scrollIntoView / scrollBy 修正
+- [ ] iPhone 430px 以下寬度有額外 fallback
+- [ ] iPhone 390px 以下寬度有額外 fallback
+- [ ] iPhone 375px 以下寬度有額外 fallback
+- [ ] `env(safe-area-inset-bottom)` 仍保留
+
+
+### v5.05 Full-time Footer Root Cause QA
+
+- [ ] `.finalToolsCard` 在全場狀態不是 `position: fixed`
+- [ ] `.finalToolsCard` 在全場狀態為正常文件流
+- [ ] 全場工具卡沒有 `bottom` 定位
+- [ ] 全場工具卡沒有 `translateX`
+- [ ] `＋ 新比賽` 位於正常文件流
+- [ ] `fullTimeBottomSpacer` 位於工具卡之後
+- [ ] spacer 高度實際增加 document scroll height
+- [ ] Safari toolbar 展開時覆蓋的是 spacer，不是新比賽按鈕
+- [ ] Safari toolbar 收合時頁面仍能正常滑到最底
+- [ ] 不使用 fixed / sticky 抬高新比賽
+- [ ] 不使用自動捲動修正
+- [ ] 全場上方比分 / 統計位置不因 footer 修正而改變
+
+
+### v5.06 Full-time Primary CTA Visibility QA
+
+- [ ] iPhone 全場狀態下 `＋ 新比賽` 位於三顆輸出工具上方
+- [ ] `＋ 新比賽` 仍為全寬 Primary CTA
+- [ ] `＋ 新比賽` 實際觸控高度至少 48px
+- [ ] 摘要 / 儲存圖片 / 匯出 CSV 仍為三欄
+- [ ] 三顆輸出工具觸控高度至少 44px
+- [ ] 手機全場工具卡不是 fixed
+- [ ] `＋ 新比賽` 不是 fixed / sticky
+- [ ] 不使用 transform 抬高 `＋ 新比賽`
+- [ ] 不自動 scrollIntoView / scrollBy
+- [ ] 最底部仍保留 fullTimeBottomSpacer
+- [ ] Safari toolbar 展開時 Primary CTA 優先保持可見
+- [ ] 全場上方比分 / 統計 / 事件紀錄位置不做大幅改動
+
+
+### v5.07 我方隊伍預設值 QA
+
+- [ ] 程式初始 state 的我方名稱為 `忠義國小`
+- [ ] 初次開啟且沒有 LocalStorage 時顯示 `忠義國小`
+- [ ] 新比賽 fallback 預設為 `忠義國小`
+- [ ] reset / restore fallback 預設為 `忠義國小`
+- [ ] 若 LocalStorage 已有最近隊名，仍優先使用最近隊名
+- [ ] 空白開賽功能不受影響
+- [ ] 比賽進行中重新整理時不會被預設值覆蓋
+
+
+### v5.08 賽前規定時間 / 時間紀錄 QA
+
+- [ ] 賽前完全不顯示「時間紀錄」標題列
+- [ ] 賽前直接顯示「規定時間」
+- [ ] 賽前標示「選填・可賽後補填」
+- [ ] 賽前可正常選擇 15 / 20 / 25 / 45 / 自訂分鐘
+- [ ] 賽前套用規定時間後狀態文字正確更新
+- [ ] 賽前清除規定時間可正常運作
+- [ ] 開始比賽後賽前規定時間卡消失
+- [ ] 開始比賽後「時間紀錄」出現
+- [ ] 已設定規定時間時，收合列顯示規定時間 badge
+- [ ] 展開時間紀錄後仍可編輯 / 清除規定時間
+- [ ] `regBox` DOM 只有一份，不存在重複 ID
+- [ ] 規定時間資料只使用 `state.regulationMinutes`
+- [ ] 中場 / 下半場 / 延長賽 / PK / 全場的時間紀錄仍正常顯示
+- [ ] 新比賽重設後回到賽前規定時間設定狀態
+
+
+### v5.09 比賽時間名詞一致性 QA
+
+- [ ] 賽前顯示 `⏱ 比賽時間`
+- [ ] 賽前不再顯示 `規定時間`
+- [ ] 未設定時顯示 `未設定比賽時間`
+- [ ] 選擇分鐘的 alert 使用 `比賽時間`
+- [ ] reset 確認訊息使用 `比賽時間`
+- [ ] 距離提示使用 `距比賽時間`
+- [ ] 到時提示使用 `比賽時間到`
+- [ ] 摘要 / 圖片輸出使用 `比賽時間`
+- [ ] 分享 HTML 使用 `比賽時間`
+- [ ] 時間紀錄收合列只顯示分鐘值，不再重複寫 `規定`
+- [ ] 內部 `regulationMinutes` 資料結構沒有改動
+- [ ] v5.08 賽前隱藏時間紀錄邏輯沒有回退
+
+
+### v5.10 賽前 Vertical Rhythm QA
+
+- [ ] 賽事 / 場地 與 名單 / 守門員之間有明確間距
+- [ ] 名單 / 守門員 與 比賽時間之間有明確間距
+- [ ] 比賽時間 與 賽前比分區之間有明確間距
+- [ ] 賽前比分區 與 開始比賽按鈕之間有明確間距
+- [ ] 一般手機主要群組間距為 12px
+- [ ] 390px 以下主要群組間距為 10px
+- [ ] 沒有因 margin 疊加造成 20px 以上異常大空白
+- [ ] 卡片內部 padding 沒有被放大
+- [ ] 開始比賽按鈕尺寸沒有改變
+- [ ] v5.09 比賽時間功能沒有回退
+- [ ] v5.08 賽前不顯示時間紀錄的邏輯沒有回退
+
+
+### v5.12 賽前比賽時間單列 QA
+
+- [ ] 預設畫面「比賽時間 / 請選擇分鐘 / 套用」位於同一列
+- [ ] 不顯示 `選填・可賽後補填`
+- [ ] 不顯示重複的賽前 `regTitle`
+- [ ] 15 / 20 / 25 / 45 分鐘不產生第二列
+- [ ] 自訂分鐘時才展開輸入區
+- [ ] 套用按鈕仍至少 48px 高
+- [ ] 分鐘選單仍至少 48px 高
+- [ ] 已設定時間時才顯示低調 `清除`
+- [ ] 未設定時間時不顯示 `清除`
+- [ ] 清除後 state.regulationMinutes 回到 null
+- [ ] 390px iPhone 三個主要元件仍維持同列
+- [ ] 350px 小螢幕不發生橫向溢出
+- [ ] v5.10 賽前群組間距沒有回退
+- [ ] v5.09 `比賽時間` 名詞沒有回退
+
+
+### v5.13 賽前 Clear / Typography QA
+
+- [ ] 賽前比賽時間卡內不顯示獨立 `清除`
+- [ ] 已設定 15 / 20 / 25 / 45 分鐘後，`清除` 不會跑到賽前狀態方框
+- [ ] 分鐘選單包含 `未設定`
+- [ ] 選擇 `未設定` + `套用` 可清除比賽時間
+- [ ] 開賽後時間紀錄編輯器仍可使用原 Clear
+- [ ] 賽事名稱 / 場地字級一致
+- [ ] 名單 / 守門員字級一致
+- [ ] 比賽時間標題 / 分鐘 / 套用字級一致
+- [ ] 賽前狀態與設定層級大小一致
+- [ ] 隊伍名稱比設定欄大一階
+- [ ] 比分仍為全頁最大視覺焦點
+- [ ] 開始 / 結束按鈕字級一致
+- [ ] 重設維持低頻次要字級
+- [ ] 390px iPhone 不再出現 12 / 13 / 14 / 16px 混雜的主要設定字級
+- [ ] v5.12 既有單列比賽時間 UI 沒有回退
+
+
+### v5.14 比賽時間 Instant Apply QA
+
+- [ ] 賽前下拉選單不再出現「請選擇分鐘」
+- [ ] 未設定比賽時間時選單顯示「未設定」
+- [ ] 賽前不顯示藍色「套用」按鈕
+- [ ] 賽前不顯示獨立「清除」按鈕
+- [ ] 賽前選 15 分鐘立即寫入 state.regulationMinutes=15
+- [ ] 賽前選 20 分鐘立即寫入 state.regulationMinutes=20
+- [ ] 賽前選 25 分鐘立即寫入 state.regulationMinutes=25
+- [ ] 賽前選「未設定」立即清除 regulationMinutes
+- [ ] 賽前選「自訂分鐘」會展開自訂輸入
+- [ ] 自訂分鐘 1–45 整數輸入完成後自動儲存
+- [ ] 自訂分鐘無效值不會寫入 state
+- [ ] 開賽後編輯比賽時間仍保留手動套用流程
+- [ ] `開始比賽` 仍是賽前最醒目的 Primary CTA
+- [ ] v5.13 賽前字體層級系統沒有回退
+
+
+### v5.15 比賽時間 Compact Height QA
+
+- [ ] 賽前比賽時間維持單列
+- [ ] 外框上下 padding 明顯小於 v5.14
+- [ ] 下拉選單高度為 44px
+- [ ] 比賽時間標題垂直置中
+- [ ] 未設定 / 15 / 20 / 25 / 45 分鐘不產生第二列
+- [ ] 自訂分鐘展開時才增加卡片高度
+- [ ] 賽前不重新出現套用 / 清除按鈕
+- [ ] instant apply 邏輯沒有回退
+- [ ] 開始比賽仍是最醒目的 Primary CTA
+- [ ] v5.13 字體層級系統沒有回退
+
+
+### v5.16 名單球衣 Icon QA
+
+- [ ] 賽前名單 icon 不再使用藍色 `👕` emoji
+- [ ] 名單 icon 主色為 `#EB686C`
+- [ ] 比賽中名單 icon 與賽前一致
+- [ ] 中場 / 下半場 / 延長賽 / PK 名單 icon 與賽前一致
+- [ ] 名單 Modal 標題使用相同球衣 icon
+- [ ] PK 球員 Modal 標題使用相同球衣 icon
+- [ ] 摘要名單資訊使用相同球衣 icon
+- [ ] SVG 不依賴外部檔案
+- [ ] 球衣 icon 不影響按鈕原本高度
+- [ ] 珊瑚紅與紅牌警示紅仍有明確色差
+- [ ] v5.15 比賽時間 Compact 高度沒有回退
+- [ ] v5.14 instant apply 沒有回退
+
+
+### v5.17 全場操作區 Spacing QA
+
+- [ ] `＋ 新比賽` 與三顆輸出工具不再邊框相貼
+- [ ] 一般手機兩組操作間距為 10px
+- [ ] 390px 以下兩組操作間距為 8px
+- [ ] `＋ 新比賽` 仍位於輸出工具上方
+- [ ] `＋ 新比賽` 不使用額外 margin-bottom
+- [ ] 三顆輸出工具仍為三欄
+- [ ] 三顆輸出工具內部 gap 維持 5px
+- [ ] Safari 全場底部安全區修正沒有回退
+- [ ] v5.16 珊瑚紅名單球衣 icon 沒有回退
+- [ ] v5.15 比賽時間 Compact 沒有回退
+
+
+### v5.18 Header Football Pitch QA
+
+- [ ] 只有 `titleBlock` 使用足球場草地背景
+- [ ] App 主內容背景仍維持原本深藍黑
+- [ ] Header 草地亮度低，不影響白色標題閱讀
+- [ ] Header 場線透明度低，不與 UI 邊框競爭
+- [ ] Header 中圈不遮住標題 / 版本 / About
+- [ ] About 按鈕仍維持 navy 色系
+- [ ] 賽前 / 比賽中 / 中場 / 下半場 / 延長 / PK / 全場 Header 一致
+- [ ] 390px 以下 Header 不產生文字擠壓
+- [ ] 不使用外部圖片或網路資源
+- [ ] v5.17 全場底部按鈕 spacing 沒有回退
+- [ ] v5.16 珊瑚紅名單球衣 icon 沒有回退
+- [ ] v5.15 比賽時間 Compact 沒有回退
+
+
+### v5.19 Header Pitch Detail QA
+
+- [ ] 標題 Header 可明顯看見中線
+- [ ] 標題 Header 可明顯看見中圈
+- [ ] 左右兩側可看見球門 / 禁區線條
+- [ ] Header 外框感比 v5.18 更弱
+- [ ] About 按鈕與版本資訊仍可清楚閱讀
+- [ ] 賽前 / 比賽中 / 全場 Header 樣式一致
+- [ ] 不影響原本深藍黑主操作區
+
+
+### v5.20 Header Strip QA
+
+- [ ] 標題區不再有明顯橢圓形外框
+- [ ] 草皮背景較 v5.19 更自然
+- [ ] 中線 / 中圈可清楚辨識
+- [ ] 左右球門 / 禁區線條可辨識
+- [ ] 標題、版本、按鈕可讀性正常
+- [ ] 賽前 / 比賽中 / 全場狀態下皆正常顯示
+
+
+### v5.25 HTML / Render Regression QA
+- [ ] 外層 document 結束後沒有任何非空白內容
+- [ ] CSS 註解內不得含會提前關閉 style raw-text 的 HTML closing-tag 字串
+- [ ] JavaScript syntax 通過
+- [ ] 實際 Chromium browser render：Header 不換行、主 UI 不變形
+- [ ] 頁面底部不會顯示 CSS 原始碼文字
+- [ ] Header 中圈維持正圓
+- [ ] 左右禁區各只有 2 組乾淨線條
+
+
+### v5.26 Header Proportion QA
+
+- [ ] Header 高度較 v5.25 縮小約 10–12%
+- [ ] 390px 以下 Header 仍可單行顯示標題 / 版本 / About
+- [ ] 左右大禁區與小禁區不再貼齊 Header 邊緣
+- [ ] 左右場線保留約 8–10px 呼吸空間
+- [ ] 中圈尺寸維持 v5.25
+- [ ] 中圈仍為正圓
+- [ ] 主操作區 UI / 字級 / 按鈕尺寸沒有回退
+- [ ] `</html>` 後沒有任何內容
+- [ ] JavaScript syntax check 通過
+
+
+### v5.27 Header Pitch Proportion QA
+
+- [ ] 中圈較 v5.26 明顯縮小且維持正圓
+- [ ] 左右大禁區與小禁區的水平長度同步縮短
+- [ ] 左右球場線條完全對稱，沒有重複線段
+- [ ] 標題、版本及 About 按鈕仍維持單行與正常可讀性
+- [ ] 主操作區 UI、資料與功能沒有回退
+
+
+### v5.28 Dropdown Indicator QA
+
+- [ ] 比賽場地與比賽時間使用相同的 `▾` 符號
+- [ ] 兩個箭頭的尺寸、顏色、背景與邊框一致
+- [ ] 箭頭在 iPhone Safari 上清楚可見且不遮住文字
+- [ ] 場地下拉選單及比賽時間選單仍可正常操作
+
+
+### v5.29 Goalkeeper / Roster Sync QA
+
+- [ ] 名單為空時選擇守門員 #21，名單人數立即顯示 1 人
+- [ ] 開啟本場名單後，#21 顯示為已選取狀態
+- [ ] 守門員原本已在名單時不會重複加入
+- [ ] 載入舊版守門員資料時會自動補入本場名單
+
+
+### v5.30 State Header / Action Visibility QA
+
+- [ ] 賽前、比賽中、中場、下半場、等待延長賽、延長賽、PK、全場的狀態標題字型與垂直位置一致
+- [ ] 開始比賽、下半場與延長賽後，事件按鈕會自動進入安全可見區
+- [ ] 全場及 PK 結束後，摘要、圖片、CSV 與新比賽按鈕可捲至 Safari 工具列上方
+- [ ] Safari 工具列展開時，頁面底部仍保有足夠捲動空間
+- [ ] 我方隊名僅在賽前可進入藍色編輯狀態
+- [ ] 開賽後點擊我方隊名不會顯示輸入框或藍色底線
+
+## v6.24 UI-only change
+- Full-time event-record styling only; no new external network calls, storage permissions, or executable dependencies.
