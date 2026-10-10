@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.51</title>
+<title>足球場邊記錄器 v6.54</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -25043,6 +25043,48 @@ body.liveViewportUltra .liveMetaStrip .competitionDisplayRow .competitionInlineC
 }
 </style>
 
+<style id="v654SubtleBorderHierarchyPatch">
+/* v6.54: 僅進行中（比賽中／下半場／延長賽）的次要框線減法精修。
+   保留 v6.51 所有排版尺寸、位置、配色、主要比分框與事件操作。
+   所有調整均為色線透明度或非必要內陰影；不改動結構與觸控範圍。 */
+
+/* 比賽賽事／場地：原本兩個高亮度描邊降低一級，不減少列高。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) .liveMetaStrip.show .matchMetaDisplayRow{
+  border-color:rgba(71,96,126,.43)!important;
+  box-shadow:none!important;
+}
+/* 名單／守門員：仍為可辨識按鈕，但與比分牌形成清楚主次。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) .liveQuickSetup button{
+  border-color:rgba(70,96,124,.23)!important;
+}
+/* 時間紀錄：只淡化收合狀態外框，展開時保持原有視覺提示。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) .timeSummary:not(.open){
+  border-color:rgba(70,96,124,.23)!important;
+}
+/* 事件操作區保留大外框、四色事件按鈕與黃／紅牌的原有輪廓。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection #disciplineSection{
+  border-top-color:rgba(188,214,243,.09)!important;
+}
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection #recordSection{
+  border-top-color:rgba(188,214,243,.07)!important;
+}
+/* 事件紀錄：弱化按鈕、文件圖示及筆數標籤的三重描邊。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection #recordSection .recordFullBtn{
+  border-color:rgba(111,177,226,.20)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection #recordSection .recordIconWrap,
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection #recordSection .recordFullBtn:disabled .recordIconWrap{
+  border-color:rgba(132,151,174,.065)!important;
+  box-shadow:none!important;
+}
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection #recordSection .recordMeta,
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection #recordSection .recordFullBtn:disabled .recordMeta{
+  border-color:rgba(105,125,146,.11)!important;
+  box-shadow:none!important;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25057,7 +25099,7 @@ body.liveViewportUltra .liveMetaStrip .competitionDisplayRow .competitionInlineC
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.51</span>
+      <span class="headerVersion">v6.54</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
