@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.61</title>
+<title>足球場邊記錄器 v6.64</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -25531,6 +25531,161 @@ body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtra
 }
 </style>
 
+
+<style id="v662LiveReadOnlyBordersAndActionSpacingPatch">
+/* v6.62：僅比賽進行中（上半場／下半場／延長賽）視覺精修。
+   賽事及場地本來就是不可編輯的顯示列，取消其輸入框式邊線與框感；
+   保留文字、圖示、原有佔位高度、兩列間距及比分牌。
+   事件區保留整體外框及事件按鈕尺寸，但給第一排按鈕合理的頂部安全內距。
+   為避免恢復 v6.55 指出的跨卡片大空隙，同時等量回收上方容器非必要留白。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
+  .liveMetaStrip.show .matchMetaDisplayRow{
+  border-color:transparent!important; /* 保留 1px 幾何，以免圖示與文字跳位 */
+  background:transparent!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+}
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection,
+body.liveViewportCompact:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection,
+body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection{
+  padding-top:9px!important;
+  padding-bottom:8px!important;
+}
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #matchCard{
+  padding-bottom:2px!important;
+  margin-bottom:2px!important;
+}
+</style>
+
+<style id="v663ScorerCountAndFinalTimeSingleLinePatch">
+/* v6.64：全場收合時間紀錄沿用既有 v6.50 LIVE/下半場/延長賽的單列規格。
+   不修改賽前、展開內容、計時狀態或其他 UI。 */
+body.resultMode .timeSummary:not(.open) .timeHead{
+  box-sizing:border-box!important;
+  height:46px!important;
+  min-height:46px!important;
+  max-height:46px!important;
+  padding:0 10px!important;
+  gap:8px!important;
+  align-items:center!important;
+}
+body.resultMode .timeSummary:not(.open) .timeTitleBlock{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr)!important;
+  align-items:center!important;
+  column-gap:10px!important;
+  row-gap:0!important;
+}
+body.resultMode .timeSummary:not(.open) .timeTitle{
+  grid-column:1!important;
+  white-space:nowrap!important;
+  line-height:1!important;
+  margin:0!important;
+}
+body.resultMode .timeSummary:not(.open) .timeStatusLine{
+  grid-column:2!important;
+  min-width:0!important;
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:4px!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  line-height:1!important;
+}
+body.resultMode .timeSummary:not(.open) .timeStatusLine[hidden]{display:none!important}
+body.resultMode .timeSummary:not(.open) .timeStatusLine .timeRegulationBadge{
+  flex:0 1 auto!important;
+  min-width:0!important;
+  max-width:100%!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#9eb6cc!important;
+  font-size:11.5px!important;
+  font-weight:850!important;
+  line-height:1!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+body.resultMode .timeSummary:not(.open) .timeHeadActions{
+  flex:0 0 auto!important;
+  min-width:auto!important;
+  margin:0!important;
+}
+body.resultMode .timeSummary:not(.open) .timeToggle{
+  height:36px!important;
+  min-height:36px!important;
+  max-height:36px!important;
+  padding:0 12px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+@media(max-width:390px){
+  body.resultMode .timeSummary:not(.open) .timeHead{
+    height:44px!important;
+    min-height:44px!important;
+    max-height:44px!important;
+    padding-left:8px!important;
+    padding-right:8px!important;
+    gap:6px!important;
+  }
+  body.resultMode .timeSummary:not(.open) .timeTitleBlock{column-gap:7px!important}
+  body.resultMode .timeSummary:not(.open) .timeTitle{font-size:17px!important}
+  body.resultMode .timeSummary:not(.open) .timeStatusLine .timeRegulationBadge{
+    font-size:10px!important;
+    letter-spacing:-.05px!important;
+  }
+  body.resultMode .timeSummary:not(.open) .timeToggle{
+    height:34px!important;
+    min-height:34px!important;
+    max-height:34px!important;
+    padding-left:10px!important;
+    padding-right:10px!important;
+    font-size:13.5px!important;
+  }
+}
+</style>
+
+<style id="v664ReportCardVisualPatch">
+/* v6.64：摘要時間軸／摘要內容的黃紅牌統一使用較鮮明的直向長方形牌卡。 */
+#reportModal .reportCardShape,
+#reportContent .reportCardShape{
+  width:11px!important;
+  height:17px!important;
+  border-radius:1.5px!important;
+  flex:0 0 11px!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 1px 2px rgba(0,0,0,.24)!important;
+}
+#reportModal .reportCardShape.yellow,
+#reportContent .reportCardShape.yellow{background:#ffd429!important;}
+#reportModal .reportCardShape.red,
+#reportContent .reportCardShape.red{background:#ff2a1c!important;}
+#reportModal .matchTimelineCompactIcon.cardIcon{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1!important;
+  transform:none!important;
+  margin-right:2px!important;
+}
+#reportModal .matchTimelineCompactIcon.cardIcon .reportCardShape{
+  width:12px!important;
+  height:18px!important;
+  border-radius:1.5px!important;
+  flex:0 0 12px!important;
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25545,7 +25700,7 @@ body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtra
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.61</span>
+      <span class="headerVersion">v6.64</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28438,10 +28593,16 @@ function scorerMVPHTML(){
   const showGoalTimes=info.kind==='mvp';
   return `<div class="reportMVPHead">${escapeHtml(info.title)}</div><div class="reportMVPNames">${info.winners.map(s=>`<span class="reportMVPName"><span class="reportMVPMedal" aria-hidden="true">🏅</span><span class="reportMVPPlayerText">${escapeHtml(s.name)}</span>${showGoalTimes&&s.goalTimes?.length?`<span class="reportMVPGoalTimes" aria-label="進球時間 ${escapeHtml(s.goalTimes.join(' '))}">${s.goalTimes.map(t=>`<span class="reportMVPGoalMinute">${escapeHtml(t)}</span>`).join('')}</span>`:''}</span>`).join('')}</div>`;
 }
+// v6.64：前三球保留逐顆足球，第四球起使用固定長度的「⚽ N 球」。
+// 同一格式共用於畫面摘要、圖片畫布及分享用摘要，避免大量圖示溢出。
+function scorerGoalsLabel(goals){
+  const count=Math.max(0,Math.floor(Number(goals)||0));
+  return count<=3 ? '⚽'.repeat(count) : `⚽ ${count} 球`;
+}
 function scorerStatsHTML(){
   const stats=scorerStats();
   if(!stats.length) return '<div class="reportEmpty">尚無可統計的球員背號進球資料</div>';
-  return stats.map(s=>`<div class="scorerRow"><div class="scorerName"><span class="scorerPlayerName">${escapeHtml(s.name)}</span><span class="scorerBalls">${'⚽'.repeat(s.goals)}</span></div></div>`).join('');
+  return stats.map(s=>`<div class="scorerRow"><div class="scorerName"><span class="scorerPlayerName">${escapeHtml(s.name)}</span><span class="scorerBalls">${scorerGoalsLabel(s.goals)}</span></div></div>`).join('');
 }
 
 function tick(){
@@ -32600,7 +32761,10 @@ function reportTimelineCompactParts(e){
   let main=`${side}${action}`;
   if(e.playerNumber) main += ` #${e.playerNumber}`;
   const assist=(e.event==='GOAL' && !e.ownGoal && e.assistNumber) ? `助攻 #${e.assistNumber}` : '';
-  return {icon:emoji(e.event), main, assist};
+  let iconHtml=`<span class="matchTimelineCompactIcon" aria-hidden="true">${escapeHtml(emoji(e.event))}</span>`;
+  if(e.event==='YELLOW_CARD') iconHtml='<span class="matchTimelineCompactIcon cardIcon" aria-hidden="true"><span class="reportCardShape yellow"></span></span>';
+  if(e.event==='RED_CARD') iconHtml='<span class="matchTimelineCompactIcon cardIcon" aria-hidden="true"><span class="reportCardShape red"></span></span>';
+  return {iconHtml, main, assist};
 }
 function reportTimelineHTML(){
   const entries=reportTimelineEntries();
@@ -32612,7 +32776,7 @@ function reportTimelineHTML(){
     const compact=reportTimelineCompactParts(e);
     return heading+`<li class="matchTimelineRow ${e.team==='OUR'?'isOur':e.team==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
       <div class="matchTimelineTime">${escapeHtml(e.time)}</div><div class="matchTimelineNode" aria-hidden="true"></div>
-      <div class="matchTimelineContent"><div class="matchTimelineCompact"><span class="matchTimelineCompactIcon" aria-hidden="true">${escapeHtml(compact.icon)}</span><span class="matchTimelineCompactMain">${escapeHtml(compact.main)}</span>${compact.assist?`<span class="matchTimelineAssistInline">${escapeHtml(compact.assist)}</span>`:''}</div></div>
+      <div class="matchTimelineContent"><div class="matchTimelineCompact">${compact.iconHtml}<span class="matchTimelineCompactMain">${escapeHtml(compact.main)}</span>${compact.assist?`<span class="matchTimelineAssistInline">${escapeHtml(compact.assist)}</span>`:''}</div></div>
       ${e.event==='GOAL'?`<div class="matchTimelineScore" aria-label="進球後比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>`:''}
     </li>`;
   }).join('')+'</ol>';
@@ -33040,7 +33204,7 @@ function reportCanvasLayout(lines,ctx){
     }else if(line.type==='scorerGrid'){
       b.rows=[];b.height=48;
       for(let i=0;i<line.items.length;i+=2){
-        const cells=line.items.slice(i,i+2).map(s=>reportWrapText(ctx,`${s.name}  ${'⚽'.repeat(s.goals)}`,(content-16)/2-20,font));
+        const cells=line.items.slice(i,i+2).map(s=>reportWrapText(ctx,`${s.name}  ${scorerGoalsLabel(s.goals)}`,(content-16)/2-20,font));
         const height=Math.max(...cells.map(c=>c.length))*32+14;
         b.rows.push({cells,height});b.height+=height;
       }
@@ -33169,7 +33333,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       ctx.fillStyle=b.team==='OUR'?'#59c8f1':b.team==='OPP'?'#ffad83':'#aeb9c5';ctx.beginPath();ctx.arc(nodeX,y+24,7,0,Math.PI*2);ctx.fill();
       text(b.time,pad+8,y+10,24,'#b3c3d3',600);
       if(b.event==='YELLOW_CARD'||b.event==='RED_CARD'){
-        ctx.fillStyle=b.event==='YELLOW_CARD'?'#ffd21f':'#ef3535';roundRect(ctx,actorX,y+12,17,27,2,true,false);
+        ctx.fillStyle=b.event==='YELLOW_CARD'?'#ffd429':'#ff2a1c';roundRect(ctx,actorX,y+12,17,27,2,true,false);
       }else{
         emojiText(emoji(b.event),actorX,y+8,28);
       }
@@ -33960,12 +34124,43 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
 }
 </style>
 
+
+<style id="v664ReportCardVisualPatch">
+/* v6.64：摘要時間軸／摘要內容的黃紅牌統一使用較鮮明的直向長方形牌卡。 */
+#reportModal .reportCardShape,
+#reportContent .reportCardShape{
+  width:11px!important;
+  height:17px!important;
+  border-radius:1.5px!important;
+  flex:0 0 11px!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 1px 2px rgba(0,0,0,.24)!important;
+}
+#reportModal .reportCardShape.yellow,
+#reportContent .reportCardShape.yellow{background:#ffd429!important;}
+#reportModal .reportCardShape.red,
+#reportContent .reportCardShape.red{background:#ff2a1c!important;}
+#reportModal .matchTimelineCompactIcon.cardIcon{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1!important;
+  transform:none!important;
+  margin-right:2px!important;
+}
+#reportModal .matchTimelineCompactIcon.cardIcon .reportCardShape{
+  width:12px!important;
+  height:18px!important;
+  border-radius:1.5px!important;
+  flex:0 0 12px!important;
+}
+</style>
+
 </head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}${formatDayMatchLabel(state.dayMatchNumber)?`｜${escapeHtml(formatDayMatchLabel(state.dayMatchNumber))}`:''}</div>${(state.competition||state.competitionStage)?`<div>🏆 ${escapeHtml([state.competition,state.competitionStage].filter(Boolean).join('｜'))}</div>`:''}${state.venue?`<div>📍 ${escapeHtml(state.venue)}</div>`:''}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
 <div class="card"><h2>時間紀錄</h2><p><b>開始：</b>${escapeHtml(fmtReportBoundary(matchStartEpoch(),matchStartEpoch(),matchEndEpoch()))}</p><p><b>結束：</b>${escapeHtml(fmtReportBoundary(matchEndEpoch(),matchStartEpoch(),matchEndEpoch()))}${isCrossDay(matchStartEpoch(),matchEndEpoch())?'　<b>跨日</b>':''}</p><p><b>實際比賽時間：</b>${escapeHtml(fmtDurationReadable(totalMatchElapsed()))}</p>${state.halftimeStartEpoch?`<p><b>中場開始：</b>${escapeHtml(fmtClock(state.halftimeStartEpoch))}<br><b>中場結束：</b>${escapeHtml(state.halftimeEndEpoch?fmtClock(state.halftimeEndEpoch):'--:--:--')}<br><b>中場休息：</b>${escapeHtml(fmtMMSS(halftimeElapsed()))}</p>`:''}${diff}</div>
 ${mvpInfo?`<div class="card"><h2>${escapeHtml(mvpInfo.title)}</h2><p>${mvpInfo.winners.map(s=>`🏅 ${escapeHtml(s.name)}${mvpInfo.kind==='mvp'&&s.goalTimes?.length?`　${escapeHtml(s.goalTimes.join(' '))}`:''}`).join('<br>')}</p></div>`:''}
-<div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${'⚽'.repeat(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
+<div class="card"><h2>球員進球統計</h2><ul>${scorerStats().length ? scorerStats().map(s=>`<li>${escapeHtml(s.name)} <b>${scorerGoalsLabel(s.goals)}</b></li>`).join('') : '<li>尚無可統計的球員背號進球資料</li>'}</ul></div>
 <div class="card"><h2>進球紀錄</h2><ul>${goalHtml}</ul></div>
 <div class="card"><h2>其他精彩標記事件</h2><ul>${otherHtml}</ul></div>
 
