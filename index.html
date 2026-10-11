@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.68</title>
+<title>足球場邊記錄器 v6.69</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -25837,6 +25837,47 @@ body.matchStatePre .preRegulationSection.needsAttention{
 }
 </style>
 
+
+<style id="v669LiveSetupStatusAndTimeTogglePolish">
+/* v6.69：比賽中／下半場／延長賽，僅未設定的數值顯示賽前一致的暖黃色。
+   保留標籤字體、按鈕底色、邊線、尺寸及功能，不影響其他狀態。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
+  .liveQuickSetup .liveSetupStatusValue.unconfigured{
+  color:#e0b160!important;
+}
+/* 完整保留 v6.66 的 44×44px 點擊區；內部視覺縮成接近賽前「修改」的微邊框按鈕。
+   兩種符號共用樣式，不改變展開／收合文字、程式或時間列高度。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
+  #timeSummary #timeToggle{
+  position:relative!important;
+  isolation:isolate;
+  background:transparent!important;
+  border:0!important;
+  border-radius:13px!important;
+  box-shadow:none!important;
+  font-size:20px!important;
+  font-weight:850!important;
+  color:#e5edf6!important;
+}
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
+  #timeSummary #timeToggle::before{
+  content:"";
+  position:absolute;
+  inset:5px;
+  z-index:-1;
+  border-radius:9px;
+  background:rgba(16,32,49,.66);
+  border:1px solid rgba(94,121,148,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  pointer-events:none;
+}
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
+  #timeSummary #timeToggle:active::before{
+  background:rgba(28,51,74,.85);
+  border-color:rgba(125,156,186,.42);
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25851,7 +25892,7 @@ body.matchStatePre .preRegulationSection.needsAttention{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.68</span>
+      <span class="headerVersion">v6.69</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -25962,10 +26003,10 @@ body.matchStatePre .preRegulationSection.needsAttention{
     <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
     <div class="liveQuickSetup" id="liveQuickSetup">
       <button type="button" onclick="openRosterModal()" aria-label="查看或編輯本場球員名單">
-        <span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="liveRosterQuickText">名單 0人</span>
+        <span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="liveRosterQuickText">名單 <span id="liveRosterStatusValue" class="liveSetupStatusValue unconfigured">0人</span></span>
       </button>
       <button type="button" onclick="openKeeperModal()" aria-label="快速設定目前守門員">
-        <span aria-hidden="true">🧤</span><span id="liveKeeperQuickText">守門員 未設定</span>
+        <span aria-hidden="true">🧤</span><span id="liveKeeperQuickText">守門員 <span id="liveKeeperStatusValue" class="liveSetupStatusValue unconfigured">未設定</span></span>
       </button>
     </div>
 
@@ -32053,10 +32094,20 @@ function renderLiveFocusUI(){
   }
 
   if(keeperText){
-    keeperText.textContent=state.goalkeeperNumber ? `守門員 #${state.goalkeeperNumber}` : '守門員 未設定';
+    const keeperValue=byId('liveKeeperStatusValue');
+    if(keeperValue){
+      const keeperNumber=String(state.goalkeeperNumber||'').trim();
+      keeperValue.textContent=keeperNumber ? `#${keeperNumber}` : '未設定';
+      keeperValue.classList.toggle('unconfigured',!keeperNumber);
+    }
   }
   if(rosterText){
-    rosterText.textContent=`名單 ${currentRosterNumbers().length}人`;
+    const rosterValue=byId('liveRosterStatusValue');
+    if(rosterValue){
+      const rosterCount=currentRosterNumbers().length;
+      rosterValue.textContent=`${rosterCount}人`;
+      rosterValue.classList.toggle('unconfigured',rosterCount===0);
+    }
   }
 
   if(typeof scheduleLiveViewportFit==='function'){
