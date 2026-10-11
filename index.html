@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.64</title>
+<title>足球場邊記錄器 v6.65</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -25686,6 +25686,29 @@ body.resultMode .timeSummary:not(.open) .timeToggle{
 }
 </style>
 
+
+<style id="v665FinalMetaHeightAndRegulationFontPatch">
+/* v6.65: 僅全場結果頁。v5.132 的 .empty 規則將未填場地壓成 32px；
+   兩列一般單行時同為 44px，長名稱仍能依內容自然增高。 */
+body.resultMode .liveMetaStrip.show .matchMetaDisplayRow,
+body.resultMode.finalOutputVisible .liveMetaStrip.show .venueDisplayRow.empty{
+  min-height:44px!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
+/* 規定時間文字原為 11.5px，390px 以下被壓到 10px；
+   全場與進行中共用較易讀字級，保留原單列高度與展開按鈕。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode) .timeSummary:not(.open) .timeStatusLine .timeRegulationBadge{
+  font-size:14.5px!important;
+  line-height:1.1!important;
+}
+@media(max-width:390px){
+  body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode) .timeSummary:not(.open) .timeStatusLine .timeRegulationBadge{
+    font-size:13.5px!important;
+    letter-spacing:0!important;
+  }
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25700,7 +25723,7 @@ body.resultMode .timeSummary:not(.open) .timeToggle{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.64</span>
+      <span class="headerVersion">v6.65</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">

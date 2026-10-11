@@ -1,3 +1,15 @@
+# v6.65 SECURITY_CHECKLIST｜本次修改及回歸
+
+- [x] 使用正式 `football_marker_v6_51.zip` 的累加成果 v6.64，沒有使用作廢 v6.52／v6.53。
+- [x] 變更僅一段全場列高與規定時間字級 CSS＋兩處版本標示；還原後與 v6.64 `index.html` 完全相同。
+- [x] 全部四段內嵌 JavaScript 與 v6.64 逐字一致，Node.js 語法檢查通過。
+- [x] Chromium 320、375、390、430px（含 430px 高度 1000px）檢查全場空白／已填場地等高 44px。
+- [x] 規定時間字體放大且全場單行、展開按鈕不重疊；原時間列高度未變。
+- [ ] iPhone Safari 實機測試。
+- [ ] 尚未重跑完整賽程與 PK、PNG、CSV 及 iOS 分享端到端功能測試。
+
+---
+
 # v6.64 SECURITY_CHECKLIST｜範圍與測試
 
 - [x] 正式 v6.51 ZIP 核對，v6.54～v6.62 受控修改完整承接；未使用作廢 v6.52／v6.53。
