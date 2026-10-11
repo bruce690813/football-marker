@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.69</title>
+<title>足球場邊記錄器 v6.71</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -25878,6 +25878,295 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
 }
 </style>
 
+<style id="v670HalftimeParityPatch">
+/* v6.70：中場／等待延長賽與比賽中畫面語言對齊。
+   1. 名單 0人／守門員 未設定：沿用暖黃色提醒。
+   2. 賽事與場地為唯讀資訊列：移除額外外框，跟進行中一致。
+   3. 時間紀錄收合列：改成單列資訊，＋／－按鈕與比賽中一致。
+   4. 開始下半場／開始延長賽 CTA：幾何語言比照賽前開始比賽。 */
+
+/* ---------- 1. 中場／等待延長賽：名單 / 守門員未設定提醒 ---------- */
+body:is(.matchStateHalftime,.matchStateExtraWait)
+  .liveQuickSetup .liveSetupStatusValue.unconfigured{
+  color:#e0b160!important;
+}
+
+/* ---------- 2. 中場／等待延長賽：賽事 / 場地改成與進行中一致的唯讀資訊列 ---------- */
+body:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show{
+  gap:4px!important;
+  margin:0 1px 6px!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .matchMetaDisplayRow{
+  min-height:34px!important;
+  height:34px!important;
+  max-height:34px!important;
+  padding:4px 10px!important;
+  border-radius:10px!important;
+  border-color:transparent!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .matchMetaDisplayIcon{
+  font-size:15px!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .matchMetaDisplayValue{
+  font-size:16.5px!important;
+  line-height:1.15!important;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext{
+  font-size:13px!important;
+  margin-left:1px!important;
+  white-space:nowrap!important;
+}
+body.liveViewportCompact:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .matchMetaDisplayRow .matchMetaDisplayValue{
+  font-size:16px!important;
+}
+body.liveViewportCompact:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext{
+  font-size:12px!important;
+}
+body.liveViewportUltra:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .matchMetaDisplayRow .matchMetaDisplayValue{
+  font-size:15.25px!important;
+}
+body.liveViewportUltra:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext{
+  font-size:11.5px!important;
+}
+
+/* ---------- 3. 中場／等待延長賽：時間紀錄改為單列，＋／－按鈕與比賽中一致 ---------- */
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open){
+  border-color:rgba(70,96,124,.23)!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeHead{
+  height:46px!important;
+  min-height:46px!important;
+  max-height:46px!important;
+  padding:0 10px!important;
+  gap:8px!important;
+  align-items:center!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeTitleBlock{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr)!important;
+  align-items:center!important;
+  column-gap:10px!important;
+  row-gap:0!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeTitle{
+  grid-column:1!important;
+  white-space:nowrap!important;
+  line-height:1!important;
+  margin:0!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeStatusLine{
+  grid-column:2!important;
+  min-width:0!important;
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:4px!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  line-height:1!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeStatusLine[hidden]{
+  display:none!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeStatusLine .timeRegulationBadge{
+  flex:0 1 auto!important;
+  min-width:0!important;
+  max-width:100%!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#9eb6cc!important;
+  font-size:14.5px!important;
+  font-weight:850!important;
+  line-height:1.1!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeStatusDivider{
+  flex:0 0 auto!important;
+  line-height:1!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeRegulationState{
+  flex:0 0 auto!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeHeadActions{
+  flex:0 0 44px!important;
+  min-width:44px!important;
+  margin:0!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeToggle{
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  padding:0!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:20px!important;
+  font-weight:850!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) #timeSummary #timeToggle{
+  position:relative!important;
+  isolation:isolate;
+  box-sizing:border-box!important;
+  width:44px!important;
+  min-width:44px!important;
+  max-width:44px!important;
+  flex:0 0 44px!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:13px!important;
+  box-shadow:none!important;
+  color:#e5edf6!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) #timeSummary #timeToggle::before{
+  content:"";
+  position:absolute;
+  inset:5px;
+  z-index:-1;
+  border-radius:9px;
+  background:rgba(16,32,49,.66);
+  border:1px solid rgba(94,121,148,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  pointer-events:none;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) #timeSummary #timeToggle:active::before{
+  background:rgba(28,51,74,.85);
+  border-color:rgba(125,156,186,.42);
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) #timeSummary:not(.open) .timeTitleBlock:has(.timeStatusLine[hidden]){
+  grid-template-columns:auto minmax(0,1fr)!important;
+}
+@media(max-width:390px){
+  body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeHead{
+    height:44px!important;
+    min-height:44px!important;
+    max-height:44px!important;
+    padding-left:8px!important;
+    padding-right:8px!important;
+    gap:6px!important;
+  }
+  body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeTitleBlock{
+    column-gap:7px!important;
+  }
+  body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeTitle{
+    font-size:17px!important;
+  }
+  body:is(.matchStateHalftime,.matchStateExtraWait) .timeSummary:not(.open) .timeStatusLine .timeRegulationBadge{
+    font-size:13.5px!important;
+    letter-spacing:0!important;
+  }
+}
+@media(max-width:350px){
+  body:is(.matchStateHalftime,.matchStateExtraWait) #timeSummary:not(.open) .timeHead{
+    padding-left:4px!important;
+    padding-right:4px!important;
+    gap:4px!important;
+  }
+  body:is(.matchStateHalftime,.matchStateExtraWait) #timeSummary:not(.open) .timeTitleBlock{
+    column-gap:2px!important;
+  }
+  body:is(.matchStateHalftime,.matchStateExtraWait) #timeSummary:not(.open) .timeTitle{
+    font-size:14.5px!important;
+  }
+  body:is(.matchStateHalftime,.matchStateExtraWait) #timeSummary:not(.open) .timeStatusLine{
+    gap:2px!important;
+  }
+  body:is(.matchStateHalftime,.matchStateExtraWait) #timeSummary:not(.open) .timeRegulationState.overtime{
+    font-size:12px!important;
+  }
+}
+
+/* ---------- 4. 中場／等待延長賽：主 CTA 幾何語言比照賽前開始比賽 ---------- */
+body:is(.matchStateHalftime,.matchStateExtraWait) .controls.singleAction #startBtn:not([hidden]){
+  width:100%!important;
+  min-height:50px!important;
+  height:50px!important;
+  max-height:50px!important;
+  border-radius:12px!important;
+  font-size:17px!important;
+  font-weight:900!important;
+}
+@media(max-width:390px){
+  body:is(.matchStateHalftime,.matchStateExtraWait) .controls.singleAction #startBtn:not([hidden]){
+    min-height:48px!important;
+    height:48px!important;
+    max-height:48px!important;
+    font-size:16.5px!important;
+  }
+}
+@media(max-width:350px){
+  body:is(.matchStateHalftime,.matchStateExtraWait) .controls.singleAction #startBtn:not([hidden]){
+    font-size:16px!important;
+  }
+}
+</style>
+
+
+<style id="v671ExtraTimeShortLabelAndFullTimeTogglePatch">
+/* v6.71：只有 350px 以下的延長賽收合列，以短字取代可能截斷的全長規定時間。
+   螢幕較寬、其他階段、展開詳情與原始比賽設定均維持原有文字。 */
+#timeSummary .timeRegulationShort{display:none!important;}
+@media(max-width:350px){
+  /* 精簡資訊即使在小螢幕，也保留標題與數值之間可辨識的空隙。 */
+  body.matchStateExtraActive #timeSummary:not(.open) .timeTitleBlock{
+    column-gap:5px!important;
+  }
+  body.matchStateExtraActive #timeSummary:not(.open) .timeRegulationBadge:has(.timeRegulationShort) .timeRegulationFull{
+    display:none!important;
+  }
+  body.matchStateExtraActive #timeSummary:not(.open) .timeRegulationBadge .timeRegulationShort{
+    display:inline!important;
+    white-space:nowrap!important;
+  }
+}
+/* 全場時間紀錄的 ＋／－ 只統一外觀；可點擊面積仍為 v6.66 的 44px。 */
+body.resultMode #timeSummary #timeToggle{
+  position:relative!important;
+  isolation:isolate;
+  background:transparent!important;
+  border:0!important;
+  border-radius:13px!important;
+  box-shadow:none!important;
+  font-size:20px!important;
+  font-weight:850!important;
+  color:#e5edf6!important;
+}
+body.resultMode #timeSummary #timeToggle::before{
+  content:"";
+  position:absolute;
+  inset:5px;
+  z-index:-1;
+  border-radius:9px;
+  background:rgba(16,32,49,.66);
+  border:1px solid rgba(94,121,148,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  pointer-events:none;
+}
+body.resultMode #timeSummary #timeToggle:active::before{
+  background:rgba(28,51,74,.85);
+  border-color:rgba(125,156,186,.42);
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25892,7 +26181,7 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.69</span>
+      <span class="headerVersion">v6.71</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28845,6 +29134,38 @@ function regulationCompactText(){
   }
   return `${state.regulationMinutes} 分鐘`;
 }
+function setTimeRegulationBadgeText(timeBadge){
+  if(!timeBadge) return;
+  const fullText=`規定 ${regulationCompactText()}`;
+  const shortText=state.multiPeriod && state.extraTime && state.extraTimeMinutes
+    ? `每半${state.regulationMinutes}分＋延${state.extraTimeMinutes}分` : '';
+  // renderRegulationTimeAlert() runs on every animation frame; only update DOM when content changes.
+  if(timeBadge.dataset.v671FullText===fullText && timeBadge.dataset.v671ShortText===shortText) return;
+  const fullSpan=document.createElement('span');
+  fullSpan.className='timeRegulationFull';
+  fullSpan.textContent=fullText;
+  timeBadge.replaceChildren(fullSpan);
+  if(shortText){
+    const shortSpan=document.createElement('span');
+    shortSpan.className='timeRegulationShort';
+    shortSpan.setAttribute('aria-hidden','true');
+    shortSpan.textContent=shortText;
+    timeBadge.appendChild(shortSpan);
+  }
+  timeBadge.dataset.v671FullText=fullText;
+  timeBadge.dataset.v671ShortText=shortText;
+  timeBadge.setAttribute('aria-label',fullText);
+  timeBadge.title=fullText;
+}
+function clearTimeRegulationBadgeText(timeBadge){
+  if(!timeBadge) return;
+  timeBadge.textContent='';
+  delete timeBadge.dataset.v671FullText;
+  delete timeBadge.dataset.v671ShortText;
+  timeBadge.removeAttribute('aria-label');
+  timeBadge.removeAttribute('title');
+}
+
 function syncRegulationPlacement(){
   const regBox=byId('regBox');
   const preHost=byId('preRegulationHost');
@@ -28885,7 +29206,7 @@ function syncRegulationPlacement(){
   if(timeLine && timeBadge){
     if(hasBegun && state.regulationMinutes){
       timeLine.hidden=false;
-      timeBadge.textContent=`規定 ${regulationCompactText()}`;
+      setTimeRegulationBadgeText(timeBadge);
       if(timeDivider) timeDivider.hidden=true;
       if(timeState){
         timeState.hidden=true;
@@ -28894,7 +29215,7 @@ function syncRegulationPlacement(){
       }
     }else{
       timeLine.hidden=true;
-      timeBadge.textContent='';
+      clearTimeRegulationBadgeText(timeBadge);
       if(timeDivider) timeDivider.hidden=true;
       if(timeState){
         timeState.hidden=true;
@@ -32541,7 +32862,7 @@ function renderRegulationTimeAlert(sampledElapsedSec=null){
 
     if(hasBegun && mins){
       timeLine.hidden=false;
-      timeBadge.textContent=`規定 ${regulationCompactText()}`;
+      setTimeRegulationBadgeText(timeBadge);
       if(timeDivider) timeDivider.hidden=true;
       if(timeState){
         timeState.hidden=true;
@@ -32550,7 +32871,7 @@ function renderRegulationTimeAlert(sampledElapsedSec=null){
       }
     }else{
       timeLine.hidden=true;
-      timeBadge.textContent='';
+      clearTimeRegulationBadgeText(timeBadge);
       if(timeDivider) timeDivider.hidden=true;
       if(timeState){
         timeState.hidden=true;
@@ -32563,7 +32884,7 @@ function renderRegulationTimeAlert(sampledElapsedSec=null){
   const setTimeStatus=(text,statusClass)=>{
     if(!timeLine || !timeBadge || !timeState) return;
     timeLine.hidden=false;
-    timeBadge.textContent=`規定 ${regulationCompactText()}`;
+    setTimeRegulationBadgeText(timeBadge);
     if(timeDivider) timeDivider.hidden=false;
     timeState.hidden=false;
     timeState.textContent=text;
