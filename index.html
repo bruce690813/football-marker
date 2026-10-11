@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.55</title>
+<title>足球場邊記錄器 v6.58</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -25114,6 +25114,138 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubS
 }
 </style>
 
+<style id="v656VisibleRhythmAndReloadStabilityPatch">
+/* v6.56: 在 v6.51 原始程式上累加 v6.54/v6.55，針對手機進行中
+   賽事資訊與跨卡片的垂直節奏做具體修正。保留既有高度、配色及按鈕功能。 */
+
+/* 不論一般／Compact／Ultra：資訊卡之間保留可辨識的呼吸空間。
+   v6.50 曾把 compact 列間距降為 1-2px，覆蓋 v6.55 的細微調整。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) .liveMetaStrip.show,
+body.liveViewportCompact:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) .liveMetaStrip.show,
+body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) .liveMetaStrip.show{
+  gap:8px!important;
+  margin-bottom:10px!important;
+}
+/* 保留賽事／場地原本的高度：40px／Compact 38px／Ultra 35px。 */
+
+/* 跨區留白由 5 段累加造成，僅收窄非必要空白，不使用負外距。
+   結束比賽到進球：約 22px → 約 14px（寬度不同可能有 1-3px 差異）。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #matchCard{
+  margin-bottom:5px!important;
+  padding-bottom:4px!important;
+}
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #matchCard .controls{
+  margin-bottom:2px!important;
+}
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection,
+body.liveViewportCompact:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection,
+body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubSection{
+  margin-top:0!important;
+  padding-top:1px!important;
+}
+/* 繼續完整保留 v6.55 彩色事件按鈕 6px 垂直間距。 */
+</style>
+
+<style id="v657QuickEventFullTeamPatch">
+/* v6.57: 僅調整「本場事件統計」進球／射門／撲救／防守細節（唯讀 quickDetailItem）。
+   既有六欄固定單列使隊名被截斷；改為兩行且僅隊名允許依內容自然換行。
+   第一行：筆序／時間／時段。第二行：完整隊名／背號／助攻或其他資訊。
+   不動完整事件紀錄、計時、事件資料格式、其他頁面及既有色彩。 */
+#logModal .logModalBody .item.quickDetailItem{
+  grid-template-columns:max-content max-content max-content minmax(0,1fr) max-content max-content!important;
+  grid-template-rows:minmax(20px,auto) minmax(24px,auto)!important;
+  column-gap:6px!important;
+  row-gap:4px!important;
+  min-height:66px!important;
+  height:auto!important;
+  padding:8px 0!important;
+  align-items:center!important;
+}
+#logModal .quickDetailItem .qdSeq{grid-column:1;grid-row:1}
+#logModal .quickDetailItem .qdTime{grid-column:2;grid-row:1}
+#logModal .quickDetailItem .qdPeriod{grid-column:3;grid-row:1;padding-inline:8px}
+#logModal .quickDetailItem .qdTeam{
+  grid-column:1 / 5;grid-row:2;
+  min-width:0;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+#logModal .quickDetailItem .qdPlayer{grid-column:5;grid-row:2;justify-self:start}
+#logModal .quickDetailItem .qdExtra{grid-column:6;grid-row:2;justify-self:end}
+@media(max-width:350px){
+  #logModal .logModalBody .item.quickDetailItem{
+    grid-template-columns:max-content max-content max-content minmax(0,1fr) max-content max-content!important;
+    column-gap:5px!important;
+    row-gap:4px!important;
+  }
+  #logModal .quickDetailItem .qdPeriod{padding-inline:6px}
+}
+</style>
+
+<style id="v658IndependentQuickDetailLayouts">
+/* v6.58: 僅分離本場事件統計的唯讀明細；不碰完整事件紀錄。
+   進球：空間允許時單行，隊名盡量顯示至少前四個中文字，超出以省略號結尾。
+   射門／撲救／防守：獨立單行優先配置，隊名不截斷；不足時自然換行。
+   計分資訊、烏龍球、背號、助攻均保留；小螢幕容不下時允許兩行。 */
+#logModal .logModalBody .item.quickDetailItem.quickDetailGoal,
+#logModal .logModalBody .item.quickDetailItem.quickDetailOther{
+  display:grid!important;
+  grid-template-columns:max-content max-content max-content minmax(0,1fr) max-content max-content!important;
+  grid-template-rows:minmax(44px,auto)!important;
+  gap:4px!important;
+  align-items:center!important;
+  padding:8px 0!important;
+  min-height:60px!important;
+  height:auto!important;
+}
+#logModal .quickDetailItem.quickDetailGoal .qdSeq,
+#logModal .quickDetailItem.quickDetailOther .qdSeq{grid-column:1;grid-row:1}
+#logModal .quickDetailItem.quickDetailGoal .qdTime,
+#logModal .quickDetailItem.quickDetailOther .qdTime{grid-column:2;grid-row:1}
+#logModal .quickDetailItem.quickDetailGoal .qdPeriod,
+#logModal .quickDetailItem.quickDetailOther .qdPeriod{grid-column:3;grid-row:1;padding-inline:5px}
+#logModal .quickDetailItem.quickDetailGoal .qdTeam,
+#logModal .quickDetailItem.quickDetailOther .qdTeam{grid-column:4;grid-row:1;min-width:0}
+#logModal .quickDetailItem.quickDetailGoal .qdPlayer,
+#logModal .quickDetailItem.quickDetailOther .qdPlayer{grid-column:5;grid-row:1;justify-self:start}
+#logModal .quickDetailItem.quickDetailGoal .qdExtra,
+#logModal .quickDetailItem.quickDetailOther .qdExtra{grid-column:6;grid-row:1;justify-self:end}
+/* 進球的隊名採單行省略；以 minmax 留出四個中文字加省略符號的寬度。 */
+#logModal .logModalBody .item.quickDetailItem.quickDetailGoal{
+  grid-template-columns:max-content max-content max-content minmax(75px,1fr) max-content max-content!important;
+}
+#logModal .quickDetailItem.quickDetailGoal .qdTeam{
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+}
+/* 非進球獨立設定；不受進球隊名最小欄寬／省略規則牽制。 */
+#logModal .quickDetailItem.quickDetailOther .qdTeam{
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+@media(max-width:350px){
+  /* 特殊狀況：三位數分鐘或三位數筆序，單行塞不下才安全分成兩行。 */
+  #logModal .logModalBody .item.quickDetailItem.quickDetailGoal.quickDetailLongMeta{
+    grid-template-columns:max-content max-content max-content minmax(0,1fr) max-content max-content!important;
+    grid-template-rows:minmax(23px,auto) minmax(25px,auto)!important;
+    row-gap:4px!important;
+    min-height:66px!important;
+  }
+  #logModal .quickDetailGoal.quickDetailLongMeta .qdTeam{grid-column:1 / 5;grid-row:2}
+  #logModal .quickDetailGoal.quickDetailLongMeta .qdPlayer{grid-column:5;grid-row:2}
+  #logModal .quickDetailGoal.quickDetailLongMeta .qdExtra{grid-column:6;grid-row:2}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25128,7 +25260,7 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive) #eventHubS
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.55</span>
+      <span class="headerVersion">v6.58</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -30868,8 +31000,11 @@ function renderLogTo(container, filterEvent=null){
     const eventKey=String(m.event||'event').toLowerCase().replace(/[^a-z0-9_-]/g,'');
     const criticalClass=['GOAL','RED_CARD'].includes(m.event) ? ' logEvent-critical' : '';
     row.className=readOnlyDetail
-      ? 'item quickDetailItem'
+      ? `item quickDetailItem ${m.event==='GOAL'?'quickDetailGoal':'quickDetailOther'}`
       : `item logTimelineItem logEvent-${eventKey}${criticalClass}`;
+    if(readOnlyDetail && m.event==='GOAL' && (fmtMMSS(m.seconds).length>5 || shownSeq>=100)){
+      row.classList.add('quickDetailLongMeta');
+    }
 
     const team=markerPlayerTeamDisplay(m);
     const safeTeam=team ? escapeHtml(team) : '';
@@ -34167,7 +34302,7 @@ function settleInitialViewportAtTop(){
 
 window.addEventListener('pageshow',e=>{
   // bfcache 回上一頁時維持原位置；一般開啟 / reload 只在初始 frame 回頁首。
-  if(!e.persisted && initialStartAtTop) settleInitialViewportAtTop();
+  if(!e.persisted && initialStartAtTop && document.documentElement.classList.contains('appBooting')) settleInitialViewportAtTop();
 },{capture:true});
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -34229,7 +34364,8 @@ window.addEventListener('pagehide',persistBeforeBackgroundSuspend,{capture:true}
 
 tick();
 syncVisualViewport();
-window.finishAppBoot();
+// v6.56: 在下方動態密度腳本完成首次同步判斷後，再解除 boot 遮罩。
+// 避免已顯示賽前/Live 排版後，下一幀才變 Compact／Ultra 而跳畫面。
 maybeOfferLongDurationNotice();
 setTimeout(showMissingMatchRecoveryIfNeeded,160);
 
@@ -34311,6 +34447,20 @@ setTimeout(showMissingMatchRecoveryIfNeeded,160);
     }
   }
 
+  // v6.56: 初次顯示前同步套用原有 Compact/Ultra 判斷，非首次仍維持原定時檢查。
+  window.fitLiveViewportBeforeReveal=function(){
+    if(!isActiveLiveState()) return;
+    const safeBottom=liveSafeViewportBottom();
+    const bottom=recordBottom();
+    if(bottom!==null && bottom>safeBottom+2){
+      document.body.classList.add('liveViewportCompact');
+      const compactBottom=recordBottom();
+      if(compactBottom!==null && compactBottom>liveSafeViewportBottom()+2){
+        document.body.classList.add('liveViewportUltra');
+      }
+    }
+  };
+
   window.scheduleLiveViewportFit=function(){
     if(fitRaf) cancelAnimationFrame(fitRaf);
     fitRaf=requestAnimationFrame(()=>{
@@ -34351,6 +34501,11 @@ setTimeout(showMissingMatchRecoveryIfNeeded,160);
     window.scheduleLiveViewportFit();
   }
 })();
+</script>
+<script id="v656BeforeFirstPaintBootRelease">
+// 原有主程式完成資料還原；在主畫面首次顯示前設定密度，再釋放載入遮罩。
+window.fitLiveViewportBeforeReveal?.();
+window.finishAppBoot?.();
 </script>
 
 </body>
