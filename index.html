@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.59</title>
+<title>足球場邊記錄器 v6.60</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -25363,6 +25363,101 @@ body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtra
 }
 </style>
 
+<style id="v660QuickDetailCompactSingleLinePatch">
+/* v6.60: 四種本場事件統計細節只佔一行，固定欄位起點。
+ * 壓縮 v6.59 浪費的筆序/時間/全場保留寬度。
+ * 完整隊名、球員背號、助攻／烏龍球不換行；超長內容只在該筆水平滑動。
+ * 唯讀 quickDetailItem 專用，不影響可編輯的完整事件紀錄。 */
+#logModal .logModalBody .item.quickDetailItem{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-height:62px!important;
+  height:auto!important;
+  padding:10px 0!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+}
+#logModal .logModalBody .item.quickDetailItem::-webkit-scrollbar{display:none}
+#logModal .quickDetailItem .qdAlignedLine{
+  display:grid!important;
+  grid-template-columns:35px 41px 22px minmax(105px,max-content) 30px max-content!important;
+  column-gap:4px!important;
+  align-items:baseline!important;
+  min-width:0;
+  width:max-content;
+  box-sizing:border-box;
+  white-space:nowrap;
+}
+#logModal .quickDetailItem .qdAlignedLine > *{
+  display:block!important;
+  min-width:0!important;
+  max-width:none!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  grid-row:1!important;
+  justify-self:start!important;
+  align-self:baseline!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:left!important;
+  line-height:1.4!important;
+  box-shadow:none!important;
+}
+#logModal .quickDetailItem .qdAlignedLine .qdSeq{
+  grid-column:1!important;font-size:11px!important;
+}
+#logModal .quickDetailItem .qdAlignedLine .qdTime{
+  grid-column:2!important;font-size:15px!important;font-variant-numeric:tabular-nums!important;
+}
+#logModal .quickDetailItem .qdAlignedLine .qdPeriod{
+  grid-column:3!important;font-size:11px!important;
+  border:0!important;border-radius:0!important;background:transparent!important;
+}
+#logModal .quickDetailItem .qdAlignedLine .qdTeam{
+  grid-column:4!important;font-size:15px!important;
+}
+#logModal .quickDetailItem .qdAlignedLine .qdPlayer{
+  grid-column:5!important;font-size:17px!important;
+}
+#logModal .quickDetailItem .qdAlignedLine .qdExtra{
+  grid-column:6!important;font-size:12px!important;
+}
+/* 中小型 iPhone：優先減少間距，不破壞固定欄位對齊。
+   320px 等窄裝置空間不足時，保留全文並只讓該筆左右捲動。 */
+@media(max-width:380px){
+  #logModal .quickDetailItem .qdAlignedLine{
+    grid-template-columns:35px 40px 21px minmax(99px,max-content) 27px max-content!important;
+    column-gap:3px!important;
+  }
+  #logModal .quickDetailItem .qdAlignedLine .qdSeq{font-size:11px!important}
+  #logModal .quickDetailItem .qdAlignedLine .qdTime{font-size:14px!important}
+  #logModal .quickDetailItem .qdAlignedLine .qdPeriod{font-size:10px!important}
+  #logModal .quickDetailItem .qdAlignedLine .qdTeam{font-size:14px!important}
+  #logModal .quickDetailItem .qdAlignedLine .qdPlayer{font-size:16px!important}
+  #logModal .quickDetailItem .qdAlignedLine .qdExtra{font-size:11px!important}
+}
+@media(max-width:340px){
+  #logModal .quickDetailItem .qdAlignedLine{
+    grid-template-columns:35px 39px 21px minmax(89px,max-content) 24px max-content!important;
+    column-gap:3px!important;
+  }
+  #logModal .quickDetailItem .qdAlignedLine .qdSeq{font-size:10.5px!important}
+  #logModal .quickDetailItem .qdAlignedLine .qdTime{font-size:13px!important}
+  #logModal .quickDetailItem .qdAlignedLine .qdPeriod{font-size:9.5px!important}
+  #logModal .quickDetailItem .qdAlignedLine .qdTeam{font-size:12px!important}
+  #logModal .quickDetailItem .qdAlignedLine .qdPlayer{font-size:14px!important}
+  #logModal .quickDetailItem .qdAlignedLine .qdExtra{font-size:10px!important}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25377,7 +25472,7 @@ body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtra
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.59</span>
+      <span class="headerVersion">v6.60</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -31161,14 +31256,13 @@ function renderLogTo(container, filterEvent=null){
         m.event==='GOAL' && !isOwnGoal && m.assist_number?`助攻 ${m.assist_number}`:''
       ].filter(Boolean).join('，');
       row.innerHTML=`
-        <div class="qdMeta">
+        <div class="qdAlignedLine">
           <span class="qdSeq">第${shownSeq}筆</span>
           <span class="qdTime">${fmtMMSS(m.seconds)}</span>
           <span class="qdPeriod">${escapeHtml(period||'全場')}</span>
-        </div>
-        <div class="qdWho">
           <span class="qdTeam${isOwnGoal?' qdTeamOwnGoal':''}" title="${safeTeam||'未指定球隊'}${isOwnGoal?'（烏龍）':''}">${safeTeam||'未指定球隊'}</span>
-          <span class="qdRight"><span class="qdPlayer">${playerText}</span>${extraText}</span>
+          <span class="qdPlayer">${playerText}</span>
+          ${extraText}
         </div>
       `;
       row.setAttribute('aria-label',accessibleParts);
