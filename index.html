@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.65</title>
+<title>足球場邊記錄器 v6.66</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -25709,6 +25709,53 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode
   }
 }
 </style>
+
+<style id="v666TimeToggleIconPatch">
+/* v6.66：時間紀錄右方改為 ＋／－，回收文字按鈕佔用寬度。
+   沿用原高度和配色，視覺按鈕保留 44px 水平／垂直觸控區。 */
+#timeSummary #timeToggle{
+  box-sizing:border-box!important;
+  width:44px!important;
+  min-width:44px!important;
+  max-width:44px!important;
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  padding:0!important;
+  display:inline-flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  font-size:25px!important;
+  font-weight:750!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  flex:0 0 44px!important;
+}
+#timeSummary .timeHeadActions{flex:0 0 44px!important;min-width:44px!important}
+/* 收合時把縮減的空間留給規定時間，不能再被非必要的保留寬度壓縮。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode)
+  #timeSummary:not(.open) .timeTitleBlock{
+  flex:1 1 auto!important;
+  min-width:0!important;
+}
+/* 320～350px：進行中有「超時」時優先完整顯示規定時間，不截字。 */
+@media(max-width:350px){
+  body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode)
+    #timeSummary:not(.open) .timeHead{
+    padding-left:4px!important;
+    padding-right:4px!important;
+    gap:4px!important;
+  }
+  body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode)
+    #timeSummary:not(.open) .timeTitleBlock{column-gap:2px!important}
+  body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode)
+    #timeSummary:not(.open) .timeTitle{font-size:14.5px!important}
+  body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode)
+    #timeSummary:not(.open) .timeStatusLine{gap:2px!important}
+  body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode)
+    #timeSummary:not(.open) .timeRegulationState.overtime{font-size:12px!important}
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25723,7 +25770,7 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.65</span>
+      <span class="headerVersion">v6.66</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -25887,7 +25934,7 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode
           </div>
         </div>
         <div class="timeHeadActions">
-          <button class="timeToggle" id="timeToggle" onclick="toggleTimeBox()">展開</button>
+          <button class="timeToggle" id="timeToggle" type="button" onclick="toggleTimeBox()" aria-label="展開時間紀錄" title="展開時間紀錄" aria-expanded="false" aria-controls="timeDetail">＋</button>
         </div>
       </div>
       <div class="longDurationInline" id="longDurationInline" hidden role="status" aria-live="polite">
@@ -25902,7 +25949,7 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.resultMode
         <div class="timeCell"><div class="label">開始時間</div><div class="value" id="compactStart">--:--:--</div></div>
         <div class="timeCell"><div class="label">結束時間</div><div class="value" id="compactEnd">--:--:--</div></div>
       </div>
-      <div class="timeDetail">
+      <div class="timeDetail" id="timeDetail">
         <div class="timeRecordDate" id="timeRecordDate" hidden>
           <span>比賽日期</span><strong id="timeRecordDateValue">----</strong>
         </div>
@@ -28774,7 +28821,15 @@ function renderTimeBox(){
   syncRegulationPlacement();
 
   box.classList.toggle('open', timeExpanded);
-  byId('timeToggle').textContent=timeExpanded?'收合':'展開';
+  // v6.66：收合／展開使用符號，保持可辨識的無障礙名稱與狀態。
+  const timeToggle=byId('timeToggle');
+  if(timeToggle){
+    const action=timeExpanded?'收合時間紀錄':'展開時間紀錄';
+    timeToggle.textContent=timeExpanded?'－':'＋';
+    timeToggle.setAttribute('aria-label',action);
+    timeToggle.setAttribute('title',action);
+    timeToggle.setAttribute('aria-expanded',String(timeExpanded));
+  }
 
   // 整場邊界必須取自 periods 的第一段 / 最後一段，而不是目前段落 startEpoch。
   const matchEnd=matchEndEpoch();
