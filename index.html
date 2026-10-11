@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.67</title>
+<title>足球場邊記錄器 v6.68</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -25787,6 +25787,56 @@ body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtra
   font-size:11.5px!important;
 }
 </style>
+
+<style id="v668PreMatchVisualRhythmPatch">
+/* v6.68：僅限賽前畫面，次要輸入框線與欄位節奏微調。
+   不修改原有色系、字型、列高、按鈕尺寸或其他階段 CSS。 */
+/* 同群組兩列保留較緊的 9px；各功能群組統一較寬鬆的 12px。 */
+body.matchStatePre .matchMetaRow{row-gap:9px!important;}
+body.matchStatePre .matchMetaRow,
+body.matchStatePre .dayMatchMeta,
+body.matchStatePre .broadcastScoreboard,
+body.matchStatePre .preVenueStandalone,
+body.matchStatePre .preRegulationSection,
+body.matchStatePre .preQuickSetup{
+  margin-top:0!important;
+  margin-bottom:12px!important;
+}
+/* 次要可輸入項目降低常態框線亮度，仍保留可辨識範圍。 */
+body.matchStatePre .stageMetaField:not(:focus-within),
+body.matchStatePre .preVenueStandalone:not(:focus-within){
+  border-color:rgba(70,96,124,.23)!important;
+}
+body.matchStatePre .dayMatchMeta{
+  border-color:rgba(61,84,110,.17)!important;
+}
+body.matchStatePre .preRegulationSection:not(.needsAttention):not(:focus-within){
+  border-color:rgba(70,96,124,.23)!important;
+}
+/* "修改" 降為次要動作，保留原來 32px 高度、觸控範圍與字體。 */
+body.matchStatePre .dayMatchEditBtn:not(.editing):not(:focus-visible){
+  border-color:rgba(94,121,148,.17)!important;
+  background:rgba(16,32,49,.40)!important;
+}
+/* 焦點、需注意狀態沿用原有高對比規則，不能因淡框變難辨認。 */
+body.matchStatePre #matchCard .preMetaField:focus-within{
+  border-color:rgba(56,189,248,.82)!important;
+  box-shadow:0 0 0 2px rgba(56,189,248,.13)!important;
+}
+body.matchStatePre .preRegulationSection.needsAttention{
+  border-color:rgba(245,158,11,.72)!important;
+}
+@media(max-width:350px){
+  body.matchStatePre .matchMetaRow{row-gap:8px!important;}
+  body.matchStatePre .matchMetaRow,
+  body.matchStatePre .dayMatchMeta,
+  body.matchStatePre .broadcastScoreboard,
+  body.matchStatePre .preVenueStandalone,
+  body.matchStatePre .preRegulationSection,
+  body.matchStatePre .preQuickSetup{margin-bottom:10px!important;}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25801,7 +25851,7 @@ body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtra
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.67</span>
+      <span class="headerVersion">v6.68</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
