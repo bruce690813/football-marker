@@ -25186,7 +25186,7 @@ body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtra
 </style>
 
 <style id="v658QuickDetailGroupedFlowPatch">
-/* v6.58 僅針對「本場事件統計」四種唯讀明細：取消時段膠囊，
+/* v6.59 僅針對「本場事件統計」四種唯讀明細：取消時段膠囊，
    讓隊名 / 球員背號 / 助攻（或比分、烏龍球）同組相鄰排列。
    既有事件紀錄、計時、資料格式、資訊框樣式均不變。 */
 #logModal .logModalBody .item.quickDetailItem{
@@ -25268,71 +25268,98 @@ body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtra
 }
 </style>
 
-<style id="v659SingleRowQuickDetailPatch">
-/* v6.59: 依需求將四種事件統計明細改回「每筆事件一行」。
-   第幾筆、時間、時段、完整隊名、背號、助攻依閱讀順序緊密相鄰，
-   不以 Grid 固定空欄，不使用膠囊；長隊名／極窄裝置可逐筆橫向捲動，
-   保留完整文字、避免重疊或被省略號截斷；不改動完整事件紀錄。 */
+
+<style id="v659QuickDetailAlignedColumnsPatch">
+/* v6.59：四種唯讀事件細節改為固定欄位對齊。
+   第N筆 / 時間 / 全場 置於固定左欄；隊名為中間彈性欄；
+   球員背號與助攻、烏龍球等額外資訊共用右側固定欄，避免第9筆/第10筆造成全列位移。 */
 #logModal .logModalBody .item.quickDetailItem{
-  display:flex!important;
-  flex-direction:row!important;
-  flex-wrap:nowrap!important;
+  display:grid!important;
+  grid-template-columns:56px 78px 34px minmax(0,1fr) 112px!important;
+  column-gap:8px!important;
+  row-gap:2px!important;
   align-items:center!important;
-  justify-content:flex-start!important;
-  gap:6px!important;
+  min-height:70px!important;
   height:auto!important;
-  min-height:62px!important;
-  width:100%!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-  padding:9px 0!important;
-  overflow-x:auto!important;
-  overflow-y:hidden!important;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
+  padding:10px 0!important;
 }
-#logModal .logModalBody .item.quickDetailItem::-webkit-scrollbar{display:none}
-#logModal .quickDetailItem > .qdSeq,
-#logModal .quickDetailItem > .qdTime,
-#logModal .quickDetailItem > .qdPeriod,
-#logModal .quickDetailItem > .qdTeam,
-#logModal .quickDetailItem > .qdPlayer,
-#logModal .quickDetailItem > .qdExtra{
-  flex:0 0 auto!important;
-  min-width:0!important;
-  max-width:none!important;
-  white-space:nowrap!important;
-  overflow:visible!important;
-  text-overflow:clip!important;
-  margin:0!important;
-  padding:0!important;
-  grid-column:auto!important;
-  grid-row:auto!important;
-  justify-self:auto!important;
-  text-align:left!important;
-  line-height:1.4!important;
+#logModal .quickDetailItem .qdMeta,
+#logModal .quickDetailItem .qdWho{display:contents!important}
+#logModal .quickDetailItem .qdSeq{
+  grid-column:1;grid-row:1 / span 2;
+  align-self:start;
+  padding-top:1px;
+  white-space:nowrap;
 }
-#logModal .quickDetailItem > .qdSeq{font-size:12px!important}
-#logModal .quickDetailItem > .qdTime{font-size:17px!important;font-variant-numeric:tabular-nums}
-#logModal .quickDetailItem > .qdPeriod{
-  font-size:11px!important;
+#logModal .quickDetailItem .qdTime{
+  grid-column:2;grid-row:1 / span 2;
+  align-self:start;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+#logModal .quickDetailItem .qdPeriod{
+  grid-column:3;grid-row:1 / span 2;
+  align-self:start;
+  white-space:nowrap;
   background:transparent!important;
   border:0!important;
   box-shadow:none!important;
   border-radius:0!important;
+  padding:0!important;
+  text-align:left!important;
 }
-#logModal .quickDetailItem > .qdTeam{font-size:15px!important;overflow-wrap:normal!important;word-break:keep-all!important}
-#logModal .quickDetailItem > .qdPlayer{font-size:17px!important}
-#logModal .quickDetailItem > .qdExtra{font-size:12px!important}
-/* 時間到隊名不需過大距離，隊名、背號與助攻保持同一個連續閱讀群組。 */
-@media(max-width:370px){
-  #logModal .logModalBody .item.quickDetailItem{gap:4px!important}
-  #logModal .quickDetailItem > .qdSeq{font-size:11px!important}
-  #logModal .quickDetailItem > .qdTime{font-size:15px!important}
-  #logModal .quickDetailItem > .qdPeriod{font-size:10.5px!important}
-  #logModal .quickDetailItem > .qdTeam{font-size:12.5px!important}
-  #logModal .quickDetailItem > .qdPlayer{font-size:15px!important}
-  #logModal .quickDetailItem > .qdExtra{font-size:10.5px!important}
+#logModal .quickDetailItem .qdTeam{
+  grid-column:4;grid-row:1 / span 2;
+  min-width:0;
+  align-self:start;
+  line-height:1.28;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+  text-align:left!important;
+}
+#logModal .quickDetailItem .qdRight{
+  grid-column:5;grid-row:1 / span 2;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:flex-start!important;
+  gap:2px;
+  min-width:0;
+  width:100%;
+  white-space:nowrap;
+  align-self:start;
+}
+#logModal .quickDetailItem .qdRight .qdPlayer,
+#logModal .quickDetailItem .qdRight .qdExtra{
+  display:block!important;
+  grid-column:auto!important;
+  grid-row:auto!important;
+  justify-self:auto!important;
+  margin:0!important;
+  text-align:left!important;
+  white-space:nowrap;
+}
+#logModal .quickDetailItem .qdRight .qdExtra{line-height:1.15}
+@media(max-width:430px){
+  #logModal .logModalBody .item.quickDetailItem{
+    grid-template-columns:54px 74px 30px minmax(0,1fr) 104px!important;
+    column-gap:7px!important;
+  }
+}
+@media(max-width:350px){
+  #logModal .logModalBody .item.quickDetailItem{
+    grid-template-columns:48px 66px 28px minmax(0,1fr) 96px!important;
+    column-gap:6px!important;
+  }
+  #logModal .quickDetailItem .qdSeq{font-size:11px}
+  #logModal .quickDetailItem .qdTime{font-size:14px}
+  #logModal .quickDetailItem .qdPeriod{font-size:10px}
+  #logModal .quickDetailItem .qdTeam{font-size:12px}
+  #logModal .quickDetailItem .qdRight .qdPlayer{font-size:14px}
+  #logModal .quickDetailItem .qdRight .qdExtra{font-size:10px}
 }
 </style>
 
@@ -31134,12 +31161,15 @@ function renderLogTo(container, filterEvent=null){
         m.event==='GOAL' && !isOwnGoal && m.assist_number?`助攻 ${m.assist_number}`:''
       ].filter(Boolean).join('，');
       row.innerHTML=`
-        <span class="qdSeq">第${shownSeq}筆</span>
-        <span class="qdTime">${fmtMMSS(m.seconds)}</span>
-        <span class="qdPeriod">${escapeHtml(period||'全場')}</span>
-        <span class="qdTeam${isOwnGoal?' qdTeamOwnGoal':''}" title="${safeTeam||'未指定球隊'}${isOwnGoal?'（烏龍）':''}">${safeTeam||'未指定球隊'}</span>
-        <span class="qdPlayer">${playerText}</span>
-        ${extraText}
+        <div class="qdMeta">
+          <span class="qdSeq">第${shownSeq}筆</span>
+          <span class="qdTime">${fmtMMSS(m.seconds)}</span>
+          <span class="qdPeriod">${escapeHtml(period||'全場')}</span>
+        </div>
+        <div class="qdWho">
+          <span class="qdTeam${isOwnGoal?' qdTeamOwnGoal':''}" title="${safeTeam||'未指定球隊'}${isOwnGoal?'（烏龍）':''}">${safeTeam||'未指定球隊'}</span>
+          <span class="qdRight"><span class="qdPlayer">${playerText}</span>${extraText}</span>
+        </div>
       `;
       row.setAttribute('aria-label',accessibleParts);
       container.appendChild(row);
@@ -33667,6 +33697,101 @@ body.resultMode.finalOutputVisible #eventHubSection.recordOnly #recordSection .r
   }
 }
 </style>
+
+<style id="v659QuickDetailAlignedColumnsPatch">
+/* v6.59：四種唯讀事件細節改為固定欄位對齊。
+   第N筆 / 時間 / 全場 置於固定左欄；隊名為中間彈性欄；
+   球員背號與助攻、烏龍球等額外資訊共用右側固定欄，避免第9筆/第10筆造成全列位移。 */
+#logModal .logModalBody .item.quickDetailItem{
+  display:grid!important;
+  grid-template-columns:56px 78px 34px minmax(0,1fr) 112px!important;
+  column-gap:8px!important;
+  row-gap:2px!important;
+  align-items:center!important;
+  min-height:70px!important;
+  height:auto!important;
+  padding:10px 0!important;
+}
+#logModal .quickDetailItem .qdMeta,
+#logModal .quickDetailItem .qdWho{display:contents!important}
+#logModal .quickDetailItem .qdSeq{
+  grid-column:1;grid-row:1 / span 2;
+  align-self:start;
+  padding-top:1px;
+  white-space:nowrap;
+}
+#logModal .quickDetailItem .qdTime{
+  grid-column:2;grid-row:1 / span 2;
+  align-self:start;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+#logModal .quickDetailItem .qdPeriod{
+  grid-column:3;grid-row:1 / span 2;
+  align-self:start;
+  white-space:nowrap;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  padding:0!important;
+  text-align:left!important;
+}
+#logModal .quickDetailItem .qdTeam{
+  grid-column:4;grid-row:1 / span 2;
+  min-width:0;
+  align-self:start;
+  line-height:1.28;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+  text-align:left!important;
+}
+#logModal .quickDetailItem .qdRight{
+  grid-column:5;grid-row:1 / span 2;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:flex-start!important;
+  gap:2px;
+  min-width:0;
+  width:100%;
+  white-space:nowrap;
+  align-self:start;
+}
+#logModal .quickDetailItem .qdRight .qdPlayer,
+#logModal .quickDetailItem .qdRight .qdExtra{
+  display:block!important;
+  grid-column:auto!important;
+  grid-row:auto!important;
+  justify-self:auto!important;
+  margin:0!important;
+  text-align:left!important;
+  white-space:nowrap;
+}
+#logModal .quickDetailItem .qdRight .qdExtra{line-height:1.15}
+@media(max-width:430px){
+  #logModal .logModalBody .item.quickDetailItem{
+    grid-template-columns:54px 74px 30px minmax(0,1fr) 104px!important;
+    column-gap:7px!important;
+  }
+}
+@media(max-width:350px){
+  #logModal .logModalBody .item.quickDetailItem{
+    grid-template-columns:48px 66px 28px minmax(0,1fr) 96px!important;
+    column-gap:6px!important;
+  }
+  #logModal .quickDetailItem .qdSeq{font-size:11px}
+  #logModal .quickDetailItem .qdTime{font-size:14px}
+  #logModal .quickDetailItem .qdPeriod{font-size:10px}
+  #logModal .quickDetailItem .qdTeam{font-size:12px}
+  #logModal .quickDetailItem .qdRight .qdPlayer{font-size:14px}
+  #logModal .quickDetailItem .qdRight .qdExtra{font-size:10px}
+}
+</style>
+
 </head><body><div class="wrap">
 <div class="card"><h1>⚽ 足球比賽摘要</h1><div class="teams"><div>${escapeHtml(state.ourTeam||'我方')}</div><div class="score">${state.ourScore} : ${state.oppScore}</div><div>${escapeHtml(state.oppTeam||'對手')}</div></div><div class="meta"><div>📅 ${escapeHtml(matchDateLabel(matchStartEpoch(),matchEndEpoch()))}${formatDayMatchLabel(state.dayMatchNumber)?`｜${escapeHtml(formatDayMatchLabel(state.dayMatchNumber))}`:''}</div>${(state.competition||state.competitionStage)?`<div>🏆 ${escapeHtml([state.competition,state.competitionStage].filter(Boolean).join('｜'))}</div>`:''}${state.venue?`<div>📍 ${escapeHtml(state.venue)}</div>`:''}</div></div>
 ${state.penalty?`<div class="card"><h2>PK 點球大戰</h2><p class="score">${penaltyGoals('our')} : ${penaltyGoals('opp')}</p><ul>${Array.from({length:Math.max(state.penalty.our.length,state.penalty.opp.length)},(_,i)=>{const a=state.penalty.our[i]||emptyPenaltyKick(),b=state.penalty.opp[i]||emptyPenaltyKick();if(!a.result&&!b.result&&!a.number&&!b.number)return '';const fmt=k=>`${k.number?'#'+escapeHtml(k.number):'無背號'} ${k.result==='GOAL'?'✓ 進球':k.result==='MISS'?'× 未進':'○ 待定'}`;return `<li>第${i+1}輪｜${escapeHtml(state.ourTeam||'我方')} ${fmt(a)}｜${escapeHtml(state.oppTeam||'對手')} ${fmt(b)}</li>`}).join('')}</ul></div>`:''}
