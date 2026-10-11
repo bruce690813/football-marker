@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.60</title>
+<title>足球場邊記錄器 v6.61</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -25458,6 +25458,79 @@ body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtra
 }
 </style>
 
+<style id="v661QuickDetailIntrinsicSafeColumnsPatch">
+/* v6.61 只修正四種唯讀事件明細的單行欄寬，不改事件資料及其他 UI。
+   v6.60 的固定 41/22/30px 欄寬在不同 Safari 字體寬度下溢出相鄰欄。
+   固定對齊的起點 + 內容最小寬度，保留清楚欄距，不擠字、不疊字。
+   隊名超長時維持原有的單筆水平捲動，絕不在單行中折行。 */
+#logModal .quickDetailItem .qdAlignedLine{
+  grid-template-columns:
+    minmax(42px,max-content)
+    max-content
+    minmax(25px,max-content)
+    minmax(113px,max-content)
+    minmax(40px,max-content)
+    max-content!important;
+  column-gap:6px!important;
+  justify-content:start!important;
+}
+#logModal .quickDetailItem .qdAlignedLine > *{
+  min-width:max-content!important;
+}
+/* 多階段比賽的「上半場／下半場／延長賽」共用時段欄寬。 */
+#logModal .quickDetailItem.quickDetailMultiPeriod .qdAlignedLine{
+  grid-template-columns:
+    minmax(42px,max-content)
+    max-content
+    minmax(38px,max-content)
+    minmax(113px,max-content)
+    minmax(40px,max-content)
+    max-content!important;
+}
+@media(max-width:380px){
+  #logModal .quickDetailItem .qdAlignedLine{
+    grid-template-columns:
+      minmax(40px,max-content)
+      max-content
+      minmax(23px,max-content)
+      minmax(102px,max-content)
+      minmax(36px,max-content)
+      max-content!important;
+    column-gap:5px!important;
+  }
+  #logModal .quickDetailItem.quickDetailMultiPeriod .qdAlignedLine{
+    grid-template-columns:
+      minmax(40px,max-content)
+      max-content
+      minmax(36px,max-content)
+      minmax(102px,max-content)
+      minmax(36px,max-content)
+      max-content!important;
+  }
+}
+@media(max-width:340px){
+  #logModal .quickDetailItem .qdAlignedLine{
+    grid-template-columns:
+      minmax(39px,max-content)
+      max-content
+      minmax(22px,max-content)
+      minmax(94px,max-content)
+      minmax(33px,max-content)
+      max-content!important;
+    column-gap:4px!important;
+  }
+  #logModal .quickDetailItem.quickDetailMultiPeriod .qdAlignedLine{
+    grid-template-columns:
+      minmax(39px,max-content)
+      max-content
+      minmax(35px,max-content)
+      minmax(94px,max-content)
+      minmax(33px,max-content)
+      max-content!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -25472,7 +25545,7 @@ body.liveViewportUltra:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtra
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.60</span>
+      <span class="headerVersion">v6.61</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -31238,6 +31311,7 @@ function renderLogTo(container, filterEvent=null){
 
     // 本場事件統計 drill-down 維持原本唯讀列表，不放編輯 / 刪除。
     if(readOnlyDetail){
+      if(state.multiPeriod) row.classList.add('quickDetailMultiPeriod');
       const playerText=m.player_number?'#'+escapeHtml(String(m.player_number)):'—';
       const isOwnGoal=Boolean(m.event==='GOAL' && m.own_goal);
       const ownGoalScoreTeam=isOwnGoal ? (teamDisplay(m.team)||'對方') : '';
