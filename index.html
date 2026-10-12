@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.79</title>
+<title>足球場邊記錄器 v6.80</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26466,6 +26466,111 @@ body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow .competitionI
 }
 </style>
 
+
+<style id="v680MetaAndTeamConsistencyPatch">
+/* v6.80：六個階段主畫面只顯示賽事名稱與選填階段，不顯示本日場次。
+   長名稱仍維持單列；過窄時允許水平滑動查看完整內容。
+   隊名只統一各階段字體基準與「對手」佔位字級，不更動長隊名縮放函式。 */
+body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+.liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:baseline!important;
+  justify-content:flex-start!important;
+  gap:0!important;
+  min-width:0!important;
+  white-space:nowrap!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  text-overflow:clip!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+  touch-action:pan-x;
+}
+body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+.liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext::-webkit-scrollbar{display:none}
+body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+.liveMetaStrip.show .competitionDisplayRow .competitionNameText{
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+  max-width:none!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  font-size:17px!important;
+  font-weight:950!important;
+  line-height:1.15!important;
+}
+body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+.liveMetaStrip.show .competitionDisplayRow .competitionInlineContext{
+  flex:0 0 auto!important;
+  max-width:none!important;
+  margin-left:2px!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  overflow-wrap:normal!important;
+  font-size:12.5px!important;
+  line-height:1.15!important;
+}
+/* v6.72 在兩個休息階段會將標題放成兩行與 48px 列高；改為單行的標準高度。 */
+body:is(.matchStateHalftime,.matchStateExtraWait)
+.liveMetaStrip.show .competitionDisplayRow{
+  min-height:34px!important;
+  height:34px!important;
+  max-height:34px!important;
+  padding-top:4px!important;
+  padding-bottom:4px!important;
+}
+/* 短隊名及未設定的「對手」使用同一個尺寸基準。
+   有實際隊名仍沿用 fitTeamNameDisplay 的自動縮字，避免長名稱被裁切。 */
+body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+.scoreRow .teamNameDisplay:not(.suffixSplit){
+  box-sizing:border-box!important;
+  padding-left:1px!important;
+  padding-right:1px!important;
+  text-align:center!important;
+  line-height:1.08!important;
+  letter-spacing:-.25px!important;
+}
+body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+.scoreRow .teamNameDisplay.empty{
+  font-size:var(--team-empty-fit-size,23px)!important;
+  font-weight:900!important;
+}
+@media(max-width:390px){
+ body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+ .scoreRow .teamNameDisplay.empty{font-size:var(--team-empty-fit-size,22px)!important;}
+ body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+ .liveMetaStrip.show .competitionDisplayRow .competitionNameText{font-size:16.5px!important;}
+}
+@media(max-width:350px){
+ body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+ .scoreRow .teamNameDisplay.empty{font-size:var(--team-empty-fit-size,21px)!important;}
+ body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+ .liveMetaStrip.show .competitionDisplayRow .competitionNameText{font-size:15px!important;}
+ body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+ .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext{font-size:11.5px!important;}
+}
+
+/* 覆蓋 v6.78 過度保守的「全場長賽事」 12px 規則：本日場次已從主畫面移除。 */
+body.resultMode .liveMetaStrip.show .competitionDisplayRow
+.matchMetaDisplayValue.resultCompetitionLong .competitionNameText{
+  font-size:16px!important;
+}
+body.resultMode .liveMetaStrip.show .competitionDisplayRow
+.matchMetaDisplayValue.resultCompetitionLong .competitionInlineContext{
+  font-size:11.5px!important;
+}
+@media(max-width:350px){
+ body.resultMode .liveMetaStrip.show .competitionDisplayRow
+ .matchMetaDisplayValue.resultCompetitionLong .competitionNameText{font-size:15px!important;}
+ body.resultMode .liveMetaStrip.show .competitionDisplayRow
+ .matchMetaDisplayValue.resultCompetitionLong .competitionInlineContext{font-size:11px!important;}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26480,7 +26585,7 @@ body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow .competitionI
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.79</span>
+      <span class="headerVersion">v6.80</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -32558,7 +32663,9 @@ function fitTeamNameDisplay(el){
   }else{
     cssVar='--team-fit-size';
     if(isShort){
-      target = vw<=350 ? 21 : (vw<=390 ? 22 : 23);
+      // v6.80：已開賽的六種畫面統一短隊名基準，必要時仍依實際寬度微縮。
+      const unifiedStates=document.body.matches('.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode');
+      target = unifiedStates ? (vw<=350 ? 18 : (vw<=380 ? 19.5 : (vw<=390 ? 21 : 22))) : (vw<=350 ? 21 : (vw<=390 ? 22 : 23));
       minimum = 18;
     }else if(isMedium){
       target = vw<=350 ? 18.5 : (vw<=390 ? 19.5 : 21);
@@ -32634,6 +32741,17 @@ function updateTeamNameDisplays(){
   applyTeamNameLayout(oppDisplay, opp, '對手');
   fitTeamNameDisplay(ourDisplay);
   fitTeamNameDisplay(oppDisplay);
+  // v6.80：若一側尚未設定，讓「對手／我方」的字級跟隨另一側短隊名的實際適配結果。
+  // 排在兩次 fitTeamNameDisplay 的 rAF 後，避免讀到上一階段尺寸。
+  requestAnimationFrame(()=>{
+    for(const [empty,filled] of [[ourDisplay,oppDisplay],[oppDisplay,ourDisplay]]){
+      if(!empty?.classList.contains('empty')) continue;
+      empty.style.removeProperty('--team-empty-fit-size');
+      if(!filled?.classList.contains('shortName') || !filled.isConnected) continue;
+      const px=getComputedStyle(filled).fontSize;
+      if(px) empty.style.setProperty('--team-empty-fit-size',px);
+    }
+  });
 }
 
 function canReviewTeamNameEdit(){
@@ -32714,7 +32832,9 @@ function renderLiveFocusUI(){
   if(shouldShow){
     const comp=String(state.competition||'').trim();
     const stage=String(state.competitionStage||'').trim();
-    const dayMatchLabel=formatDayMatchLabel(state.dayMatchNumber);
+    // v6.80：除 PK 外，進行中／中場／延長賽／全場主畫面不顯示本日場次。
+    // 僅省略此資訊列文字，不修改 state.dayMatchNumber；摘要、圖片、CSV 照常保留。
+    const dayMatchLabel=isPenalty ? formatDayMatchLabel(state.dayMatchNumber) : '';
     const venue=String(state.venue||'').trim();
     const editBtn=isResult
       ? `<button type="button" class="resultMetaEditBtn metaGroupEditBtn" onclick="openResultMetaEdit()" aria-label="修正比賽賽事、賽事階段與比賽場地" title="修正比賽資料"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span></button>`
@@ -33325,6 +33445,8 @@ function syncPreMatchScoreboardPlacement(){
 
 function render(){
   applyJerseyColorTheme();
+  // v6.80：先切換階段 CSS，再量測兩側隊名，避免延用前一階段的字級。
+  renderMatchStateUI();
   updateTeamNameDisplays();
   const ourScoreEl=byId('ourScore');
   const oppScoreEl=byId('oppScore');
@@ -33346,7 +33468,6 @@ function render(){
   }
 
   byId('count').textContent=state.markers.length;
-  renderMatchStateUI();
   syncPreMatchScoreboardPlacement();
   renderRegulationTimeAlert();
   renderQuickResult();

@@ -1,3 +1,12 @@
+# v6.80 SECURITY_CHECKLIST｜主畫面場次顯示／隊名一致性
+
+- [x] 只改主畫面顯示，不刪除 dayMatchNumber 或改寫儲存格式。
+- [x] 摘要、圖片與 CSV 原本讀取 dayMatchNumber 的邏輯保留。
+- [x] 未修改事件紀錄、計時、比賽階段、PK 或任何資料安全檢查。
+- [ ] iPhone Safari 實機驗證待使用者確認。
+
+---
+
 # v6.79 SECURITY_CHECKLIST｜全場賽事資訊單行
 
 - [x] 核對正式 v6.51 ZIP 存在，且工作原始檔與 v6.77 交付 ZIP 三檔逐位元組一致。
