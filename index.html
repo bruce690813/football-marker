@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.80</title>
+<title>足球場邊記錄器 v6.81</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26571,6 +26571,31 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow
 }
 </style>
 
+
+<style id="v681UniformBrandPitchHeaderPatch">
+/* v6.81：校正全場結果視窗在較矮手機上額外縮小品牌球場 Header 的回歸。
+   v5.170 針對全場工具列的空間調整將標題壓成 48px，導致足球中圈、說明及
+   標題版位相對賽前、LIVE、中場、下半場、等待延長賽與延長賽位移。
+   只還原全場 Header 與其他階段相同的實際高度；保留全場的底部工具與其他緊湊規則。
+   原本 .titleBlock 在 v5.106 之後 padding 為 0，因此也取消全場額外的 5px padding。 */
+@media (max-width:430px) and (max-height:950px){
+  body.resultMode.finalOutputVisible .titleBlock{
+    min-height:58px!important;
+    padding:0!important;
+  }
+}
+@media (max-width:390px) and (max-height:950px){
+  body.resultMode.finalOutputVisible .titleBlock{
+    min-height:56px!important;
+  }
+}
+@media (max-width:350px) and (max-height:950px){
+  body.resultMode.finalOutputVisible .titleBlock{
+    min-height:54px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26585,7 +26610,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.80</span>
+      <span class="headerVersion">v6.81</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">

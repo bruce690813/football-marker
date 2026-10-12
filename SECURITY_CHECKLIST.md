@@ -1,3 +1,14 @@
+# v6.81 SECURITY_CHECKLIST｜足球場標題一致性
+
+- [x] 基底：正式 v6.51 歷史原始程式與 v6.80 累加 ZIP 可讀；未使用 v6.52／v6.53。
+- [x] 僅更改全場 Header CSS 及兩處 HTML 版本標示；JS 與資料邏輯完全不變。
+- [x] 保留原有足球場配色、球場中線／中圈、球門、說明按鈕及其他狀態的 Header 樣式。
+- [x] 全場底部工具列的 CSS／結構完全保留。
+- [ ] iPhone Safari 實機操作尚待驗證。
+- [ ] 全部比賽流程、PK、PNG、CSV、iOS 分享端到端流程未於本次完整重測。
+
+---
+
 # v6.80 SECURITY_CHECKLIST｜主畫面場次顯示／隊名一致性
 
 - [x] 只改主畫面顯示，不刪除 dayMatchNumber 或改寫儲存格式。
