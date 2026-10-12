@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.81</title>
+<title>足球場邊記錄器 v6.82</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26596,6 +26596,82 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow
 }
 </style>
 
+
+<style id="v682CrossStateMetaTypographyAndContrast">
+/* v6.82 最小修正：七個顯示階段賽事名稱與場地名稱字級一致；
+   保留賽前輸入操作，以及非賽前的單行橫向捲動／次要階段字級。
+   這裡的七個階段包含額外的「等待延長賽」。 */
+body{
+  --v682-meta-type-size:17px;
+}
+@media(max-width:399px){
+  body{--v682-meta-type-size:16.5px}
+}
+@media(max-width:350px){
+  body{--v682-meta-type-size:15px}
+}
+/* 賽前：僅「賽事名稱」與「場地」，不改賽事階段、場次或時間欄。 */
+body.matchStatePre #matchCard #competition,
+body.matchStatePre #matchCard #venue{
+  font-size:var(--v682-meta-type-size)!important;
+  line-height:1.15!important;
+}
+/* 比賽中、中場、下半場、等待延長賽、延長賽、全場：統一名稱字級。 */
+body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+ .liveMetaStrip.show .competitionDisplayRow .competitionNameText,
+body.resultMode .liveMetaStrip.show .competitionDisplayRow
+ .matchMetaDisplayValue.resultCompetitionLong .competitionNameText{
+  font-size:var(--v682-meta-type-size)!important;
+  line-height:1.15!important;
+}
+body:is(.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode)
+ .liveMetaStrip.show .venueDisplayRow .matchMetaDisplayValue{
+  font-size:var(--v682-meta-type-size)!important;
+  line-height:1.15!important;
+}
+/* 仍以原規則單列滑動檢視長賽事名稱；不影響階段、場次的資料與儲存。 */
+/* 原有 veryLongName 採 2 行截斷；極長隊名（上限 15 字）在窄手機會少字。
+   僅對此類長名稱開放最多四行並適度縮字，不改短／中隊名原有字級。 */
+body:is(.matchStatePre,.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode) .scoreRow .teamNameDisplay.veryLongName:not(.suffixSplit):not(.empty){
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:4!important;
+  line-clamp:4!important;
+  font-size:15px!important;
+  line-height:1.04!important;
+  max-height:4.16em!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+  overflow:hidden!important;
+}
+@media(max-width:350px){
+  body:is(.matchStatePre,.matchStateLive,.matchStateHalftime,.matchStateSecondHalf,.matchStateExtraWait,.matchStateExtraActive,.resultMode) .scoreRow .teamNameDisplay.veryLongName:not(.suffixSplit):not(.empty){
+    font-size:12px!important;
+    line-height:1.03!important;
+    max-height:4.12em!important;
+  }
+}
+
+
+/* 賽前：只略微弱化次要欄位「非焦點」狀態的框線，維持可輸入線索。 */
+body.matchStatePre .stageMetaField:not(:focus-within),
+body.matchStatePre .preVenueStandalone:not(:focus-within){
+  border-color:rgba(70,96,124,.18)!important;
+}
+body.matchStatePre .dayMatchMeta{
+  border-color:rgba(61,84,110,.14)!important;
+}
+body.matchStatePre .preRegulationSection:not(.needsAttention):not(:focus-within){
+  border-color:rgba(70,96,124,.18)!important;
+}
+/* 全場：0 筆統計比 v6.81 更易讀，但仍弱於真正有紀錄的白字。 */
+body.resultMode.finalOutputVisible .quickResultStat:not(.hasData) strong,
+body.resultMode.finalOutputVisible .quickResultStat:disabled:not(.hasData) strong{
+  color:#b8c6d5!important;
+  opacity:.84!important;
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26610,7 +26686,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.81</span>
+      <span class="headerVersion">v6.82</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
