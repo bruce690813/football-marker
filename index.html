@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.74</title>
+<title>足球場邊記錄器 v6.75</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26351,6 +26351,20 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn:active{filter:brightness(1
 }
 </style>
 
+
+<style id="v675RosterQuickAddEntryFix">
+/* v6.75：兩個新增入口共用按需新增 Dock；鍵盤顯示時輸入列不再被清單蓋住。
+   Dock 仍僅於 rosterAdding 時顯示，不更動球衣色票／快捷背號配置。 */
+#rosterModal .rosterModalPanel.rosterAdding .rosterQuickAddDock{
+  position:relative!important;
+  z-index:6!important;
+  display:block!important;
+  min-height:0!important;
+}
+#rosterModal .rosterModalPanel.rosterAdding .rosterQuickAddArea .rosterInputRow{
+  margin:0!important;
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26365,7 +26379,7 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn:active{filter:brightness(1
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.74</span>
+      <span class="headerVersion">v6.75</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -30071,6 +30085,9 @@ function openRosterQuickAdd(options={}){
     dock.hidden=false;
     dock.appendChild(area);
     panel.classList.add('rosterAdding');
+    // v6.75：避免先前捲到名單底部的 offset 留在鍵盤開啟後。
+    const scroll=byId('rosterModal')?.querySelector('.rosterModalScroll');
+    if(scroll) scroll.scrollTop=0;
   }
   const trigger=byId('rosterQuickAddOpen');
   if(trigger){trigger.setAttribute('aria-expanded','true');trigger.hidden=true;}
@@ -30145,8 +30162,16 @@ function addRosterNumbers(){
 
   const number=parseRosterNumber(input.value);
   if(number===null){
+    const adding=!!byId('rosterModal')?.querySelector('.rosterModalPanel.rosterAdding');
+    // v6.75：點擊原本底部「＋新增」但輸入空白時，不再直接 focus 被捲到
+    // 清單底部的欄位；改進入標題下方的固定輸入模式，再開啟數字鍵盤。
+    if(!adding && !String(input.value||'').trim()){
+      openRosterQuickAdd();
+      setRosterInlineStatus('請輸入 1～99 的球員背號。','info');
+      return;
+    }
     setRosterInlineStatus('請輸入 1～99 的球員背號。','error');
-    input.focus();
+    input.focus({preventScroll:true});
     return;
   }
 
@@ -35561,7 +35586,18 @@ byId('venue').addEventListener('blur', ()=>{
   closeVenueMenu();
 });
 
-// 球員名單背號輸入維持既有邏輯。
+// v6.75：直接點底部「其他背號」輸入框也進入標題下方新增模式。
+// iOS Safari 會在輸入框 focus 時打開數字鍵盤；先改 Dock 所在位置，
+// 避免瀏覽器仍將可捲動內容定位到原本的底部欄位。
+byId('rosterInput')?.addEventListener('focus', ()=>{
+  const modal=byId('rosterModal');
+  if(!modal?.classList.contains('open')) return;
+  const panel=modal.querySelector('.rosterModalPanel');
+  if(panel && !panel.classList.contains('rosterAdding')){
+    openRosterQuickAdd();
+  }
+});
+// 球員名單原本的數字過濾、Enter 新增、重複背號驗證全部維持。
 byId('rosterInput')?.addEventListener('input', e=>{
   const cleaned=String(e.target.value||'').replace(/\D/g,'').slice(0,2);
   if(e.target.value!==cleaned) e.target.value=cleaned;
