@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.78</title>
+<title>足球場邊記錄器 v6.79</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26404,6 +26404,68 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .resultCompetitionLon
 }
 </style>
 
+<style id="v679HalftimeSingleLineCompetitionPatch">
+/* v6.79：中場賽事資訊改回單行呈現，與全場一致。
+   - 不拆成兩行。
+   - 長文字維持單行，必要時可左右滑動查看完整內容。
+   - 場地列維持原來字級與版面，不受影響。 */
+body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow{
+  min-height:34px!important;
+  height:auto!important;
+  max-height:none!important;
+  padding-top:4px!important;
+  padding-bottom:4px!important;
+}
+body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue,
+body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:baseline!important;
+  justify-content:flex-start!important;
+  gap:0!important;
+  min-width:0!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  white-space:nowrap!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+  touch-action:pan-x;
+}
+body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue::-webkit-scrollbar{display:none}
+body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow .competitionNameText{
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+  max-width:none!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  font-size:clamp(12px,3.95vw,15px)!important;
+  line-height:1.18!important;
+}
+body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext{
+  flex:0 0 auto!important;
+  margin-left:1px!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  overflow-wrap:normal!important;
+  font-size:clamp(11px,3.25vw,13px)!important;
+  line-height:1.18!important;
+}
+body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext::first-letter{
+  color:inherit!important;
+}
+@media(max-width:350px){
+  body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow .competitionNameText{
+    font-size:clamp(11px,3.7vw,13.5px)!important;
+  }
+  body.matchStateHalftime .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext{
+    font-size:clamp(10px,3vw,12px)!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26418,7 +26480,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .resultCompetitionLon
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.78</span>
+      <span class="headerVersion">v6.79</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
