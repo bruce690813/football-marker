@@ -1,4 +1,4 @@
-# v6.82 SECURITY_CHECKLIST｜足球場標題一致性
+# v6.83 SECURITY_CHECKLIST｜足球場標題一致性
 
 - [x] 基底：正式 v6.51 歷史原始程式與 v6.80 累加 ZIP 可讀；未使用 v6.52／v6.53。
 - [x] 僅更改全場 Header CSS 及兩處 HTML 版本標示；JS 與資料邏輯完全不變。
@@ -2535,7 +2535,8 @@ football_marker_vX_XX.zip
 - Full-time event-record styling only; no new external network calls, storage permissions, or executable dependencies.
 
 
-## v6.82 專項核對
-- 原始正式 v6.51 ZIP 可存取；新版延續 v6.81 累加版本。
-- 不更動 localStorage、任何計時／比分／事件邏輯，也不新增網路請求。
-- 28 組手機模擬版面通過；完整賽程、iPhone Safari、PNG 與 CSV 端到端仍待實機驗證。
+## v6.83 專項檢查
+- [x] v6.82 來源經 GitHub 公開儲存庫 commit 差異重建，HTML git blob SHA 與官方 v6.82 SHA 完全相符。
+- [x] v6.83 僅更新版本、場地顯示用 span 與三個比賽進行狀態的局部 CSS。
+- [x] 未變更比分、計時、事件、PK、摘要、圖片、CSV 或 localStorage 邏輯。
+- [ ] iPhone Safari 真機及完整賽程／匯出端到端測試（待使用者驗證）。

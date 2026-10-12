@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.82</title>
+<title>足球場邊記錄器 v6.83</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26672,6 +26672,33 @@ body.resultMode.finalOutputVisible .quickResultStat:disabled:not(.hasData) stron
   opacity:.84!important;
 }
 </style>
+
+<style id="v683ThreePlayingPhasesConsistentMetaText">
+/* v6.83：僅比賽中、下半場、延長賽的賽事／場地名稱文字統一。
+   兩者皆使用明確文字 span；不調整圖示、資訊列、比分、其他階段或功能。 */
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
+ .liveMetaStrip.show .competitionDisplayRow .competitionNameText,
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
+ .liveMetaStrip.show .venueDisplayRow .venueNameText{
+  font-size:var(--v682-meta-type-size)!important;
+  font-weight:950!important;
+  line-height:1.15!important;
+  letter-spacing:-.08px!important;
+  font-family:inherit!important;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
+ .liveMetaStrip.show .venueDisplayRow .venueNameText{
+  display:inline-block;
+  min-width:0;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  vertical-align:middle;
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26686,7 +26713,7 @@ body.resultMode.finalOutputVisible .quickResultStat:disabled:not(.hasData) stron
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.82</span>
+      <span class="headerVersion">v6.83</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -32983,7 +33010,7 @@ function renderLiveFocusUI(){
       metaRows.push(`
         <div class="matchMetaDisplayRow venueDisplayRow${venue?'':' empty'}">
           <span class="matchMetaDisplayIcon" aria-hidden="true">🏟️</span>
-          <span class="matchMetaDisplayValue">${escapeHtml(venue || '比賽場地')}</span>
+          <span class="matchMetaDisplayValue"><span class="venueNameText">${escapeHtml(venue || '比賽場地')}</span></span>
         </div>`);
     }
 
