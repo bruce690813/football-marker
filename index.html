@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.71</title>
+<title>足球場邊記錄器 v6.74</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26126,10 +26126,6 @@ body:is(.matchStateHalftime,.matchStateExtraWait) .controls.singleAction #startB
    螢幕較寬、其他階段、展開詳情與原始比賽設定均維持原有文字。 */
 #timeSummary .timeRegulationShort{display:none!important;}
 @media(max-width:350px){
-  /* 精簡資訊即使在小螢幕，也保留標題與數值之間可辨識的空隙。 */
-  body.matchStateExtraActive #timeSummary:not(.open) .timeTitleBlock{
-    column-gap:5px!important;
-  }
   body.matchStateExtraActive #timeSummary:not(.open) .timeRegulationBadge:has(.timeRegulationShort) .timeRegulationFull{
     display:none!important;
   }
@@ -26167,6 +26163,194 @@ body.resultMode #timeSummary #timeToggle:active::before{
 }
 </style>
 
+
+<style id="v672FiveRequestedUIPolish">
+/* v6.72 只修正：中場／等待延長賽完整賽事名稱、延長時間、全場唯讀框線、
+   新比賽 CTA 顏色、摘要與匯出圖片場地圖示及比賽段落標籤。 */
+
+/* 中場／等待延長賽：賽事名稱優先完整呈現；較長的階段和場次移到下一行。
+   移除 v6.70 固定 34px 高度及舊 flex 的 ellipsis 限制，場地仍保留原列高。 */
+body:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .competitionDisplayRow{
+  height:auto!important; min-height:48px!important; max-height:none!important;
+  padding-top:6px!important; padding-bottom:6px!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext{
+  display:flex!important; flex-direction:column!important; align-items:flex-start!important;
+  justify-content:center!important; gap:2px!important; overflow:visible!important;
+  white-space:normal!important; -webkit-line-clamp:unset!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .competitionDisplayRow .competitionNameText{
+  flex:0 0 auto!important; max-width:100%!important; white-space:normal!important;
+  overflow:visible!important; text-overflow:clip!important; overflow-wrap:anywhere!important;
+  line-height:1.18!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext{
+  flex:0 1 auto!important; max-width:100%!important; white-space:normal!important;
+  overflow:visible!important; overflow-wrap:anywhere!important;
+  margin-left:0!important; line-height:1.15!important;
+}
+body:is(.matchStateHalftime,.matchStateExtraWait) .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext::first-letter{
+  color:#8ba1b7;
+}
+
+/* v6.71 在 350px 以下僅對延長賽生效；改為等待與進行中皆適用。
+   351-430px 顯示保留完整語意的中長版，<=350px 顯示安全短版。
+   完整文字仍留在展開明細與 aria-label/title 中。 */
+#timeSummary .timeRegulationMedium{display:none!important;}
+@media(max-width:430px){
+  body:is(.matchStateExtraWait,.matchStateExtraActive) #timeSummary:not(.open)
+  .timeRegulationBadge:has(.timeRegulationMedium) .timeRegulationFull{display:none!important;}
+  body:is(.matchStateExtraWait,.matchStateExtraActive) #timeSummary:not(.open)
+  .timeRegulationBadge .timeRegulationMedium{display:inline!important;white-space:nowrap!important;}
+}
+@media(max-width:350px){
+  body:is(.matchStateExtraWait,.matchStateExtraActive) #timeSummary:not(.open)
+  .timeRegulationBadge .timeRegulationMedium{display:none!important;}
+  body:is(.matchStateExtraWait,.matchStateExtraActive) #timeSummary:not(.open)
+  .timeRegulationBadge .timeRegulationShort{display:inline!important;white-space:nowrap!important;}
+}
+
+/* 全場資訊為唯讀顯示：保留「鉛筆修改」按鈕，僅移除兩張資訊列外框感。 */
+body.resultMode .liveMetaStrip.show .matchMetaDisplayRow{
+  border-color:transparent!important; background:transparent!important;
+  box-shadow:none!important; border-radius:0!important;
+}
+/* 參照賽前開始比賽的綠松石主色，但保持原本新比賽按鈕尺寸和文案。 */
+body.resultMode.finalOutputVisible .finalToolNew,
+body.resultMode.finalOutputVisible .resultNewMatchBtn{
+  color:#ffffff!important;
+  background:linear-gradient(180deg,#18b5a6 0%,#109b90 100%)!important;
+  border:1px solid rgba(91,231,214,.34)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 5px 14px rgba(15,159,143,.18)!important;
+  text-shadow:none!important;
+}
+body.resultMode.finalOutputVisible .finalToolNew .finalToolIcon{color:#ffffff!important;}
+body.resultMode.finalOutputVisible .resultNewMatchBtn:active{filter:brightness(1.04)!important;}
+
+/* 摘要場地圖示統一採 🏟️，修正舊 pin SVG 的固定寬高與陰影。 */
+#reportModal .reportVenuePin{width:1.45em!important; height:auto!important; flex:0 0 1.45em!important;
+  display:inline-flex!important; align-items:center!important; justify-content:center!important;
+  transform:none!important; font-size:1.12em!important; line-height:1!important;}
+
+/* 段落統計：時間一定標示 mm:ss 是「比賽用時」，比分標示「本段比分」。 */
+#reportModal .periodSummaryRow .ptime,
+#reportModal .periodSummaryRow .pscore{display:flex!important;flex-direction:column!important;
+  align-items:flex-start!important;gap:2px!important;}
+#reportModal .periodSummaryRow .periodStatLabel{font-size:10px!important;font-weight:700!important;
+  line-height:1.2!important;color:#8da7ba!important;white-space:nowrap!important;}
+#reportModal .periodSummaryRow .periodStatValue{font-size:14px!important;font-weight:800!important;
+  line-height:1.25!important;white-space:nowrap!important;color:#edf5ff!important;}
+#reportModal .periodSummaryRow .ptime .periodStatValue{color:#bccbdc!important;}
+</style>
+
+
+<style id="v673RosterQuickAddVisiblePatch">
+/* v6.73：球員名單新增「其他背號」不再位於長清單底部。
+   Header / 固定新增列 / 可捲動色票與快捷背號 / 原 Footer。
+   不修改任何球員背號資料邏輯，也不改動其他 modal。 */
+#rosterModal .rosterModalPanel{
+  grid-template-rows:auto auto minmax(0,1fr) auto!important;
+}
+#rosterModal .rosterModalFixedHead{grid-row:1!important;}
+#rosterModal .rosterQuickAddArea{
+  grid-row:2!important;
+  min-width:0;
+  padding:7px 18px 9px;
+  background:#f6f7fb;
+  border-bottom:1px solid #dbe3ee;
+  box-sizing:border-box;
+}
+#rosterModal .rosterQuickAddArea .rosterOtherLabel{
+  margin:0 0 5px!important;
+}
+#rosterModal .rosterQuickAddArea .rosterInputRow{
+  margin:0!important;
+}
+#rosterModal .rosterQuickAddArea .rosterInlineStatus{
+  min-height:15px;
+  margin-top:4px;
+}
+#rosterModal .rosterModalScroll{grid-row:3!important;}
+#rosterModal .rosterModalFooter{grid-row:4!important;}
+@media(max-width:390px){
+  #rosterModal .rosterQuickAddArea{padding:7px 16px 8px;}
+}
+@media(max-height:720px){
+  #rosterModal .rosterQuickAddArea{padding-top:5px;padding-bottom:6px;}
+}
+</style>
+
+
+<style id="v674RosterOnDemandAddPatch">
+/* v6.74：預設還原 v6.72 名單排列，只有點「＋新增背號」才暫時固定輸入列。 */
+#rosterModal .rosterModalPanel:not(.rosterAdding){
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+}
+#rosterModal .rosterModalPanel:not(.rosterAdding) .rosterModalScroll{grid-row:2!important;}
+#rosterModal .rosterModalPanel:not(.rosterAdding) .rosterModalFooter{grid-row:3!important;}
+#rosterModal .rosterModalPanel.rosterAdding{
+  grid-template-rows:auto auto minmax(0,1fr) auto!important;
+}
+#rosterModal .rosterModalPanel.rosterAdding .rosterModalScroll{grid-row:3!important;}
+#rosterModal .rosterModalPanel.rosterAdding .rosterModalFooter{grid-row:4!important;}
+#rosterModal .rosterQuickAddDock{grid-row:2!important;min-width:0;}
+#rosterModal .rosterQuickAddDock[hidden]{display:none!important;}
+#rosterModal .rosterQuickAddArea{grid-row:auto!important;min-width:0;}
+/* 平常輸入區在原有捲動清單的下方，不再占據固定區域。 */
+#rosterModal .rosterModalScroll > .rosterQuickAddArea{
+  padding:0!important;
+  margin-top:12px;
+  background:transparent!important;
+  border:0!important;
+}
+#rosterModal .rosterModalScroll .rosterQuickAddArea .rosterOtherLabel{
+  margin:0 0 5px!important;
+}
+#rosterModal .rosterQuickAddDock > .rosterQuickAddArea{
+  padding:7px 18px 9px!important;
+  background:#f6f7fb!important;
+  border-bottom:1px solid #dbe3ee!important;
+  box-sizing:border-box;
+}
+#rosterModal .rosterHeadHintRow{
+  display:flex;align-items:center;gap:5px 8px;flex-wrap:wrap;
+}
+#rosterModal .rosterHeadHintRow .rosterHeadHint{flex:1 1 auto;}
+#rosterModal .rosterQuickAddOpen{
+  flex:0 0 auto;
+  min-height:32px;
+  padding:5px 9px;
+  border-radius:9px;
+  background:#e8f0ff;
+  border:1px solid #bbd0f6;
+  color:#1d4ed8;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
+#rosterModal .rosterQuickAddOpen[hidden]{display:none!important;}
+#rosterModal .rosterAddLabelRow{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+#rosterModal .rosterQuickAddCollapse{
+  flex:0 0 auto;
+  padding:2px 8px;
+  min-height:28px;
+  border:1px solid #cbd5e1;
+  border-radius:8px;
+  background:#eef2f7;
+  color:#42536b;
+  font-size:12px;
+  font-weight:800;
+}
+#rosterModal .rosterQuickAddCollapse[hidden]{display:none!important;}
+@media(max-width:390px){
+  #rosterModal .rosterQuickAddDock > .rosterQuickAddArea{padding:7px 16px 8px!important;}
+  #rosterModal .rosterQuickAddOpen{font-size:11.5px;padding:5px 7px;}
+}
+@media(max-height:720px){
+  #rosterModal .rosterQuickAddDock > .rosterQuickAddArea{padding-top:5px!important;padding-bottom:6px!important;}
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26181,7 +26365,7 @@ body.resultMode #timeSummary #timeToggle:active::before{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.71</span>
+      <span class="headerVersion">v6.74</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -26885,10 +27069,13 @@ body.resultMode #timeSummary #timeToggle:active::before{
     <div class="rosterModalHead rosterModalFixedHead">
       <div>
         <h2 class="rosterIconHeading" style="margin:0"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>本場球員名單</span></h2>
-        <div class="rosterHeadHint">點一下加入，再點一次取消</div>
+        <div class="rosterHeadHintRow"><div class="rosterHeadHint">點一下加入，再點一次取消</div><button id="rosterQuickAddOpen" class="rosterQuickAddOpen" type="button" onclick="openRosterQuickAdd()" aria-controls="rosterQuickAddArea" aria-expanded="false">＋新增背號</button></div>
       </div>
       <span class="rosterCountBadge" id="rosterCountBadge">0 人</span>
     </div>
+
+    <!-- v6.74：預設不占標題下方；只有按「新增背號」才把原輸入區暫時移至此。 -->
+    <div id="rosterQuickAddDock" class="rosterQuickAddDock" hidden></div>
 
     <div class="rosterModalScroll">
       <button id="rosterPreviousBtn" class="rosterPreviousBtn" type="button" onclick="applyPreviousRoster()" style="display:none">
@@ -26927,12 +27114,14 @@ body.resultMode #timeSummary #timeToggle:active::before{
         <div id="rosterGrid" class="rosterGrid rosterExtraGrid"></div>
       </div>
 
-      <div class="rosterPickerLabel rosterOtherLabel">其他背號</div>
+    <div class="rosterQuickAddArea" id="rosterQuickAddArea">
+      <div class="rosterAddLabelRow"><div class="rosterPickerLabel rosterOtherLabel">其他背號</div><button type="button" class="rosterQuickAddCollapse" onclick="closeRosterQuickAdd()" hidden>收起</button></div>
       <div class="rosterInputRow">
-        <input id="rosterInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="其他背號 1–99" aria-label="新增單一球員背號">
+        <input id="rosterInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" enterkeyhint="done" placeholder="其他背號 1–99" aria-label="新增單一球員背號">
         <button class="rosterAddBtn" type="button" onclick="addRosterNumbers()">＋ 新增</button>
       </div>
       <div id="rosterInlineStatus" class="rosterInlineStatus" aria-live="polite"></div>
+    </div>
 
     </div>
 
@@ -27176,7 +27365,7 @@ body.resultMode #timeSummary #timeToggle:active::before{
       <div class="reportMeta reportMetaScrollable" aria-label="比賽基本資料">
         <span id="reportCompetition" class="reportMetaRow" style="display:none"></span>
         <span id="reportDate" class="reportMetaRow">📅 ----/--/--</span>
-        <span id="reportVenue" class="reportVenueMeta reportMetaRow" style="display:none"><span class="reportVenuePin" aria-hidden="true"><svg viewBox="0 0 24 30" focusable="false"><path fill="#ff3b30" d="M12 0C5.37 0 0 5.33 0 11.9c0 8.7 10.2 17.04 11.12 17.76a1.4 1.4 0 0 0 1.76 0C13.8 28.94 24 20.6 24 11.9 24 5.33 18.63 0 12 0Z"/><circle cx="12" cy="11.4" r="4.35" fill="#fff" fill-opacity=".94"/><circle cx="12" cy="11.4" r="2.95" fill="#ff6b63" fill-opacity=".36"/></svg></span><span id="reportVenueText" class="reportVenueText"></span></span>
+        <span id="reportVenue" class="reportVenueMeta reportMetaRow" style="display:none"><span class="reportVenuePin" aria-hidden="true">🏟️</span><span id="reportVenueText" class="reportVenueText"></span></span>
         <span id="reportRoster" class="reportRosterMeta reportMetaRow" style="display:none"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="reportRosterText">本場名單</span></span>
       </div>
       <div class="reportStatusBadge idle reportStatusScrollable" id="reportStatusBadge">尚未開始</div>
@@ -28993,7 +29182,7 @@ function completedPeriodSummaryHTML(){
   state.periods.forEach(p=>{
     const our=Math.max(0,(p.endOurScore??0)-(p.startOurScore??0));
     const opp=Math.max(0,(p.endOppScore??0)-(p.startOppScore??0));
-    rows.push(`<div class="periodSummaryRow"><div class="pname">${escapeHtml(p.label||periodLabel(p.number))}</div><div class="ptime">${fmtMMSS(p.duration||0)}</div><div class="pscore">${our}:${opp}</div></div>`);
+    rows.push(`<div class="periodSummaryRow"><div class="pname">${escapeHtml(p.label||periodLabel(p.number))}</div><div class="ptime"><span class="periodStatLabel">比賽用時</span><span class="periodStatValue">${fmtMMSS(p.duration||0)}</span></div><div class="pscore"><span class="periodStatLabel">本段比分</span><span class="periodStatValue">${our}:${opp}</span></div></div>`);
   });
   return rows.join('');
 }
@@ -29138,9 +29327,10 @@ function setTimeRegulationBadgeText(timeBadge){
   if(!timeBadge) return;
   const fullText=`規定 ${regulationCompactText()}`;
   const shortText=state.multiPeriod && state.extraTime && state.extraTimeMinutes
-    ? `每半${state.regulationMinutes}分＋延${state.extraTimeMinutes}分` : '';
+    ? `規定 每半${state.regulationMinutes}分＋延${state.extraTimeMinutes}分` : '';
+  const mediumText=shortText ? `規定 每半場${state.regulationMinutes}分＋延長${state.extraTimeMinutes}分` : '';
   // renderRegulationTimeAlert() runs on every animation frame; only update DOM when content changes.
-  if(timeBadge.dataset.v671FullText===fullText && timeBadge.dataset.v671ShortText===shortText) return;
+  if(timeBadge.dataset.v671FullText===fullText && timeBadge.dataset.v671ShortText===shortText && timeBadge.dataset.v672MediumText===mediumText) return;
   const fullSpan=document.createElement('span');
   fullSpan.className='timeRegulationFull';
   fullSpan.textContent=fullText;
@@ -29151,7 +29341,13 @@ function setTimeRegulationBadgeText(timeBadge){
     shortSpan.setAttribute('aria-hidden','true');
     shortSpan.textContent=shortText;
     timeBadge.appendChild(shortSpan);
+    const mediumSpan=document.createElement('span');
+    mediumSpan.className='timeRegulationMedium';
+    mediumSpan.setAttribute('aria-hidden','true');
+    mediumSpan.textContent=mediumText;
+    timeBadge.appendChild(mediumSpan);
   }
+  timeBadge.dataset.v672MediumText=mediumText;
   timeBadge.dataset.v671FullText=fullText;
   timeBadge.dataset.v671ShortText=shortText;
   timeBadge.setAttribute('aria-label',fullText);
@@ -29160,6 +29356,7 @@ function setTimeRegulationBadgeText(timeBadge){
 function clearTimeRegulationBadgeText(timeBadge){
   if(!timeBadge) return;
   timeBadge.textContent='';
+  delete timeBadge.dataset.v672MediumText;
   delete timeBadge.dataset.v671FullText;
   delete timeBadge.dataset.v671ShortText;
   timeBadge.removeAttribute('aria-label');
@@ -29863,12 +30060,52 @@ function renderRosterModal(){
   }
 }
 
+// v6.74：只有使用者主動進入新增模式，才將原本位於捲動底部的「其他背號」移到標題下方。
+// 兩種位置共用同一個真實 input 與原本 addRosterNumbers()，不複製輸入框、不修改名單驗證。
+function openRosterQuickAdd(options={}){
+  const panel=byId('rosterModal')?.querySelector('.rosterModalPanel');
+  const dock=byId('rosterQuickAddDock');
+  const area=byId('rosterQuickAddArea');
+  if(!panel || !dock || !area) return;
+  if(!panel.classList.contains('rosterAdding')){
+    dock.hidden=false;
+    dock.appendChild(area);
+    panel.classList.add('rosterAdding');
+  }
+  const trigger=byId('rosterQuickAddOpen');
+  if(trigger){trigger.setAttribute('aria-expanded','true');trigger.hidden=true;}
+  const collapse=area.querySelector('.rosterQuickAddCollapse');
+  if(collapse) collapse.hidden=false;
+  if(options.focus!==false){
+    // 使用者點擊手勢當下聚焦，讓 iOS Safari 能正常顯示數字鍵盤。
+    try{byId('rosterInput')?.focus({preventScroll:true});}catch(e){byId('rosterInput')?.focus();}
+  }
+}
+function closeRosterQuickAdd(options={}){
+  const panel=byId('rosterModal')?.querySelector('.rosterModalPanel');
+  const dock=byId('rosterQuickAddDock');
+  const area=byId('rosterQuickAddArea');
+  const scroll=byId('rosterModal')?.querySelector('.rosterModalScroll');
+  if(!panel || !dock || !area || !scroll) return;
+  if(panel.classList.contains('rosterAdding')){
+    if(options.blur!==false && document.activeElement===byId('rosterInput')) byId('rosterInput').blur();
+    scroll.appendChild(area);
+    panel.classList.remove('rosterAdding');
+    dock.hidden=true;
+  }
+  const trigger=byId('rosterQuickAddOpen');
+  if(trigger){trigger.hidden=false;trigger.setAttribute('aria-expanded','false');}
+  const collapse=area.querySelector('.rosterQuickAddCollapse');
+  if(collapse) collapse.hidden=true;
+}
+
 function openRosterModal(){
   syncVisualViewport();
   if(state.finished){
     alert('本場比賽已結束，球員名單已鎖定。');
     return;
   }
+  closeRosterQuickAdd();
   hideRosterUndo();
   setRosterInlineStatus('');
   lastRosterRenderedCount=null;
@@ -29891,6 +30128,7 @@ function closeRosterModal(){
   saveState();
   render();
   byId('rosterModal').classList.remove('open');
+  closeRosterQuickAdd();
 }
 
 function parseRosterNumber(raw){
@@ -33530,7 +33768,7 @@ function reportLines(){
   if(competitionSummary) metaCards.push({label:'比賽賽事／階段',icon:'🏆',value:competitionSummary,full:true,summaryCard:true});
   const dayMatchLabel=formatDayMatchLabel(state.dayMatchNumber);
   metaCards.push({label:'比賽日期',icon:'📅',value:`${matchDateLabel(start,end)}${dayMatchLabel?`｜${dayMatchLabel}`:''}`,full:true,summaryCard:true});
-  if(venueValue) metaCards.push({label:'比賽場地',icon:'📍',value:venueValue,full:true,summaryCard:true});
+  if(venueValue) metaCards.push({label:'比賽場地',icon:'🏟️',value:venueValue,full:true,summaryCard:true});
   if(roster.length){
     metaCards.push({label:'本場球員',icon:'👕',value:roster.map(n=>'#'+n).join(' '),full:true,summaryCard:true});
   }
@@ -33727,7 +33965,7 @@ function reportCanvasLayout(lines,ctx){
     }else if(line.type==='meta'){
       b.textRows=reportWrapText(ctx,line.text,content-16,font);b.height=b.textRows.length*32+10;
     }else if(line.type==='periodGrid'){
-      b.height=Math.ceil(line.items.length/3)*78+4;
+      b.height=Math.ceil(line.items.length/3)*108+4;
     }else if(line.type==='mvpCard'){
       b.titleRows=reportWrapText(ctx,line.title,content-24,'900 30px -apple-system, sans-serif');
       b.nameRows=reportWrapText(ctx,(line.names||[]).join(' ｜ '),content-24,mainFont);
@@ -33826,10 +34064,11 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       });
     }else if(b.type==='periodGrid'){
       b.items.forEach((p,i)=>{
-        const x=pad+(i%3)*(content+16)/3, top=y+Math.floor(i/3)*78, w=(content-32)/3;
-        ctx.fillStyle='#182837';roundRect(ctx,x,top,w,68,8,true,false);
-        text(p.label,x+12,top+8,21,'#7dd3fc',750);text(p.duration,x+12,top+34,22,'#b9c9d9',650);
-        ctx.font=font(25,800);ctx.textAlign='right';ctx.textBaseline='top';ctx.fillStyle='#eef5fc';ctx.fillText(p.score,x+w-12,top+34);
+        const x=pad+(i%3)*(content+16)/3, top=y+Math.floor(i/3)*108, w=(content-32)/3;
+        ctx.fillStyle='#182837';roundRect(ctx,x,top,w,101,8,true,false);
+        text(p.label,x+12,top+8,21,'#7dd3fc',750);
+        text('比賽用時',x+12,top+36,17,'#8da7ba',700);text(p.duration,x+113,top+34,22,'#b9c9d9',700);
+        text('本段比分',x+12,top+69,17,'#8da7ba',700);text(p.score,x+113,top+67,24,'#eef5fc',800);
       });
     }else if(b.type==='mvpCard'){
       const topScorer=b.kind==='topScorer';
