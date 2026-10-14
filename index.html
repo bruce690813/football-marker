@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.84</title>
+<title>足球場邊記錄器 v6.86</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26736,6 +26736,99 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
   .stageMenu .stageMenuItem{font-size:15px!important;padding-left:3px!important;padding-right:3px!important;}
 }
 </style>
+
+<style id="v686ResultStageVisibilityPatch">
+/* v6.86：修正全場主畫面賽事名稱右側的階段文字被編輯鍵擠壓。
+   原則：
+   1. 全場仍維持單行。
+   2. 優先完整顯示「｜小組賽／8強賽…」等階段文字。
+   3. 若整體寬度不足，縮的是賽事名稱本體，使用省略號；不再把階段文字推到看不完整。
+   4. 同時縮小全場編輯鍵保留區，回收一些可用寬度。 */
+body.resultMode .liveMetaStrip.show .competitionDisplayRow{
+  padding-right:40px!important;
+}
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext,
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong{
+  display:flex!important;
+  align-items:baseline!important;
+  justify-content:flex-start!important;
+  gap:0!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext::-webkit-scrollbar,
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong::-webkit-scrollbar{
+  display:none!important;
+}
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionNameText,
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionNameText{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+  font-size:16.5px!important;
+}
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionInlineContext,
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionInlineContext{
+  flex:0 0 auto!important;
+  margin-left:1px!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+  font-size:12px!important;
+  letter-spacing:-.02em!important;
+}
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn{
+  right:2px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  width:34px!important;
+  min-width:34px!important;
+  height:34px!important;
+  min-height:34px!important;
+  border-radius:50%!important;
+}
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn:active{
+  transform:translateY(-50%) scale(.94)!important;
+}
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .uiEditIcon{
+  width:14px!important;
+  height:14px!important;
+}
+@media(max-width:390px){
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow{
+    padding-right:38px!important;
+  }
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionNameText,
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionNameText{
+    font-size:16px!important;
+  }
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionInlineContext,
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionInlineContext{
+    font-size:11.7px!important;
+  }
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn{
+    width:32px!important;
+    min-width:32px!important;
+    height:32px!important;
+    min-height:32px!important;
+  }
+}
+@media(max-width:350px){
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionNameText,
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionNameText{
+    font-size:15px!important;
+  }
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionInlineContext,
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionInlineContext{
+    font-size:11px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26750,7 +26843,7 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.84</span>
+      <span class="headerVersion">v6.86</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28805,7 +28898,7 @@ function deleteRecentVenue(value){
 
 const COMPETITION_STAGE_GROUPS=[
   {key:'league',title:'聯賽常用輪次',items:['第1輪','第2輪','第3輪','第4輪','第5輪','第6輪','第7輪','第8輪','第9輪','第10輪','第11輪','第12輪']},
-  {key:'cup',title:'盃賽／淘汰賽',items:['小組賽','淘汰賽','32強賽','16強賽','8強賽','4強賽','冠軍賽','季軍賽']}
+  {key:'cup',title:'盃賽',items:['小組賽','淘汰賽','32強賽','16強賽','8強賽','4強賽','冠軍賽','季軍賽']}
 ];
 function competitionStageMenuMode(){
   const name=String(byId('competition')?.value||state.competition||'').trim();
@@ -28833,7 +28926,7 @@ function renderCompetitionStageMenu(){
   const hint=mode==='league'
     ? `已依「${competitionName}」顯示聯賽常用輪次；也可自行輸入。`
     : mode==='cup'
-      ? `已依「${competitionName}」顯示盃賽／淘汰賽階段；也可自行輸入。`
+      ? `已依「${competitionName}」顯示盃賽階段；也可自行輸入。`
       : '無法由賽事名稱明確判斷賽制，先顯示完整選項；也可自行輸入。';
   let html=`<div class="stageMenuTitle">選擇賽事階段／輪次</div><div class="stageMenuHint">${escapeHtml(hint)}</div>`;
   groups.forEach(group=>{
