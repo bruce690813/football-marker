@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.86</title>
+<title>足球場邊記錄器 v6.87</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26737,92 +26737,92 @@ body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive)
 }
 </style>
 
-<style id="v686ResultStageVisibilityPatch">
-/* v6.86：修正全場主畫面賽事名稱右側的階段文字被編輯鍵擠壓。
-   原則：
-   1. 全場仍維持單行。
-   2. 優先完整顯示「｜小組賽／8強賽…」等階段文字。
-   3. 若整體寬度不足，縮的是賽事名稱本體，使用省略號；不再把階段文字推到看不完整。
-   4. 同時縮小全場編輯鍵保留區，回收一些可用寬度。 */
+<style id="v687ResultCompetitionAndEditInlinePatch">
+/* v6.87 全場賽事資訊：完整名稱和階段保持同一行；絕不以省略號取代名稱。
+   資訊過長時僅文字區可左右滑動，右側編輯鍵使用 flex 正常排版並垂直置中。
+   不更改資料內容、編輯行為、其他狀態。 */
 body.resultMode .liveMetaStrip.show .competitionDisplayRow{
-  padding-right:40px!important;
+  display:flex!important;
+  align-items:center!important;
+  padding-right:8px!important;
 }
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue,
 body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext,
 body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong{
   display:flex!important;
   align-items:baseline!important;
   justify-content:flex-start!important;
-  gap:0!important;
-  min-width:0!important;
-  overflow:hidden!important;
-  white-space:nowrap!important;
-}
-body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext::-webkit-scrollbar,
-body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong::-webkit-scrollbar{
-  display:none!important;
-}
-body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionNameText,
-body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionNameText{
   flex:1 1 auto!important;
   min-width:0!important;
-  max-width:none!important;
-  overflow:hidden!important;
-  text-overflow:ellipsis!important;
+  gap:0!important;
   white-space:nowrap!important;
-  font-size:16.5px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  text-overflow:clip!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  touch-action:pan-x;
+  scrollbar-width:none;
 }
-body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionInlineContext,
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue::-webkit-scrollbar{
+  display:none;
+}
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .competitionNameText,
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionNameText{
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+  max-width:none!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+  font-size:var(--v682-meta-type-size,16.5px)!important;
+}
+/* 中長名稱在一般 iPhone 優先用溫和自適應縮字，減少不必要的橫向滑動。 */
+@media(min-width:351px) and (max-width:420px){
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow
+  .matchMetaDisplayValue.resultCompetitionLong .competitionNameText{
+    font-size:clamp(14px,3.9vw,16px)!important;
+  }
+}
+body.resultMode .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext,
 body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionInlineContext{
   flex:0 0 auto!important;
-  margin-left:1px!important;
+  max-width:none!important;
+  margin-left:2px!important;
   overflow:visible!important;
   text-overflow:clip!important;
   white-space:nowrap!important;
   font-size:12px!important;
-  letter-spacing:-.02em!important;
 }
 body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn{
-  right:2px!important;
-  top:50%!important;
-  transform:translateY(-50%)!important;
-  width:34px!important;
-  min-width:34px!important;
-  height:34px!important;
-  min-height:34px!important;
-  border-radius:50%!important;
+  position:static!important;
+  top:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  left:auto!important;
+  inset:auto!important;
+  transform:none!important;
+  flex:0 0 40px!important;
+  width:40px!important;
+  min-width:40px!important;
+  height:40px!important;
+  min-height:40px!important;
+  padding:0!important;
+  margin:0 0 0 3px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  align-self:center!important;
 }
 body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn:active{
-  transform:translateY(-50%) scale(.94)!important;
+  transform:scale(.94)!important;
 }
 body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .uiEditIcon{
-  width:14px!important;
-  height:14px!important;
-}
-@media(max-width:390px){
-  body.resultMode .liveMetaStrip.show .competitionDisplayRow{
-    padding-right:38px!important;
-  }
-  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionNameText,
-  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionNameText{
-    font-size:16px!important;
-  }
-  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionInlineContext,
-  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionInlineContext{
-    font-size:11.7px!important;
-  }
-  body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn{
-    width:32px!important;
-    min-width:32px!important;
-    height:32px!important;
-    min-height:32px!important;
-  }
+  width:15px!important;
+  height:15px!important;
 }
 @media(max-width:350px){
-  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionNameText,
-  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionNameText{
-    font-size:15px!important;
-  }
-  body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.withInlineContext .competitionInlineContext,
+  body.resultMode .liveMetaStrip.show .competitionDisplayRow .competitionInlineContext,
   body.resultMode .liveMetaStrip.show .competitionDisplayRow .matchMetaDisplayValue.resultCompetitionLong .competitionInlineContext{
     font-size:11px!important;
   }
@@ -26843,7 +26843,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.86</span>
+      <span class="headerVersion">v6.87</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
