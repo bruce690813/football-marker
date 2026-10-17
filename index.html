@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.91</title>
+<title>足球場邊記錄器 v6.93</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26242,12 +26242,12 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn:active{filter:brightness(1
   line-height:1.25!important;white-space:nowrap!important;color:#edf5ff!important;}
 #reportModal .periodSummaryRow .ptime .periodStatValue{color:#bccbdc!important;}
 #reportModal .periodSummaryRow{border:1px solid rgba(77,104,131,.24)!important;transition:background .18s ease,border-color .18s ease;}
-#reportModal .periodSummaryRow.periodToneFirstHalf{background:linear-gradient(180deg,rgba(20,43,65,.96) 0%,rgba(17,37,55,.96) 100%)!important;border-color:rgba(76,193,255,.24)!important;}
-#reportModal .periodSummaryRow.periodToneFirstHalf .pname{color:#7dd3fc!important;}
-#reportModal .periodSummaryRow.periodToneFirstHalf .periodStatLabel{color:#7ea4be!important;}
-#reportModal .periodSummaryRow.periodToneSecondHalf{background:linear-gradient(180deg,rgba(35,28,58,.95) 0%,rgba(28,24,48,.95) 100%)!important;border-color:rgba(167,139,250,.24)!important;}
-#reportModal .periodSummaryRow.periodToneSecondHalf .pname{color:#c4b5fd!important;}
-#reportModal .periodSummaryRow.periodToneSecondHalf .periodStatLabel{color:#a899d3!important;}
+#reportModal .periodSummaryRow.periodToneFirstHalf{background:linear-gradient(180deg,rgba(94,62,8,.96) 0%,rgba(71,45,8,.98) 100%)!important;border-color:rgba(250,204,21,.48)!important;box-shadow:inset 0 1px 0 rgba(255,240,177,.12)!important;}
+#reportModal .periodSummaryRow.periodToneFirstHalf .pname{color:#ffd966!important;}
+#reportModal .periodSummaryRow.periodToneFirstHalf .periodStatLabel{color:#f7cb62!important;}
+#reportModal .periodSummaryRow.periodToneSecondHalf{background:linear-gradient(180deg,rgba(104,49,14,.96) 0%,rgba(82,37,10,.98) 100%)!important;border-color:rgba(251,146,60,.5)!important;box-shadow:inset 0 1px 0 rgba(255,225,188,.10)!important;}
+#reportModal .periodSummaryRow.periodToneSecondHalf .pname{color:#ffb261!important;}
+#reportModal .periodSummaryRow.periodToneSecondHalf .periodStatLabel{color:#ffc27f!important;}
 </style>
 
 
@@ -26837,7 +26837,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
 </style>
 
 <style id="v691CompactReportTimeAndPeriods">
-/* v6.91 只精簡摘要時間與比賽段落；事件時間軸及主畫面樣式不變。 */
+/* v6.92 只精簡摘要時間與比賽段落；事件時間軸及主畫面樣式不變。 */
 #reportModal .reportOverviewGrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:6px!important}
 #reportModal .reportTimeRange{grid-column:1/-1!important;min-height:40px!important;padding:6px 9px!important}
 #reportModal .reportTimeRange .reportOverviewValue{font-variant-numeric:tabular-nums;white-space:normal;overflow-wrap:anywhere}
@@ -26864,6 +26864,19 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
 #reportModal .periodSummaryRow .pscore .periodStatValue{font-size:15px!important;color:#eef5fc!important;font-weight:900!important;font-variant-numeric:tabular-nums}
 @media(max-width:350px){#reportModal .periodSummaryHeader,#reportModal .periodSummaryRow{grid-template-columns:minmax(0,1fr) 62px 46px!important;gap:6px!important}#reportModal .periodSummaryRow{padding:7px 8px!important}}
 </style>
+<style id="v693ReportTimelinePhaseTone">
+/* v6.93：僅比賽事件時間軸的上半場／下半場標題配色，沿用 v6.92 比賽段落色票。 */
+#reportModal .matchTimelinePhase.periodToneFirstHalf{
+  color:#ffd966!important;
+  border-left:4px solid #facc15!important;
+  padding-left:10px!important;
+}
+#reportModal .matchTimelinePhase.periodToneSecondHalf{
+  color:#ffb261!important;
+  border-left:4px solid #fb923c!important;
+  padding-left:10px!important;
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26878,7 +26891,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.91</span>
+      <span class="headerVersion">v6.93</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -29709,8 +29722,8 @@ function periodToneClass(label='',number=0){
 }
 function periodTonePalette(label='',number=0){
   const tone=normalizedPeriodTone(label,number);
-  if(tone==='first') return {fill:'#173247',stroke:'rgba(76,193,255,.24)',title:'#7dd3fc',label:'#89aabd',value:'#eef5fc'};
-  if(tone==='second') return {fill:'#2a2146',stroke:'rgba(167,139,250,.24)',title:'#c4b5fd',label:'#aa9fcb',value:'#f4f0ff'};
+  if(tone==='first') return {fill:'#5f3c09',stroke:'#facc15',title:'#ffd966',label:'#f7cb62',value:'#fff7e3'};
+  if(tone==='second') return {fill:'#69310d',stroke:'#fb923c',title:'#ffb261',label:'#ffc27f',value:'#fff4e8'};
   return {fill:'#182837',stroke:'rgba(63,86,111,.18)',title:'#7dd3fc',label:'#8da7ba',value:'#eef5fc'};
 }
 
@@ -34121,7 +34134,7 @@ function reportTimelineHTML(){
   if(!entries.length) return '<div class="reportEmpty">尚未標記事件</div>';
   let phase=null;
   return '<ol class="matchTimeline">'+entries.map(e=>{
-    const heading=phase!==e.period?`<li class="matchTimelinePhase">${escapeHtml(e.phase)}</li>`:'';
+    const heading=phase!==e.period?`<li class="matchTimelinePhase ${periodToneClass(e.phase,state.multiPeriod?e.period:0)}">${escapeHtml(e.phase)}</li>`:'';
     phase=e.period;
     const compact=reportTimelineCompactParts(e);
     return heading+`<li class="matchTimelineRow ${e.team==='OUR'?'isOur':e.team==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
@@ -34404,7 +34417,7 @@ function reportLines(){
     let phase=null;
     for(const e of entries){
       if(phase!==e.period){
-        lines.push({type:'timelinePhase',text:e.phase});
+        lines.push({type:'timelinePhase',text:e.phase,period:state.multiPeriod?e.period:0});
         phase=e.period;
       }
       lines.push(e);
@@ -34772,7 +34785,10 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       ctx.fillStyle='#59c8f1';ctx.beginPath();ctx.arc(pad+16,y+57,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+44,23,'#59c8f1',700);
       ctx.fillStyle='#ffad83';ctx.beginPath();ctx.arc(pad+120,y+57,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+44,23,'#ffad83',700);
     }else if(b.type==='timelinePhase'){
-      text(b.text,pad+8,y+10,25,'#b3c3d3',800);
+      const tone=periodTonePalette(b.text,b.period);
+      const isHalf=normalizedPeriodTone(b.text,b.period)!=='default';
+      if(isHalf){ctx.fillStyle=tone.stroke;roundRect(ctx,pad+8,y+10,4,24,2,true,false);}
+      text(b.text,pad+(isHalf?22:8),y+10,25,isHalf?tone.title:'#b3c3d3',800);
       ctx.strokeStyle='#293c4e';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,y+42);ctx.lineTo(W-pad,y+42);ctx.stroke();
     }else if(b.type==='timelineEvent'){
       const nodeX=pad+172, actorX=pad+200, isGoal=b.event==='GOAL';
