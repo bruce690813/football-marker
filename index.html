@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.95</title>
+<title>足球場邊記錄器 v6.96</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26897,7 +26897,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
 #reportModal .reportDiff{margin-top:8px!important;padding:4px 8px 0!important;min-height:0!important}
 #reportModal .matchTimelinePhase{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;padding:16px 0 10px!important;border-top:1px solid #293c4e!important}
 #reportModal .matchTimelinePhaseMain{display:flex!important;align-items:center!important;gap:10px!important;min-width:0}
-#reportModal .matchTimelinePhaseBar{width:6px!important;height:38px!important;border-radius:2px!important;flex:0 0 auto;background:#3b556f}
+#reportModal .matchTimelinePhaseBar{width:6px!important;height:30px!important;border-radius:2px!important;flex:0 0 auto;background:#3b556f}
 #reportModal .matchTimelinePhase.periodToneFirstHalf .matchTimelinePhaseBar{background:#facc15!important}
 #reportModal .matchTimelinePhase.periodToneSecondHalf .matchTimelinePhaseBar{background:#fb923c!important}
 #reportModal .matchTimelinePhaseTitle{font-size:15px!important;font-weight:900!important;line-height:1.2!important;color:#d7e5f2!important;white-space:nowrap}
@@ -26918,6 +26918,27 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
   #reportModal .matchTimelinePhaseMetaValue{font-size:13px!important}
 }
 
+/* v6.96：只保留階段標題內側的小長方形色條，不再畫重複的外邊框。 */
+#reportModal .matchTimelinePhase.periodToneFirstHalf,
+#reportModal .matchTimelinePhase.periodToneSecondHalf{
+  border-left:0!important;
+  padding-left:0!important;
+}
+
+/* v6.96：兩張時間卡縮短無效底部留白，保留三行資訊的可讀性。 */
+#reportModal .reportTimeCard{padding:7px 9px 6px!important}
+#reportModal .reportOverviewCell{
+  min-height:76px!important;
+  padding:7px 10px!important;
+  gap:2px!important;
+  line-height:1.18!important;
+}
+#reportModal .reportOverviewCell.primary .reportOverviewValue{color:#eef5fc!important}
+#reportModal .reportOverviewLabel{margin-bottom:0!important}
+#reportModal .reportOverviewSub{line-height:1.2!important}
+@media(max-width:390px){
+  #reportModal .reportOverviewCell{min-height:72px!important;padding:6px 8px!important}
+}
 </style>
 </head>
 <body>
@@ -26933,7 +26954,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.95</span>
+      <span class="headerVersion">v6.96</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -34189,7 +34210,7 @@ function reportTimelineHTML(){
       const summary=periodSummaryInfo(e.period);
       heading=`<li class="matchTimelinePhase ${toneClass}">
         <div class="matchTimelinePhaseMain"><span class="matchTimelinePhaseBar" aria-hidden="true"></span><span class="matchTimelinePhaseTitle">${escapeHtml(e.phase)}</span></div>
-        ${summary?`<div class="matchTimelinePhaseMeta" aria-label="${escapeHtml(e.phase)} 用時 ${escapeHtml(summary.duration)} 本段比分 ${escapeHtml(summary.score)}"><span class="matchTimelinePhaseMetaItem"><span class="matchTimelinePhaseMetaLabel">用時</span><span class="matchTimelinePhaseMetaValue">${escapeHtml(summary.duration)}</span></span><span class="matchTimelinePhaseMetaItem"><span class="matchTimelinePhaseMetaLabel">本段比分</span><span class="matchTimelinePhaseMetaValue">${escapeHtml(summary.score)}</span></span></div>`:''}
+        ${summary?`<div class="matchTimelinePhaseMeta" aria-label="${escapeHtml(e.phase)} 本段時間 ${escapeHtml(summary.duration)} 本段比分 ${escapeHtml(summary.score)}"><span class="matchTimelinePhaseMetaItem"><span class="matchTimelinePhaseMetaLabel">本段時間</span><span class="matchTimelinePhaseMetaValue">${escapeHtml(summary.duration)}</span></span><span class="matchTimelinePhaseMetaItem"><span class="matchTimelinePhaseMetaLabel">本段比分</span><span class="matchTimelinePhaseMetaValue">${escapeHtml(summary.score)}</span></span></div>`:''}
       </li>`;
     }
     phase=e.period;
@@ -34637,7 +34658,7 @@ function reportCanvasLayout(lines,ctx){
         }
       }
     }else if(line.type==='compactTime'){
-      b.height=line.halftime!==null?116:104;
+      b.height=90;
     }else if(line.type==='timeGrid'){
       b.rows=[];b.height=8;
       for(let i=0;i<line.cells.length;i+=2){
@@ -34743,7 +34764,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       const padX=14;
       const gap=12;
       const topY=y+2;
-      const cellH=100;
+      const cellH=84;
       const smallLabel=(str,x,ty)=>text(str,x+padX,ty+8,18,'#7dd3fc',800);
       const fittedValue=(str,x,ty,maxWidth,baseSize,color,weight=800)=>{
         const value=String(str||'');
@@ -34751,7 +34772,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         ctx.font=font(size,weight);
         const measured=ctx.measureText(value).width;
         if(measured>maxWidth) size=Math.max(16,Math.floor(size*maxWidth/measured));
-        text(value,x+padX,ty+34,size,color,weight);
+        text(value,x+padX,ty+30,size,color,weight);
       };
       const fittedSub=(str,x,ty,maxWidth)=>{
         const value=String(str||'');
@@ -34759,14 +34780,14 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         ctx.font=font(size,700);
         const measured=ctx.measureText(value).width;
         if(measured>maxWidth) size=Math.max(13,Math.floor(size*maxWidth/measured));
-        text(value,x+padX,ty+72,size,'#d7e2ef',700);
+        text(value,x+padX,ty+60,size,'#d7e2ef',700);
       };
       if(b.halftime!==null){
         const w=(content-gap)/2;
         ctx.fillStyle='#162535';roundRect(ctx,pad,topY,w,cellH,10,true,false);
         ctx.fillStyle='#162535';roundRect(ctx,pad+w+gap,topY,w,cellH,10,true,false);
         smallLabel('實際比賽時間',pad,topY);
-        fittedValue(b.actual,pad,topY,w-padX*2,30,'#38bdf8',900);
+        fittedValue(b.actual,pad,topY,w-padX*2,30,'#eef5fc',900);
         fittedSub(b.actualRange,pad,topY,w-padX*2);
         smallLabel('中場休息',pad+w+gap,topY);
         fittedValue(b.halftime,pad+w+gap,topY,w-padX*2,28,'#eef5fc',850);
@@ -34774,7 +34795,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       }else{
         ctx.fillStyle='#162535';roundRect(ctx,pad,topY,content,cellH,10,true,false);
         smallLabel('實際比賽時間',pad,topY);
-        fittedValue(b.actual,pad,topY,content-padX*2,30,'#38bdf8',900);
+        fittedValue(b.actual,pad,topY,content-padX*2,30,'#eef5fc',900);
         fittedSub(b.actualRange,pad,topY,content-padX*2);
       }
     }else if(b.type==='timeGrid'){
@@ -34833,8 +34854,8 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       if(isHalf){ctx.fillStyle=tone.stroke;roundRect(ctx,pad+8,y+8,6,30,2,true,false);}
       text(b.text,pad+(isHalf?24:8),y+10,25,isHalf?tone.title:'#b3c3d3',800);
       if(b.duration){
-        text('用時',W-pad-170,y+7,14,'#91a7bd',800);
-        text(b.duration,W-pad-170,y+22,20,'#eef5fc',900);
+        text('本段時間',W-pad-188,y+7,14,'#91a7bd',800);
+        text(b.duration,W-pad-188,y+22,20,'#eef5fc',900);
       }
       if(b.score){
         text('本段比分',W-pad-78,y+7,14,'#91a7bd',800);
