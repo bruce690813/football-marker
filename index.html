@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.87</title>
+<title>足球場邊記錄器 v6.91</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26241,6 +26241,13 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn:active{filter:brightness(1
 #reportModal .periodSummaryRow .periodStatValue{font-size:14px!important;font-weight:800!important;
   line-height:1.25!important;white-space:nowrap!important;color:#edf5ff!important;}
 #reportModal .periodSummaryRow .ptime .periodStatValue{color:#bccbdc!important;}
+#reportModal .periodSummaryRow{border:1px solid rgba(77,104,131,.24)!important;transition:background .18s ease,border-color .18s ease;}
+#reportModal .periodSummaryRow.periodToneFirstHalf{background:linear-gradient(180deg,rgba(20,43,65,.96) 0%,rgba(17,37,55,.96) 100%)!important;border-color:rgba(76,193,255,.24)!important;}
+#reportModal .periodSummaryRow.periodToneFirstHalf .pname{color:#7dd3fc!important;}
+#reportModal .periodSummaryRow.periodToneFirstHalf .periodStatLabel{color:#7ea4be!important;}
+#reportModal .periodSummaryRow.periodToneSecondHalf{background:linear-gradient(180deg,rgba(35,28,58,.95) 0%,rgba(28,24,48,.95) 100%)!important;border-color:rgba(167,139,250,.24)!important;}
+#reportModal .periodSummaryRow.periodToneSecondHalf .pname{color:#c4b5fd!important;}
+#reportModal .periodSummaryRow.periodToneSecondHalf .periodStatLabel{color:#a899d3!important;}
 </style>
 
 
@@ -26829,6 +26836,34 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
 }
 </style>
 
+<style id="v691CompactReportTimeAndPeriods">
+/* v6.91 只精簡摘要時間與比賽段落；事件時間軸及主畫面樣式不變。 */
+#reportModal .reportOverviewGrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:6px!important}
+#reportModal .reportTimeRange{grid-column:1/-1!important;min-height:40px!important;padding:6px 9px!important}
+#reportModal .reportTimeRange .reportOverviewValue{font-variant-numeric:tabular-nums;white-space:normal;overflow-wrap:anywhere}
+#reportModal .reportHalftime{display:block;min-height:48px!important;padding:6px 8px!important}
+#reportModal .reportHalftime[hidden]{display:none!important}
+#reportModal .reportHalftime .reportOverviewValue{font-size:18px!important;font-weight:800!important}
+#reportModal .reportTimeDetails{margin-top:3px;color:#a9c0d4}
+#reportModal .reportTimeDetails[hidden]{display:none!important}
+#reportModal .reportTimeDetails summary{cursor:pointer;display:flex;align-items:center;justify-content:flex-end;gap:6px;min-height:36px;padding:4px 8px;list-style:none;color:#9fc8e3;font-size:12px;font-weight:800}
+#reportModal .reportTimeDetails summary::-webkit-details-marker{display:none}
+#reportModal .reportTimeDetails summary:focus-visible{outline:2px solid #7dd3fc;outline-offset:-2px;border-radius:7px}
+#reportModal .reportTimeDetailsArrow{display:inline-block;transition:transform .12s ease}
+#reportModal .reportTimeDetails[open] .reportTimeDetailsArrow{transform:rotate(180deg)}
+#reportModal .reportTimeDetailsBody{display:flex;flex-wrap:wrap;align-items:baseline;gap:9px;padding:8px 10px;background:#152537;border-radius:8px}
+#reportModal .reportTimeDetailsBody .reportOverviewLabel{font-size:11px!important;white-space:nowrap}
+#reportModal .reportTimeDetailsBody .reportHalftimeTimes{display:inline;font-size:12px!important;color:#d4e2ef;font-weight:650;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#reportModal .periodSummary{display:flex!important;flex-direction:column!important;gap:6px!important;padding:0!important;border:0!important;background:none!important}
+#reportModal .periodSummaryHeader, #reportModal .periodSummaryRow{display:grid!important;grid-template-columns:minmax(0,1fr) 76px 54px!important;align-items:center!important;gap:8px!important}
+#reportModal .periodSummaryHeader{padding:0 10px;font-size:11px;font-weight:800;color:#91a7bd}
+#reportModal .periodSummaryRow{min-height:43px!important;padding:8px 10px!important;margin:0!important;border-radius:9px!important}
+#reportModal .periodSummaryRow .pname{font-size:13px!important;font-weight:900!important;line-height:1.3!important;min-width:0}
+#reportModal .periodSummaryRow .ptime,#reportModal .periodSummaryRow .pscore{display:block!important;text-align:left!important;line-height:1.25!important}
+#reportModal .periodSummaryRow .ptime .periodStatValue{font-size:13px!important;font-weight:750!important;color:#d3dfea!important;font-variant-numeric:tabular-nums}
+#reportModal .periodSummaryRow .pscore .periodStatValue{font-size:15px!important;color:#eef5fc!important;font-weight:900!important;font-variant-numeric:tabular-nums}
+@media(max-width:350px){#reportModal .periodSummaryHeader,#reportModal .periodSummaryRow{grid-template-columns:minmax(0,1fr) 62px 46px!important;gap:6px!important}#reportModal .periodSummaryRow{padding:7px 8px!important}}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26843,7 +26878,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.87</span>
+      <span class="headerVersion">v6.91</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -27552,8 +27587,17 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
       <span class="rosterCountBadge" id="rosterCountBadge">0 人</span>
     </div>
 
-    <!-- v6.74：預設不占標題下方；只有按「新增背號」才把原輸入區暫時移至此。 -->
-    <div id="rosterQuickAddDock" class="rosterQuickAddDock" hidden></div>
+    <!-- v6.88：唯一的自訂背號入口在標題旁；輸入區預設隱藏，按下後才展開。 -->
+    <div id="rosterQuickAddDock" class="rosterQuickAddDock" hidden>
+      <div class="rosterQuickAddArea" id="rosterQuickAddArea">
+        <div class="rosterAddLabelRow"><div class="rosterPickerLabel rosterOtherLabel">其他背號</div><button type="button" class="rosterQuickAddCollapse" onclick="closeRosterQuickAdd()" hidden>收起</button></div>
+        <div class="rosterInputRow">
+          <input id="rosterInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" enterkeyhint="done" placeholder="其他背號 1–99" aria-label="新增單一球員背號">
+          <button class="rosterAddBtn" type="button" onclick="addRosterNumbers()">確認加入</button>
+        </div>
+        <div id="rosterInlineStatus" class="rosterInlineStatus" aria-live="polite"></div>
+      </div>
+    </div>
 
     <div class="rosterModalScroll">
       <button id="rosterPreviousBtn" class="rosterPreviousBtn" type="button" onclick="applyPreviousRoster()" style="display:none">
@@ -27591,15 +27635,6 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
         <div class="rosterPickerLabel rosterExtraLabel">其他已選</div>
         <div id="rosterGrid" class="rosterGrid rosterExtraGrid"></div>
       </div>
-
-    <div class="rosterQuickAddArea" id="rosterQuickAddArea">
-      <div class="rosterAddLabelRow"><div class="rosterPickerLabel rosterOtherLabel">其他背號</div><button type="button" class="rosterQuickAddCollapse" onclick="closeRosterQuickAdd()" hidden>收起</button></div>
-      <div class="rosterInputRow">
-        <input id="rosterInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" enterkeyhint="done" placeholder="其他背號 1–99" aria-label="新增單一球員背號">
-        <button class="rosterAddBtn" type="button" onclick="addRosterNumbers()">＋ 新增</button>
-      </div>
-      <div id="rosterInlineStatus" class="rosterInlineStatus" aria-live="polite"></div>
-    </div>
 
     </div>
 
@@ -27854,18 +27889,24 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
             <span class="reportOverviewLabel">實際比賽時間</span>
             <span class="reportOverviewValue" id="reportActual">00:00</span>
           </div>
-          <div class="reportOverviewCell">
-            <span class="reportOverviewLabel">開始／結束</span>
-            <span class="reportOverviewValue"><span id="reportStart">--</span> → <span id="reportEnd">--</span></span>
-            <span class="crossDayBadge" id="reportCrossDayBadge">跨日</span>
-          </div>
           <div class="reportHalftime" id="reportHalftime" hidden>
             <span class="reportOverviewLabel">中場休息</span>
             <span class="reportOverviewValue" id="reportHalftimeDuration">--</span>
-            <div class="reportHalftimeTimes"><span id="reportHalftimeStart">--</span> → <span id="reportHalftimeEnd">--</span></div>
+          </div>
+          <div class="reportOverviewCell reportTimeRange">
+            <span class="reportOverviewLabel">開始 → 結束</span>
+            <span class="reportOverviewValue"><span id="reportStart">--</span> → <span id="reportEnd">--</span></span>
+            <span class="crossDayBadge" id="reportCrossDayBadge">跨日</span>
           </div>
           <div class="diff reportDiff" id="reportDiff"></div>
         </div>
+        <details class="reportTimeDetails" id="reportTimeDetails" hidden>
+          <summary>查看詳細時間<span class="reportTimeDetailsArrow" aria-hidden="true">▾</span></summary>
+          <div class="reportTimeDetailsBody">
+            <span class="reportOverviewLabel">中場起訖</span>
+            <span class="reportHalftimeTimes"><span id="reportHalftimeStart">--</span> → <span id="reportHalftimeEnd">--</span></span>
+          </div>
+        </details>
       </div>
 
       <div id="reportPeriodsWrap" style="display:none">
@@ -29654,13 +29695,34 @@ function matchEndEpoch(){
   if(state.finished && state.periods?.length) return state.periods[state.periods.length-1].endEpoch || state.endEpoch;
   return state.endEpoch;
 }
+function normalizedPeriodTone(label='',number=0){
+  const plain=String(label||'').replace(/\s+/g,'');
+  if(Number(number)===1 || /上半場/.test(plain)) return 'first';
+  if(Number(number)===2 || /下半場/.test(plain)) return 'second';
+  return 'default';
+}
+function periodToneClass(label='',number=0){
+  const tone=normalizedPeriodTone(label,number);
+  if(tone==='first') return 'periodToneFirstHalf';
+  if(tone==='second') return 'periodToneSecondHalf';
+  return '';
+}
+function periodTonePalette(label='',number=0){
+  const tone=normalizedPeriodTone(label,number);
+  if(tone==='first') return {fill:'#173247',stroke:'rgba(76,193,255,.24)',title:'#7dd3fc',label:'#89aabd',value:'#eef5fc'};
+  if(tone==='second') return {fill:'#2a2146',stroke:'rgba(167,139,250,.24)',title:'#c4b5fd',label:'#aa9fcb',value:'#f4f0ff'};
+  return {fill:'#182837',stroke:'rgba(63,86,111,.18)',title:'#7dd3fc',label:'#8da7ba',value:'#eef5fc'};
+}
+
 function completedPeriodSummaryHTML(){
   if(!state.multiPeriod || !state.periods?.length) return '';
-  const rows=[];
+  const rows=['<div class="periodSummaryHeader" aria-hidden="true"><span>段落</span><span>用時</span><span>本段比分</span></div>'];
   state.periods.forEach(p=>{
     const our=Math.max(0,(p.endOurScore??0)-(p.startOurScore??0));
     const opp=Math.max(0,(p.endOppScore??0)-(p.startOppScore??0));
-    rows.push(`<div class="periodSummaryRow"><div class="pname">${escapeHtml(p.label||periodLabel(p.number))}</div><div class="ptime"><span class="periodStatLabel">比賽用時</span><span class="periodStatValue">${fmtMMSS(p.duration||0)}</span></div><div class="pscore"><span class="periodStatLabel">本段比分</span><span class="periodStatValue">${our}:${opp}</span></div></div>`);
+    const label=p.label||periodLabel(p.number);
+    const toneClass=periodToneClass(label,p.number);
+    rows.push(`<div class="periodSummaryRow ${toneClass}"><div class="pname">${escapeHtml(label)}</div><div class="ptime"><span class="periodStatValue">${fmtMMSS(p.duration||0)}</span></div><div class="pscore"><span class="periodStatValue">${our}:${opp}</span></div></div>`);
   });
   return rows.join('');
 }
@@ -30538,8 +30600,8 @@ function renderRosterModal(){
   }
 }
 
-// v6.74：只有使用者主動進入新增模式，才將原本位於捲動底部的「其他背號」移到標題下方。
-// 兩種位置共用同一個真實 input 與原本 addRosterNumbers()，不複製輸入框、不修改名單驗證。
+// v6.88：只有使用者主動按「＋新增背號」才展開標題下方輸入區。
+// 不再把輸入區放在底部清單；沿用原 input 和 addRosterNumbers() 驗證。
 function openRosterQuickAdd(options={}){
   const panel=byId('rosterModal')?.querySelector('.rosterModalPanel');
   const dock=byId('rosterQuickAddDock');
@@ -30547,7 +30609,6 @@ function openRosterQuickAdd(options={}){
   if(!panel || !dock || !area) return;
   if(!panel.classList.contains('rosterAdding')){
     dock.hidden=false;
-    dock.appendChild(area);
     panel.classList.add('rosterAdding');
     // v6.75：避免先前捲到名單底部的 offset 留在鍵盤開啟後。
     const scroll=byId('rosterModal')?.querySelector('.rosterModalScroll');
@@ -30570,7 +30631,7 @@ function closeRosterQuickAdd(options={}){
   if(!panel || !dock || !area || !scroll) return;
   if(panel.classList.contains('rosterAdding')){
     if(options.blur!==false && document.activeElement===byId('rosterInput')) byId('rosterInput').blur();
-    scroll.appendChild(area);
+    // v6.88：輸入區永遠保留在 Dock；收起時只隱藏，不移回底部。
     panel.classList.remove('rosterAdding');
     dock.hidden=true;
   }
@@ -34154,6 +34215,11 @@ function buildReportDOM(){
   if(reportHalftime){
     const showHalftime=Boolean(state.halftimeStartEpoch);
     reportHalftime.hidden=!showHalftime;
+    const details=byId('reportTimeDetails');
+    if(details){
+      details.hidden=!showHalftime;
+      details.open=false; // 每次進入摘要時預設為精簡模式；完整時間資料仍保留
+    }
     if(showHalftime){
       byId('reportHalftimeStart').textContent=fmtReportBoundary(
         state.halftimeStartEpoch,
@@ -34290,20 +34356,17 @@ function reportLines(){
   metaCards.push({label:'比賽日期',icon:'📅',value:`${matchDateLabel(start,end)}${dayMatchLabel?`｜${dayMatchLabel}`:''}`,full:true,summaryCard:true});
   if(venueValue) metaCards.push({label:'比賽場地',icon:'🏟️',value:venueValue,full:true,summaryCard:true});
   if(roster.length){
-    metaCards.push({label:'本場球員',icon:'👕',value:roster.map(n=>'#'+n).join(' '),full:true,summaryCard:true});
+    metaCards.push({label:'本場球員',icon:'👕',iconType:'jersey',value:roster.map(n=>'#'+n).join(' '),full:true,summaryCard:true});
   }
   lines.push({type:'metaGrid',cells:metaCards});
 
   lines.push({type:'section',text:'時間紀錄'});
-  const timeCells=[
-    {label:'實際比賽時間',value:fmtDurationReadable(totalMatchElapsed()),primary:true},
-    {label:'開始／結束',value:`${clock(start)} → ${clock(end)}${crossDay?'（跨日）':''}`}
-  ];
-  if(state.halftimeStartEpoch){
-    timeCells.push({label:'中場休息',value:fmtMMSS(halftimeElapsed())},
-      {label:'中場起訖',value:`${clock(state.halftimeStartEpoch)} → ${clock(state.halftimeEndEpoch)}`});
-  }
-  lines.push({type:'timeGrid',cells:timeCells});
+  lines.push({
+    type:'compactTime',
+    actual:fmtDurationReadable(totalMatchElapsed()),
+    halftime:state.halftimeStartEpoch?fmtMMSS(halftimeElapsed()):null,
+    range:`${clock(start)} → ${clock(end)}${crossDay?'（跨日）':''}`
+  });
   if(state.regulationMinutes){
     const diff=Math.round((state.finished?state.finalElapsed:totalMatchElapsed())-regulationTargetSeconds());
     lines.push({type:'meta',text:`${regulationDisplayText()}${state.finished?`｜${diff<0?'提前':'超過'} ${fmtMMSS(Math.abs(diff))}`:''}`});
@@ -34311,9 +34374,12 @@ function reportLines(){
 
   if(state.multiPeriod && state.periods.length){
     lines.push({type:'section',text:'比賽段落'});
-    lines.push({type:'periodGrid',items:state.periods.map(p=>({label:p.label||periodLabel(p.number),
+    lines.push({type:'periodGrid',items:state.periods.map(p=>({
+      number:p.number,
+      label:p.label||periodLabel(p.number),
       score:`${Math.max(0,(p.endOurScore??0)-(p.startOurScore??0))}:${Math.max(0,(p.endOppScore??0)-(p.startOppScore??0))}`,
-      duration:fmtMMSS(p.duration||0)}))});
+      duration:fmtMMSS(p.duration||0)
+    }))});
   }
   const entries=reportTimelineEntries();
   const scorers=new Map();
@@ -34451,6 +34517,56 @@ function reportWrapText(ctx,text,width,font){
   }
   return rows;
 }
+function currentJerseyPalette(){
+  return JERSEY_COLOR_OPTIONS[normalizeJerseyColor(state.jerseyColor)] || JERSEY_COLOR_OPTIONS.default;
+}
+
+function drawReportJerseyIcon(ctx,x,y,size,palette=currentJerseyPalette()){
+  const fill=palette?.fill || JERSEY_COLOR_OPTIONS.default.fill;
+  const outline=palette?.outline || JERSEY_COLOR_OPTIONS.default.outline;
+  const collar=palette?.collar || JERSEY_COLOR_OPTIONS.default.collar;
+  const unit=size/24;
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.scale(unit,unit);
+
+  ctx.beginPath();
+  ctx.moveTo(8.2,2.3);
+  ctx.lineTo(5.3,3.2);
+  ctx.lineTo(1.6,6.4);
+  ctx.lineTo(4.1,10.5);
+  ctx.lineTo(6.7,9);
+  ctx.lineTo(6.7,21);
+  ctx.lineTo(17.3,21);
+  ctx.lineTo(17.3,9);
+  ctx.lineTo(19.9,10.5);
+  ctx.lineTo(22.4,6.4);
+  ctx.lineTo(18.7,3.2);
+  ctx.lineTo(15.8,2.3);
+  ctx.bezierCurveTo(15.3,3.9,14,4.9,12,4.9);
+  ctx.bezierCurveTo(10,4.9,8.7,3.9,8.2,2.3);
+  ctx.closePath();
+  ctx.fillStyle=fill;
+  ctx.strokeStyle=outline;
+  ctx.lineWidth=1.15;
+  ctx.lineJoin='round';
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(8.55,2.72);
+  ctx.bezierCurveTo(9.22,3.89,10.37,4.5,12,4.5);
+  ctx.bezierCurveTo(13.63,4.5,14.78,3.89,15.45,2.72);
+  ctx.lineTo(16.37,3.01);
+  ctx.bezierCurveTo(15.55,4.57,14.05,5.38,12,5.38);
+  ctx.bezierCurveTo(9.95,5.38,8.45,4.57,7.63,3.01);
+  ctx.closePath();
+  ctx.fillStyle=collar;
+  ctx.fill();
+
+  ctx.restore();
+}
+
 function reportCanvasLayout(lines,ctx){
   const width=1080, pad=64, content=width-pad*2;
   const font='500 24px -apple-system, BlinkMacSystemFont, sans-serif';
@@ -34466,10 +34582,12 @@ function reportCanvasLayout(lines,ctx){
         if(current?.summaryCard){
           const rows=reportWrapText(ctx,current.value,content-92,mainFont);
           const height=Math.max(58,rows.length*34+20);
-          b.rows.push({summaryCard:true,icon:current.icon,label:current.label,rows,height});
+          b.rows.push({summaryCard:true,icon:current.icon,iconType:current.iconType,label:current.label,rows,height});
           b.height+=height+8;
         }
       }
+    }else if(line.type==='compactTime'){
+      b.height=line.halftime!==null?154:81;
     }else if(line.type==='timeGrid'){
       b.rows=[];b.height=8;
       for(let i=0;i<line.cells.length;i+=2){
@@ -34485,7 +34603,7 @@ function reportCanvasLayout(lines,ctx){
     }else if(line.type==='meta'){
       b.textRows=reportWrapText(ctx,line.text,content-16,font);b.height=b.textRows.length*32+10;
     }else if(line.type==='periodGrid'){
-      b.height=Math.ceil(line.items.length/3)*108+4;
+      b.height=37+line.items.length*62+7;
     }else if(line.type==='mvpCard'){
       b.titleRows=reportWrapText(ctx,line.title,content-24,'900 30px -apple-system, sans-serif');
       b.nameRows=reportWrapText(ctx,(line.names||[]).join(' ｜ '),content-24,mainFont);
@@ -34565,11 +34683,47 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       b.rows.forEach(row=>{
         if(row.summaryCard){
           ctx.fillStyle='#162535';roundRect(ctx,pad,rowY,content,row.height,10,true,false);
-          emojiText(row.icon,pad+18,rowY+14,28);
+          if(row.iconType==='jersey') drawReportJerseyIcon(ctx,pad+18,rowY+14,28);
+          else emojiText(row.icon,pad+18,rowY+14,28);
           row.rows.forEach((value,j)=>text(value,pad+62,rowY+12+j*34,28,'#c8d6e4',700));
           rowY+=row.height+8;
         }
       });
+    }else if(b.type==='compactTime'){
+      const padX=14;
+      const gap=12;
+      const topY=y+2;
+      const firstH=72;
+      const smallLabel=(str,x,ty)=>text(str,x+padX,ty+7,18,'#7dd3fc',800);
+      const fittedValue=(str,x,ty,maxWidth,baseSize,color,weight=800)=>{
+        const value=String(str);
+        let size=baseSize;
+        ctx.font=font(size,weight);
+        const measured=ctx.measureText(value).width;
+        if(measured>maxWidth) size=Math.max(16,Math.floor(size*maxWidth/measured));
+        text(value,x+padX,ty+34,size,color,weight);
+      };
+      if(b.halftime!==null){
+        const w=(content-gap)/2;
+        ctx.fillStyle='#162535';roundRect(ctx,pad,topY,w,firstH,10,true,false);
+        ctx.fillStyle='#162535';roundRect(ctx,pad+w+gap,topY,w,firstH,10,true,false);
+        smallLabel('實際比賽',pad,topY);
+        fittedValue(b.actual,pad,topY,w-padX*2,30,'#38bdf8',900);
+        smallLabel('中場休息',pad+w+gap,topY);
+        fittedValue(b.halftime,pad+w+gap,topY,w-padX*2,28,'#eef5fc',800);
+        const bottomY=topY+firstH+7;
+        ctx.fillStyle='#162535';roundRect(ctx,pad,bottomY,content,61,10,true,false);
+        smallLabel('開始 → 結束',pad,bottomY);
+        fittedValue(b.range,pad,bottomY,content-padX*2,23,'#eef5fc',750);
+      }else{
+        const w=content*.38;
+        ctx.fillStyle='#162535';roundRect(ctx,pad,topY,w,firstH,10,true,false);
+        ctx.fillStyle='#162535';roundRect(ctx,pad+w+gap,topY,content-w-gap,firstH,10,true,false);
+        smallLabel('實際比賽',pad,topY);
+        fittedValue(b.actual,pad,topY,w-padX*2,29,'#38bdf8',900);
+        smallLabel('開始 → 結束',pad+w+gap,topY);
+        fittedValue(b.range,pad+w+gap,topY,content-w-gap-padX*2,22,'#eef5fc',750);
+      }
     }else if(b.type==='timeGrid'){
       let rowY=y+2;
       b.rows.forEach(row=>{
@@ -34583,12 +34737,19 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         rowY+=row.height+8;
       });
     }else if(b.type==='periodGrid'){
+      const timeX=pad+content*.66;
+      const scoreX=pad+content-85;
+      text('段落',pad+12,y+4,18,'#8da7ba',750);
+      text('用時',timeX,y+4,18,'#8da7ba',750);
+      text('本段比分',scoreX,y+4,18,'#8da7ba',750);
       b.items.forEach((p,i)=>{
-        const x=pad+(i%3)*(content+16)/3, top=y+Math.floor(i/3)*108, w=(content-32)/3;
-        ctx.fillStyle='#182837';roundRect(ctx,x,top,w,101,8,true,false);
-        text(p.label,x+12,top+8,21,'#7dd3fc',750);
-        text('比賽用時',x+12,top+36,17,'#8da7ba',700);text(p.duration,x+113,top+34,22,'#b9c9d9',700);
-        text('本段比分',x+12,top+69,17,'#8da7ba',700);text(p.score,x+113,top+67,24,'#eef5fc',800);
+        const top=y+34+i*62;
+        const palette=periodTonePalette(p.label,p.number);
+        ctx.fillStyle=palette.fill;roundRect(ctx,pad,top,content,56,8,true,false);
+        ctx.strokeStyle=palette.stroke;ctx.lineWidth=1.5;roundRect(ctx,pad,top,content,56,8,false,true);
+        text(p.label,pad+12,top+12,25,palette.title,850);
+        text(p.duration,timeX,top+13,24,'#d7e2ef',700);
+        text(p.score,scoreX,top+11,27,palette.value,850);
       });
     }else if(b.type==='mvpCard'){
       const topScorer=b.kind==='topScorer';
