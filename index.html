@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.93</title>
+<title>足球場邊記錄器 v6.94</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26242,12 +26242,13 @@ body.resultMode.finalOutputVisible .resultNewMatchBtn:active{filter:brightness(1
   line-height:1.25!important;white-space:nowrap!important;color:#edf5ff!important;}
 #reportModal .periodSummaryRow .ptime .periodStatValue{color:#bccbdc!important;}
 #reportModal .periodSummaryRow{border:1px solid rgba(77,104,131,.24)!important;transition:background .18s ease,border-color .18s ease;}
-#reportModal .periodSummaryRow.periodToneFirstHalf{background:linear-gradient(180deg,rgba(94,62,8,.96) 0%,rgba(71,45,8,.98) 100%)!important;border-color:rgba(250,204,21,.48)!important;box-shadow:inset 0 1px 0 rgba(255,240,177,.12)!important;}
+/* v6.94：比賽段落退回中性深藍灰底，與事件時間軸僅透過標題與左側細色條區分上下半場。 */
+#reportModal .periodSummaryRow.periodToneFirstHalf{background:#142332!important;border-color:rgba(77,104,131,.25)!important;box-shadow:inset 4px 0 0 #facc15!important;}
 #reportModal .periodSummaryRow.periodToneFirstHalf .pname{color:#ffd966!important;}
-#reportModal .periodSummaryRow.periodToneFirstHalf .periodStatLabel{color:#f7cb62!important;}
-#reportModal .periodSummaryRow.periodToneSecondHalf{background:linear-gradient(180deg,rgba(104,49,14,.96) 0%,rgba(82,37,10,.98) 100%)!important;border-color:rgba(251,146,60,.5)!important;box-shadow:inset 0 1px 0 rgba(255,225,188,.10)!important;}
+#reportModal .periodSummaryRow.periodToneFirstHalf .periodStatLabel{color:#91a7bd!important;}
+#reportModal .periodSummaryRow.periodToneSecondHalf{background:#142332!important;border-color:rgba(77,104,131,.25)!important;box-shadow:inset 4px 0 0 #fb923c!important;}
 #reportModal .periodSummaryRow.periodToneSecondHalf .pname{color:#ffb261!important;}
-#reportModal .periodSummaryRow.periodToneSecondHalf .periodStatLabel{color:#ffc27f!important;}
+#reportModal .periodSummaryRow.periodToneSecondHalf .periodStatLabel{color:#91a7bd!important;}
 </style>
 
 
@@ -26891,7 +26892,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.93</span>
+      <span class="headerVersion">v6.94</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -29722,8 +29723,8 @@ function periodToneClass(label='',number=0){
 }
 function periodTonePalette(label='',number=0){
   const tone=normalizedPeriodTone(label,number);
-  if(tone==='first') return {fill:'#5f3c09',stroke:'#facc15',title:'#ffd966',label:'#f7cb62',value:'#fff7e3'};
-  if(tone==='second') return {fill:'#69310d',stroke:'#fb923c',title:'#ffb261',label:'#ffc27f',value:'#fff4e8'};
+  if(tone==='first') return {fill:'#142332',stroke:'#facc15',cardStroke:'rgba(77,104,131,.25)',title:'#ffd966',label:'#91a7bd',value:'#eef5fc'};
+  if(tone==='second') return {fill:'#142332',stroke:'#fb923c',cardStroke:'rgba(77,104,131,.25)',title:'#ffb261',label:'#91a7bd',value:'#eef5fc'};
   return {fill:'#182837',stroke:'rgba(63,86,111,.18)',title:'#7dd3fc',label:'#8da7ba',value:'#eef5fc'};
 }
 
@@ -34759,7 +34760,10 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         const top=y+34+i*62;
         const palette=periodTonePalette(p.label,p.number);
         ctx.fillStyle=palette.fill;roundRect(ctx,pad,top,content,56,8,true,false);
-        ctx.strokeStyle=palette.stroke;ctx.lineWidth=1.5;roundRect(ctx,pad,top,content,56,8,false,true);
+        ctx.strokeStyle=palette.cardStroke||palette.stroke;ctx.lineWidth=1.5;roundRect(ctx,pad,top,content,56,8,false,true);
+        if(normalizedPeriodTone(p.label,p.number)!=='default'){
+          ctx.fillStyle=palette.stroke;roundRect(ctx,pad+1,top+7,4,42,2,true,false);
+        }
         text(p.label,pad+12,top+12,25,palette.title,850);
         text(p.duration,timeX,top+13,24,'#d7e2ef',700);
         text(p.score,scoreX,top+11,27,palette.value,850);
