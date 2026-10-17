@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.96</title>
+<title>足球場邊記錄器 v6.97</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26940,6 +26940,56 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
   #reportModal .reportOverviewCell{min-height:72px!important;padding:6px 8px!important}
 }
 </style>
+<style id="v697SummaryAndGoalPolish">
+/* v6.97：本場進球依比分牌以我方／對手並列，其餘事件欄位維持原設計。 */
+body.resultMode.finalOutputVisible .quickResultStat.goalStat{gap:2px!important}
+body.resultMode.finalOutputVisible .quickResultStat.goalStat .goalComparisonValue{
+  display:flex!important;align-items:baseline!important;justify-content:center!important;
+  gap:1px!important;white-space:nowrap!important;line-height:1!important;
+  font-size:26px!important;letter-spacing:-.03em!important;
+}
+body.resultMode.finalOutputVisible .goalComparisonOur{color:#68ccef!important;opacity:1!important}
+body.resultMode.finalOutputVisible .goalComparisonOpp{color:#ffad83!important;opacity:1!important}
+body.resultMode.finalOutputVisible .goalComparisonSeparator{color:#9daebe!important;opacity:1!important}
+body.resultMode.finalOutputVisible .goalComparisonLegend{
+  display:block!important;width:100%!important;text-align:center!important;
+  color:#b8c7d5!important;font-weight:750!important;font-size:10px!important;
+  line-height:1.05!important;white-space:nowrap!important;
+}
+@media(max-width:360px){
+  body.resultMode.finalOutputVisible .quickResultStat.goalStat .goalComparisonValue{font-size:23px!important}
+  body.resultMode.finalOutputVisible .goalComparisonLegend{font-size:9px!important}
+}
+/* 時間紀錄：規定時間與標題同列，不增加新高度；雙卡依內容撐高而非預留空白。 */
+#reportModal .reportTimeHeading{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0;margin:3px 0 6px!important}
+#reportModal .reportTimeHeading .reportSectionTitleTime{flex:0 0 auto;margin:0!important}
+#reportModal .reportTimeHeading .reportDiff{
+  flex:1 1 auto;min-width:0;max-width:100%;margin:0!important;padding:0!important;
+  font-size:clamp(10px,2.75vw,12px)!important;line-height:1.2!important;
+  font-weight:700!important;color:#b9c9d9!important;text-align:right!important;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+#reportModal .reportTimeHeading .reportDiff.early{color:#ff9c98!important}
+#reportModal .reportTimeHeading .reportDiff.over{color:#ffc06b!important}
+#reportModal .reportTimeCard{padding:6px 8px 5px!important;margin-bottom:8px!important}
+#reportModal .reportOverviewCell,#reportModal .reportOverviewCell.reportHalftime{
+  min-height:0!important;height:auto!important;padding:6px 9px 5px!important;
+  gap:1px!important;line-height:1.12!important;
+}
+#reportModal .reportOverviewCell .reportOverviewValue{line-height:1.08!important}
+#reportModal .reportOverviewCell .reportOverviewSub{line-height:1.18!important}
+@media(max-width:390px){
+  #reportModal .reportOverviewCell,#reportModal .reportOverviewCell.reportHalftime{min-height:0!important;padding:5px 7px 4px!important}
+}
+/* MVP / 最多進球僅微縮間距，內容與配色、進球時間均保留。 */
+#reportModal .reportMVPCard{padding:9px 12px!important;margin:2px 0 9px!important}
+#reportModal .reportMVPNames{margin-top:6px!important;gap:5px!important}
+#reportModal .reportMVPName{min-height:25px!important;line-height:1.15!important}
+@media(max-width:390px){
+  #reportModal .reportMVPCard{padding:8px 11px!important}
+  #reportModal .reportMVPNames{margin-top:5px!important;gap:4px!important}
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -26954,7 +27004,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.96</span>
+      <span class="headerVersion">v6.97</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -27201,7 +27251,8 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
     <div class="quickResultStats" aria-label="本場事件統計">
       <button type="button" class="quickResultStat goalStat" data-event="GOAL">
         <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">⚽</span><span>進球</span></span>
-        <strong id="quickResultGoal">0</strong>
+        <strong id="quickResultGoal" class="goalComparisonValue" aria-label="我方 0 球，對手 0 球"><span class="goalComparisonOur">0</span><span class="goalComparisonSeparator">:</span><span class="goalComparisonOpp">0</span></strong>
+        <small class="goalComparisonLegend">我方 / 對手</small>
       </button>
       <button type="button" class="quickResultStat shotStat" data-event="SHOT">
         <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">🥅</span><span>射門</span></span>
@@ -27958,7 +28009,7 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
         <span id="reportRoster" class="reportRosterMeta reportMetaRow" style="display:none"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="reportRosterText">本場名單</span></span>
       </div>
       <div class="reportStatusBadge idle reportStatusScrollable" id="reportStatusBadge">尚未開始</div>
-      <div class="reportSectionTitle reportSectionTitleTime">時間紀錄</div>
+      <div class="reportTimeHeading"><div class="reportSectionTitle reportSectionTitleTime">時間紀錄</div><span class="diff reportDiff" id="reportDiff" aria-label="比賽規定時間"></span></div>
       <div class="reportTimeCard" id="reportTimeCard">
         <div class="reportOverviewGrid">
           <div class="reportOverviewCell primary" id="reportActualCell">
@@ -27972,7 +28023,6 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
             <span class="reportOverviewSub"><span id="reportHalftimeStart">--</span> → <span id="reportHalftimeEnd">--</span></span>
           </div>
         </div>
-        <div class="diff reportDiff" id="reportDiff"></div>
       </div>
 
       <div id="reportPeriodsWrap" style="display:none">
@@ -30177,7 +30227,7 @@ function formatRegulationDiffText(){
 }
 
 function renderDiff(el){
-  el.className='diff';
+  el.className=el.id==='reportDiff'?'diff reportDiff':'diff';
   if(!state.regulationMinutes){
     el.style.display='none';
     el.textContent='';
@@ -33458,7 +33508,18 @@ function renderQuickResult(){
   stats.forEach(([event,id,label])=>{
     const count=state.markers.filter(m=>m.event===event).length;
     const value=byId(id);
-    if(value) value.textContent=count;
+    if(value){
+      if(event==='GOAL'){
+        // 進球統計與比分牌一致：包含對手進球與烏龍球計入的得分方。
+        // 事件筆數仍用來控制原有的「進球細節」入口，不改動記分或事件資料。
+        const ourGoals=Math.max(0,Number(state.ourScore)||0);
+        const oppGoals=Math.max(0,Number(state.oppScore)||0);
+        value.innerHTML=`<span class="goalComparisonOur">${ourGoals}</span><span class="goalComparisonSeparator">:</span><span class="goalComparisonOpp">${oppGoals}</span>`;
+        value.setAttribute('aria-label',`我方 ${ourGoals} 球，對手 ${oppGoals} 球`);
+      }else{
+        value.textContent=count;
+      }
+    }
 
     const card=section.querySelector(`.quickResultStat[data-event="${event}"]`);
     if(!card) return;
@@ -33473,10 +33534,14 @@ function renderQuickResult(){
     card.style.pointerEvents=hasData?'auto':'none';
 
     if(hasData){
-      card.setAttribute('aria-label',`查看${label}細節，共 ${count} 筆`);
+      card.setAttribute('aria-label',event==='GOAL'
+        ? `我方 ${Math.max(0,Number(state.ourScore)||0)} 球，對手 ${Math.max(0,Number(state.oppScore)||0)} 球；查看進球事件，共 ${count} 筆`
+        : `查看${label}細節，共 ${count} 筆`);
       card.onclick=()=>openQuickResultDetail(event);
     }else{
-      card.setAttribute('aria-label',`${label}目前 0 筆`);
+      card.setAttribute('aria-label',event==='GOAL'
+        ? `我方 ${Math.max(0,Number(state.ourScore)||0)} 球，對手 ${Math.max(0,Number(state.oppScore)||0)} 球；尚無進球事件明細`
+        : `${label}目前 0 筆`);
       card.onclick=null;
     }
   });
@@ -34440,7 +34505,7 @@ function reportLines(){
   }
   lines.push({type:'metaGrid',cells:metaCards});
 
-  lines.push({type:'section',text:'時間紀錄'});
+  lines.push({type:'section',text:'時間紀錄',detail:formatRegulationDiffText()});
   lines.push({
     type:'compactTime',
     actual:fmtDurationReadable(totalMatchElapsed()),
@@ -34448,9 +34513,6 @@ function reportLines(){
     halftime:state.halftimeStartEpoch?fmtMMSS(halftimeElapsed()):null,
     halftimeRange:state.halftimeStartEpoch?`${clock(state.halftimeStartEpoch)} → ${state.halftimeEndEpoch?clock(state.halftimeEndEpoch):'--'}`:''
   });
-  if(state.regulationMinutes){
-    lines.push({type:'meta',text:formatRegulationDiffText()});
-  }
 
   const entries=reportTimelineEntries();
   const scorers=new Map();
@@ -34678,7 +34740,7 @@ function reportCanvasLayout(lines,ctx){
     }else if(line.type==='mvpCard'){
       b.titleRows=reportWrapText(ctx,line.title,content-24,'900 30px -apple-system, sans-serif');
       b.nameRows=reportWrapText(ctx,(line.names||[]).join(' ｜ '),content-24,mainFont);
-      b.height=b.titleRows.length*34 + b.nameRows.length*32 + 28;
+      b.height=b.titleRows.length*33 + b.nameRows.length*30 + 20;
     }else if(line.type==='scorerGrid'){
       b.rows=[];b.height=48;
       for(let i=0;i<line.items.length;i+=2){
@@ -34832,8 +34894,8 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       const topScorer=b.kind==='topScorer';
       ctx.fillStyle=topScorer?'#193d52':'#29412e';roundRect(ctx,pad,y,content,b.height-6,12,true,false);
       ctx.strokeStyle=topScorer?'rgba(56,189,248,.46)':'rgba(250,204,21,.46)';ctx.lineWidth=2;roundRect(ctx,pad,y,content,b.height-6,12,false,true);
-      b.titleRows.forEach((value,j)=>text(value,pad+16,y+12+j*34,28,topScorer?'#7dd3fc':'#ffd84d',900));
-      b.nameRows.forEach((value,j)=>text(value,pad+16,y+14+b.titleRows.length*34+j*32,26,'#f7fbff',800));
+      b.titleRows.forEach((value,j)=>text(value,pad+16,y+9+j*33,28,topScorer?'#7dd3fc':'#ffd84d',900));
+      b.nameRows.forEach((value,j)=>text(value,pad+16,y+10+b.titleRows.length*33+j*30,26,'#f7fbff',800));
     }else if(b.type==='scorerGrid'){
       text('球員進球統計',pad+8,y+4,29,'#7dd3fc',800);let rowY=y+42;
       b.rows.forEach(row=>{
@@ -34888,6 +34950,18 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       }
     }else if(b.type==='section'){
       text(b.text,pad+8,y+12,28,'#7dd3fc',800);
+      if(b.detail){
+        const v=String(b.detail);
+        let size=20;
+        ctx.font=font(size,700);
+        const maxWidth=content-225;
+        const measured=ctx.measureText(v).width;
+        if(measured>maxWidth) size=Math.max(14,Math.floor(size*maxWidth/measured));
+        ctx.font=font(size,700);
+        ctx.fillStyle='#b3c3d3';ctx.textAlign='right';ctx.textBaseline='top';
+        ctx.fillText(v,W-pad,y+17, maxWidth);
+        ctx.textAlign='left';
+      }
     }else{
       (b.textRows||[]).forEach((value,j)=>text(value,pad+8,y+4+j*32));
     }
