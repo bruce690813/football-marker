@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.97</title>
+<title>足球場邊記錄器 v6.99</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -26990,6 +26990,37 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   #reportModal .reportMVPNames{margin-top:5px!important;gap:4px!important}
 }
 </style>
+<style id="v699LogScoreTextOnlyPatch">
+/* v6.99：事件紀錄比分採暖黃純文字，不再使用綠／灰膠囊；其他畫面維持原貌。 */
+#logModal .logTimelineItem .goalScoreInline,
+#logModal .logTimelineItem .logScoreInline{
+  display:inline-block!important;
+  flex:0 0 auto!important;
+  min-width:0!important;
+  width:auto!important;
+  height:auto!important;
+  padding:0!important;
+  margin:0 0 0 6px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#ffe16a!important;
+  font-size:14px!important;
+  font-weight:900!important;
+  line-height:1.2!important;
+  letter-spacing:.1px!important;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+@media(max-width:390px){
+  #logModal .logTimelineItem .goalScoreInline,
+  #logModal .logTimelineItem .logScoreInline{
+    margin-left:4px!important;
+    font-size:13.5px!important;
+  }
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -27004,7 +27035,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.97</span>
+      <span class="headerVersion">v6.99</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -30213,16 +30244,39 @@ function regulationDisplayText(){
   return `${state.regulationMinutes} 分鐘`;
 }
 
+// v6.98：賽後「超過」以各半場分別判斷，不將兩段各不足 1 分鐘的誤差相加。
+// 多段均超過門檻時，提示其中最長的一段；原始全場時間與 CSV 差值不變。
+function regulationExcessPerPeriod(){
+  if(!state.finished || !state.regulationMinutes) return 0;
+  const oneMinute=60;
+  if(state.multiPeriod){
+    const limits=[
+      {number:1, seconds:Number(state.regulationMinutes)*60},
+      {number:2, seconds:Number(state.regulationMinutes)*60}
+    ];
+    if(state.extraTime && state.extraTimeMinutes){
+      limits.push({number:3, seconds:Number(state.extraTimeMinutes)*60});
+    }
+    return limits.reduce((maxExcess,limit)=>{
+      const period=(state.periods||[]).find(p=>Number(p.number)===limit.number);
+      if(!period) return maxExcess; // 舊資料缺少單段紀錄時，不臆測超時。
+      const excess=Math.max(0,Math.floor(Number(period.duration)||0)-limit.seconds);
+      return excess>oneMinute ? Math.max(maxExcess,excess) : maxExcess;
+    },0);
+  }
+  const excess=Math.max(0,Math.round(Number(state.finalElapsed||0)-regulationTargetSeconds()));
+  return excess>oneMinute ? excess : 0;
+}
+
 function formatRegulationDiffText(){
   if(!state.regulationMinutes) return '';
   const base=`每半場 ${state.regulationMinutes} 分鐘（全場 ${Number(state.regulationMinutes)*2} 分鐘）`;
   const plain=regulationDisplayText() || base;
   if(!state.finished) return plain;
-  const target=regulationTargetSeconds();
-  const actual=state.finished ? state.finalElapsed : totalMatchElapsed();
-  const diff=Math.round(actual-target);
+  const excess=regulationExcessPerPeriod();
+  if(excess>0) return `${plain}｜超過 ${fmtMMSS(excess)}`;
+  const diff=Math.round(Number(state.finalElapsed||0)-regulationTargetSeconds());
   if(diff<0) return `${plain}｜提前 ${fmtMMSS(Math.abs(diff))}`;
-  if(diff>=60) return `${plain}｜超過 ${fmtMMSS(diff)}`;
   return plain;
 }
 
@@ -30234,12 +30288,11 @@ function renderDiff(el){
     return;
   }
   el.style.display='';
-  const target=regulationTargetSeconds();
-  const actual=state.finished ? state.finalElapsed : totalMatchElapsed();
-  const diff=Math.round(actual-target);
+  const excess=regulationExcessPerPeriod();
+  const diff=Math.round(Number(state.finalElapsed||0)-regulationTargetSeconds());
   el.textContent=formatRegulationDiffText();
-  if(state.finished && diff<0) el.classList.add('early');
-  else if(state.finished && diff>=60) el.classList.add('over');
+  if(state.finished && excess>0) el.classList.add('over');
+  else if(state.finished && diff<0) el.classList.add('early');
 }
 
 function toggleRegCustomInput(){
