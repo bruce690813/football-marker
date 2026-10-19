@@ -1,3 +1,17 @@
+# v6.100 圖片智慧排版變更與驗證（2026-10-19）
+
+- 修改範圍：僅 `reportSmartTimelineColumns`、`reportCanvasLayout` 配置與 `makeReportCanvas` 中的雙欄繪製分支，另更新版本、README、檢查紀錄。
+- 保留：未修改 `buildReportDOM`、`reportTimelineHTML`、`reportLines`、`reportTimelineEntries`、CSV 匯出函式、遊戲時鐘及 PK 實際規則。
+- 版控：已從正式 v6.51 套用 v6.99 累積差異，並與上傳的 v6.99 三檔 SHA-256 校對一致，才套用 v6.100 局部變更。
+- **已通過**：Node.js `--check` 檢查 HTML 內全部四段 JavaScript，無語法錯誤。
+- **已通過**：Chromium 390×844 手機視窗載入 v6.99 與 v6.100，兩者無 pageerror、無頁面水平溢出，頂端版本資訊以外的首屏像素一致。
+- **已通過**：Chromium Canvas 9 組事件排版情境：12 筆單欄；13/16/18 筆均衡雙欄；16 筆 13:3 失衡回單欄；16 與 23 筆單階段回單欄；20 筆含延長賽分兩組雙欄；21 筆三階段之末段全寬。長背號／助攻實測可換行，Canvas 可產生 PNG。
+- **已通過**：用相同 18 筆真實資料格式情境比對 v6.99/v6.100 的 `csvText()`、`reportLines()`、`reportTimelineHTML()`、`reportModal` 內容，輸出相同；新版圖片 Canvas 可生成，上下半場雙欄事件全數保留，測試圖片高度由 2020 降至 1464 px（約 27.5%）。
+- **已通過**：`index.html` 從 v6.99 到新版差異僅版本文字、智慧欄位計算、Canvas 雙欄繪製，不涉及事件輸入、比分或資料儲存程式。
+- **尚未測試**：iPhone Safari 真機、分享面板、下載相簿權限與各 iOS 版本相容性；延長賽／PK 全操作及計時／暫停的實際手動流程（程式與對外行為未更動），需部署後核對。自動 Canvas 與狀態比對不等於手動流程全數通過。
+
+---
+
 # v6.99 安全檢查與測試（2026-10-18）
 
 - [x] 正式 `football_marker_v6_51.zip` 與 v6.98 累積版已讀取，版本差異限定在 2 個版本文字及 1 個事件紀錄 CSS 區塊。

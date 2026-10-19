@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.99</title>
+<title>足球場邊記錄器 v6.100</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27035,7 +27035,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.99</span>
+      <span class="headerVersion">v6.100</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -34753,6 +34753,70 @@ function drawReportJerseyIcon(ctx,x,y,size,palette=currentJerseyPalette()){
   ctx.restore();
 }
 
+// v6.100：只供分享／儲存圖片使用的智慧事件欄位量測。摘要視窗、CSV 不呼叫此函式。
+// 單欄始終是保底方案；雙欄需要 >=13 筆、至少兩個有事件的階段，且量測後確實縮短 >=20%。
+function reportSmartTimelineColumns(blocks,ctx,content){
+  const headingIndex=blocks.findIndex(b=>b.type==='timelineHeading');
+  if(headingIndex<0) return blocks;
+  let end=headingIndex+1;
+  while(end<blocks.length && (blocks[end].type==='timelinePhase'||blocks[end].type==='timelineEvent')) end++;
+  const original=blocks.slice(headingIndex+1,end);
+  const eventCount=original.filter(b=>b.type==='timelineEvent').length;
+  if(eventCount<13) return blocks;
+
+  const groups=[];
+  for(const b of original){
+    if(b.type==='timelinePhase') groups.push({phase:b,events:[]});
+    else if(b.type==='timelineEvent'){
+      if(!groups.length) return blocks; // 不猜測缺失的階段資訊。
+      groups[groups.length-1].events.push(b);
+    }
+  }
+  const populated=groups.filter(g=>g.events.length);
+  if(populated.length<2 || new Set(populated.map(g=>g.phase.text)).size<2) return blocks; // 單一階段或重複階段名稱一律全寬。
+  // 不壓縮只有空標題的階段，也不在雙欄中調換比賽的時間先後。
+  if(populated.length!==groups.length) return blocks;
+
+  const gap=20, colWidth=(content-gap)/2;
+  const eventFont='700 22px -apple-system, BlinkMacSystemFont, sans-serif';
+  const result=[];
+  for(let i=0;i<groups.length;i+=2){
+    const pair=groups.slice(i,i+2);
+    if(pair.length===1){
+      // 延長賽等奇數階段：保留原有單欄全寬排列，不縮窄唯一的階段。
+      result.push(pair[0].phase,...pair[0].events);
+      continue;
+    }
+    const columns=pair.map(group=>{
+      let h=64;
+      const events=group.events.map(source=>{
+        const combined=`${source.compact.main}${source.compact.assist?`  ${source.compact.assist}`:''}`;
+        const reserveScore=source.event==='GOAL'?76:0;
+        const available=colWidth-127-16-reserveScore;
+        // 過窄時退回單欄；不允許靠裁切或無限制縮字達成雙欄。
+        if(available<130) return null;
+        const rows=reportWrapText(ctx,combined,available,eventFont);
+        if(rows.length>3) return null;
+        const height=Math.max(56,rows.length*29+14);
+        const row={...source,compactRows:rows,height};
+        h+=height;
+        return row;
+      });
+      if(events.some(e=>!e)) return null;
+      return {phase:group.phase,events,height:h};
+    });
+    if(columns.some(c=>!c)) return blocks;
+    // 上／下半場事件過度失衡時，避免一側大片空白而另一側很長。
+    if(Math.min(...columns.map(c=>c.height))<Math.max(...columns.map(c=>c.height))*.55) return blocks;
+    result.push({type:'timelineDualRow',columns,colWidth,gap,height:Math.max(...columns.map(c=>c.height))+12});
+  }
+  const oldHeight=original.reduce((sum,b)=>sum+b.height,0);
+  const newHeight=result.reduce((sum,b)=>sum+b.height,0);
+  // 只有事件區高度至少節省 20%，才承擔雙欄較窄的閱讀空間。
+  if(!(newHeight<=oldHeight*.80)) return blocks;
+  return [...blocks.slice(0,headingIndex+1),...result,...blocks.slice(end)];
+}
+
 function reportCanvasLayout(lines,ctx){
   const width=1080, pad=64, content=width-pad*2;
   const font='500 24px -apple-system, BlinkMacSystemFont, sans-serif';
@@ -34815,7 +34879,11 @@ function reportCanvasLayout(lines,ctx){
     }
     y+=b.height;return b;
   });
-  return {width,pad,content,height:Math.ceil(y+80),blocks};
+  // 將單欄預估高度與雙欄候選高度實測比較，再重新安排後續區塊的 y。
+  const laidOut=reportSmartTimelineColumns(blocks,ctx,content);
+  let top=54;
+  for(const b of laidOut){b.y=top;top+=b.height;}
+  return {width,pad,content,height:Math.ceil(top+80),blocks:laidOut};
 }
 
 function makeReportCanvas(lines=reportLines(),resolution=1){
@@ -34963,6 +35031,51 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       text(b.text,pad+8,y+8,30,'#7dd3fc',800);
       ctx.fillStyle='#59c8f1';ctx.beginPath();ctx.arc(pad+16,y+57,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+44,23,'#59c8f1',700);
       ctx.fillStyle='#ffad83';ctx.beginPath();ctx.arc(pad+120,y+57,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+44,23,'#ffad83',700);
+    }else if(b.type==='timelineDualRow'){
+      // v6.100：上半場在左、下半場在右；延長賽依時間順序成對排列。
+      // 所有座標僅影響圖片 Canvas，不改畫面摘要或事件操作。
+      b.columns.forEach((column,i)=>{
+        const x=pad+i*(b.colWidth+b.gap);
+        const tone=periodTonePalette(column.phase.text,column.phase.period);
+        const isHalf=normalizedPeriodTone(column.phase.text,column.phase.period)!=='default';
+        const headY=y+3;
+        ctx.fillStyle='#172838';roundRect(ctx,x,headY,b.colWidth,56,9,true,false);
+        if(isHalf){ctx.fillStyle=tone.stroke;roundRect(ctx,x+9,headY+10,4,28,2,true,false);}
+        text(column.phase.text,x+(isHalf?21:12),headY+6,23,isHalf?tone.title:'#dbe8f4',850);
+        let meta='';
+        if(column.phase.duration) meta+=`本段時間 ${column.phase.duration}`;
+        if(column.phase.score) meta+=`${meta?'  ｜  ':''}本段比分 ${column.phase.score}`;
+        if(meta){
+          ctx.font=font(17,700);
+          let metaFont=17;
+          const measured=ctx.measureText(meta).width;
+          if(measured>b.colWidth-24) metaFont=Math.max(14,Math.floor(metaFont*(b.colWidth-24)/measured));
+          text(meta,x+13,headY+32,metaFont,'#b9cde0',700);
+        }
+        let rowY=y+64;
+        column.events.forEach((ev,j)=>{
+          const goal=ev.event==='GOAL';
+          const dotX=x+80, actorX=x+99;
+          if(goal){ctx.fillStyle='#192D3D';roundRect(ctx,x,rowY,b.colWidth,ev.height-4,7,true,false);}
+          if(j<column.events.length-1){
+            ctx.strokeStyle='#30465b';ctx.lineWidth=2;
+            ctx.beginPath();ctx.moveTo(dotX,rowY+23);ctx.lineTo(dotX,rowY+ev.height+23);ctx.stroke();
+          }
+          ctx.fillStyle=ev.team==='OUR'?'#59c8f1':ev.team==='OPP'?'#ffad83':'#aeb9c5';
+          ctx.beginPath();ctx.arc(dotX,rowY+23,5,0,Math.PI*2);ctx.fill();
+          text(ev.time,x+10,rowY+11,20,'#b9c9d9',650);
+          if(ev.event==='YELLOW_CARD'||ev.event==='RED_CARD'){
+            ctx.fillStyle=ev.event==='YELLOW_CARD'?'#ffd429':'#ff2a1c';
+            roundRect(ctx,actorX,rowY+13,13,22,2,true,false);
+          }else emojiText(emoji(ev.event),actorX,rowY+9,22);
+          ev.compactRows.forEach((line,k)=>text(line,actorX+28,rowY+8+k*29,22,'#edf5fc',goal?800:700));
+          if(goal){
+            ctx.font=font(23,900);ctx.fillStyle='#ffd84d';ctx.textAlign='right';ctx.textBaseline='top';
+            ctx.fillText(String(ev.score||''),x+b.colWidth-10,rowY+10);
+          }
+          rowY+=ev.height;
+        });
+      });
     }else if(b.type==='timelinePhase'){
       const tone=periodTonePalette(b.text,b.period);
       const isHalf=normalizedPeriodTone(b.text,b.period)!=='default';
