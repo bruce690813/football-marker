@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.112</title>
+<title>足球場邊記錄器 v6.114</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27042,6 +27042,39 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   }
 }
 </style>
+<style id="v6114AboutButtonFootballPolish">
+/* v6.114: Only the title-area help button gets a lighter soccer treatment. */
+.titleBlock .aboutInfoBtn{
+  min-width:0!important;
+  min-height:44px!important;
+  height:44px!important;
+  padding:0 10px!important;
+  gap:5px!important;
+  border-radius:13px!important;
+  background:rgba(18,62,55,.58)!important;
+  border:1px solid rgba(111,173,155,.30)!important;
+  color:#f3f8f5!important;
+  box-shadow:none!important;
+}
+.titleBlock .aboutInfoBtn .icon{
+  font-size:17px!important;
+  line-height:1!important;
+  opacity:1!important;
+}
+.titleBlock .aboutInfoBtn .label{
+  font-size:14px!important;
+  font-weight:820!important;
+  letter-spacing:0!important;
+}
+@media(max-width:390px){
+  .titleBlock .aboutInfoBtn{
+    padding:0 8px!important;
+    gap:4px!important;
+  }
+  .titleBlock .aboutInfoBtn .icon{font-size:16px!important;}
+  .titleBlock .aboutInfoBtn .label{font-size:13px!important;}
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -27056,12 +27089,12 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.112</span>
+      <span class="headerVersion">v6.114</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
       <button class="aboutInfoBtn" type="button" onclick="openAboutModal()" aria-label="說明：了解足球場邊記錄器">
-        <span class="icon">ⓘ</span><span class="label">說明</span>
+        <span class="icon" aria-hidden="true">⚽</span><span class="label">說明</span>
       </button>
     </div>
   </div>
@@ -34935,7 +34968,7 @@ function reportCanvasLayout(lines,ctx){
     }else if(line.type==='mvpCard'){
       b.titleRows=reportWrapText(ctx,line.title,content-24,'900 30px -apple-system, sans-serif');
       b.nameRows=reportWrapText(ctx,(line.names||[]).join(' ｜ '),content-24,mainFont);
-      b.height=b.titleRows.length*33 + b.nameRows.length*30 + 20;
+      b.height=b.titleRows.length*33 + b.nameRows.length*30 + 28;
     }else if(line.type==='scorerGrid'){
       b.rows=[];b.height=48;
       // 與摘要視窗一致：球員進球統計每列三格，保留長內容換行高度。
@@ -35097,7 +35130,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       b.titleRows.forEach((value,j)=>text(value,pad+16,y+9+j*33,28,topScorer?'#7dd3fc':'#ffd84d',900));
       b.nameRows.forEach((value,j)=>text(value,pad+16,y+10+b.titleRows.length*33+j*30,26,'#f7fbff',800));
     }else if(b.type==='scorerGrid'){
-      text('球員進球統計',pad+8,y+4,29,'#7dd3fc',800);let rowY=y+42;
+      text('球員進球統計',pad+8,y+4,29,'#ffffff',800);let rowY=y+42;
       b.rows.forEach(row=>{
         const cellW=(content-24)/3;
         row.cells.forEach((cell,i)=>{
@@ -35107,7 +35140,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         });rowY+=row.height;
       });
     }else if(b.type==='timelineHeading'){
-      text(b.text,pad+8,y+8,30,'#7dd3fc',800);
+      text(b.text,pad+8,y+8,30,'#ffffff',800);
       ctx.fillStyle='#f9a8c6';ctx.beginPath();ctx.arc(pad+16,y+57,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+44,23,'#f9a8c6',700);
       ctx.fillStyle='#59c8f1';ctx.beginPath();ctx.arc(pad+120,y+57,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+44,23,'#59c8f1',700);
     }else if(b.type==='timelineDualRow'){
@@ -35225,7 +35258,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         ctx.fillText(score,W-pad,y+10);
       }
     }else if(b.type==='section'){
-      text(b.text,pad+8,y+12,28,'#7dd3fc',800);
+      text(b.text,pad+8,y+12,28,b.text==='時間紀錄'?'#ffffff':'#7dd3fc',800);
       if(b.detail){
         const v=String(b.detail);
         let size=20;
