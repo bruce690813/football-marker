@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.100</title>
+<title>足球場邊記錄器 v6.112</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -14450,7 +14450,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 
 /* v5.77 統一事件時間軸：隊伍色與事件圖示分離 */
 .matchTimelineLegend{display:flex;gap:18px;font-size:13px;margin:10px 0}
-.timelineOur{color:#59c8f1}.timelineOpp{color:#ffad83}
+.timelineOur{color:#f9a8c6}.timelineOpp{color:#59c8f1}
 .matchTimelineNote{font-size:12px;line-height:1.5;color:#b3c3d3;margin:8px 0 14px}
 .matchTimeline{list-style:none;padding:0;margin:0}
 .matchTimelinePhase{color:#b3c3d3;font-size:14px;font-weight:700;padding:16px 0 10px;border-top:1px solid #293c4e}
@@ -14459,7 +14459,7 @@ body.resultMode.finalOutputVisible .resultEventsGroup > .quickResultCard .quickR
 .matchTimelineNode{position:relative;align-self:stretch}
 .matchTimelineNode:before{content:'';position:absolute;left:7px;top:9px;bottom:-26px;width:2px;background:#30465b}
 .matchTimelineNode:after{content:'';position:absolute;left:3px;top:5px;width:10px;height:10px;border-radius:50%;background:#aeb9c5}
-.isOur .matchTimelineNode:after{background:#59c8f1}.isOpp .matchTimelineNode:after{background:#ffad83}
+.isOur .matchTimelineNode:after{background:#f9a8c6}.isOpp .matchTimelineNode:after{background:#59c8f1}
 .matchTimelineRow:last-child .matchTimelineNode:before,.matchTimelineRow:has(+ .matchTimelinePhase) .matchTimelineNode:before{bottom:0}
 .matchTimelineContent{font-size:14px;line-height:1.5;min-width:0;overflow-wrap:anywhere;color:#eaf2fa}
 .matchTimelineActor{color:#c8d6e4}.matchTimelineAssist{font-size:12px;color:#b3c3d3;margin-top:3px}
@@ -19045,6 +19045,26 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 
 
 
+</style>
+<style id="v6104GoalSingleRowPatch">
+/* v6.104：GOAL 標籤僅標示一般進球；摘要每筆事件保持單列。 */
+#reportModal .matchTimelineRow.isGoal .matchTimelineCompact{
+  flex-wrap:nowrap!important;align-items:center!important;white-space:nowrap!important;gap:4px!important;
+}
+#reportModal .matchTimelineRow.isGoal .matchTimelineCompactMain{
+  flex:0 1 auto!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+}
+#reportModal .matchTimelineRow.isGoal .matchTimelineAssistInline{
+  flex:0 1 auto!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+}
+#reportModal .matchTimelineGoalTag{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  padding:2px 4px;border-radius:4px;background:#f9a8c6;color:#182332;
+  font-size:9px;font-weight:900;line-height:1.15;letter-spacing:.2px;
+}
+#reportModal .matchTimelineRow.isOpp .matchTimelineGoalTag{background:#59c8f1}
+#reportModal .matchTimelineRow.isUnknown .matchTimelineGoalTag{background:#aeb9c5}
+</style>
 <style id="v5146RosterModalBreathingPatch">
 /* =========================================================
    v5.146：本場球員名單 Modal 呼吸空間修正
@@ -26903,8 +26923,8 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
 #reportModal .matchTimelinePhaseTitle{font-size:15px!important;font-weight:900!important;line-height:1.2!important;color:#d7e5f2!important;white-space:nowrap}
 #reportModal .matchTimelinePhase.periodToneFirstHalf .matchTimelinePhaseTitle{color:#ffd966!important}
 #reportModal .matchTimelinePhase.periodToneSecondHalf .matchTimelinePhaseTitle{color:#ffb261!important}
-#reportModal .matchTimelinePhaseMeta{display:grid!important;grid-template-columns:66px 58px!important;gap:10px!important;align-items:end!important;justify-items:end!important;min-width:0}
-#reportModal .matchTimelinePhaseMetaItem{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:1px!important;min-width:0}
+#reportModal .matchTimelinePhaseMeta{display:flex!important;flex-wrap:nowrap!important;gap:12px!important;align-items:center!important;justify-content:flex-end!important;min-width:0}
+#reportModal .matchTimelinePhaseMetaItem{display:flex!important;flex-direction:row!important;align-items:baseline!important;gap:4px!important;white-space:nowrap!important;min-width:0}
 #reportModal .matchTimelinePhaseMetaLabel{font-size:10px!important;font-weight:800!important;color:#91a7bd!important;line-height:1.1!important}
 #reportModal .matchTimelinePhaseMetaValue{font-size:14px!important;font-weight:900!important;color:#eef5fc!important;line-height:1.05!important;font-variant-numeric:tabular-nums!important}
 @media(max-width:390px){
@@ -26914,7 +26934,8 @@ body.resultMode .liveMetaStrip.show .competitionDisplayRow .metaGroupEditBtn .ui
   #reportModal .reportOverviewSub{font-size:11px!important}
   #reportModal .matchTimelinePhase{gap:8px!important}
   #reportModal .matchTimelinePhaseTitle{font-size:14px!important}
-  #reportModal .matchTimelinePhaseMeta{grid-template-columns:58px 52px!important;gap:8px!important}
+  #reportModal .matchTimelinePhaseMeta{gap:7px!important}
+  #reportModal .matchTimelinePhaseMetaLabel{font-size:9px!important}
   #reportModal .matchTimelinePhaseMetaValue{font-size:13px!important}
 }
 
@@ -26948,8 +26969,8 @@ body.resultMode.finalOutputVisible .quickResultStat.goalStat .goalComparisonValu
   gap:1px!important;white-space:nowrap!important;line-height:1!important;
   font-size:26px!important;letter-spacing:-.03em!important;
 }
-body.resultMode.finalOutputVisible .goalComparisonOur{color:#68ccef!important;opacity:1!important}
-body.resultMode.finalOutputVisible .goalComparisonOpp{color:#ffad83!important;opacity:1!important}
+body.resultMode.finalOutputVisible .goalComparisonOur{color:#f9a8c6!important;opacity:1!important}
+body.resultMode.finalOutputVisible .goalComparisonOpp{color:#59c8f1!important;opacity:1!important}
 body.resultMode.finalOutputVisible .goalComparisonSeparator{color:#9daebe!important;opacity:1!important}
 body.resultMode.finalOutputVisible .goalComparisonLegend{
   display:block!important;width:100%!important;text-align:center!important;
@@ -27035,7 +27056,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.100</span>
+      <span class="headerVersion">v6.112</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -27249,13 +27270,20 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
         </div>
 
         <div class="periodPhaseDetailBlock compactPhaseBlock extraPhase" id="extraTimeDetailBlock" hidden>
-          <div class="periodPhaseDetailTitle"><span>延長賽紀錄</span><span class="phaseDuration" id="extraTimeDurationText">（00:00）</span></div>
+          <div class="periodPhaseDetailTitle"><span id="extraTimeDetailLabel">延長賽紀錄</span><span class="phaseDuration" id="extraTimeDurationText">（00:00）</span></div>
           <div class="timelinePairRow">
             <div class="timelinePairItem"><span class="timelinePairLabel">開始</span><strong class="timelinePairValue" id="extraTimeStartText">--</strong></div>
             <div class="timelinePairItem"><span class="timelinePairLabel">結束</span><strong class="timelinePairValue" id="extraTimeEndText">--</strong></div>
           </div>
         </div>
 
+        <div class="periodPhaseDetailBlock compactPhaseBlock extraPhase" id="extraSecondHalfDetailBlock" hidden>
+          <div class="periodPhaseDetailTitle"><span>延長賽下半場紀錄</span><span class="phaseDuration" id="extraSecondHalfDurationText">（00:00）</span></div>
+          <div class="timelinePairRow">
+            <div class="timelinePairItem"><span class="timelinePairLabel">開始</span><strong class="timelinePairValue" id="extraSecondHalfStartText">--</strong></div>
+            <div class="timelinePairItem"><span class="timelinePairLabel">結束</span><strong class="timelinePairValue" id="extraSecondHalfEndText">--</strong></div>
+          </div>
+        </div>
         <div class="fullTimeActualBox" id="fullTimeActualBox" hidden>
           <div class="label">實際比賽時間</div>
           <div class="value" id="fullTimeActualValue">00:00</div>
@@ -27503,9 +27531,9 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
       </div>
       <div class="aboutFooter">
         <div class="aboutUtilityRow">
-          <div class="aboutFooterStatement" aria-label="工具理念：記錄每一場成長足跡，為孩子的足球時光留下回憶">
+          <div class="aboutFooterStatement" aria-label="工具理念：記錄每一場成長足跡，比賽有勝負，成長沒有輸贏。">
             <span class="aboutFooterStatementLead">記錄每一場成長足跡</span>
-            <span class="aboutFooterStatementSub">為孩子的足球時光留下回憶</span>
+            <span class="aboutFooterStatementSub">比賽有勝負，成長沒有輸贏。</span>
           </div>
           <button class="aboutGuideBtn" type="button" onclick="openQuickGuide()" aria-label="開啟快速使用指南">
             <span class="aboutGuideLabel"><span aria-hidden="true">📖</span><span class="aboutGuideTextFull">快速使用指南</span><span class="aboutGuideTextShort">使用指南</span></span>
@@ -27602,10 +27630,10 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
 <div class="modalBack" id="extraTimeModal">
   <div class="modal">
     <h2>⏱ 設定延長賽時間</h2>
-    <p>輸入本場延長賽要進行多久。延長賽會以獨立比賽段落計時。</p>
+    <p>延長賽分為上、下半場，各自獨立計時；正規賽每半場 45 分鐘以上預設 15 分鐘，較短賽事預設 5 分鐘；手動設定上限取 15 分鐘與正規賽每半場時間的較小值。</p>
     <div class="extraTimeInputWrap">
-      <label for="extraTimeMinutes">延長賽時間（分鐘）</label>
-      <input id="extraTimeMinutes" type="number" inputmode="numeric" min="1" max="45" placeholder="例如 10">
+      <label for="extraTimeMinutes">延長賽每半場時間（分鐘）</label>
+      <input id="extraTimeMinutes" type="number" inputmode="numeric" min="1" max="15" value="5" placeholder="例如 5 或 15">
     </div>
     <div class="extraTimeActions">
       <button class="extraTimeCancel" onclick="closeExtraTimeSetup()">返回</button>
@@ -28575,7 +28603,7 @@ let state={
   periods:[],
   nextPeriodType:null,
   extraTime:false,
-  extraTimeMinutes:null,
+  extraTimeMinutes:null, extraTimeSplit:false,
   penalty:null,
   goalkeeperNumber:'',
   // v5.159：記錄「因設定守門員而自動加入名單」的背號來源。
@@ -29426,6 +29454,8 @@ function loadState(){
   if(typeof state.periodStartOppScore!=='number') state.periodStartOppScore=0;
   if(typeof state.extraTime!=='boolean') state.extraTime=false;
   if(state.extraTimeMinutes!=null) state.extraTimeMinutes=Number(state.extraTimeMinutes)||null;
+  // v6.108: 舊延長賽保持單段紀錄；只有新版建立的延長賽分兩半。
+  state.extraTimeSplit=state.extraTimeSplit===true;
   if(!('nextPeriodType' in state)) state.nextPeriodType=null;
   if(!('penalty' in state)) state.penalty=null;
   if(!('goalkeeperNumber' in state)) state.goalkeeperNumber='';
@@ -29736,7 +29766,7 @@ function sanitizeInvalidAssistsAfterRed(){
 }
 function periodLabel(n){
   if(!state.multiPeriod) return '全場';
-  return Number(n)===1 ? '上半場' : Number(n)===2 ? '下半場' : Number(n)===3 ? '延長賽' : `第${n}段`;
+  return Number(n)===1 ? '上半場' : Number(n)===2 ? '下半場' : Number(n)===3 ? (state.extraTimeSplit?'延長賽上半場':'延長賽') : Number(n)===4 ? '延長賽下半場' : `第${n}段`;
 }
 function totalMatchElapsed(){
   if(state.finished) return Number(state.finalElapsed)||0;
@@ -29790,6 +29820,7 @@ function renderPeriodPhaseTimeDetail(){
   const p1=periodRecord(1);
   const p2=periodRecord(2);
   const p3=periodRecord(3);
+  const p4=periodRecord(4);
 
   const firstBlock=byId('firstHalfDetailBlock');
   const firstStart=byId('firstHalfStartText');
@@ -29817,6 +29848,8 @@ function renderPeriodPhaseTimeDetail(){
 
   const extraStartEpoch=p3?.startEpoch || currentPeriodStartEpoch(3);
   const extraEndEpoch=p3?.endEpoch || null;
+  const extraTitle=byId('extraTimeDetailLabel');
+  if(extraTitle) extraTitle.textContent=state.extraTimeSplit?'延長賽上半場紀錄':'延長賽紀錄';
   const extraBlock=byId('extraTimeDetailBlock');
   if(extraBlock) extraBlock.hidden=!extraStartEpoch;
   if(extraStartEpoch){
@@ -29824,6 +29857,15 @@ function renderPeriodPhaseTimeDetail(){
     byId('extraTimeEndText').textContent=extraEndEpoch ? fmtTimelineTime(extraEndEpoch,baseEpoch) : '--';
     const duration=byId('extraTimeDurationText');
     if(duration) duration.textContent=`（${fmtMMSS(phaseElapsedSeconds(p3,extraStartEpoch,extraEndEpoch))}）`;
+  }
+  const extraSecondStart=p4?.startEpoch || currentPeriodStartEpoch(4);
+  const extraSecondEnd=p4?.endEpoch || null;
+  const fourth=byId('extraSecondHalfDetailBlock');
+  if(fourth) fourth.hidden=!extraSecondStart;
+  if(extraSecondStart){
+    byId('extraSecondHalfStartText').textContent=fmtTimelineTime(extraSecondStart,baseEpoch);
+    byId('extraSecondHalfEndText').textContent=extraSecondEnd?fmtTimelineTime(extraSecondEnd,baseEpoch):'--';
+    byId('extraSecondHalfDurationText').textContent=`（${fmtMMSS(phaseElapsedSeconds(p4,extraSecondStart,extraSecondEnd))}）`;
   }
 }
 
@@ -29993,6 +30035,9 @@ function tick(){
     if(Number(state.currentPeriod)===2){
       const el=byId('secondHalfDurationText');
       if(el) el.textContent=`（${fmtMMSS(elapsed())}）`;
+    }else if(Number(state.currentPeriod)===4){
+      const el=byId('extraSecondHalfDurationText');
+      if(el) el.textContent=`（${fmtMMSS(elapsed())}）`;
     }else if(Number(state.currentPeriod)===3){
       const el=byId('extraTimeDurationText');
       if(el) el.textContent=`（${fmtMMSS(elapsed())}）`;
@@ -30015,7 +30060,7 @@ function toggleRegulationEditor(){
 function regulationCompactText(){
   if(!state.regulationMinutes) return '未設定';
   if(state.multiPeriod){
-    const extra=state.extraTime && state.extraTimeMinutes ? `＋延長 ${state.extraTimeMinutes} 分` : '';
+    const extra=state.extraTime && state.extraTimeMinutes ? (state.extraTimeSplit?`＋延長每半場 ${state.extraTimeMinutes} 分`:`＋延長 ${state.extraTimeMinutes} 分`) : '';
     return `每半場 ${state.regulationMinutes} 分${extra}`;
   }
   return `${state.regulationMinutes} 分鐘`;
@@ -30024,8 +30069,8 @@ function setTimeRegulationBadgeText(timeBadge){
   if(!timeBadge) return;
   const fullText=`規定 ${regulationCompactText()}`;
   const shortText=state.multiPeriod && state.extraTime && state.extraTimeMinutes
-    ? `規定 每半${state.regulationMinutes}分＋延${state.extraTimeMinutes}分` : '';
-  const mediumText=shortText ? `規定 每半場${state.regulationMinutes}分＋延長${state.extraTimeMinutes}分` : '';
+    ? `規定 每半${state.regulationMinutes}分＋延${state.extraTimeSplit?'每半':''}${state.extraTimeMinutes}分` : '';
+  const mediumText=shortText ? `規定 每半場${state.regulationMinutes}分＋延長${state.extraTimeSplit?'每半場':''}${state.extraTimeMinutes}分` : '';
   // renderRegulationTimeAlert() runs on every animation frame; only update DOM when content changes.
   if(timeBadge.dataset.v671FullText===fullText && timeBadge.dataset.v671ShortText===shortText && timeBadge.dataset.v672MediumText===mediumText) return;
   const fullSpan=document.createElement('span');
@@ -30227,9 +30272,9 @@ function regulationPeriodCount(){
   return state.multiPeriod ? 2 : 1;
 }
 function regulationTotalMinutes(){
-  if(!state.regulationMinutes) return state.extraTimeMinutes ? Number(state.extraTimeMinutes) : 0;
+  if(!state.regulationMinutes) return state.extraTimeMinutes ? Number(state.extraTimeMinutes)*(state.extraTimeSplit?2:1) : 0;
   const normal=Number(state.regulationMinutes) * regulationPeriodCount();
-  return normal + (state.extraTime ? (Number(state.extraTimeMinutes)||0) : 0);
+  return normal + (state.extraTime ? (Number(state.extraTimeMinutes)||0)*(state.extraTimeSplit?2:1) : 0);
 }
 function regulationTargetSeconds(){
   return regulationTotalMinutes() * 60;
@@ -30238,7 +30283,7 @@ function regulationDisplayText(){
   if(!state.regulationMinutes) return '';
   if(state.multiPeriod){
     const normal=Number(state.regulationMinutes)*2;
-    if(state.extraTime && state.extraTimeMinutes) return `每半場 ${state.regulationMinutes} 分鐘（正規 ${normal}＋延長 ${state.extraTimeMinutes}＝${regulationTotalMinutes()} 分鐘）`;
+    if(state.extraTime && state.extraTimeMinutes) return `每半場 ${state.regulationMinutes} 分鐘（正規 ${normal}＋延長 ${state.extraTimeSplit?`每半場 ${state.extraTimeMinutes}×2`:`${state.extraTimeMinutes}`}＝${regulationTotalMinutes()} 分鐘）`;
     return `每半場 ${state.regulationMinutes} 分鐘（全場 ${normal} 分鐘）`;
   }
   return `${state.regulationMinutes} 分鐘`;
@@ -30256,6 +30301,7 @@ function regulationExcessPerPeriod(){
     ];
     if(state.extraTime && state.extraTimeMinutes){
       limits.push({number:3, seconds:Number(state.extraTimeMinutes)*60});
+      if(state.extraTimeSplit) limits.push({number:4, seconds:Number(state.extraTimeMinutes)*60});
     }
     return limits.reduce((maxExcess,limit)=>{
       const period=(state.periods||[]).find(p=>Number(p.number)===limit.number);
@@ -31373,7 +31419,7 @@ function startMatch(){
       state.halftimeEndEpoch=actionEpoch;
       state.halftimeDuration=wholeSecondDuration(state.halftimeStartEpoch,state.halftimeEndEpoch);
     }
-    state.currentPeriod=state.nextPeriodType==='EXTRA_TIME' ? 3 : 2;
+    state.currentPeriod=state.nextPeriodType==='EXTRA_TIME' ? 3 : state.nextPeriodType==='EXTRA_SECOND_HALF' ? 4 : 2;
     state.awaitingNextPeriod=false;
     state.nextPeriodType=null;
   }else if(!state.periods.length){
@@ -31443,7 +31489,7 @@ function finishMatch(){
     return;
   }
   if(!state.started){
-    const waitText=state.nextPeriodType==='EXTRA_TIME' ? '請先開始延長賽' : (state.awaitingNextPeriod ? '請先開始下半場' : '比賽尚未開始');
+    const waitText=state.nextPeriodType==='EXTRA_SECOND_HALF' ? '請先開始延長賽下半場' : state.nextPeriodType==='EXTRA_TIME' ? '請先開始延長賽' : (state.awaitingNextPeriod ? '請先開始下半場' : '比賽尚未開始');
     alert(waitText);
     return;
   }
@@ -31453,17 +31499,22 @@ function finishMatch(){
   pendingFinishElapsed=wholeSecondDuration(state.startEpoch,pendingFinishEnd,elapsed());
 
   const tied=state.ourScore===state.oppScore;
-  const title=state.currentPeriod===1 ? '本段比賽已結束' : state.currentPeriod===2 ? '下半場已結束' : '延長賽已結束';
+  const title=state.currentPeriod===1 ? '本段比賽已結束' : state.currentPeriod===2 ? '下半場已結束' : state.currentPeriod===3 && state.extraTimeSplit ? '延長賽上半場已結束' : '延長賽已結束';
   byId('finishDecisionTitle').textContent=title;
   byId('finishDecisionInfo').textContent=`目前比分 ${state.ourScore}:${state.oppScore}｜本段時間 ${fmtMatchClock(pendingFinishElapsed)}${tied && state.currentPeriod>=2 ? '｜目前平手' : ''}`;
 
+  const wholeBtn=byId('finishWholeBtn');
+  // v6.108：延長賽上半場只能進入下半場；不開放提早全場結束 / PK。
+  wholeBtn.style.display=(state.currentPeriod===3 && state.extraTimeSplit)?'none':'';
   const halfBtn=byId('finishHalfBtn');
   const extraBtn=byId('finishExtraBtn');
   const pkBtn=byId('finishPenaltyBtn');
   const btns=byId('finishDecisionBtns');
-  halfBtn.style.display=state.currentPeriod===1 ? '' : 'none';
+  halfBtn.style.display=(state.currentPeriod===1 || (state.currentPeriod===3 && state.extraTimeSplit)) ? '' : 'none';
+  halfBtn.textContent=state.currentPeriod===3 ? '延長賽下半場' : '還有下半場';
+  halfBtn.onclick=state.currentPeriod===3 ? confirmFinishExtraFirstHalf : confirmFinishHalf;
   extraBtn.style.display=(state.currentPeriod===2 && tied) ? '' : 'none';
-  pkBtn.style.display=(state.currentPeriod>=2 && tied) ? '' : 'none';
+  pkBtn.style.display=(state.currentPeriod>=2 && tied && !(state.currentPeriod===3 && state.extraTimeSplit)) ? '' : 'none';
   btns.classList.toggle('three', state.currentPeriod===2 && tied);
   byId('finishDecisionModal').classList.add('open');
 }
@@ -31513,21 +31564,39 @@ function confirmFinishHalf(){
   showMatchStateFromTop();
 }
 
+function confirmFinishExtraFirstHalf(){
+  if(state.currentPeriod!==3 || !state.extraTimeSplit || pendingFinishEnd===null) return;
+  archiveCurrentPeriod('延長賽上半場');
+  state.endEpoch=pendingFinishEnd;
+  state.finalElapsed=0;
+  state.started=false;
+  state.finished=false;
+  state.awaitingNextPeriod=true;
+  state.nextPeriodType='EXTRA_SECOND_HALF';
+  pendingFinishEnd=null; pendingFinishElapsed=null;
+  byId('finishDecisionModal').classList.remove('open');
+  saveState(); render(); showMatchStateFromTop();
+}
 function openExtraTimeSetup(){
   if(state.currentPeriod!==2 || pendingFinishEnd===null) return;
-  byId('extraTimeMinutes').value=state.extraTimeMinutes || '';
+  // 新延長賽每半場上限取 15 分鐘與正規賽每半場分鐘數的較小值；舊單段延長賽資料不受影響。
+  const maxMinutes=Math.min(15,Math.max(1,Math.floor(Number(state.regulationMinutes)||1)));
+  const input=byId('extraTimeMinutes');
+  input.max=String(maxMinutes);
+  input.value=String(Math.min(maxMinutes,state.extraTimeMinutes ?? (Number(state.regulationMinutes)>=45 ? 15 : 5)));
   byId('extraTimeModal').classList.add('open');
 }
 function closeExtraTimeSetup(){
   byId('extraTimeModal').classList.remove('open');
 }
 function confirmExtraTime(){
-  const minutes=validateIntegerField('extraTimeMinutes','延長賽時間',1,45,false);
+  const minutes=validateIntegerField('extraTimeMinutes','延長賽時間',1,Math.min(15,Math.max(1,Math.floor(Number(state.regulationMinutes)||1))),false);
   if(minutes===undefined) return;
   if(pendingFinishEnd===null || state.currentPeriod!==2) return;
   state.multiPeriod=true;
   state.extraTime=true;
   state.extraTimeMinutes=minutes;
+  state.extraTimeSplit=true;
   archiveCurrentPeriod('下半場');
   state.endEpoch=pendingFinishEnd;
   state.finalElapsed=0;
@@ -31649,7 +31718,7 @@ function penaltyGoals(side){
 function penaltyResultLabel(result){ return result==='GOAL'?'✓ 進球':result==='MISS'?'× 未進':'○ 待定'; }
 function beginPenaltyShootout(){
   if(pendingFinishEnd!==null){
-    const label=state.currentPeriod===2?'下半場':state.currentPeriod===3?'延長賽':'全場';
+    const label=state.currentPeriod===2?'下半場':periodLabel(state.currentPeriod);
     archiveCurrentPeriod(label);
     state.endEpoch=pendingFinishEnd;
     state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
@@ -31835,7 +31904,7 @@ function penaltySummaryHTML(){
 function confirmFinishFull(){
   if(pendingFinishEnd===null) return;
 
-  const label=state.multiPeriod ? (state.currentPeriod===1?'上半場':state.currentPeriod===2?'下半場':'延長賽') : '全場';
+  const label=state.multiPeriod ? (state.currentPeriod===1?'上半場':state.currentPeriod===2?'下半場':periodLabel(state.currentPeriod)) : '全場';
   archiveCurrentPeriod(label);
 
   state.endEpoch=pendingFinishEnd;
@@ -31896,7 +31965,7 @@ function newMatch(){
     regulationMinutes:rememberedRegulationMinutes, ourScore:0, oppScore:0, markers:[],
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
     periodStartOurScore:0, periodStartOppScore:0, periods:[],
-    nextPeriodType:null, extraTime:false, extraTimeMinutes:null, penalty:null,
+    nextPeriodType:null, extraTime:false, extraTimeMinutes:null, extraTimeSplit:false, penalty:null,
     goalkeeperNumber:rememberedGoalkeeper, goalkeeperAutoRosterNumber:rememberedGoalkeeperAutoRoster,
     rosterNumbers:[...rememberedRoster], jerseyColor:rememberedJerseyColor, halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0,
     longDurationAckStartEpoch:null,
@@ -32769,7 +32838,7 @@ function toggleLog(){ byId('logWrap').classList.toggle('open'); }
 function openScoreModal(){
   const isScoreReviewBreak=
     !!state.awaitingNextPeriod &&
-    (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME') &&
+    (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME' || state.nextPeriodType==='EXTRA_SECOND_HALF') &&
     !state.penalty?.active;
 
   const isFullTime=!!state.finished;
@@ -32826,7 +32895,7 @@ function saveScoreModal(){
   const isFullTime=!!state.finished;
   const isScoreReviewBreak=
     !!state.awaitingNextPeriod &&
-    (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME') &&
+    (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME' || state.nextPeriodType==='EXTRA_SECOND_HALF') &&
     !state.penalty?.active;
   const isCombinedReview=!!isFullTime || !!isScoreReviewBreak;
   const pkScoreLocked=!!(state.penalty?.active || state.penalty?.completed);
@@ -33263,7 +33332,7 @@ function canReviewTeamNameEdit(){
   const isReviewBreak=Boolean(
     state.awaitingNextPeriod &&
     !state.penalty?.active &&
-    (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME')
+    (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME' || state.nextPeriodType==='EXTRA_SECOND_HALF')
   );
   return Boolean(state.finished || isReviewBreak);
 }
@@ -33330,7 +33399,7 @@ function renderLiveFocusUI(){
   const isPenalty=!!state.penalty?.active;
   const isLive=!!state.started && !state.finished && !state.awaitingNextPeriod && !isPenalty;
   const isHalftime=!!state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF' && !state.finished && !isPenalty;
-  const isExtraWait=!!state.awaitingNextPeriod && state.nextPeriodType==='EXTRA_TIME' && !state.finished && !isPenalty;
+  const isExtraWait=!!state.awaitingNextPeriod && (state.nextPeriodType==='EXTRA_TIME' || state.nextPeriodType==='EXTRA_SECOND_HALF') && !state.finished && !isPenalty;
   const isResult=!!state.finished;
   const shouldShow=isLive || isHalftime || isExtraWait || isPenalty || isResult;
 
@@ -33741,6 +33810,7 @@ function resetPreMatchSetup(){
   state.nextPeriodType=null;
   state.extraTime=false;
   state.extraTimeMinutes=null;
+  state.extraTimeSplit=false;
   state.penalty=null;
   state.halftimeStartEpoch=null;
   state.halftimeEndEpoch=null;
@@ -33772,7 +33842,7 @@ function renderMatchStateUI(){
   const isPenalty=!!state.penalty?.active;
   const isBreak=!!state.awaitingNextPeriod;
   const isHalftime=!!state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF' && !isFinished && !isPenalty;
-  const isExtraWait=!!state.awaitingNextPeriod && state.nextPeriodType==='EXTRA_TIME' && !isFinished && !isPenalty;
+  const isExtraWait=!!state.awaitingNextPeriod && (state.nextPeriodType==='EXTRA_TIME' || state.nextPeriodType==='EXTRA_SECOND_HALF') && !isFinished && !isPenalty;
   const isLive=!!state.started && !isFinished && !isBreak && !isPenalty;
   const isPre=!state.started && !isBreak && !isFinished && !isPenalty;
 
@@ -33873,7 +33943,8 @@ function renderRegulationTimeAlert(sampledElapsedSec=null){
     legacyHint.textContent='';
   }
 
-  const mins=Number(state.regulationMinutes||0);
+  // v6.108: 延長賽各半場用其專屬規定時間提醒；正規時間不變。
+  const mins=Number((state.currentPeriod>=3 && state.extraTime && state.extraTimeMinutes) ? state.extraTimeMinutes : state.regulationMinutes||0);
   const hasBegun=Boolean(matchStartEpoch());
 
   const resetTimeStatus=()=>{
@@ -34036,7 +34107,9 @@ function render(){
     txt=`PK 點球進行中｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`;
     cls='liveStatus'; cardCls='liveState';
   }else if(state.awaitingNextPeriod){
-    if(state.nextPeriodType==='EXTRA_TIME'){
+    if(state.nextPeriodType==='EXTRA_SECOND_HALF'){
+      txt=`延長賽上半場結束｜目前 ${state.ourScore}:${state.oppScore}｜等待下半場`;
+    }else if(state.nextPeriodType==='EXTRA_TIME'){
       txt=`下半場結束｜目前 ${state.ourScore}:${state.oppScore}｜等待延長賽`;
     }else{
       const firstHalf=state.periods.find(p=>Number(p.number)===1);
@@ -34046,7 +34119,7 @@ function render(){
     cls='idleStatus';
     cardCls='idleState';
   }else if(state.started && !state.finished){
-    txt=state.currentPeriod===3 ? '延長賽進行中' : (state.multiPeriod && state.currentPeriod===2 ? '下半場進行中' : '比賽進行中');
+    txt=state.currentPeriod>=3 ? `${periodLabel(state.currentPeriod)}進行中` : (state.multiPeriod && state.currentPeriod===2 ? '下半場進行中' : '比賽進行中');
     cls='liveStatus';
     cardCls='liveState';
   }
@@ -34059,8 +34132,8 @@ function render(){
   const startBtn=byId('startBtn');
   const finishBtn=byId('finishBtn');
 
-  startBtn.textContent=state.awaitingNextPeriod ? (state.nextPeriodType==='EXTRA_TIME'?'▶ 開始延長賽':'▶ 開始下半場') : '▶ 開始比賽';
-  finishBtn.textContent=state.penalty?.active ? '⚽ 記錄 PK' : state.currentPeriod===3 && state.started ? '■ 結束延長賽' : (state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 結束比賽');
+  startBtn.textContent=state.awaitingNextPeriod ? (state.nextPeriodType==='EXTRA_TIME'?'▶ 開始延長賽上半場':state.nextPeriodType==='EXTRA_SECOND_HALF'?'▶ 開始延長賽下半場':'▶ 開始下半場') : '▶ 開始比賽';
+  finishBtn.textContent=state.penalty?.active ? '⚽ 記錄 PK' : state.currentPeriod===3 && state.started && state.extraTimeSplit ? '■ 結束延長賽上半場' : state.currentPeriod>=3 && state.started ? '■ 結束延長賽' : (state.multiPeriod && state.currentPeriod===2 && state.started?'■ 結束下半場':'■ 結束比賽');
 
   // v6.22：每個狀態只顯示當下真正可執行的主要動作。
   // 不再保留 disabled 的另一顆按鈕，降低現場操作認知負擔。
@@ -34138,7 +34211,7 @@ function render(){
   if(scoreEditBtn){
     const isScoreReviewBreak=
       !!state.awaitingNextPeriod &&
-      (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME') &&
+      (state.nextPeriodType==='SECOND_HALF' || state.nextPeriodType==='EXTRA_TIME' || state.nextPeriodType==='EXTRA_SECOND_HALF') &&
       !state.penalty?.active;
 
     const pkLocksScore=!!(state.penalty?.active || state.penalty?.completed);
@@ -34165,11 +34238,11 @@ function render(){
       stageText='PK 點球';
       stageClass='penalty';
     }else if(state.awaitingNextPeriod){
-      stageText=state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':'中場';
+      stageText=state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':state.nextPeriodType==='EXTRA_SECOND_HALF'?'延長賽中場':'中場';
       stageClass='halftime';
     }else if(state.started && !state.finished){
-      if(state.currentPeriod===3){
-        stageText='延長賽';
+      if(state.currentPeriod>=3){
+        stageText=periodLabel(state.currentPeriod);
         stageClass='live secondHalf';
       }else if(state.multiPeriod && state.currentPeriod===2){
         stageText='下半場';
@@ -34335,7 +34408,7 @@ function reportTimelineHTML(){
     const compact=reportTimelineCompactParts(e);
     return heading+`<li class="matchTimelineRow ${e.team==='OUR'?'isOur':e.team==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
       <div class="matchTimelineTime">${escapeHtml(e.time)}</div><div class="matchTimelineNode" aria-hidden="true"></div>
-      <div class="matchTimelineContent"><div class="matchTimelineCompact">${compact.iconHtml}<span class="matchTimelineCompactMain">${escapeHtml(compact.main)}</span>${compact.assist?`<span class="matchTimelineAssistInline">${escapeHtml(compact.assist)}</span>`:''}</div></div>
+      <div class="matchTimelineContent"><div class="matchTimelineCompact">${compact.iconHtml}<span class="matchTimelineCompactMain">${escapeHtml(compact.main)}</span>${compact.assist?`<span class="matchTimelineAssistInline">${escapeHtml(compact.assist)}</span>`:''}${e.event==='GOAL'?'<span class="matchTimelineGoalTag" aria-label="進球">GOAL</span>':''}</div></div>
       ${e.event==='GOAL'?`<div class="matchTimelineScore" aria-label="進球後比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>`:''}
     </li>`;
   }).join('')+'</ol>';
@@ -34451,7 +34524,7 @@ function buildReportDOM(){
 
   const badge=byId('reportStatusBadge');
   badge.className='reportStatusBadge ' + (state.finished ? 'finished' : (state.started ? 'running' : 'idle'));
-  badge.textContent=state.finished ? (state.penalty?.completed?`比賽結束｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:'比賽結束') : (state.penalty?.active?`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:(state.started ? (state.currentPeriod===3?'延長賽':state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?(state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':`中場 ${fmtMMSS(halftimeElapsed())}`):'尚未開始')));
+  badge.textContent=state.finished ? (state.penalty?.completed?`比賽結束｜PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:'比賽結束') : (state.penalty?.active?`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`:(state.started ? (state.currentPeriod>=3?periodLabel(state.currentPeriod):state.multiPeriod&&state.currentPeriod===2?'下半場':'比賽中') : (state.awaitingNextPeriod?(state.nextPeriodType==='EXTRA_TIME'?'等待延長賽':state.nextPeriodType==='EXTRA_SECOND_HALF'?'延長賽中場':`中場 ${fmtMMSS(halftimeElapsed())}`):'尚未開始')));
   badge.style.display=state.finished?'none':'inline-flex';
 
   const reportDiff=byId('reportDiff');
@@ -34539,7 +34612,7 @@ function reportLines(){
   const start=matchStartEpoch(), end=matchEndEpoch();
   const crossDay=isCrossDay(start,end);
   const clock=epoch=>epoch?(crossDay?fmtMonthDayClock(epoch):fmtClock(epoch)):'--:--:--';
-  const status=state.finished?'比賽結束':state.penalty?.active?'PK 點球大戰':state.awaitingNextPeriod?'中場／等待開賽':state.started?(state.currentPeriod===3?'延長賽':state.multiPeriod?periodLabel(state.currentPeriod||1):'比賽中'):'尚未開始';
+  const status=state.finished?'比賽結束':state.penalty?.active?'PK 點球大戰':state.awaitingNextPeriod?'中場／等待開賽':state.started?(state.currentPeriod>=3?periodLabel(state.currentPeriod):state.multiPeriod?periodLabel(state.currentPeriod||1):'比賽中'):'尚未開始';
   const lines=[{type:'title',text:'比賽摘要'},
     {type:'score',left:state.ourTeam||'我方',right:state.oppTeam||'對手',score:`${state.ourScore} : ${state.oppScore}`,status}];
   const roster=currentRosterNumbers();
@@ -34788,14 +34861,19 @@ function reportSmartTimelineColumns(blocks,ctx,content){
       continue;
     }
     const columns=pair.map(group=>{
-      let h=64;
+      let h=50;
       const events=group.events.map(source=>{
         const combined=`${source.compact.main}${source.compact.assist?`  ${source.compact.assist}`:''}`;
-        const reserveScore=source.event==='GOAL'?76:0;
-        const available=colWidth-127-16-reserveScore;
-        // 過窄時退回單欄；不允許靠裁切或無限制縮字達成雙欄。
+        const isGoal=source.event==='GOAL';
+        const reserveScore=isGoal?76:0;
+        const available=colWidth-127-16-reserveScore-(isGoal?63:0);
+        // GOAL 標籤、事件及比分必須在同一行；雙欄不夠寬則退回單欄。
         if(available<130) return null;
-        const rows=reportWrapText(ctx,combined,available,eventFont);
+        if(isGoal){
+          ctx.font='700 18px -apple-system, BlinkMacSystemFont, sans-serif';
+          if(ctx.measureText(combined).width>available) return null;
+        }
+        const rows=isGoal?[combined]:reportWrapText(ctx,combined,available,eventFont);
         if(rows.length>3) return null;
         const height=Math.max(56,rows.length*29+14);
         const row={...source,compactRows:rows,height};
@@ -34860,8 +34938,9 @@ function reportCanvasLayout(lines,ctx){
       b.height=b.titleRows.length*33 + b.nameRows.length*30 + 20;
     }else if(line.type==='scorerGrid'){
       b.rows=[];b.height=48;
-      for(let i=0;i<line.items.length;i+=2){
-        const cells=line.items.slice(i,i+2).map(s=>reportWrapText(ctx,`${s.name}  ${scorerGoalsLabel(s.goals)}`,(content-16)/2-20,font));
+      // 與摘要視窗一致：球員進球統計每列三格，保留長內容換行高度。
+      for(let i=0;i<line.items.length;i+=3){
+        const cells=line.items.slice(i,i+3).map(s=>reportWrapText(ctx,`${s.name}  ${scorerGoalsLabel(s.goals)}`,(content-24)/3-20,font));
         const height=Math.max(...cells.map(c=>c.length))*32+14;
         b.rows.push({cells,height});b.height+=height;
       }
@@ -34872,7 +34951,7 @@ function reportCanvasLayout(lines,ctx){
       const compact=reportTimelineCompactParts(line);
       b.compact=compact;
       const combined=`${compact.main}${compact.assist?`  ${compact.assist}`:''}`;
-      b.compactRows=reportWrapText(ctx,combined,content-310,mainFont);
+      b.compactRows=line.event==='GOAL'?[combined]:reportWrapText(ctx,combined,content-310,mainFont);
       b.height=Math.max(58,b.compactRows.length*34+20);
     }else{
       b.textRows=reportWrapText(ctx,line.text||'',content-16,font);b.height=b.textRows.length*32+10;
@@ -35020,7 +35099,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
     }else if(b.type==='scorerGrid'){
       text('球員進球統計',pad+8,y+4,29,'#7dd3fc',800);let rowY=y+42;
       b.rows.forEach(row=>{
-        const cellW=(content-12)/2;
+        const cellW=(content-24)/3;
         row.cells.forEach((cell,i)=>{
           const x=pad+i*(cellW+12);
           ctx.fillStyle='#182837';roundRect(ctx,x,rowY,cellW,row.height-6,8,true,false);
@@ -35029,8 +35108,8 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       });
     }else if(b.type==='timelineHeading'){
       text(b.text,pad+8,y+8,30,'#7dd3fc',800);
-      ctx.fillStyle='#59c8f1';ctx.beginPath();ctx.arc(pad+16,y+57,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+44,23,'#59c8f1',700);
-      ctx.fillStyle='#ffad83';ctx.beginPath();ctx.arc(pad+120,y+57,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+44,23,'#ffad83',700);
+      ctx.fillStyle='#f9a8c6';ctx.beginPath();ctx.arc(pad+16,y+57,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+44,23,'#f9a8c6',700);
+      ctx.fillStyle='#59c8f1';ctx.beginPath();ctx.arc(pad+120,y+57,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+44,23,'#59c8f1',700);
     }else if(b.type==='timelineDualRow'){
       // v6.100：上半場在左、下半場在右；延長賽依時間順序成對排列。
       // 所有座標僅影響圖片 Canvas，不改畫面摘要或事件操作。
@@ -35039,20 +35118,25 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         const tone=periodTonePalette(column.phase.text,column.phase.period);
         const isHalf=normalizedPeriodTone(column.phase.text,column.phase.period)!=='default';
         const headY=y+3;
-        ctx.fillStyle='#172838';roundRect(ctx,x,headY,b.colWidth,56,9,true,false);
-        if(isHalf){ctx.fillStyle=tone.stroke;roundRect(ctx,x+9,headY+10,4,28,2,true,false);}
-        text(column.phase.text,x+(isHalf?21:12),headY+6,23,isHalf?tone.title:'#dbe8f4',850);
+        ctx.fillStyle='#172838';roundRect(ctx,x,headY,b.colWidth,42,9,true,false);
+        if(isHalf){ctx.fillStyle=tone.stroke;roundRect(ctx,x+9,headY+8,4,26,2,true,false);}
+        const titleX=x+(isHalf?21:12);
+        text(column.phase.text,titleX,headY+9,22,isHalf?tone.title:'#dbe8f4',850);
         let meta='';
         if(column.phase.duration) meta+=`本段時間 ${column.phase.duration}`;
         if(column.phase.score) meta+=`${meta?'  ｜  ':''}本段比分 ${column.phase.score}`;
         if(meta){
-          ctx.font=font(17,700);
-          let metaFont=17;
+          ctx.font=font(22,850);
+          const titleWidth=ctx.measureText(column.phase.text).width;
+          const metaX=titleX+titleWidth+12;
+          const available=x+b.colWidth-10-metaX;
+          let metaFont=15;
+          ctx.font=font(metaFont,700);
           const measured=ctx.measureText(meta).width;
-          if(measured>b.colWidth-24) metaFont=Math.max(14,Math.floor(metaFont*(b.colWidth-24)/measured));
-          text(meta,x+13,headY+32,metaFont,'#b9cde0',700);
+          metaFont=Math.max(10,Math.min(15,Math.floor(metaFont*available/Math.max(measured,1))));
+          text(meta,metaX,headY+12,metaFont,'#b9cde0',700);
         }
-        let rowY=y+64;
+        let rowY=y+50;
         column.events.forEach((ev,j)=>{
           const goal=ev.event==='GOAL';
           const dotX=x+80, actorX=x+99;
@@ -35061,14 +35145,24 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
             ctx.strokeStyle='#30465b';ctx.lineWidth=2;
             ctx.beginPath();ctx.moveTo(dotX,rowY+23);ctx.lineTo(dotX,rowY+ev.height+23);ctx.stroke();
           }
-          ctx.fillStyle=ev.team==='OUR'?'#59c8f1':ev.team==='OPP'?'#ffad83':'#aeb9c5';
+          ctx.fillStyle=ev.team==='OUR'?'#f9a8c6':ev.team==='OPP'?'#59c8f1':'#aeb9c5';
           ctx.beginPath();ctx.arc(dotX,rowY+23,5,0,Math.PI*2);ctx.fill();
           text(ev.time,x+10,rowY+11,20,'#b9c9d9',650);
           if(ev.event==='YELLOW_CARD'||ev.event==='RED_CARD'){
             ctx.fillStyle=ev.event==='YELLOW_CARD'?'#ffd429':'#ff2a1c';
             roundRect(ctx,actorX,rowY+13,13,22,2,true,false);
           }else emojiText(emoji(ev.event),actorX,rowY+9,22);
-          ev.compactRows.forEach((line,k)=>text(line,actorX+28,rowY+8+k*29,22,'#edf5fc',goal?800:700));
+          if(goal){
+            const label=ev.compactRows.join(' '), start=actorX+28, maxWidth=x+b.colWidth-136-start;
+            ctx.font=font(22,800);
+            const measured=ctx.measureText(label).width;
+            const ratio=Math.min(1,maxWidth/Math.max(measured,1));
+            ctx.save();ctx.translate(start,rowY+8);ctx.scale(ratio,1);
+            text(label,0,0,22,'#edf5fc',800);ctx.restore();
+            ctx.fillStyle=ev.team==='OUR'?'#f9a8c6':ev.team==='OPP'?'#59c8f1':'#aeb9c5';
+            roundRect(ctx,x+b.colWidth-128,rowY+11,49,25,5,true,false);
+            text('GOAL',x+b.colWidth-123,rowY+14,16,'#172333',900);
+          }else ev.compactRows.forEach((line,k)=>text(line,actorX+28,rowY+8+k*29,22,'#edf5fc',700));
           if(goal){
             ctx.font=font(23,900);ctx.fillStyle='#ffd84d';ctx.textAlign='right';ctx.textBaseline='top';
             ctx.fillText(String(ev.score||''),x+b.colWidth-10,rowY+10);
@@ -35081,13 +35175,19 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       const isHalf=normalizedPeriodTone(b.text,b.period)!=='default';
       if(isHalf){ctx.fillStyle=tone.stroke;roundRect(ctx,pad+8,y+8,6,30,2,true,false);}
       text(b.text,pad+(isHalf?24:8),y+10,25,isHalf?tone.title:'#b3c3d3',800);
-      if(b.duration){
-        text('本段時間',W-pad-188,y+7,14,'#91a7bd',800);
-        text(b.duration,W-pad-188,y+22,20,'#eef5fc',900);
-      }
-      if(b.score){
-        text('本段比分',W-pad-78,y+7,14,'#91a7bd',800);
-        text(b.score,W-pad-78,y+22,20,'#eef5fc',900);
+      // v6.105：單欄圖片的時間與比分亦採同列標籤＋數值。
+      const metaItems=[];
+      if(b.duration) metaItems.push(['本段時間',b.duration]);
+      if(b.score) metaItems.push(['本段比分',b.score]);
+      let right=W-pad-8;
+      for(let i=metaItems.length-1;i>=0;i--){
+        const [label,value]=metaItems[i];
+        ctx.font=font(19,900); const valueW=ctx.measureText(value).width;
+        ctx.font=font(14,800); const labelW=ctx.measureText(label).width;
+        const itemW=labelW+7+valueW;
+        text(label,right-itemW,y+14,14,'#91a7bd',800);
+        text(value,right-valueW,y+10,19,'#eef5fc',900);
+        right-=itemW+20;
       }
       ctx.strokeStyle='#293c4e';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,y+42);ctx.lineTo(W-pad,y+42);ctx.stroke();
     }else if(b.type==='timelineEvent'){
@@ -35097,14 +35197,24 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       if(next?.type==='timelineEvent'){
         ctx.strokeStyle='#30465b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(nodeX,y+24);ctx.lineTo(nodeX,y+b.height+24);ctx.stroke();
       }
-      ctx.fillStyle=b.team==='OUR'?'#59c8f1':b.team==='OPP'?'#ffad83':'#aeb9c5';ctx.beginPath();ctx.arc(nodeX,y+24,7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=b.team==='OUR'?'#f9a8c6':b.team==='OPP'?'#59c8f1':'#aeb9c5';ctx.beginPath();ctx.arc(nodeX,y+24,7,0,Math.PI*2);ctx.fill();
       text(b.time,pad+8,y+10,24,'#b3c3d3',600);
       if(b.event==='YELLOW_CARD'||b.event==='RED_CARD'){
         ctx.fillStyle=b.event==='YELLOW_CARD'?'#ffd429':'#ff2a1c';roundRect(ctx,actorX,y+12,17,27,2,true,false);
       }else{
         emojiText(emoji(b.event),actorX,y+8,28);
       }
-      b.compactRows.forEach((value,j)=>text(value,actorX+38,y+8+j*34,28,'#edf5fc',isGoal?800:700));
+      if(isGoal){
+        const label=b.compactRows.join(' '), start=actorX+38, maxWidth=W-pad-164-start;
+        ctx.font=font(28,800);
+        const measured=ctx.measureText(label).width;
+        const ratio=Math.min(1,maxWidth/Math.max(measured,1));
+        ctx.save();ctx.translate(start,y+8);ctx.scale(ratio,1);
+        text(label,0,0,28,'#edf5fc',800);ctx.restore();
+        ctx.fillStyle=b.team==='OUR'?'#f9a8c6':b.team==='OPP'?'#59c8f1':'#aeb9c5';
+        roundRect(ctx,W-pad-154,y+12,66,30,5,true,false);
+        text('GOAL',W-pad-147,y+15,20,'#172333',900);
+      }else b.compactRows.forEach((value,j)=>text(value,actorX+38,y+8+j*34,28,'#edf5fc',700));
       // 與螢幕摘要一致：只有進球事件顯示比分，使用單純暖黃色文字，不加膠囊外框。
       if(isGoal){
         const score=String(b.score||'');
