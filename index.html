@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.114</title>
+<title>足球場邊記錄器 v6.115</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -19059,11 +19059,11 @@ body.resultMode .liveMetaStrip .metaGroupEditBtn:active{
 }
 #reportModal .matchTimelineGoalTag{
   flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
-  padding:2px 4px;border-radius:4px;background:#f9a8c6;color:#182332;
+  padding:2px 4px;border-radius:4px;background:#192b3b;color:#f9a8c6;border:1px solid #f9a8c6;box-sizing:border-box;
   font-size:9px;font-weight:900;line-height:1.15;letter-spacing:.2px;
 }
-#reportModal .matchTimelineRow.isOpp .matchTimelineGoalTag{background:#59c8f1}
-#reportModal .matchTimelineRow.isUnknown .matchTimelineGoalTag{background:#aeb9c5}
+#reportModal .matchTimelineRow.isOpp .matchTimelineGoalTag{color:#59c8f1;border-color:#59c8f1}
+#reportModal .matchTimelineRow.isUnknown .matchTimelineGoalTag{color:#aeb9c5;border-color:#aeb9c5}
 </style>
 <style id="v5146RosterModalBreathingPatch">
 /* =========================================================
@@ -27089,7 +27089,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.114</span>
+      <span class="headerVersion">v6.115</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -35192,9 +35192,10 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
             const ratio=Math.min(1,maxWidth/Math.max(measured,1));
             ctx.save();ctx.translate(start,rowY+8);ctx.scale(ratio,1);
             text(label,0,0,22,'#edf5fc',800);ctx.restore();
-            ctx.fillStyle=ev.team==='OUR'?'#f9a8c6':ev.team==='OPP'?'#59c8f1':'#aeb9c5';
-            roundRect(ctx,x+b.colWidth-128,rowY+11,49,25,5,true,false);
-            text('GOAL',x+b.colWidth-123,rowY+14,16,'#172333',900);
+            const tagColor=ev.team==='OUR'?'#f9a8c6':ev.team==='OPP'?'#59c8f1':'#aeb9c5';
+            ctx.fillStyle='#192b3b';ctx.strokeStyle=tagColor;ctx.lineWidth=1;
+            roundRect(ctx,x+b.colWidth-128,rowY+11,49,25,5,true,true);
+            text('GOAL',x+b.colWidth-123,rowY+14,16,tagColor,900);
           }else ev.compactRows.forEach((line,k)=>text(line,actorX+28,rowY+8+k*29,22,'#edf5fc',700));
           if(goal){
             ctx.font=font(23,900);ctx.fillStyle='#ffd84d';ctx.textAlign='right';ctx.textBaseline='top';
@@ -35244,9 +35245,10 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         const ratio=Math.min(1,maxWidth/Math.max(measured,1));
         ctx.save();ctx.translate(start,y+8);ctx.scale(ratio,1);
         text(label,0,0,28,'#edf5fc',800);ctx.restore();
-        ctx.fillStyle=b.team==='OUR'?'#f9a8c6':b.team==='OPP'?'#59c8f1':'#aeb9c5';
-        roundRect(ctx,W-pad-154,y+12,66,30,5,true,false);
-        text('GOAL',W-pad-147,y+15,20,'#172333',900);
+        const tagColor=b.team==='OUR'?'#f9a8c6':b.team==='OPP'?'#59c8f1':'#aeb9c5';
+        ctx.fillStyle='#192b3b';ctx.strokeStyle=tagColor;ctx.lineWidth=1;
+        roundRect(ctx,W-pad-154,y+12,66,30,5,true,true);
+        text('GOAL',W-pad-147,y+15,20,tagColor,900);
       }else b.compactRows.forEach((value,j)=>text(value,actorX+38,y+8+j*34,28,'#edf5fc',700));
       // 與螢幕摘要一致：只有進球事件顯示比分，使用單純暖黃色文字，不加膠囊外框。
       if(isGoal){
