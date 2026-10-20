@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.115</title>
+<title>足球場邊記錄器 v6.116</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27089,7 +27089,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.115</span>
+      <span class="headerVersion">v6.116</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -34898,13 +34898,14 @@ function reportSmartTimelineColumns(blocks,ctx,content){
       const events=group.events.map(source=>{
         const combined=`${source.compact.main}${source.compact.assist?`  ${source.compact.assist}`:''}`;
         const isGoal=source.event==='GOAL';
-        const reserveScore=isGoal?76:0;
-        const available=colWidth-127-16-reserveScore-(isGoal?63:0);
-        // GOAL 標籤、事件及比分必須在同一行；雙欄不夠寬則退回單欄。
+        // v6.116：和下方 Canvas 實際繪製共用同一段 GOAL 文字空間。
+        // 預留時間、事件圓點、圖示、GOAL 標籤及比分，避免過度保守的固定扣除值。
+        const available=isGoal?(colWidth-263):(colWidth-143);
         if(available<130) return null;
         if(isGoal){
-          ctx.font='700 18px -apple-system, BlinkMacSystemFont, sans-serif';
-          if(ctx.measureText(combined).width>available) return null;
+          // 實際字級為 22px；僅允許輕微水平壓縮，不截字、不換行。
+          ctx.font='800 22px -apple-system, BlinkMacSystemFont, sans-serif';
+          if(ctx.measureText(combined).width>available/0.84) return null;
         }
         const rows=isGoal?[combined]:reportWrapText(ctx,combined,available,eventFont);
         if(rows.length>3) return null;
@@ -35190,6 +35191,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
             ctx.font=font(22,800);
             const measured=ctx.measureText(label).width;
             const ratio=Math.min(1,maxWidth/Math.max(measured,1));
+            // 與 reportSmartTimelineColumns 的 84% 可讀性門檻相同。
             ctx.save();ctx.translate(start,rowY+8);ctx.scale(ratio,1);
             text(label,0,0,22,'#edf5fc',800);ctx.restore();
             const tagColor=ev.team==='OUR'?'#f9a8c6':ev.team==='OPP'?'#59c8f1':'#aeb9c5';
