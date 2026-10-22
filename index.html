@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.118</title>
+<title>足球場邊記錄器 v6.119</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27089,7 +27089,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.118</span>
+      <span class="headerVersion">v6.119</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28140,12 +28140,8 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
       <div class="youtubeChapterTool">
         <button id="youtubeChapterToggle" class="youtubeChapterToggle" type="button" aria-expanded="false" aria-controls="youtubeChapterPanel">▶ 複製 YouTube 事件時間軸</button>
         <div id="youtubeChapterPanel" class="youtubeChapterPanel" hidden>
-          <p class="youtubeChapterHint">依影片實際播放時間填入各階段起點；預設事件提前 10 秒。原始 CSV 不變。</p>
-          <label class="youtubeChapterField">事件提前秒數<input id="youtubeChapterLead" type="number" inputmode="numeric" min="0" max="120" step="1" value="10"></label>
-          <div id="youtubeChapterStarts" class="youtubeChapterStarts"></div>
-          <p id="youtubeChapterWarning" class="youtubeChapterWarning" aria-live="polite"></p>
-          <textarea id="youtubeChapterOutput" class="youtubeChapterOutput" rows="7" readonly aria-label="YouTube 時間軸文字"></textarea>
-          <button id="youtubeChapterCopy" class="youtubeChapterCopy" type="button">複製時間軸文字</button>
+          <p class="youtubeChapterHint">依比賽階段分別產生時間軸；各段事件時間固定提前 10 秒（最低 00:00）。適用於各半場分開的影片，原始 CSV 不變。</p>
+          <div id="youtubeChapterGroups" class="youtubeChapterGroups"></div>
           <p id="youtubeChapterStatus" class="youtubeChapterHint" role="status" aria-live="polite"></p>
         </div>
       </div>
@@ -28166,8 +28162,10 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
 .youtubeChapterPanel[hidden]{display:none!important}
 .youtubeChapterHint,.youtubeChapterWarning{font-size:12px;line-height:1.5;color:#b9cbd9;margin:4px 0 10px}
 .youtubeChapterWarning{color:#ffda89}
-.youtubeChapterField{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;font-weight:650;margin:8px 0}
-.youtubeChapterField input{width:100px;max-width:42%;height:38px;box-sizing:border-box;padding:6px;border:1px solid #50708a;border-radius:7px;background:#0b1927;color:white;font:inherit;text-align:center}
+.youtubeChapterGroups{display:grid;gap:12px}
+.youtubeChapterGroup{min-width:0}
+.youtubeChapterGroupTitle{font-weight:700;font-size:14px;color:#f1f6fc;margin:4px 0 8px}
+.youtubeChapterGroup .youtubeChapterOutput{min-height:104px}
 .youtubeChapterOutput{box-sizing:border-box;width:100%;min-height:155px;resize:vertical;padding:10px;border:1px solid #36546a;border-radius:9px;background:#0b1927;color:#f1f6fc;font-size:13px;line-height:1.65}
 .youtubeChapterCopy{width:100%;min-height:44px;border:0;border-radius:9px;background:#2563eb;color:white;font:inherit;font-weight:700;margin-top:8px}
 </style>
@@ -36172,12 +36170,6 @@ function youtubeChapterTime(seconds){
   const h=Math.floor(v/3600),m=Math.floor(v%3600/60),sec=v%60;
   return h?`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
 }
-function youtubeChapterParseClock(s){
-  const v=String(s||'').trim();
-  if(!/^(?:\d{1,3}:)?[0-5]?\d:[0-5]\d$/.test(v)) return null;
-  const parts=v.split(':').map(Number);
-  return parts.reduce((a,b)=>a*60+b,0);
-}
 function youtubeChapterEventText(m){
   const side=m.team==='OUR'?'我方':m.team==='OPP'?'對手':'';
   const label=m.own_goal?'烏龍球':eventLabel(m.event);
@@ -36186,42 +36178,29 @@ function youtubeChapterEventText(m){
   return `${emoji(m.event)} ${side}${label}${num}${assist}`.trim();
 }
 function youtubeChapterSetup(){
-  const starts=byId('youtubeChapterStarts');
-  if(!starts) return;
+  const groups=byId('youtubeChapterGroups');
+  if(!groups)return;
+  groups.textContent='';
   const phases=[...new Set(state.markers.filter(m=>m && m.event && Number.isFinite(Number(m.seconds))).map(m=>Number(m.period)||1))].sort((a,b)=>a-b);
-  starts.textContent='';
-  phases.forEach((period,i)=>{
-    const label=document.createElement('label');label.className='youtubeChapterField';
-    const title=document.createElement('span');title.textContent=`${periodLabel(period)}影片起點`;
-    const input=document.createElement('input');input.type='text';input.inputMode='numeric';input.placeholder='MM:SS';
-    input.setAttribute('aria-label',`${periodLabel(period)}影片起點`);
-    input.dataset.period=String(period);
-    input.value=i===0?'00:00':'';
-    input.addEventListener('input',youtubeChapterUpdate);
-    label.append(title,input);starts.append(label);
+  phases.forEach(period=>{
+    const section=document.createElement('section');section.className='youtubeChapterGroup';
+    const heading=document.createElement('div');heading.className='youtubeChapterGroupTitle';heading.textContent=`${periodLabel(period)}｜事件時間軸`;
+    const output=document.createElement('textarea');output.className='youtubeChapterOutput';output.readOnly=true;output.rows=5;
+    output.setAttribute('aria-label',`${periodLabel(period)} YouTube 時間軸文字`);
+    const copy=document.createElement('button');copy.className='youtubeChapterCopy';copy.type='button';copy.textContent=`複製${periodLabel(period)}時間軸`;
+    const status=document.createElement('p');status.className='youtubeChapterHint';status.setAttribute('role','status');
+    copy.addEventListener('click',async()=>{
+      if(!output.value){status.textContent='目前沒有可複製的事件。';return;}
+      try{await navigator.clipboard.writeText(output.value);status.textContent='已複製時間軸文字。';}
+      catch(e){output.focus();output.select();status.textContent='無法自動複製，已選取文字，請長按複製。';}
+    });
+    section.append(heading,output,copy,status);groups.append(section);
+    const timeline=state.markers.filter(m=>m && m.event && (Number(m.period)||1)===period && Number.isFinite(Number(m.seconds)))
+      .map(m=>({seconds:Math.max(0,wholeSecondMarkerSeconds(m.seconds)-10),text:youtubeChapterEventText(m)}))
+      .sort((a,b)=>a.seconds-b.seconds);
+    output.value=timeline.map(e=>`${youtubeChapterTime(e.seconds)} ${e.text}`).join('\n');
   });
-  youtubeChapterUpdate();
-}
-function youtubeChapterUpdate(){
-  const result=byId('youtubeChapterOutput'),warning=byId('youtubeChapterWarning');
-  if(!result||!warning) return;
-  const leadInput=byId('youtubeChapterLead');
-  const lead=Number(leadInput?.value);
-  if(!/^\d+$/.test(leadInput?.value||'') || lead>120){result.value='';warning.textContent='請輸入 0～120 秒的整數提前量。';return;}
-  const origins=new Map();let invalid=false;
-  byId('youtubeChapterStarts').querySelectorAll('input[data-period]').forEach(input=>{
-    const time=youtubeChapterParseClock(input.value);
-    if(time===null){invalid=true;return;}
-    origins.set(Number(input.dataset.period),time);
-  });
-  if(invalid){result.value='';warning.textContent='請填寫每個比賽階段在影片中的起點（例如 00:00、22:30），才能避免影片時間錯位。';return;}
-  const timeline=state.markers.filter(m=>m && m.event && Number.isFinite(Number(m.seconds))).map(m=>{
-    const start=origins.get(Number(m.period)||1);
-    return {seconds:Math.max(0,start+wholeSecondMarkerSeconds(m.seconds)-lead),text:youtubeChapterEventText(m)};
-  }).sort((a,b)=>a.seconds-b.seconds);
-  result.value=timeline.map(e=>`${youtubeChapterTime(e.seconds)} ${e.text}`).join('\n');
-  const gaps=timeline.some((e,i)=>i && e.seconds-timeline[i-1].seconds<10);
-  warning.textContent=timeline.length ? '注意：影片片頭、剪接或分段錄影時，請校準各階段起點。'+(gaps?' 事件間隔不足 10 秒，YouTube 可能不會將所有項目識別為章節。':' YouTube 正式章節通常還需以 00:00 開始，且至少三段。') : '目前沒有可輸出的事件。';
+  byId('youtubeChapterStatus').textContent=phases.length?'各半場獨立複製；合併影片時須另外校正播放時間。':'目前沒有可輸出的事件。';
 }
 function youtubeChapterInit(){
   const toggle=byId('youtubeChapterToggle'),panel=byId('youtubeChapterPanel');
@@ -36229,14 +36208,6 @@ function youtubeChapterInit(){
   toggle.addEventListener('click',()=>{
     panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));
     if(!panel.hidden)youtubeChapterSetup();
-  });
-  byId('youtubeChapterLead')?.addEventListener('input',youtubeChapterUpdate);
-  byId('youtubeChapterCopy')?.addEventListener('click',async()=>{
-    youtubeChapterUpdate();
-    const output=byId('youtubeChapterOutput'),status=byId('youtubeChapterStatus');
-    if(!output?.value){status.textContent='請先完成影片時間設定。';return;}
-    try{await navigator.clipboard.writeText(output.value);status.textContent='已複製時間軸文字。';}
-    catch(e){output.focus();output.select();status.textContent='無法自動複製，已選取文字，請長按複製。';}
   });
 }
 /* Export data */
