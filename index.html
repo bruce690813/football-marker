@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.120</title>
+<title>足球場邊記錄器 v6.122</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27089,7 +27089,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.120</span>
+      <span class="headerVersion">v6.122</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28138,8 +28138,11 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
       <div id="reportTimeline"></div>
       <!-- v6.117：獨立 YouTube 時間軸工具；不變更 Highlight 使用的 CSV。 -->
       <div class="youtubeChapterTool">
-        <div class="youtubeChapterHeading">▶ YouTube 事件時間軸</div>
-        <div id="youtubeChapterPanel" class="youtubeChapterPanel">
+        <div class="youtubeChapterHeading">
+          <span>▶ YouTube 事件時間軸</span>
+          <button id="youtubeChapterToggle" class="youtubeChapterToggle" type="button" aria-expanded="false" aria-controls="youtubeChapterPanel" aria-label="展開 YouTube 事件時間軸">＋</button>
+        </div>
+        <div id="youtubeChapterPanel" class="youtubeChapterPanel" hidden>
           <p class="youtubeChapterHint">依比賽階段分別產生時間軸；各段事件時間固定提前 10 秒（最低 00:00）。適用於各半場分開的影片，原始 CSV 不變。</p>
           <div id="youtubeChapterGroups" class="youtubeChapterGroups"></div>
           <p id="youtubeChapterStatus" class="youtubeChapterHint" role="status" aria-live="polite"></p>
@@ -28155,9 +28158,11 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   </div>
 </div>
 <style>
-/* v6.120：僅精簡摘要中 YouTube 時間軸排版，保留事件格式與原 CSV。 */
+/* v6.122：僅精簡摘要中 YouTube 時間軸排版，保留事件格式與原 CSV。 */
 .youtubeChapterTool{margin:14px 0 8px;color:#e7f0fa}
-.youtubeChapterHeading{font-size:16px;font-weight:700;color:#f1f6fc;margin:0 0 8px}
+.youtubeChapterHeading{font-size:16px;font-weight:700;color:#f1f6fc;margin:0 0 8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.youtubeChapterToggle{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;border:1px solid #30485f;border-radius:10px;background:#112331;color:#f1f6fc;font:inherit;font-size:24px;font-weight:700;cursor:pointer}
+.youtubeChapterPanel[hidden]{display:none!important}
 .youtubeChapterPanel{padding:10px 12px;border:1px solid #30485f;border-radius:12px;background:#112331}
 .youtubeChapterHint,.youtubeChapterWarning{font-size:12px;line-height:1.5;color:#b9cbd9;margin:2px 0 8px}
 .youtubeChapterHint:empty{display:none}
@@ -34654,6 +34659,7 @@ function openReport(){
   syncVisualViewport();
   buildReportDOM();
   youtubeChapterSetup();
+  youtubeChapterSetExpanded(false);
   document.body.style.overflow='hidden';
   const modal=byId('reportModal');
   modal.classList.add('open');
@@ -36210,9 +36216,25 @@ function youtubeChapterSetup(){
     });
     section.append(headingRow,output,copy,status);groups.append(section);
   });
-  byId('youtubeChapterStatus').textContent=phases.length?'各半場獨立複製；合併影片時須另外校正播放時間。':'目前沒有可輸出的事件。';
+  byId('youtubeChapterStatus').textContent=phases.length?'':'目前沒有可輸出的事件。';
 }
-function youtubeChapterInit(){youtubeChapterSetup();}
+function youtubeChapterSetExpanded(expanded){
+  const panel=byId('youtubeChapterPanel'),toggle=byId('youtubeChapterToggle');
+  if(!panel||!toggle)return;
+  panel.hidden=!expanded;
+  toggle.textContent=expanded?'－':'＋';
+  toggle.setAttribute('aria-expanded',String(expanded));
+  toggle.setAttribute('aria-label',expanded?'收合 YouTube 事件時間軸':'展開 YouTube 事件時間軸');
+}
+function youtubeChapterInit(){
+  youtubeChapterSetup();
+  const toggle=byId('youtubeChapterToggle');
+  if(toggle&&!toggle.dataset.bound){
+    toggle.dataset.bound='1';
+    toggle.addEventListener('click',()=>youtubeChapterSetExpanded(toggle.getAttribute('aria-expanded')!=='true'));
+  }
+  youtubeChapterSetExpanded(false);
+}
 /* Export data */
 function csvEscape(v){
   const s=String(v??'');
