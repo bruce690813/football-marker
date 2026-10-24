@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.119</title>
+<title>足球場邊記錄器 v6.120</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27089,7 +27089,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.119</span>
+      <span class="headerVersion">v6.120</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28138,8 +28138,8 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
       <div id="reportTimeline"></div>
       <!-- v6.117：獨立 YouTube 時間軸工具；不變更 Highlight 使用的 CSV。 -->
       <div class="youtubeChapterTool">
-        <button id="youtubeChapterToggle" class="youtubeChapterToggle" type="button" aria-expanded="false" aria-controls="youtubeChapterPanel">▶ 複製 YouTube 事件時間軸</button>
-        <div id="youtubeChapterPanel" class="youtubeChapterPanel" hidden>
+        <div class="youtubeChapterHeading">▶ YouTube 事件時間軸</div>
+        <div id="youtubeChapterPanel" class="youtubeChapterPanel">
           <p class="youtubeChapterHint">依比賽階段分別產生時間軸；各段事件時間固定提前 10 秒（最低 00:00）。適用於各半場分開的影片，原始 CSV 不變。</p>
           <div id="youtubeChapterGroups" class="youtubeChapterGroups"></div>
           <p id="youtubeChapterStatus" class="youtubeChapterHint" role="status" aria-live="polite"></p>
@@ -28155,19 +28155,20 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   </div>
 </div>
 <style>
-/* v6.117：僅摘要內獨立 YouTube 時間軸工具，不調整原有 UI 元件。 */
+/* v6.120：僅精簡摘要中 YouTube 時間軸排版，保留事件格式與原 CSV。 */
 .youtubeChapterTool{margin:14px 0 8px;color:#e7f0fa}
-.youtubeChapterToggle{width:100%;min-height:44px;border:1px solid #395a71;border-radius:10px;background:#172b3d;color:#eff7ff;font:inherit;font-weight:700;cursor:pointer}
-.youtubeChapterPanel{margin-top:8px;padding:12px;border:1px solid #30485f;border-radius:12px;background:#112331}
-.youtubeChapterPanel[hidden]{display:none!important}
-.youtubeChapterHint,.youtubeChapterWarning{font-size:12px;line-height:1.5;color:#b9cbd9;margin:4px 0 10px}
+.youtubeChapterHeading{font-size:16px;font-weight:700;color:#f1f6fc;margin:0 0 8px}
+.youtubeChapterPanel{padding:10px 12px;border:1px solid #30485f;border-radius:12px;background:#112331}
+.youtubeChapterHint,.youtubeChapterWarning{font-size:12px;line-height:1.5;color:#b9cbd9;margin:2px 0 8px}
+.youtubeChapterHint:empty{display:none}
 .youtubeChapterWarning{color:#ffda89}
-.youtubeChapterGroups{display:grid;gap:12px}
-.youtubeChapterGroup{min-width:0}
-.youtubeChapterGroupTitle{font-weight:700;font-size:14px;color:#f1f6fc;margin:4px 0 8px}
-.youtubeChapterGroup .youtubeChapterOutput{min-height:104px}
-.youtubeChapterOutput{box-sizing:border-box;width:100%;min-height:155px;resize:vertical;padding:10px;border:1px solid #36546a;border-radius:9px;background:#0b1927;color:#f1f6fc;font-size:13px;line-height:1.65}
-.youtubeChapterCopy{width:100%;min-height:44px;border:0;border-radius:9px;background:#2563eb;color:white;font:inherit;font-weight:700;margin-top:8px}
+.youtubeChapterGroups{display:grid;gap:10px}
+.youtubeChapterGroup{min-width:0;padding:10px;border-radius:10px;background:#152b3b}
+.youtubeChapterGroupHeading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.youtubeChapterGroupTitle{font-weight:700;font-size:14px;color:#f1f6fc}
+.youtubeChapterGroupCount{font-size:12px;color:#b9cbd9;white-space:nowrap}
+.youtubeChapterOutput{box-sizing:border-box;width:100%;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;padding:10px;border:1px solid #36546a;border-radius:9px;background:#0b1927;color:#f1f6fc;font-size:13px;line-height:1.65;user-select:text;-webkit-user-select:text}
+.youtubeChapterCopy{display:block;width:100%;min-height:44px;border:1px solid #48667e;border-radius:9px;background:#172b3d;color:#f1f6fc;font:inherit;font-weight:700;margin-top:8px;cursor:pointer}
 </style>
 
 <script>
@@ -34650,9 +34651,9 @@ window.addEventListener('resize', syncVisualViewport);
 syncVisualViewport();
 
 function openReport(){
-  if(byId('youtubeChapterPanel') && !byId('youtubeChapterPanel').hidden) youtubeChapterSetup();
   syncVisualViewport();
   buildReportDOM();
+  youtubeChapterSetup();
   document.body.style.overflow='hidden';
   const modal=byId('reportModal');
   modal.classList.add('open');
@@ -36184,32 +36185,34 @@ function youtubeChapterSetup(){
   const phases=[...new Set(state.markers.filter(m=>m && m.event && Number.isFinite(Number(m.seconds))).map(m=>Number(m.period)||1))].sort((a,b)=>a-b);
   phases.forEach(period=>{
     const section=document.createElement('section');section.className='youtubeChapterGroup';
+    const headingRow=document.createElement('div');headingRow.className='youtubeChapterGroupHeading';
     const heading=document.createElement('div');heading.className='youtubeChapterGroupTitle';heading.textContent=`${periodLabel(period)}｜事件時間軸`;
-    const output=document.createElement('textarea');output.className='youtubeChapterOutput';output.readOnly=true;output.rows=5;
+    const count=document.createElement('span');count.className='youtubeChapterGroupCount';
+    headingRow.append(heading,count);
+    const output=document.createElement('div');output.className='youtubeChapterOutput';
     output.setAttribute('aria-label',`${periodLabel(period)} YouTube 時間軸文字`);
     const copy=document.createElement('button');copy.className='youtubeChapterCopy';copy.type='button';copy.textContent=`複製${periodLabel(period)}時間軸`;
     const status=document.createElement('p');status.className='youtubeChapterHint';status.setAttribute('role','status');
-    copy.addEventListener('click',async()=>{
-      if(!output.value){status.textContent='目前沒有可複製的事件。';return;}
-      try{await navigator.clipboard.writeText(output.value);status.textContent='已複製時間軸文字。';}
-      catch(e){output.focus();output.select();status.textContent='無法自動複製，已選取文字，請長按複製。';}
-    });
-    section.append(heading,output,copy,status);groups.append(section);
     const timeline=state.markers.filter(m=>m && m.event && (Number(m.period)||1)===period && Number.isFinite(Number(m.seconds)))
       .map(m=>({seconds:Math.max(0,wholeSecondMarkerSeconds(m.seconds)-10),text:youtubeChapterEventText(m)}))
       .sort((a,b)=>a.seconds-b.seconds);
-    output.value=timeline.map(e=>`${youtubeChapterTime(e.seconds)} ${e.text}`).join('\n');
+    const content=timeline.map(e=>`${youtubeChapterTime(e.seconds)} ${e.text}`).join('\n');
+    count.textContent=`${timeline.length} 筆事件`;
+    output.textContent=content;
+    copy.addEventListener('click',async()=>{
+      if(!content){status.textContent='目前沒有可複製的事件。';return;}
+      try{await navigator.clipboard.writeText(content);status.textContent='已複製時間軸文字。';}
+      catch(e){
+        const selection=window.getSelection(),range=document.createRange();range.selectNodeContents(output);
+        selection.removeAllRanges();selection.addRange(range);
+        status.textContent='無法自動複製，已選取文字，請長按複製。';
+      }
+    });
+    section.append(headingRow,output,copy,status);groups.append(section);
   });
   byId('youtubeChapterStatus').textContent=phases.length?'各半場獨立複製；合併影片時須另外校正播放時間。':'目前沒有可輸出的事件。';
 }
-function youtubeChapterInit(){
-  const toggle=byId('youtubeChapterToggle'),panel=byId('youtubeChapterPanel');
-  if(!toggle||!panel)return;
-  toggle.addEventListener('click',()=>{
-    panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));
-    if(!panel.hidden)youtubeChapterSetup();
-  });
-}
+function youtubeChapterInit(){youtubeChapterSetup();}
 /* Export data */
 function csvEscape(v){
   const s=String(v??'');
