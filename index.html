@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.123</title>
+<title>足球場邊記錄器 v6.124</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27075,6 +27075,29 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   .titleBlock .aboutInfoBtn .label{font-size:13px!important;}
 }
 </style>
+<style id="v6124DesktopDeviceShell">
+/* v6.124: 桌面版僅加裝飾性手機外框，維持原有 .wrap 盒模型及頁面捲動。 */
+@media screen and (min-width:1024px){
+  #appContent.wrap{
+    margin-top:30px;
+    margin-bottom:38px;
+    border-radius:34px;
+    box-shadow:0 0 0 4px #43546b, 0 0 0 8px #101c2a, 0 24px 52px rgba(0,0,0,.42);
+  }
+  #appContent.wrap::before{
+    content:"";
+    position:absolute;
+    top:-14px;
+    left:50%;
+    transform:translateX(-50%);
+    width:84px;
+    height:5px;
+    border-radius:999px;
+    background:#586b82;
+    pointer-events:none;
+  }
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -27089,7 +27112,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.123</span>
+      <span class="headerVersion">v6.124</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
