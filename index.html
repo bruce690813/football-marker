@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.127</title>
+<title>足球場邊記錄器 v6.128</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27076,19 +27076,27 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
 }
 </style>
 <style id="v6126DesktopDeviceShell">
-/* v6.127: Desktop-only portrait device frame. Keep mobile UI and all app descendants unchanged.
-   The shell has a phone-like minimum silhouette, but extends with content to avoid
+/* v6.128: Desktop-only portrait device frame. Keep mobile UI and all app descendants unchanged.
+   The shell follows actual content height and extends naturally to avoid
    clipping modal overlays, long event logs, or existing fixed controls. */
 @media screen and (min-width:1024px){
   #appContent.wrap{
     width:430px;
     max-width:calc(100% - 64px);
-    /* Fit the decorative shell within typical desktop viewport heights.
-       Actual content may still extend naturally when event lists grow. */
-    min-height:clamp(0px, calc(100dvh - 260px), 700px);
+    /* No forced phone-screen height: the frame follows visible app content. */
+    min-height:0;
     margin-top:92px;
     margin-bottom:40px;
     isolation:isolate;
+  }
+  /* On desktop there is no mobile Safari bottom toolbar. The legacy safety
+     spacer otherwise adds 172px+ of invisible document height in live state,
+     and an additional tail on the final-results screen. */
+  body.matchStateLive .fullTimeBottomSpacer,
+  body.resultMode.finalOutputVisible .fullTimeBottomSpacer{
+    display:none!important;
+    height:0!important;
+    min-height:0!important;
   }
   #appContent.wrap::before{
     content:"";
@@ -27139,7 +27147,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.127</span>
+      <span class="headerVersion">v6.128</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
