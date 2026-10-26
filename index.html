@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.130</title>
+<title>足球場邊記錄器 v6.131</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27112,6 +27112,18 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
     padding:0!important;
     flex:0 0 0!important;
   }
+  /* v6.131: Desktop viewport has no Safari bottom toolbar. Earlier versions
+     disabled the spacer nodes but left 150px+ of state-level .wrap padding.
+     Override this real flow height only on desktops; retain natural overflow
+     when an actual match includes more content. */
+  body:is(.matchStateLive,.matchStateSecondHalf,.matchStateExtraActive,.matchStateHalftime,.matchStateExtraWait,.matchStateBreak,.matchStatePenalty,.resultMode) #appContent.wrap{
+    padding-bottom:12px!important;
+    scroll-padding-bottom:20px!important;
+  }
+  /* Keep the virtual phone close to the visible content; no forced height. */
+  #appContent.wrap{
+    padding-bottom:12px!important;
+  }
   #appContent.wrap::before{
     content:"";
     position:absolute;
@@ -27148,7 +27160,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
 }
 </style>
 <style id="v6130QuickDetailUniformTypographyPatch">
-/* v6.130: 僅本場事件統計的四種唯讀細節（進球／射門／撲救／防守）。
+/* v6.131: 僅本場事件統計的四種唯讀細節（進球／射門／撲救／防守）。
    統一筆序、時間、時段、隊名、背號及額外資訊字級；不改色彩與排列。
    保留既有單筆水平捲動，避免窄螢幕資料疊字或遭截斷。 */
 #logModal .logModalBody .item.quickDetailItem .qdAlignedLine > .qdSeq,
@@ -27175,7 +27187,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.130</span>
+      <span class="headerVersion">v6.131</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
