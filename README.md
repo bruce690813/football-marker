@@ -1,3 +1,11 @@
+## v6.127（2026-10-26）— 桌面手機框高度依視窗調整
+
+- 僅調整桌面 (≥1024 CSS px) `#appContent.wrap` 的最低高度與底部外距：`min-height` 從 864px 改為 `clamp(0px, calc(100dvh - 260px), 700px)`，`margin-bottom` 從 66px 改為 40px。
+- 目的：修正 v6.126 比賽中畫面下方無意義大片空白、常需捲動畫面才能看到外框底部的問題。
+- 原有內容高度如超出最低高度仍自然延伸，不強制裁切，不新增框內捲動。
+- 原有 430px 寬度、Dynamic Island、所有內部 HTML、JavaScript 與手機版 CSS 均保持一致。
+- 已完成 CSS 差異、JavaScript 區塊一致性及語法檢查；尚未完成 Chrome / Safari 實機排版和全流程驗收。
+
 ## v6.125 — 桌面擬真手機外框（方案 A）
 
 - 僅桌面寬度 >=1024 CSS px 顯示擬真外框：金屬質感機身、玻璃細框、Dynamic Island 與鏡頭造型。
