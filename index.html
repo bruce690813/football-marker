@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.136</title>
+<title>足球場邊記錄器 v6.137</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27207,7 +27207,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.136</span>
+      <span class="headerVersion">v6.137</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28280,6 +28280,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
       
     </div>
     <div class="reportActions oneReportAction">
+      <button id="reportBothShareBtn" class="shareReport" type="button">分享／儲存兩張圖片（詳細版＋視覺精簡版）</button>
       <button id="reportShareBtn" class="shareReport" type="button">分享／儲存詳細版圖片</button>
       <button id="reportVisualShareBtn" class="shareReport" type="button">分享／儲存視覺精簡版圖片</button>
     </div>
@@ -28287,6 +28288,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
 </div>
 <style id="v6136VisualExport">
 #reportModal .reportActions:has(#reportVisualShareBtn){display:flex;flex-direction:column;gap:8px}
+#reportModal #reportBothShareBtn{display:block;width:100%;min-height:44px;background:#2169c9;color:#fff;border:1px solid #62a3ec;border-radius:12px;font-size:16px;font-weight:800}
 #reportModal #reportVisualShareBtn{display:block;width:100%;min-height:44px;background:#11645f;color:#fff;border:1px solid #36b7aa;border-radius:12px;font-size:16px;font-weight:800}
 </style>
 <style id="v6133ReportStats">
@@ -35512,7 +35514,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
   return canvas;
 }
 
-/* v6.136: independent 4:5 visual image; original detailed canvas is unchanged. */
+/* v6.137: independent 4:5 visual image; original detailed canvas is unchanged. */
 function makeVisualSummaryCanvas(){
   if(!state.finished) throw new Error('比賽結束後才能輸出視覺精簡版');
   const W=900,H=1125;
@@ -35642,7 +35644,7 @@ function showReportImageDownloads(images){
   openReport();
   const box=byId('reportImageDownloads');
   box.replaceChildren();box.hidden=false;
-  const title=document.createElement('p');title.textContent='分享圖片已產生。';box.appendChild(title);
+  const title=document.createElement('p');title.textContent=images.length>1?'兩張圖片已產生，請分別點選下方連結儲存（此瀏覽器無法一次分享兩張）。':'分享圖片已產生。';box.appendChild(title);
   images.forEach(({file,blob})=>{
     const url=URL.createObjectURL(blob);reportImageUrls.push(url);
     const a=document.createElement('a');a.href=url;a.download=file.name;
@@ -35680,7 +35682,14 @@ function shareSummaryText(){
 async function shareImageFile(mode='share',variant='detailed'){
   let result;
   try{
-    result=variant==='visual'?buildVisualSummaryImageFile():buildReportImageFile();
+    if(variant==='both'){
+      // 先同步建立兩張 File，避免 iOS Safari 在等待非同步轉檔時失去分享手勢。
+      const detailed=buildReportImageFile().images[0];
+      const visual=buildVisualSummaryImageFile().images[0];
+      result={images:[detailed,visual]};
+    }else{
+      result=variant==='visual'?buildVisualSummaryImageFile():buildReportImageFile();
+    }
   }catch(e){
     console.error(e);
     alert('圖片產生失敗，請再試一次。');
@@ -35715,6 +35724,9 @@ async function shareImageFile(mode='share',variant='detailed'){
 
 function shareReportImage(){
   return shareImageFile('share');
+}
+function shareBothReportImages(){
+  return shareImageFile('share','both');
 }
 function shareVisualReportImage(){
   return shareImageFile('share','visual');
@@ -37204,6 +37216,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   };
 
   bindTap(closeBtn, closeReport);
+  bindTap(byId('reportBothShareBtn'), shareBothReportImages);
   bindTap(shareBtn, shareReportImage);
   bindTap(byId('reportVisualShareBtn'), shareVisualReportImage);
   syncVisualViewport();
