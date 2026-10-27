@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.138</title>
+<title>足球場邊記錄器 v6.140</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27207,7 +27207,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.138</span>
+      <span class="headerVersion">v6.140</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -35514,76 +35514,118 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
   return canvas;
 }
 
-/* v6.138: independent 4:5 visual image; original detailed canvas is unchanged. */
+/* v6.140: independent 4:5 visual image; original detailed canvas is unchanged. */
 function makeVisualSummaryCanvas(){
   if(!state.finished) throw new Error('比賽結束後才能輸出視覺精簡版');
   const W=900,H=1125;
   const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
   const ctx=canvas.getContext('2d');if(!ctx) throw new Error('無法建立圖片');
-  const rect=(x,y,w,h,r,fill,stroke)=>{ctx.fillStyle=fill;ctx.strokeStyle=stroke||'transparent';ctx.lineWidth=2;roundRect(ctx,x,y,w,h,r,true,!!stroke);};
-  const txt=(value,x,y,size=28,color='#f3f8fc',weight=800,align='center',maxWidth)=>{
+  const shirtPalette=currentJerseyPalette(); // 與原有球衣設定、詳細版共用色票
+  const box=(x,y,w,h,r,fill,stroke)=>{ctx.fillStyle=fill;ctx.strokeStyle=stroke||'transparent';ctx.lineWidth=2;roundRect(ctx,x,y,w,h,r,true,!!stroke);};
+  const txt=(value,x,y,size=28,color='#f5faff',weight=800,align='center',maxWidth)=>{
     ctx.fillStyle=color;ctx.font=`${weight} ${size}px -apple-system, BlinkMacSystemFont, "PingFang TC", sans-serif`;
     ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillText(String(value),x,y,maxWidth);
   };
-  // Neutral shirt art: team colours are not inferred from the team name.
-  const shirt=(x,y,w,h,colour,number)=>{
-    ctx.save();ctx.translate(x,y);ctx.scale(w/104,h/108);
+  const jersey=(x,y,size,number,palette=shirtPalette)=>{
+    const c=palette||JERSEY_COLOR_OPTIONS.default;
+    ctx.save();ctx.translate(x,y);ctx.scale(size/104,size/108);
     ctx.beginPath();ctx.moveTo(29,8);ctx.lineTo(39,4);ctx.lineTo(45,14);ctx.lineTo(59,14);ctx.lineTo(65,4);
     ctx.lineTo(75,8);ctx.lineTo(101,28);ctx.lineTo(86,53);ctx.lineTo(76,46);ctx.lineTo(76,100);
     ctx.lineTo(28,100);ctx.lineTo(28,46);ctx.lineTo(18,53);ctx.lineTo(3,28);ctx.closePath();
-    ctx.fillStyle=colour;ctx.fill();ctx.strokeStyle='#9ab5c9';ctx.lineWidth=2.5;ctx.stroke();
-    ctx.strokeStyle='rgba(255,255,255,.24)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(31,27);ctx.lineTo(73,27);ctx.stroke();
-    if(number){ctx.fillStyle='#fff';ctx.font='900 38px -apple-system, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(number,52,66,48);}
+    ctx.fillStyle=c.fill;ctx.fill();ctx.strokeStyle=c.outline;ctx.lineWidth=3;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(42,13);ctx.quadraticCurveTo(52,27,62,13);ctx.strokeStyle=c.collar;ctx.lineWidth=3;ctx.stroke();
+    if(number){
+      // 深淺球衣自動選擇高對比背號
+      const light=['yellow','white','gray'].includes(normalizeJerseyColor(state.jerseyColor));
+      ctx.fillStyle=light?'#0d2533':'#ffffff';ctx.font='900 38px -apple-system, sans-serif';
+      ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(number,52,65,55);
+    }
     ctx.restore();
   };
-  ctx.fillStyle='#091827';ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='#0d342e';ctx.fillRect(0,0,W,172);
-  ctx.strokeStyle='#27685b';ctx.lineWidth=3;ctx.beginPath();ctx.arc(450,86,68,0,Math.PI*2);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(450,0);ctx.lineTo(450,172);ctx.stroke();
+  // 明顯區隔詳細版：海報式主視覺、球場線條、放射光與大比分，而非資訊卡片列表。
+  const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#071e38');bg.addColorStop(.48,'#0a263f');bg.addColorStop(1,'#071b22');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  // 足球場與燈光：以 Canvas 繪製，不依賴外部圖片或網路
+  const glow=(x,y)=>{const g=ctx.createRadialGradient(x,y,3,x,y,260);g.addColorStop(0,'rgba(177,234,255,.38)');g.addColorStop(1,'rgba(177,234,255,0)');ctx.fillStyle=g;ctx.fillRect(x-260,y-260,520,520);};
+  glow(0,160);glow(W,160);
+  // v6.140: 球場聚光燈與看台層次；全由 Canvas 原生圖形產生，離線也能匯出。
+  ctx.save();
+  for(const sx of [48,852]){
+    const beam=ctx.createLinearGradient(sx,100,450,590);
+    beam.addColorStop(0,'rgba(188,226,255,.22)');beam.addColorStop(1,'rgba(188,226,255,0)');
+    ctx.fillStyle=beam;ctx.beginPath();ctx.moveTo(sx-18,134);ctx.lineTo(sx+18,134);
+    ctx.lineTo(sx<450?610:290,575);ctx.lineTo(sx<450?290:610,575);ctx.closePath();ctx.fill();
+    for(let r=0;r<2;r++)for(let c=0;c<4;c++){
+      const lx=sx+(c-1.5)*16,ly=137+r*16;
+      const halo=ctx.createRadialGradient(lx,ly,1,lx,ly,19);
+      halo.addColorStop(0,'rgba(255,255,240,1)');halo.addColorStop(.2,'rgba(229,246,255,.85)');halo.addColorStop(1,'rgba(145,212,252,0)');
+      ctx.fillStyle=halo;ctx.beginPath();ctx.arc(lx,ly,19,0,Math.PI*2);ctx.fill();
+    }
+  }
+  ctx.restore();
+  // 勝利時用少量金色紙花營造賽果海報效果，不遮蔽球隊或比分。
+  if(reportWinningSide()){
+    ctx.save();const flecks=[[40,282,8],[76,420,5],[820,302,9],[850,475,6],[105,550,5],[783,555,5],[64,807,5],[840,810,5]];
+    flecks.forEach(([x,y,s],i)=>{ctx.save();ctx.translate(x,y);ctx.rotate((i-3)*.29);ctx.fillStyle=i%2?'rgba(255,222,124,.78)':'rgba(255,245,198,.65)';ctx.fillRect(-s/2,-s/2,s,s*1.8);ctx.restore();});ctx.restore();
+  }
+  ctx.strokeStyle='rgba(108,204,193,.15)';ctx.lineWidth=3;
+  ctx.beginPath();ctx.ellipse(450,390,340,145,0,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(450,185);ctx.lineTo(450,582);ctx.stroke();
+  ctx.fillStyle='rgba(8,80,61,.40)';ctx.fillRect(0,900,W,225);
+  for(let i=0;i<9;i++){ctx.fillStyle=i%2?'rgba(52,125,65,.13)':'rgba(15,91,62,.16)';ctx.fillRect(i*100,900,100,225);}
   const comp=[String(state.competition||'').trim(),String(state.competitionStage||'').trim()].filter(Boolean).join('｜');
-  txt(comp||'⚽ 足球賽事',450,47,35,'#fff',900,'center',816);
+  txt(comp||'⚽ 足球賽事',450,66,37,'#ffe17e',900,'center',822);
   const date=matchDateLabel(matchStartEpoch(),matchEndEpoch());
   const day=formatDayMatchLabel(state.dayMatchNumber);
-  txt([date,day].filter(Boolean).join('｜'),450,113,28,'#d6f5e9',750,'center',814);
-  rect(30,193,840,380,26,'#12273b','#34566a');
-  shirt(121,245,122,123,'#327ca9','');shirt(657,245,122,123,'#47505c','');
-  txt(String(state.ourTeam||'我方'),183,406,37,'#f2f7ff',850,'center',290);
-  txt(String(state.oppTeam||'對手'),718,406,37,'#f2f7ff',850,'center',290);
-  txt(`${state.ourScore} : ${state.oppScore}`,450,335,128,'#ffe072',950,'center',460);
-  txt('全場比分',450,442,25,'#b5cad8',700);
+  txt([date,day].filter(Boolean).join('｜'),450,117,27,'#d8e6f0',750,'center',820);
+  // 中央賽果：巨幅比分 + 勝方球衣，球衣以「本場名單設定」色票呈現
+  jersey(91,228,155,'');
+  jersey(655,228,155,'',{fill:'#77818c',outline:'#a1aab3',collar:'#eaf0f5'}); // 對手未提供球衣設定，使用中性灰
+  txt(state.ourTeam||'我方',167,428,39,'#ffffff',900,'center',280);
+  txt(state.oppTeam||'對手',733,428,39,'#ffffff',900,'center',280);
+  ctx.save();ctx.shadowColor='rgba(255,201,61,.36)';ctx.shadowBlur=28;
+  // 大比分採雙層柔光，保留足夠對比；不額外佔用標題空間。
+  txt(`${state.ourScore} : ${state.oppScore}`,450,316,148,'#ffe079',950,'center',475);ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(255,216,101,.55)';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(323,405);ctx.quadraticCurveTo(450,428,577,405);ctx.stroke();ctx.restore();
   const winner=reportWinningSide();
-  if(winner){
-    const x=winner==='OUR'?183:718;
-    ctx.beginPath();ctx.arc(x,500,36,0,Math.PI*2);ctx.fillStyle='#fff1f1';ctx.fill();ctx.lineWidth=5;ctx.strokeStyle='#f44762';ctx.stroke();
-    txt('勝',x,501,42,'#bc1833',950);
-  }else txt('和',450,509,39,'#b1d8db',900);
+  if(winner){const x=winner==='OUR'?165:735;box(x-37,471,74,74,37,'#fff0f1','#f14460');txt('勝',x,509,46,'#c11b39',950);}
+  else txt('和',450,511,42,'#ccecee',950);
+  txt('FULL TIME',450,498,21,'#92bdcc',800);
+  // 一眼即懂的視覺化數據帶，去除冗長說明
+  box(34,584,832,186,28,'rgba(4,22,37,.90)','#3b7181');
   const stats=reportEventStatsData();
-  rect(30,599,840,209,22,'#12273b','#34566a');
   stats.forEach((item,i)=>{
-    const cx=135+i*210;
-    if(i){ctx.strokeStyle='#36536a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(30+i*210,627);ctx.lineTo(30+i*210,781);ctx.stroke();}
-    txt(item.icon,cx,642,39,'#f3f8fc',800);
-    txt(item.value,cx,717,i===0?52:66,i===0?'#ffe072':'#fff',950,'center',196);
-    txt(item.label,cx,778,25,'#d4e4ee',750);
+    const cx=138+i*208;
+    if(i){ctx.strokeStyle='rgba(114,177,193,.35)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(34+i*208,610);ctx.lineTo(34+i*208,745);ctx.stroke();}
+    txt(item.icon,cx,618,37);
+    txt(item.value,cx,687,i===0?51:69,i===0?'#ffe079':'#ffffff',950,'center',193);
+    txt(item.label,cx,738,25,'#d4e5ef',800);
   });
+  // MVP 視覺區以冠軍金線與深綠球場形成獨立表揚舞台。
+  const mvpGrad=ctx.createLinearGradient(0,796,0,1066);
+  mvpGrad.addColorStop(0,'rgba(13,60,54,.94)');mvpGrad.addColorStop(1,'rgba(12,40,37,.94)');
+  box(32,793,836,241,29,mvpGrad,'rgba(248,206,93,.72)');
+  ctx.save();ctx.strokeStyle='rgba(255,214,102,.55)';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(92,849);ctx.quadraticCurveTo(70,925,112,989);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(808,849);ctx.quadraticCurveTo(830,925,788,989);ctx.stroke();ctx.restore();
+  // MVP 採球衣背號，不再使用文字敘述長列
   const mvp=scorerMVPInfo();
-  rect(30,832,840,228,22,'#173a34','#66804d');
-  txt(mvp?(mvp.kind==='mvp'?'🏅 單場 MVP':'⚽ 我方最多進球'):'⚽ 比賽回顧',450,873,34,'#ffe072',900);
+  txt(mvp?(mvp.kind==='mvp'?'🏅 單場 MVP':'⚽ 我方最多進球'):'⚽ 比賽精彩時刻',450,822,40,'#ffe079',900);
   if(mvp){
     const players=mvp.winners.map(p=>{const m=String(p.name).match(/#(\d+)/);return m?m[1]:String(p.name).replace(/^我方/,'');});
-    // Maximum four jerseys per row; additional players use a second compact row.
-    const count=Math.min(players.length,8),cols=Math.min(count,4),rows=Math.ceil(count/4);
-    const cell=182,begin=450-(cols-1)*cell/2;
+    const count=Math.min(players.length,8),rows=Math.ceil(count/4);
     for(let i=0;i<count;i++){
-      const row=Math.floor(i/4),col=i%4;const nInRow=Math.min(4,count-row*4);
-      const cx=450-(nInRow-1)*cell/2+col*cell;
-      const scale=rows>1?.67:.89;
-      shirt(cx-48*scale,(rows>1?903:920)+row*73,96*scale,100*scale,'#327ca9',players[i]);
+      const row=Math.floor(i/4),col=i%4,nInRow=Math.min(4,count-row*4);
+      const cx=450-(nInRow-1)*192/2+col*192;
+      const scale=rows>1?.67:.97;
+      jersey(cx-51*scale,(rows>1?851:864)+row*93,102*scale,players[i]);
     }
-    if(players.length>8) txt(`另有 ${players.length-8} 位並列球員`,450,1051,18,'#d9e9e2',700);
-    else if(rows===1) txt(mvp.title.replace(/^⚽ /,''),450,1042,22,'#c0ddd0',700,'center',775);
-  }else txt('記錄每一場成長足跡',450,959,32,'#d8eee8',750);
-  txt('足球場邊記錄器',450,1095,23,'#809cac',650);
+    if(players.length>8)txt(`另有 ${players.length-8} 位並列`,450,1051,21,'#d8e9e7',700);
+    else if(rows===1)txt(mvp.title.replace(/^⚽ /,''),450,1015,25,'#c7e1d9',750,'center',770);
+  }else txt('記錄每一場成長足跡',450,944,31,'#d9eee7',800);
+  txt('團隊努力，創造精彩！',450,1055,31,'#f4f8e3',850);
+  txt('足球場邊記錄器',450,1100,21,'#9abac3',700);
   return canvas;
 }
 function buildVisualSummaryImageFile(){

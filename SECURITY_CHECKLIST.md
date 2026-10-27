@@ -1,15 +1,10 @@
-# v6.138 安全與品質檢查
+# SECURITY CHECKLIST — v6.140
 
-- [x] 以 v6.137 為基底，只替換視覺精簡版 Canvas 函式並更新版本資訊。
-- [x] 未改動 CSV 匯出、儲存狀態、計時、PK、雙圖片分享流程。
-- [x] 不依隊名推測球衣顏色。
-- [ ] iPhone Safari 實測雙圖分享及精簡版長隊名、多人 MVP。
-- [ ] 完整賽事流程回歸實測。
+- [x] 開發來源為 v6.139 ZIP（累加保留 v6.51 正式基底之設計）。
+- [x] 已比對程式差異，除版本字樣外僅修改精簡版 Canvas 繪圖函式。
+- [x] HTML JavaScript 語法檢查（以實際檢查結果為準）。
+- [x] ZIP 僅包含 index.html、README.md、SECURITY_CHECKLIST.md。
+- [ ] Mac/Chrome/Firefox、iPhone Safari 實際影像渲染與多圖分享驗證。
+- [ ] 賽前、上下半場、延長賽、PK、比賽結束與 CSV 完整回歸實測。
 
-# SECURITY_CHECKLIST.md — v6.137
-
-- 直接沿用 v6.136，不更動事件資料、CSV 格式或持久化機制。
-- 兩張 PNG 均在瀏覽器本機 Canvas 生成；不新增外部傳輸或依賴。
-- 同步轉檔以維持 iOS Web Share 點擊手勢；先檢查 `navigator.canShare({files})`。
-- 若不支援多檔分享，提供兩個分開的下載連結；使用者取消不觸發備援下載。
-- 需實測：iPhone Safari 分享／儲存兩張、LINE 多檔接收、較長賽事 Canvas 記憶體壓力及完整比賽狀態回歸。
+無外部 CDN、圖片下載或新增網路傳輸。
