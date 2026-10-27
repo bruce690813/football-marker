@@ -1,13 +1,15 @@
-# SECURITY CHECKLIST — v6.132
+# v6.133 安全與測試檢查清單
 
-- [x] 以 v6.131 ZIP 為直接基底，僅新增桌面專用 CSS 和版本字樣。
-- [x] 無 JavaScript 行為修改；未增加外部程式碼與資料傳輸。
-- [x] 僅在 `min-width:1024px` 下覆蓋手機專用安全尾端佔位元件。
-- [x] 保留手機版 CSS、HTML 結構、比分、事件、延長賽、PK、摘要、分享圖片、CSV 等既有程式。
-- [x] ZIP 僅包含 index.html、README.md、SECURITY_CHECKLIST.md。
-- [ ] 真實 Mac Firefox 桌面畫面與操作回歸：尚未實測。
-- [ ] iPhone Safari 實機：尚未實測。
-- [ ] 賽前、上半場、中場、下半場、延長賽、PK、全場全流程：尚未實測。
+- [x] 以 v6.132 ZIP 解壓作為直接基底，且保持 v6.51 開發來源原則。
+- [x] 確認僅加入摘要／Canvas 統計、勝方章判定及版本／說明文字。
+- [x] 以 BeautifulSoup 驗證摘要統計區及兩個勝方章元素存在。
+- [x] Node.js `--check` 驗證 4 個 JavaScript 區塊語法。
+- [x] 進球統計依既有比分、射門／撲救／防守依既有 Marker event 計數；未修改事件資料。
+- [x] PK 完成時依 PK 進球數判定勝方；一般依全場比分；平手不顯示勝章。
+- [x] 正式 ZIP 僅包含 index.html、README.md、SECURITY_CHECKLIST.md。
+- [ ] Mac Firefox / Chrome 真實互動與摘要版面測試（未實測）。
+- [ ] iPhone Safari 直式長隊名、短螢幕畫面與視窗操作（未實測）。
+- [ ] Canvas 分享圖片真實存檔、智慧雙欄長事件回歸（未實測）。
+- [ ] 賽前、上半場、中場、下半場、延長賽、PK、全場、CSV 完整功能回歸（未實測）。
 
-## 注意
-正常事件內容高度超過瀏覽器可視高度時仍會保留捲動，不裁切事件或操作按鈕。
+未完成項目不得視為已通過。未修改既有 CSV 格式與事件操作流程。

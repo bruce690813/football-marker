@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.132</title>
+<title>足球場邊記錄器 v6.133</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27174,7 +27174,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
 }
 </style>
 <style id="v6132DesktopLiveTailFix">
-/* v6.132: Desktop-only; override later mobile safety-space selectors which
+/* v6.133: Desktop-only; override later mobile safety-space selectors which
    re-enable the live bottom spacer despite the earlier v6.129 rule. */
 @media screen and (min-width:1024px){
   body #appContent #liveViewportBottomSpacer,
@@ -27207,7 +27207,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.132</span>
+      <span class="headerVersion">v6.133</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28207,7 +28207,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
       <button id="reportCloseBtn" class="reportCloseIcon" type="button" aria-label="關閉摘要" title="關閉">✕</button>
       <div class="reportScoreRow" id="reportScoreRow">
         <div class="reportTeam" id="reportOurTeam">我方</div>
-        <div class="reportScore" id="reportScore">0 : 0</div>
+        <div class="reportScore" id="reportScore">0 : 0</div><span id="reportWinnerOur" class="reportWinnerStamp our" aria-label="我方勝">勝</span><span id="reportWinnerOpp" class="reportWinnerStamp opp" aria-label="對手勝">勝</span>
         <div class="reportTeam" id="reportOppTeam">對手</div>
       </div>
     </div>
@@ -28219,6 +28219,15 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
         <span id="reportRoster" class="reportRosterMeta reportMetaRow" style="display:none"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="reportRosterText">本場名單</span></span>
       </div>
       <div class="reportStatusBadge idle reportStatusScrollable" id="reportStatusBadge">尚未開始</div>
+      <div class="reportEventStats" id="reportEventStats" aria-label="本場事件統計">
+        <div class="reportEventStatsTitle">本場事件統計</div>
+        <div class="reportEventStatsGrid">
+          <div class="reportEventStatsCell"><span>⚽ 進球</span><strong id="reportStatGoal">0 : 0</strong><small>我方 / 對手</small></div>
+          <div class="reportEventStatsCell"><span>🥅 射門</span><strong id="reportStatShot">0</strong></div>
+          <div class="reportEventStatsCell"><span>🧤 撲救</span><strong id="reportStatSave">0</strong></div>
+          <div class="reportEventStatsCell"><span>🛡️ 防守</span><strong id="reportStatDefense">0</strong></div>
+        </div>
+      </div>
       <div class="reportTimeHeading"><div class="reportSectionTitle reportSectionTitleTime">時間紀錄</div><span class="diff reportDiff" id="reportDiff" aria-label="比賽規定時間"></span></div>
       <div class="reportTimeCard" id="reportTimeCard">
         <div class="reportOverviewGrid">
@@ -28275,6 +28284,23 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
     </div>
   </div>
 </div>
+<style id="v6133ReportStats">
+/* v6.133：只擴充摘要統計及勝方章，不影響主畫面及手機外框 */
+#reportModal .reportEventStats{margin:10px 0 14px;padding:12px 10px;border:1px solid #2d4963;border-radius:14px;background:#101f31;color:#f0f6fc}
+#reportModal .reportEventStatsTitle{font-size:16px;font-weight:850;margin-bottom:10px;border-left:3px solid #5bc6f3;padding-left:9px}
+#reportModal .reportEventStatsGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+#reportModal .reportEventStatsCell{text-align:center;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px}
+#reportModal .reportEventStatsCell>span{font-size:12px;font-weight:750;white-space:nowrap}
+#reportModal .reportEventStatsCell strong{font-size:24px;color:#edf5fc;white-space:nowrap;font-variant-numeric:tabular-nums}
+#reportModal #reportStatGoal{color:#ffd95e}
+#reportModal .reportEventStatsCell small{font-size:10px;color:#a8bfd4}
+#reportModal .reportScoreRow{position:relative}
+#reportModal .reportWinnerStamp{position:absolute;bottom:1px;width:31px;height:31px;display:none;align-items:center;justify-content:center;border:2px solid #f43f53;background:#fff4f3;color:#c61e37;font-size:16px;font-weight:950;border-radius:50%;z-index:2;pointer-events:none}
+#reportModal .reportWinnerStamp.our{left:31%}
+#reportModal .reportWinnerStamp.opp{right:31%}
+#reportModal .reportWinnerStamp.show{display:flex}
+@media(max-width:390px){#reportModal .reportEventStatsCell>span{font-size:11px}#reportModal .reportEventStatsCell strong{font-size:21px}}
+</style>
 <style>
 /* v6.123：僅精簡摘要中 YouTube 時間軸排版，保留事件格式與原 CSV。 */
 .youtubeChapterTool{margin:14px 0 8px;color:#e7f0fa}
@@ -33764,6 +33790,22 @@ function saveResultMetaEdit(){
   render();
 }
 
+/* v6.133：摘要／分享圖片共用統計與勝方判定，PK 完成時以 PK 分數決勝。 */
+function reportWinningSide(){
+  if(!state.finished) return '';
+  const a=state.penalty?.completed?penaltyGoals('our'):Number(state.ourScore)||0;
+  const b=state.penalty?.completed?penaltyGoals('opp'):Number(state.oppScore)||0;
+  return a>b?'OUR':b>a?'OPP':'';
+}
+function reportEventStatsData(){
+  const count=event=>state.markers.filter(m=>m.event===event).length;
+  return [
+    {label:'進球',icon:'⚽',value:`${Math.max(0,Number(state.ourScore)||0)} : ${Math.max(0,Number(state.oppScore)||0)}`,hint:'我方 / 對手'},
+    {label:'射門',icon:'🥅',value:String(count('SHOT'))},
+    {label:'撲救',icon:'🧤',value:String(count('SAVE'))},
+    {label:'防守',icon:'🛡️',value:String(count('DEFENSE'))}
+  ];
+}
 function renderWinnerBadge(){
   const ourBox=byId('ourTeamBox');
   const oppBox=byId('oppTeamBox');
@@ -34645,6 +34687,13 @@ function buildReportDOM(){
   byId('reportOurTeam').textContent=state.ourTeam||'我方';
   byId('reportOppTeam').textContent=state.oppTeam||'對手';
   byId('reportScore').textContent=`${state.ourScore} : ${state.oppScore}`;
+  const eventStats=reportEventStatsData();
+  ['reportStatGoal','reportStatShot','reportStatSave','reportStatDefense'].forEach((id,i)=>{
+    const node=byId(id);if(node) node.textContent=eventStats[i].value;
+  });
+  const winner=reportWinningSide();
+  byId('reportWinnerOur')?.classList.toggle('show',winner==='OUR');
+  byId('reportWinnerOpp')?.classList.toggle('show',winner==='OPP');
   const totalElapsed=totalMatchElapsed();
   const reportStartEpoch=matchStartEpoch();
   const reportEndEpoch=matchEndEpoch();
@@ -34815,6 +34864,7 @@ function reportLines(){
     metaCards.push({label:'本場球員',icon:'👕',iconType:'jersey',value:roster.map(n=>'#'+n).join(' '),full:true,summaryCard:true});
   }
   lines.push({type:'metaGrid',cells:metaCards});
+  lines.push({type:'eventStats',items:reportEventStatsData()});
 
   lines.push({type:'section',text:'時間紀錄',detail:formatRegulationDiffText()});
   lines.push({
@@ -35100,6 +35150,8 @@ function reportCanvasLayout(lines,ctx){
           b.height+=height+8;
         }
       }
+    }else if(line.type==='eventStats'){
+      b.height=122;
     }else if(line.type==='compactTime'){
       b.height=90;
     }else if(line.type==='timeGrid'){
@@ -35197,6 +35249,26 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       centered(b.status,W/2,y+17,18,'#f7fafc',700);
       teamName(b.left,pad+162,y+72);teamName(b.right,W-pad-162,y+72);
       centered(b.score,W/2,y+76,72,'#ffffff');
+      const win=reportWinningSide();
+      if(win){
+        const sx=win==='OUR'?pad+300:W-pad-300, sy=y+112;
+        ctx.fillStyle='#fff5f3';ctx.strokeStyle='#f43f53';ctx.lineWidth=4;
+        ctx.beginPath();ctx.arc(sx,sy,22,0,Math.PI*2);ctx.fill();ctx.stroke();
+        centered('勝',sx,sy,24,'#c51e36',950);
+      }
+
+    }else if(b.type==='eventStats'){
+      ctx.fillStyle='#122538';roundRect(ctx,pad,y+2,content,110,12,true,false);
+      text('本場事件統計',pad+16,y+9,23,'#eff7ff',850);
+      const width=content/4;
+      b.items.forEach((item,i)=>{
+        const x=pad+i*width;
+        if(i){ctx.strokeStyle='#30465a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,y+38);ctx.lineTo(x,y+100);ctx.stroke();}
+        ctx.textAlign='center';ctx.fillStyle='#cddcea';ctx.font=font(19,750);
+        ctx.fillText(`${item.icon} ${item.label}`,x+width/2,y+46);
+        centered(item.value,x+width/2,y+79,i===0?30:37,i===0?'#ffda66':'#eef6ff',900);
+        if(item.hint){ctx.font=font(13,650);ctx.fillStyle='#a9bed1';ctx.textAlign='center';ctx.fillText(item.hint,x+width/2,y+100);}
+      });
     }else if(b.type==='metaGrid'){
       let rowY=y+2;
       b.rows.forEach(row=>{
