@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.133</title>
+<title>足球場邊記錄器 v6.134</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27207,7 +27207,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.133</span>
+      <span class="headerVersion">v6.134</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -35251,7 +35251,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       centered(b.score,W/2,y+76,72,'#ffffff');
       const win=reportWinningSide();
       if(win){
-        const sx=win==='OUR'?pad+300:W-pad-300, sy=y+112;
+        const sx=win==='OUR'?pad+300:W-pad-300, sy=y+88;
         ctx.fillStyle='#fff5f3';ctx.strokeStyle='#f43f53';ctx.lineWidth=4;
         ctx.beginPath();ctx.arc(sx,sy,22,0,Math.PI*2);ctx.fill();ctx.stroke();
         centered('勝',sx,sy,24,'#c51e36',950);
