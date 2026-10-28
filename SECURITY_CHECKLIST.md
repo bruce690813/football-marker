@@ -1,14 +1,11 @@
-# v6.142 安全及功能檢查清單
+# SECURITY_CHECKLIST — v6.145
 
-- [x] 使用 v6.141 正式 ZIP 作直接基底。
-- [x] 版本差異只涉及精簡版 Canvas 與版本標記、文件。
-- [x] 詳細版繪圖及分享處理函式未改動。
-- [x] 無新增網路來源或第三方程式依賴。
+- [x] 以上一正式交付 v6.144 ZIP 作為直接基底。
+- [x] 最小修改：主要改動視覺精簡版 Canvas，不新增外部網路請求。
+- [x] 既有事件資料與比分仍由內部狀態產生，不寫死示例賽果。
+- [x] 保持原有詳細版、雙圖分享、CSV、PK 與手機操作邏輯不變（靜態差異確認）。
 - [x] 四個內嵌 JavaScript 區塊語法檢查通過。
-- [x] Chromium 模擬資料成功執行 Canvas，並輸出 PNG。
-- [x] 正式 ZIP 僅有 index.html、README.md、SECURITY_CHECKLIST.md。
-- [ ] iPhone Safari 實機測試。
-- [ ] LINE 一次分享兩張實機測試。
-- [ ] 賽前／比賽中／中場／下半場／延長賽／PK／結束完整回歸。
-- [ ] 長隊名、長賽事名稱及多 MVP 極端情況檢查。
-- [ ] 達到使用者 AI 寫實美術示意圖的高擬真程度（未達標）。
+- [ ] Chromium 實際 Canvas PNG 渲染：執行逾時，尚未驗證。
+- [ ] iPhone Safari 雙圖分享與 LINE 分享實機回歸。
+- [ ] 全流程功能、不同隊名長度與 1～8 人 MVP 畫面實機驗證。
+- [x] 正式 ZIP 僅包含 index.html、README.md、SECURITY_CHECKLIST.md。
