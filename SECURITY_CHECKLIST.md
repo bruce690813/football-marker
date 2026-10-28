@@ -1,11 +1,11 @@
-# SECURITY_CHECKLIST — v6.145
+# 安全與測試檢查｜v6.146
 
-- [x] 以上一正式交付 v6.144 ZIP 作為直接基底。
-- [x] 最小修改：主要改動視覺精簡版 Canvas，不新增外部網路請求。
-- [x] 既有事件資料與比分仍由內部狀態產生，不寫死示例賽果。
-- [x] 保持原有詳細版、雙圖分享、CSV、PK 與手機操作邏輯不變（靜態差異確認）。
-- [x] 四個內嵌 JavaScript 區塊語法檢查通過。
-- [ ] Chromium 實際 Canvas PNG 渲染：執行逾時，尚未驗證。
-- [ ] iPhone Safari 雙圖分享與 LINE 分享實機回歸。
-- [ ] 全流程功能、不同隊名長度與 1～8 人 MVP 畫面實機驗證。
-- [x] 正式 ZIP 僅包含 index.html、README.md、SECURITY_CHECKLIST.md。
+- [x] 來源 v6.145 ZIP 已讀取，正式交付檔案結構核對。
+- [x] 修改範圍僅為視覺精簡版 Canvas 的底部球場圖形及版本號、文件。
+- [x] 4 個內嵌 JavaScript 區塊通過 Node `--check`。
+- [x] 3D 球場未使用外部不受信任影像或未授權浮水印素材。
+- [x] 正式 ZIP 僅三個必要檔案，`.diff` 留在開發階段。
+- [x] Chromium 隔離測試頁直接呼叫同一 `makeVisualSummaryCanvas()`，輸出 900×1125 PNG，已檢視場線、MVP、文字未見明顯相互覆蓋。
+- [ ] 完整網頁 Chromium 畫面：檔案導航遭測試環境限制，未驗證。
+- [ ] iPhone Safari 雙圖片分享、長隊名、多 MVP、PK、完整賽事流程尚未實機驗證。
+- [ ] 桌面與手機版回歸視覺檢查尚未完成。
