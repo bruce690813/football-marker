@@ -1,11 +1,18 @@
-# 安全與測試檢查｜v6.146
+# SECURITY_CHECKLIST — v6.148
 
-- [x] 來源 v6.145 ZIP 已讀取，正式交付檔案結構核對。
-- [x] 修改範圍僅為視覺精簡版 Canvas 的底部球場圖形及版本號、文件。
-- [x] 4 個內嵌 JavaScript 區塊通過 Node `--check`。
-- [x] 3D 球場未使用外部不受信任影像或未授權浮水印素材。
-- [x] 正式 ZIP 僅三個必要檔案，`.diff` 留在開發階段。
-- [x] Chromium 隔離測試頁直接呼叫同一 `makeVisualSummaryCanvas()`，輸出 900×1125 PNG，已檢視場線、MVP、文字未見明顯相互覆蓋。
-- [ ] 完整網頁 Chromium 畫面：檔案導航遭測試環境限制，未驗證。
-- [ ] iPhone Safari 雙圖片分享、長隊名、多 MVP、PK、完整賽事流程尚未實機驗證。
-- [ ] 桌面與手機版回歸視覺檢查尚未完成。
+- [x] 使用 v6.146 ZIP 作為修改來源，未採用作廢版本。
+- [x] 僅調整 `makeVisualSummaryCanvas()` 的配色、裝飾和版型細節與版本標示。
+- [x] 沒有新增網路端點、外部腳本、追蹤程式或額外權限。
+- [x] 雙圖片分享與詳細版的原有邏輯未修改。
+- [x] Node.js 檢查四個 JavaScript 區塊語法通過。
+- [x] Chromium 隔離 Canvas 測試可輸出有效 PNG。
+- [x] 正式交付 ZIP 只有三個必要檔案，不含 diff。
+- [ ] iPhone Safari 真機、LINE 多圖片分享實測。
+- [ ] 賽前至結束、延長賽及 PK 完整手動回歸。
+- [ ] 多款手機螢幕與不同長度球隊名稱的完整實測。
+
+
+## v6.148 專項檢查
+- 新增繪圖僅作用於視覺精簡版 `makeVisualSummaryCanvas()`。
+- 無額外網路請求、無外部影像依賴。
+- 完整賽事流程、iPhone Safari 分享仍需實機回歸。
