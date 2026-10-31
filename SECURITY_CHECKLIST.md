@@ -1,18 +1,14 @@
-# SECURITY_CHECKLIST — v6.148
+# v6.150 安全檢查補充
+- 球內動態影像為內嵌 PNG 示意素材，無外部網路請求；來源為使用者提供的參考概念圖。
+- 已進行 JS 語法及差異檢查；真實 iPhone Safari、LINE 分享及完整賽事流程尚未實測。
 
-- [x] 使用 v6.146 ZIP 作為修改來源，未採用作廢版本。
-- [x] 僅調整 `makeVisualSummaryCanvas()` 的配色、裝飾和版型細節與版本標示。
-- [x] 沒有新增網路端點、外部腳本、追蹤程式或額外權限。
-- [x] 雙圖片分享與詳細版的原有邏輯未修改。
-- [x] Node.js 檢查四個 JavaScript 區塊語法通過。
-- [x] Chromium 隔離 Canvas 測試可輸出有效 PNG。
-- [x] 正式交付 ZIP 只有三個必要檔案，不含 diff。
-- [ ] iPhone Safari 真機、LINE 多圖片分享實測。
-- [ ] 賽前至結束、延長賽及 PK 完整手動回歸。
-- [ ] 多款手機螢幕與不同長度球隊名稱的完整實測。
+# v6.150 安全與驗證清單
 
-
-## v6.148 專項檢查
-- 新增繪圖僅作用於視覺精簡版 `makeVisualSummaryCanvas()`。
-- 無額外網路請求、無外部影像依賴。
-- 完整賽事流程、iPhone Safari 分享仍需實機回歸。
+- [x] 使用 v6.148 程式作為直接修改基底
+- [x] 正式 ZIP 僅 index.html、README.md、SECURITY_CHECKLIST.md
+- [x] 圖片素材內嵌、沒有向外部網址發送比賽資料
+- [x] 既有摘要、CSV、詳細版及雙圖分享邏輯未修改
+- [ ] iPhone Safari 雙圖分享實機測試
+- [ ] LINE 接收兩張圖片實機測試
+- [ ] 賽前／上下半場／延長賽／PK／賽後完整回歸
+- [ ] Mac 及手機實機視覺檢查
