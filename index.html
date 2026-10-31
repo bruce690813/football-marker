@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.158</title>
+<title>足球場邊記錄器 v6.159</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27193,6 +27193,47 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   }
 }
 </style>
+<style id="v6160PlayerTrackingUI">
+/* v6.160: optional, single-player tracking. Keep other screens untouched. */
+#playerTrackingStrip{margin:6px 0 7px;min-width:0}
+.ptStripButton{width:100%;min-height:42px;border:1px solid #315571;border-radius:12px;background:linear-gradient(110deg,#122d44,#11253a);color:#e7f5ff;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;font:700 14px/1.3 inherit;box-shadow:inset 0 1px rgba(255,255,255,.06);cursor:pointer}
+.ptStripButton .ptStripLabel{display:flex;gap:7px;align-items:center;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptStripButton .ptStripValue{color:#f5cc6b;white-space:nowrap;font-size:13px}
+.ptStripButton.ptIsOn .ptStripValue{color:#7ee2b3}
+body.resultMode #playerTrackingStrip{display:none}
+#playerTrackingModal .ptModalPanel{box-sizing:border-box;width:min(94vw,460px);max-height:min(85dvh,780px);display:flex;flex-direction:column;padding:0;overflow:hidden;border:1px solid #375874;background:#0d1e2d;color:#ecf6ff;border-radius:20px}
+#playerTrackingModal .ptModalHead{padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #2b455c;gap:10px}
+#playerTrackingModal .ptModalHead h2{margin:0;font-size:19px;letter-spacing:.1px}
+#playerTrackingModal .ptClose{background:#203b52;color:#e5f5ff;border:1px solid #355975;border-radius:9px;min-width:36px;min-height:36px;font-size:20px}
+#playerTrackingModal .ptModalBody{padding:14px 16px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:12px}
+#playerTrackingModal .ptHint{font-size:12px;color:#b1c8db;line-height:1.5;margin:0}
+#playerTrackingModal .ptLabel{font-weight:750;font-size:14px;color:#d7ecfb}
+#playerTrackingModal .ptNumberRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+#playerTrackingModal .ptNumberRow input{width:100%;min-height:42px;box-sizing:border-box;border-radius:9px;border:1px solid #50708a;background:#0a1927;color:white;padding:9px 11px;font-size:18px}
+#playerTrackingModal .ptPrimary,#playerTrackingModal .ptSecondary,#playerTrackingModal .ptExport{min-height:42px;padding:9px 12px;border-radius:10px;border:1px solid #396e90;color:white;background:#1b5480;font-size:14px;font-weight:800}
+#playerTrackingModal .ptPrimary{background:#147a67;border-color:#36b7a1}
+#playerTrackingModal .ptSecondary{background:#274159}
+#playerTrackingModal .ptExport{background:#2468af;width:100%}
+#playerTrackingModal button:disabled{opacity:.42;cursor:not-allowed}
+#playerTrackingModal .ptCheckRow{display:flex;align-items:center;gap:9px;font-size:14px;color:#e4f3ff}
+#playerTrackingModal .ptCheckRow input{height:20px;width:20px;accent-color:#1eb78a}
+#playerTrackingModal .ptStatus{border:1px solid #34556c;border-radius:12px;background:#142d42;padding:11px;display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+#playerTrackingModal .ptStatus strong{color:#f8d779;font-size:18px}
+#playerTrackingModal .ptActionGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#playerTrackingModal .ptRows{display:flex;flex-direction:column;gap:7px}
+#playerTrackingModal .ptRow{border-radius:11px;background:#172f41;padding:10px 11px;border:1px solid #31526a}
+#playerTrackingModal .ptRowLine{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px}
+#playerTrackingModal .ptTimeline{height:9px;border-radius:30px;background:#385163;overflow:hidden;margin-top:8px}
+#playerTrackingModal .ptRange{height:100%;border-radius:30px;background:#32bd90;position:relative}
+#playerTrackingModal .ptEdit{background:#244860;border:1px solid #52718a;color:#e2f3ff;border-radius:8px;min-height:30px;padding:4px 9px;font-size:12px;font-weight:700}
+#playerTrackingModal .ptTotal{font-size:14px;color:#b9e5d9;font-weight:800}
+#playerTrackingModal .ptSectionHead{font-weight:800;color:#d4efff;font-size:14px;margin-top:4px}
+#reportModal #reportPlayerTrackingWrap{border:1px solid #2f5670;background:#102739;border-radius:12px;padding:11px;margin:12px 0;color:#d9edfa}
+#reportModal .reportPtHead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:850;margin-bottom:7px}
+#reportModal .reportPtBody{font-size:13px;line-height:1.6}
+#reportModal .reportPtBtn{font-size:13px;font-weight:800;color:white;background:#1d669c;border:1px solid #5183a8;border-radius:9px;padding:8px 11px;margin-top:9px}
+@media(max-width:410px){#playerTrackingModal .ptModalBody{padding:12px}#playerTrackingStrip{margin:5px 0}#playerTrackingModal .ptModalHead h2{font-size:17px}}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -27207,7 +27248,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.158</span>
+      <span class="headerVersion">v6.160</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -27315,6 +27356,12 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
 
     
 
+    <!-- v6.160: one-line player tracker, hidden in result mode. -->
+    <div id="playerTrackingStrip">
+      <button type="button" class="ptStripButton" id="playerTrackingQuickBtn" onclick="openPlayerTrackingModal()" aria-label="設定或檢視球員出賽追蹤">
+        <span class="ptStripLabel">👕 球員出賽追蹤</span><span class="ptStripValue" id="playerTrackingStripValue">設定 ›</span>
+      </button>
+    </div>
     <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
     <div class="liveQuickSetup" id="liveQuickSetup">
       <button type="button" onclick="openRosterModal()" aria-label="查看或編輯本場球員名單">
@@ -27473,7 +27520,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
         <strong id="quickResultSave">0</strong>
       </button>
       <button type="button" class="quickResultStat defenseStat" data-event="DEFENSE">
-        <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">🛡️</span><span>防守</span></span>
+        <span class="quickResultLabel"><span class="quickResultIcon" aria-hidden="true">👏</span><span>好球</span></span>
         <strong id="quickResultDefense">0</strong>
       </button>
     </div>
@@ -27485,7 +27532,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
         <button id="goalBtn" class="event goal" onclick="openGoalModal()"><span class="eventTop"><span class="eventIcon">⚽</span> 進球</span></button>
         <button id="saveBtn" class="event save" onclick="openPlayerEvent('SAVE')"><span class="eventTop"><span class="eventIcon">🧤</span> 撲救</span></button>
         <button id="shotBtn" class="event shot" onclick="openPlayerEvent('SHOT')"><span class="eventTop"><span class="eventIcon">🥅</span> 射門</span></button>
-        <button id="greatPlayBtn" class="event play" onclick="openPlayerEvent('DEFENSE')"><span class="eventTop"><span class="eventIcon">🛡️</span> 防守</span></button>
+        <button id="greatPlayBtn" class="event play" onclick="openPlayerEvent('DEFENSE')"><span class="eventTop"><span class="eventIcon">👏</span> 好球</span></button>
       </div>
     </div>
 
@@ -27668,7 +27715,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
       <div class="aboutCards">
         <div class="aboutCard">
           <div class="aboutCardTitle">🎬 一鍵標記重點</div>
-          <div class="aboutCardText">快速記下進球、撲救、射門、防守與牌卡，重要片段不漏接。</div>
+          <div class="aboutCardText">快速記下進球、撲救、射門、好球與牌卡，重要片段不漏接。</div>
         </div>
         <div class="aboutCard">
           <div class="aboutCardTitle">📊 自動整理摘要</div>
@@ -27728,7 +27775,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
             <div class="quickGuideNum">3</div>
             <div class="quickGuideStepText">
               <b>場邊即時標記事件</b>
-              <span>進球、撲救、射門、防守、黃牌及紅牌發生就按，計時不會中斷。</span>
+              <span>進球、撲救、射門、好球、黃牌及紅牌發生就按，計時不會中斷。</span>
             </div>
           </div>
 
@@ -27914,6 +27961,27 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
 </div>
 
 <!-- Match roster modal -->
+<!-- v6.160: tracked player's on-field intervals, separate from event markers. -->
+<div class="modalBack" id="playerTrackingModal" role="dialog" aria-modal="true" aria-labelledby="playerTrackingTitle">
+  <div class="modal ptModalPanel">
+    <div class="ptModalHead"><h2 id="playerTrackingTitle">👕 球員出賽追蹤</h2><button type="button" class="ptClose" onclick="closePlayerTrackingModal()" aria-label="關閉">×</button></div>
+    <div class="ptModalBody">
+      <p class="ptHint">每場先追蹤一位球員；記錄上場、下場的比賽秒數。中場、延長賽分段計算，不包含休息及 PK。</p>
+      <div id="ptSelectArea">
+        <div class="ptNumberRow"><div><label class="ptLabel" for="ptNumberInput">追蹤背號（1～99）</label><input id="ptNumberInput" type="number" inputmode="numeric" min="1" max="99" step="1" list="ptRosterSuggestions" placeholder="例如 36"></div><button class="ptPrimary" type="button" onclick="applyPlayerTrackingSelection()">套用</button></div>
+        <datalist id="ptRosterSuggestions"></datalist>
+        <label class="ptCheckRow" style="margin-top:10px"><input id="ptStarterInput" type="checkbox">第一段開賽即為先發（自動從 00:00 記錄）</label>
+      </div>
+      <div id="ptNextStarterArea" hidden><label class="ptCheckRow"><input id="ptNextStarterInput" type="checkbox" onchange="setNextPeriodStarter(this.checked)">下一段開賽即在場上（自動記錄 00:00）</label><p class="ptHint">每個新半場／延長賽開始前請確認；預設不自動上場。</p></div>
+      <div id="ptStatusArea" class="ptStatus" hidden><div><div id="ptStatusText">未設定</div><div class="ptTotal" id="ptTotalText">累計 00:00</div></div><strong id="ptLiveClock">—</strong></div>
+      <div id="ptActionArea" class="ptActionGrid" hidden><button id="ptToggleBtn" class="ptPrimary" onclick="togglePlayerOnfield()">↑ 記錄上場</button><button id="ptUndoBtn" class="ptSecondary" onclick="undoPlayerTrackingAction()">↶ 撤銷上一步</button></div>
+      <div class="ptSectionHead">出賽時間軸</div>
+      <div id="ptTimelineRows" class="ptRows"><p class="ptHint">尚無上場區間。</p></div>
+      <button id="ptDownloadBtn" class="ptExport" onclick="downloadPlayerOnfieldCSV()" type="button">⬇ 匯出球員上場時間 CSV</button>
+      <p class="ptHint">檔案與原本 Marker CSV 分開保存；現有 Highlight 工具尚需增加「上場區間剪輯」模式才能讀取此檔。</p>
+    </div>
+  </div>
+</div>
 <div class="modalBack" id="rosterModal">
   <div class="modal rosterModalPanel">
     <div class="rosterModalHead rosterModalFixedHead">
@@ -28151,7 +28219,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
         <button type="button" id="editEventGOAL" onclick="setEditMarkerEvent('GOAL')">⚽ 進球</button>
         <button type="button" id="editEventSAVE" onclick="setEditMarkerEvent('SAVE')">🧤 撲救</button>
         <button type="button" id="editEventSHOT" onclick="setEditMarkerEvent('SHOT')">🥅 射門</button>
-        <button type="button" id="editEventDEFENSE" onclick="setEditMarkerEvent('DEFENSE')">🛡️ 防守</button>
+        <button type="button" id="editEventDEFENSE" onclick="setEditMarkerEvent('DEFENSE')">👏 好球</button>
         <button type="button" id="editEventYELLOW_CARD" onclick="setEditMarkerEvent('YELLOW_CARD')"><span class="yellowCardShape" aria-hidden="true"></span> 黃牌</button>
         <button type="button" id="editEventRED_CARD" onclick="setEditMarkerEvent('RED_CARD')"><span class="redCardShape" aria-hidden="true"></span> 紅牌</button>
       </div>
@@ -28225,7 +28293,7 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
           <div class="reportEventStatsCell"><span>⚽ 進球</span><strong id="reportStatGoal">0 : 0</strong><small>我方 / 對手</small></div>
           <div class="reportEventStatsCell"><span>🥅 射門</span><strong id="reportStatShot">0</strong></div>
           <div class="reportEventStatsCell"><span>🧤 撲救</span><strong id="reportStatSave">0</strong></div>
-          <div class="reportEventStatsCell"><span>🛡️ 防守</span><strong id="reportStatDefense">0</strong></div>
+          <div class="reportEventStatsCell"><span>👏 好球</span><strong id="reportStatDefense">0</strong></div>
         </div>
       </div>
       <div class="reportTimeHeading"><div class="reportSectionTitle reportSectionTitleTime">時間紀錄</div><span class="diff reportDiff" id="reportDiff" aria-label="比賽規定時間"></span></div>
@@ -28257,6 +28325,11 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
         <div class="reportMVPCard" id="reportMVPCard"></div>
       </div>
 
+      <div id="reportPlayerTrackingWrap" hidden>
+        <div class="reportPtHead"><span>👕 球員出賽追蹤</span><span id="reportPtTotal"></span></div>
+        <div id="reportPtSummary" class="reportPtBody"></div>
+        <button class="reportPtBtn" type="button" onclick="openPlayerTrackingModal()">檢視時間軸／匯出 CSV</button>
+      </div>
       <div class="reportSectionTitle reportSectionTitlePrimary">球員進球統計</div>
       <div class="scorerStats" id="reportScorers"></div>
 
@@ -28825,6 +28898,7 @@ let state={
   // 原本就由使用者選進名單的球員，即使不再守門仍會保留。
   goalkeeperAutoRosterNumber:'',
   rosterNumbers:[],
+  playerTracking:{number:'',starter:false,nextPeriodStarter:false,segments:[],open:null},
   jerseyColor:'default',
   halftimeStartEpoch:null,
   halftimeEndEpoch:null,
@@ -29674,6 +29748,7 @@ function loadState(){
   if(!('penalty' in state)) state.penalty=null;
   if(!('goalkeeperNumber' in state)) state.goalkeeperNumber='';
   if(!Array.isArray(state.rosterNumbers)) state.rosterNumbers=[];
+  normalizePlayerTracking();
   state.rosterNumbers=[...new Set(state.rosterNumbers.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=99))].sort((a,b)=>a-b);
   if(!('goalkeeperAutoRosterNumber' in state)){
     // v5.159 舊資料相容：若名單只有目前守門員一人，可安全判定此人很可能是
@@ -29868,10 +29943,10 @@ function durationReportHTML(sec){
   return escapeHtml(fmtDurationReadable(sec));
 }
 function emoji(ev){
-  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', DEFENSE:'🛡️', YELLOW_CARD:'🟨', RED_CARD:'🟥'}[ev] || '•';
+  return {GOAL:'⚽', SAVE:'🧤', SHOT:'🥅', DEFENSE:'👏', YELLOW_CARD:'🟨', RED_CARD:'🟥'}[ev] || '•';
 }
 function eventLabel(ev){
-  return {GOAL:'進球', SAVE:'撲救', SHOT:'射門', DEFENSE:'防守', YELLOW_CARD:'黃牌', RED_CARD:'紅牌'}[ev] || ev;
+  return {GOAL:'進球', SAVE:'撲救', SHOT:'射門', DEFENSE:'好球', YELLOW_CARD:'黃牌', RED_CARD:'紅牌'}[ev] || ev;
 }
 function teamDisplay(code){
   if(code==='OUR') return state.ourTeam || '我方';
@@ -29929,7 +30004,7 @@ function isSecondYellowCard(team, number, beforeIndex=null){
 function canPlayerParticipateAfterRed(team, number, event, beforeIndex=null){
   if(!number) return true;
   if(!isRedCardedPlayer(team,number,beforeIndex)) return true;
-  alert(`#${number} 已領紅牌退場，後續不能再記錄任何球員事件（包含黃牌、紅牌、進球、射門、撲救與防守）。`);
+  alert(`#${number} 已領紅牌退場，後續不能再記錄任何球員事件（包含黃牌、紅牌、進球、射門、撲救與好球）。`);
   return false;
 }
 function hasOtherRedCardForPlayer(team, number, excludeIndex=null){
@@ -30229,6 +30304,7 @@ function scorerStatsHTML(){
 }
 
 function tick(){
+  renderPlayerTrackingQuick();
   const isHalftime=state.awaitingNextPeriod && state.nextPeriodType==='SECOND_HALF';
   const timerSec=isHalftime ? halftimeElapsed() : (state.awaitingNextPeriod ? 0 : elapsed());
 
@@ -31650,6 +31726,7 @@ function startMatch(){
   state.finalElapsed=0;
   state.periodStartOurScore=state.ourScore;
   state.periodStartOppScore=state.oppScore;
+  playerTrackingStartPeriod(actionEpoch);
   saveState();
   render();
   showMatchStateFromTop();
@@ -31759,6 +31836,7 @@ function archiveCurrentPeriod(label){
 function confirmFinishHalf(){
   if(state.currentPeriod!==1 || pendingFinishEnd===null) return;
   state.multiPeriod=true;
+  closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
   archiveCurrentPeriod('上半場');
   state.endEpoch=pendingFinishEnd;
   // 上半場時間已完整封存在 periods；等待下半場時，現在這一段的計時歸零。
@@ -31780,6 +31858,7 @@ function confirmFinishHalf(){
 
 function confirmFinishExtraFirstHalf(){
   if(state.currentPeriod!==3 || !state.extraTimeSplit || pendingFinishEnd===null) return;
+  closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
   archiveCurrentPeriod('延長賽上半場');
   state.endEpoch=pendingFinishEnd;
   state.finalElapsed=0;
@@ -31811,6 +31890,7 @@ function confirmExtraTime(){
   state.extraTime=true;
   state.extraTimeMinutes=minutes;
   state.extraTimeSplit=true;
+  closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
   archiveCurrentPeriod('下半場');
   state.endEpoch=pendingFinishEnd;
   state.finalElapsed=0;
@@ -31933,6 +32013,7 @@ function penaltyResultLabel(result){ return result==='GOAL'?'✓ 進球':result=
 function beginPenaltyShootout(){
   if(pendingFinishEnd!==null){
     const label=state.currentPeriod===2?'下半場':periodLabel(state.currentPeriod);
+    closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
     archiveCurrentPeriod(label);
     state.endEpoch=pendingFinishEnd;
     state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
@@ -32119,6 +32200,7 @@ function confirmFinishFull(){
   if(pendingFinishEnd===null) return;
 
   const label=state.multiPeriod ? (state.currentPeriod===1?'上半場':state.currentPeriod===2?'下半場':periodLabel(state.currentPeriod)) : '全場';
+  closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
   archiveCurrentPeriod(label);
 
   state.endEpoch=pendingFinishEnd;
@@ -32181,7 +32263,7 @@ function newMatch(){
     periodStartOurScore:0, periodStartOppScore:0, periods:[],
     nextPeriodType:null, extraTime:false, extraTimeMinutes:null, extraTimeSplit:false, penalty:null,
     goalkeeperNumber:rememberedGoalkeeper, goalkeeperAutoRosterNumber:rememberedGoalkeeperAutoRoster,
-    rosterNumbers:[...rememberedRoster], jerseyColor:rememberedJerseyColor, halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0,
+    rosterNumbers:[...rememberedRoster], playerTracking:emptyPlayerTracking(), jerseyColor:rememberedJerseyColor, halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0,
     longDurationAckStartEpoch:null,
     regulationPulseAckToken:''
   };
@@ -32574,8 +32656,8 @@ function openNumberSelection(event, team, sec){
     if(titleText) titleText.textContent='🥅 選擇射門球員背號';
     byId('numberHint').textContent='射門球員背號為選填，可直接略過。';
   }else if(event==='DEFENSE'){
-    if(titleText) titleText.textContent='🛡️ 選擇防守球員背號';
-    byId('numberHint').textContent='防守球員背號為選填，可直接略過。';
+    if(titleText) titleText.textContent='👏 選擇好球球員背號';
+    byId('numberHint').textContent='好球球員背號為選填，可直接略過。';
   }else{
     if(titleText) titleText.textContent=`選擇${label}球員背號`;
     byId('numberHint').textContent=currentRosterNumbers().length?'球員背號為選填，可直接略過。':'選填：可直接點常用背號；其他背號輸入一次後會自動加入。';
@@ -33349,7 +33431,7 @@ function eventIcon(event){
     GOAL:'⚽',
     SHOT:'🥅',
     SAVE:'🧤',
-    DEFENSE:'🛡️',
+    DEFENSE:'👏',
     YELLOW_CARD:'',
     RED_CARD:''
   };
@@ -33808,7 +33890,7 @@ function reportEventStatsData(){
     {label:'進球',icon:'⚽',value:`${Math.max(0,Number(state.ourScore)||0)} : ${Math.max(0,Number(state.oppScore)||0)}`,hint:'我方 / 對手'},
     {label:'射門',icon:'🥅',value:String(count('SHOT'))},
     {label:'撲救',icon:'🧤',value:String(count('SAVE'))},
-    {label:'防守',icon:'🛡️',value:String(count('DEFENSE'))}
+    {label:'好球',icon:'👏',value:String(count('DEFENSE'))}
   ];
 }
 function renderWinnerBadge(){
@@ -33854,7 +33936,7 @@ function renderQuickResult(){
     ['GOAL','quickResultGoal','進球'],
     ['SHOT','quickResultShot','射門'],
     ['SAVE','quickResultSave','撲救'],
-    ['DEFENSE','quickResultDefense','防守']
+    ['DEFENSE','quickResultDefense','好球']
   ];
 
   stats.forEach(([event,id,label])=>{
@@ -34000,7 +34082,7 @@ function resetPreMatchSetup(){
 
   if(!confirm(
     '重置賽前設定？\n\n' +
-    '將清除本場賽事、階段／輪次、場地、對手、名單與守門員等賽前設定。\n\n' +
+    '將清除本場賽事、階段／輪次、場地、對手、名單、守門員與球員追蹤等賽前設定。\n\n' +
     '我方隊名會保留，本日場次恢復自動判斷；比賽時間恢復預設 20 分鐘。'
   )) return;
 
@@ -34021,6 +34103,7 @@ function resetPreMatchSetup(){
   state.goalkeeperNumber='';
   state.goalkeeperAutoRosterNumber='';
   state.rosterNumbers=[];
+  state.playerTracking=emptyPlayerTracking();
   state.jerseyColor='default';
   state.regulationMinutes=20;
   state.dayMatchNumber=null;
@@ -34265,6 +34348,8 @@ function syncPreMatchScoreboardPlacement(){
 }
 
 function render(){
+  renderPlayerTrackingQuick();
+  renderPlayerTrackingReport();
   applyJerseyColorTheme();
   // v6.80：先切換階段 CSS，再量測兩側隊名，避免延用前一階段的字級。
   renderMatchStateUI();
@@ -35609,9 +35694,9 @@ function makeVisualSummaryCanvas(){
  ctx.save();ctx.shadowColor='rgba(0,9,25,.42)';ctx.shadowBlur=23;ctx.shadowOffsetY=8;
  rounded(48,479,804,176,36,grad(479,655,[[0,'#FFFFFF'],[.32,'#F1FAFF'],[1,'#D5EEFB']]),'rgba(255,255,255,.97)',2.6);ctx.restore();
  ctx.save();ctx.globalAlpha=.17;ctx.fillStyle='#7ED8FF';ctx.beginPath();ctx.ellipse(449,495,363,14,0,0,Math.PI*2);ctx.fill();ctx.restore();
- const stats=reportEventStatsData(),icos=['⚽','🥅','🧤','🛡️'],xs=[147,348,552,754];
+ const stats=reportEventStatsData(),icos=['⚽','🥅','🧤','👏'],xs=[147,348,552,754];
  const drawIcon=(symbol,cx,cy)=>{const tmp=document.createElement('canvas');tmp.width=118;tmp.height=118;const t=tmp.getContext('2d');t.textAlign='center';t.textBaseline='middle';t.font='86px "Apple Color Emoji", "Noto Color Emoji", sans-serif';t.fillText(symbol,59,59);
- if(symbol==='🧤'||symbol==='🛡️'){t.globalCompositeOperation='source-atop';t.fillStyle=symbol==='🧤'?'rgba(0,196,82,.85)':'rgba(216,48,72,.45)';t.fillRect(0,0,118,118);t.globalCompositeOperation='source-over';}
+ if(symbol==='🧤'){t.globalCompositeOperation='source-atop';t.fillStyle='rgba(0,196,82,.85)';t.fillRect(0,0,118,118);t.globalCompositeOperation='source-over';}
  const pixels=t.getImageData(0,0,118,118).data;let ax=118,ay=118,bx=0,by=0;for(let y=0;y<118;y++)for(let x=0;x<118;x++)if(pixels[(y*118+x)*4+3]>12){ax=Math.min(ax,x);ay=Math.min(ay,y);bx=Math.max(bx,x);by=Math.max(by,y);}if(ax>=bx){text(symbol,cx,cy,50);return;}let w=bx-ax+1,h=by-ay+1,k=Math.min(53/w,53/h);ctx.save();ctx.shadowColor='rgba(4,29,70,.22)';ctx.shadowBlur=7;ctx.drawImage(tmp,ax,ay,w,h,cx-w*k/2,cy-h*k/2,w*k,h*k);ctx.restore();};
  stats.forEach((s,i)=>{let x=xs[i];drawIcon(icos[i],x,516);text(s.value,x,581,i===0?52:65,i===0?'#DD1551':'#0B3A72',950,170);text(s.label,x,625,24,'#22496E',900);});
  ctx.save();ctx.strokeStyle='rgba(31,97,155,.27)';ctx.lineWidth=1.7;[248,451,652].forEach(x=>{ctx.beginPath();ctx.moveTo(x,508);ctx.lineTo(x,639);ctx.stroke();});ctx.restore();
@@ -36598,6 +36683,200 @@ function diffSecondsExport(){
   if(!state.regulationMinutes || !state.finished) return '';
   return Math.round(state.finalElapsed-regulationTargetSeconds());
 }
+// ===== v6.160 Player on-field tracking: independent of legacy 24-column Marker CSV =====
+function emptyPlayerTracking(){ return {number:'',starter:false,nextPeriodStarter:false,segments:[],open:null}; }
+function normalizePlayerTracking(){
+  const t=state.playerTracking;
+  if(!t || typeof t!=='object' || Array.isArray(t)){state.playerTracking=emptyPlayerTracking();return;}
+  const n=Number(t.number);
+  t.number=(Number.isInteger(n)&&n>=1&&n<=99)?String(n):'';
+  t.starter=t.starter===true;
+  t.nextPeriodStarter=t.nextPeriodStarter===true;
+  if(!Array.isArray(t.segments)) t.segments=[];
+  t.segments=t.segments.filter(s=>s && Number.isInteger(Number(s.period)) && Number(s.period)>=1 && Number(s.period)<=4 && Number.isFinite(Number(s.startSeconds)) && Number.isFinite(Number(s.endSeconds)) && Number(s.endSeconds)>=Number(s.startSeconds) && Number(s.startSeconds)>=0).map(s=>({period:Number(s.period),startSeconds:Math.floor(Number(s.startSeconds)),endSeconds:Math.floor(Number(s.endSeconds)),startEpoch:toWholeSecondEpoch(s.startEpoch),endEpoch:toWholeSecondEpoch(s.endEpoch)}));
+  if(t.open && t.number && Number(t.open.period)===Number(state.currentPeriod) && state.started && !state.finished){
+    const p=Number(t.open.period), n=Number(t.open.startSeconds);
+    t.open=(Number.isInteger(p)&&p>=1&&p<=4&&Number.isFinite(n)&&n>=0)?{period:p,startSeconds:n,startEpoch:toWholeSecondEpoch(t.open.startEpoch)}:null;
+  }else t.open=null;
+}
+function trackerSecondsNow(){return Math.max(0,Math.floor(elapsed()));}
+function playerTrackingStartPeriod(epoch){
+  const t=state.playerTracking;
+  if(!t?.number)return;
+  const auto=Number(state.currentPeriod)===1?t.starter:t.nextPeriodStarter;
+  t.open=null;
+  if(auto)t.open={period:Number(state.currentPeriod),startSeconds:0,startEpoch:epoch};
+  t.nextPeriodStarter=false;
+}
+function closePlayerTrackingForPeriod(endSeconds,endEpoch){
+  const t=state.playerTracking;
+  if(!t?.open)return;
+  const p=Number(t.open.period);
+  if(p!==Number(state.currentPeriod))return;
+  const start=Math.floor(t.open.startSeconds);
+  const end=Math.max(start,Math.floor(Number(endSeconds)||0));
+  t.segments.push({period:p,startSeconds:start,endSeconds:end,startEpoch:t.open.startEpoch,endEpoch:toWholeSecondEpoch(endEpoch)});
+  t.open=null;
+  t.nextPeriodStarter=false;
+}
+function playerTrackingTotal(){
+  const t=state.playerTracking;
+  return (t?.segments||[]).reduce((v,s)=>v+Math.max(0,s.endSeconds-s.startSeconds),0) + (t?.open?Math.max(0,trackerSecondsNow()-t.open.startSeconds):0);
+}
+function trackingPeriodLabel(p){
+  if(p===1)return state.multiPeriod?'上半場':'第一段／全場';
+  if(p===2)return '下半場';
+  if(p===3)return state.extraTimeSplit?'延長賽上半場':'延長賽';
+  if(p===4)return '延長賽下半場';
+  return `第${p}段`;
+}
+function renderPlayerTrackingQuick(){
+  const t=state.playerTracking, text=byId('playerTrackingStripValue'),btn=byId('playerTrackingQuickBtn');
+  if(!text||!btn)return;
+  btn.classList.toggle('ptIsOn',!!t.open);
+  if(!t.number)text.textContent='賽前設定 ›';
+  else if(t.open)text.textContent=`#${t.number} ● 場上 ${fmtMMSS(Math.max(0,trackerSecondsNow()-t.open.startSeconds))} ›`;
+  else if(state.awaitingNextPeriod)text.textContent=`#${t.number} 下段${t.nextPeriodStarter?'先發':'待上場'} ›`;
+  else if(state.started)text.textContent=`#${t.number} ○ 場下 ›`;
+  else text.textContent=`#${t.number} ${t.starter?'先發':'替補'} ›`;
+}
+function openPlayerTrackingModal(){
+  normalizePlayerTracking();
+  const root=byId('playerTrackingModal');
+  if(!root)return;
+  const number=byId('ptNumberInput');
+  number.value=state.playerTracking.number;
+  const suggestion=byId('ptRosterSuggestions');
+  suggestion.replaceChildren();
+  currentRosterNumbers().forEach(n=>{const option=document.createElement('option');option.value=String(n);suggestion.appendChild(option)});
+  byId('ptStarterInput').checked=state.playerTracking.starter;
+  renderPlayerTrackingModal();
+  root.classList.add('open');
+}
+function closePlayerTrackingModal(){byId('playerTrackingModal')?.classList.remove('open');}
+function applyPlayerTrackingSelection(){
+  const t=state.playerTracking;
+  const n=Number(byId('ptNumberInput').value);
+  if(!Number.isInteger(n)||n<1||n>99){alert('請輸入 1～99 的球員背號');return;}
+  if((t.segments.length||t.open)&&String(n)!==t.number){alert('已有出賽紀錄，為避免混合不同球員，不能更換背號。請為下一場重新設定。');return;}
+  if(state.finished){alert('比賽已結束，無法變更追蹤設定。');return;}
+  if(!state.started&&!state.awaitingNextPeriod){t.starter=byId('ptStarterInput').checked;}
+  t.number=String(n);
+  saveState(); render();renderPlayerTrackingModal();
+}
+function setNextPeriodStarter(value){
+  if(!state.awaitingNextPeriod || !state.playerTracking?.number)return;
+  state.playerTracking.nextPeriodStarter=!!value;
+  saveState();renderPlayerTrackingQuick();renderPlayerTrackingModal();
+}
+function togglePlayerOnfield(){
+  const t=state.playerTracking;
+  if(!t?.number){alert('請先設定追蹤背號');return;}
+  if(!state.started || state.finished || state.awaitingNextPeriod || state.penalty?.active){alert('只有正在進行的比賽階段可記錄上下場');return;}
+  const epoch=nowWholeMs(), sec=trackerSecondsNow();
+  if(t.open){closePlayerTrackingForPeriod(sec,epoch)}
+  else t.open={period:Number(state.currentPeriod),startSeconds:sec,startEpoch:epoch};
+  saveState();render();renderPlayerTrackingModal();
+}
+function undoPlayerTrackingAction(){
+  const t=state.playerTracking;
+  if(!t?.number||!state.started||state.finished){return;}
+  if(t.open && Number(t.open.period)===Number(state.currentPeriod)){
+    if(!confirm('撤銷最近一次上場標記？'))return;
+    t.open=null;
+  }else{
+    const i=t.segments.length-1,s=t.segments[i];
+    if(!s||Number(s.period)!==Number(state.currentPeriod))return;
+    if(!confirm('撤銷最近一次下場標記，恢復場上狀態？'))return;
+    t.segments.pop(); t.open={period:s.period,startSeconds:s.startSeconds,startEpoch:s.startEpoch};
+  }
+  saveState();render();renderPlayerTrackingModal();
+}
+function playerPeriodMax(p){
+  const rec=(state.periods||[]).find(s=>Number(s.number)===Number(p));
+  if(rec)return Math.max(0,Math.floor(Number(rec.duration)||0));
+  if(state.started && p===Number(state.currentPeriod))return trackerSecondsNow();
+  return null;
+}
+function parsePlayerClock(raw){
+  if(!/^\d{1,4}:\d{2}(?::\d{2})?$/.test(String(raw||'')))return null;
+  const a=raw.split(':').map(Number);
+  if(a.some(n=>!Number.isInteger(n)))return null;
+  if(a.length===2){if(a[1]>59)return null;return a[0]*60+a[1]}
+  if(a[1]>59||a[2]>59)return null;
+  return a[0]*3600+a[1]*60+a[2];
+}
+function editPlayerTrackingSegment(i){
+  const t=state.playerTracking, s=t?.segments?.[i];
+  if(!s)return;
+  const max=playerPeriodMax(s.period);
+  if(max===null){alert('找不到該比賽階段的時間上限');return;}
+  const a=prompt(`修改 #${t.number} ${trackingPeriodLabel(s.period)}上場時間 (MM:SS)`,fmtMatchClock(s.startSeconds));
+  if(a===null)return;
+  const b=prompt(`修改 #${t.number} ${trackingPeriodLabel(s.period)}下場時間 (MM:SS)`,fmtMatchClock(s.endSeconds));
+  if(b===null)return;
+  const start=parsePlayerClock(a),end=parsePlayerClock(b);
+  const overlap=t.segments.some((z,j)=>j!==i&&z.period===s.period&&start<z.endSeconds&&end>z.startSeconds) || (t.open&&t.open.period===s.period&&end>t.open.startSeconds);
+  if(start===null||end===null||end<start||end>max||overlap){alert('時間格式、階段上限或上場區間重疊，請重新確認');return;}
+  const rec=(state.periods||[]).find(p=>Number(p.number)===s.period);
+  const base=rec?.startEpoch || (state.started && Number(state.currentPeriod)===s.period?state.startEpoch:null);
+  s.startSeconds=start;s.endSeconds=end;
+  if(base){s.startEpoch=base+start*1000;s.endEpoch=base+end*1000;}
+  saveState();render();renderPlayerTrackingModal();
+}
+function buildPlayerTimelineRows(){
+  const t=state.playerTracking;
+  const all=[...(t?.segments||[]).map((s,i)=>({...s,index:i})),...(t?.open?[{...t.open,endSeconds:trackerSecondsNow(),index:-1,live:true}]:[])];
+  if(!all.length)return '<p class="ptHint">尚無上場區間。</p>';
+  return all.map(s=>{
+    const max=Math.max(playerPeriodMax(s.period)||s.endSeconds,s.endSeconds,1);
+    const left=Math.min(100,s.startSeconds/max*100), width=Math.max(0,Math.min(100-left,(s.endSeconds-s.startSeconds)/max*100));
+    const canEdit=s.index>=0;
+    return `<div class="ptRow"><div class="ptRowLine"><strong>${escapeHtml(trackingPeriodLabel(s.period))}${s.live?'・場上':''}</strong><span>${fmtMatchClock(s.startSeconds)} → ${fmtMatchClock(s.endSeconds)}　(${fmtMMSS(s.endSeconds-s.startSeconds)})</span>${canEdit?`<button class="ptEdit" onclick="editPlayerTrackingSegment(${s.index})">修正</button>`:''}</div><div class="ptTimeline"><div class="ptRange" style="margin-left:${left}%;width:${width}%"></div></div></div>`;
+  }).join('');
+}
+function renderPlayerTrackingModal(){
+  const t=state.playerTracking,has=!!t?.number;
+  const pre=!state.started&&!state.finished&&!state.awaitingNextPeriod&&!state.periods.length;
+  byId('ptSelectArea').hidden=!!(has && (t.segments.length||t.open||state.finished)) || (!!state.awaitingNextPeriod) || (state.started && has);
+  byId('ptStarterInput').disabled=!pre;
+  byId('ptNextStarterArea').hidden=!(has&&state.awaitingNextPeriod&&!state.finished);
+  byId('ptNextStarterInput').checked=!!t?.nextPeriodStarter;
+  byId('ptStatusArea').hidden=!has;
+  byId('ptActionArea').hidden=!(has&&state.started&&!state.finished&&!state.penalty?.active);
+  byId('ptStatusText').textContent=has?`#${t.number}　${t.open?'● 場上':state.awaitingNextPeriod?'⏸ 等待下一段':'○ 場下'}`:'未追蹤';
+  byId('ptTotalText').textContent=`累計 ${fmtMatchClock(playerTrackingTotal())}`;
+  byId('ptLiveClock').textContent=t.open?fmtMMSS(Math.max(0,trackerSecondsNow()-t.open.startSeconds)):'—';
+  byId('ptToggleBtn').textContent=t.open?'↓ 記錄下場':'↑ 記錄上場';
+  byId('ptUndoBtn').disabled=!(t.open || t.segments.length&&t.segments[t.segments.length-1].period===state.currentPeriod);
+  byId('ptTimelineRows').innerHTML=buildPlayerTimelineRows();
+  byId('ptDownloadBtn').disabled=!(has&&t.segments.length>0);
+}
+function renderPlayerTrackingReport(){
+  const host=byId('reportPlayerTrackingWrap');
+  if(!host)return;
+  const t=state.playerTracking;
+  host.hidden=!t?.number;
+  if(!t?.number)return;
+  byId('reportPtTotal').textContent=`#${t.number}｜${fmtMatchClock(playerTrackingTotal())}`;
+  byId('reportPtSummary').textContent=(t.segments||[]).map(s=>`${trackingPeriodLabel(s.period)} ${fmtMatchClock(s.startSeconds)}～${fmtMatchClock(s.endSeconds)}`).join('｜') || (t.open?'目前正在場上':'尚未記錄上場時間');
+}
+function playerOnfieldCSVText(){
+  const t=state.playerTracking;
+  const header=['match_id','our_team','opponent_team','competition','competition_stage','day_match_number','player_number','period','period_label','start_seconds','end_seconds','duration_seconds','start_time','end_time','start_datetime','end_datetime'];
+  const rows=[header];
+  (t.segments||[]).forEach(s=>rows.push([MATCH_ID,state.ourTeam,state.oppTeam,state.competition,state.competitionStage,state.dayMatchNumber||'',t.number,s.period,trackingPeriodLabel(s.period),s.startSeconds,s.endSeconds,s.endSeconds-s.startSeconds,fmtMatchClock(s.startSeconds),fmtMatchClock(s.endSeconds),s.startEpoch?fmtDateTime(s.startEpoch):'',s.endEpoch?fmtDateTime(s.endEpoch):'']));
+  return '\ufeff'+rows.map(row=>row.map(csvEscape).join(',')).join('\n');
+}
+function downloadPlayerOnfieldCSV(){
+  const t=state.playerTracking;
+  if(!t?.number || !t.segments?.length){alert('尚無已完成的出賽區間，請先記錄下場或結束該比賽階段。');return;}
+  saveState();
+  const filename=`${stamp()}_${safeName()}_player_${t.number}_onfield.csv`;
+  downloadBlob(playerOnfieldCSVText(),'text/csv;charset=utf-8',filename);
+}
+// ===== END v6.160 =====
+
 function csvText(){
   saveState();
   const rows=[['our_team','opponent_team','venue','competition','competition_stage','day_match_number','roster_numbers','start_datetime','end_datetime','duration_seconds','regulation_minutes','diff_seconds','final_our_score','final_opponent_score','period','period_label','time','seconds','event','team','player_number','assist_number','score_after','recorded_at']];
@@ -36627,7 +36906,7 @@ function csvText(){
         state.multiPeriod?periodLabel(m.period||1):'全場',
         fmtMMSS(markerSeconds),
         markerSeconds,
-        m.event,
+        m.event==='DEFENSE'?'GOOD_PLAY':m.event,
         m.team||'',
         m.player_number||'',
         m.assist_number||'',
