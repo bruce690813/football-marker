@@ -27197,6 +27197,36 @@ body.resultMode.finalOutputVisible .goalComparisonLegend{
 /* v6.160: optional, single-player tracking. Keep other screens untouched. */
 #playerTrackingStrip{margin:6px 0 7px;min-width:0}
 .ptStripButton{width:100%;min-height:42px;border:1px solid #315571;border-radius:12px;background:linear-gradient(110deg,#122d44,#11253a);color:#e7f5ff;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;font:700 14px/1.3 inherit;box-shadow:inset 0 1px rgba(255,255,255,.06);cursor:pointer}
+/* v6.161: only the pre-match tracker follows the adjacent roster/keeper
+   controls' 56px cell height, radius, and 12px group spacing. */
+body.matchStatePre #playerTrackingStrip{
+  margin:0 0 12px!important;
+  padding:0!important;
+  width:100%;
+  box-sizing:border-box;
+}
+body.matchStatePre #playerTrackingQuickBtn{
+  box-sizing:border-box;
+  width:100%!important;
+  height:calc(var(--pre-matrix-h,52px) + 2px)!important;
+  min-height:calc(var(--pre-matrix-h,52px) + 2px)!important;
+  max-height:calc(var(--pre-matrix-h,52px) + 2px)!important;
+  margin:0!important;
+  padding:0 14px!important;
+  border-radius:var(--pre-matrix-radius,14px)!important;
+}
+#playerTrackingStrip .ptRosterJerseyIcon{
+  display:inline-flex;
+  flex:0 0 auto;
+  align-items:center;
+  justify-content:center;
+  width:1.48em;
+  height:1.48em;
+}
+/* The report dialog follows the tracker dialog in DOM order. Without a
+   higher layer, its backdrop covers a newly opened tracker and captures taps. */
+#playerTrackingModal.open{z-index:1001;}
+@media(max-width:350px){body.matchStatePre #playerTrackingStrip{margin-bottom:10px!important;}}
 .ptStripButton .ptStripLabel{display:flex;gap:7px;align-items:center;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ptStripButton .ptStripValue{color:#f5cc6b;white-space:nowrap;font-size:13px}
 .ptStripButton.ptIsOn .ptStripValue{color:#7ee2b3}
@@ -27248,7 +27278,7 @@ body.resultMode #playerTrackingStrip{display:none}
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.160</span>
+      <span class="headerVersion">v6.161</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -27359,7 +27389,7 @@ body.resultMode #playerTrackingStrip{display:none}
     <!-- v6.160: one-line player tracker, hidden in result mode. -->
     <div id="playerTrackingStrip">
       <button type="button" class="ptStripButton" id="playerTrackingQuickBtn" onclick="openPlayerTrackingModal()" aria-label="設定或檢視球員出賽追蹤">
-        <span class="ptStripLabel">👕 球員出賽追蹤</span><span class="ptStripValue" id="playerTrackingStripValue">設定 ›</span>
+        <span class="ptStripLabel"><span class="rosterJerseyIcon ptRosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span>球員出賽追蹤</span><span class="ptStripValue" id="playerTrackingStripValue">設定 ›</span>
       </button>
     </div>
     <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
