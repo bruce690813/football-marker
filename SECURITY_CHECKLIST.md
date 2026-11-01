@@ -1,3 +1,31 @@
+# SECURITY CHECKLIST｜v6.165 賽前名單文字與按鈕留白
+
+- [x] 以 v6.164 正式完整 ZIP 為直接基底，v6.51 作為官方原設計基準；沒有使用作廢 v6.52、v6.53。
+- [x] 只修改賽前文字及限定 `.matchStatePre` 的 CSS，未動比賽核心 JavaScript 或 CSV 格式。
+- [x] 小螢幕按鈕高 ≥44px；320、375、390、430px 瀏覽器排版無水平溢出。
+- [x] 主要雙欄「開始比賽＋重置賽前設定」不重疊，卡片底部保留可見留白。
+- [x] 賽前名單、守門員、球員出賽追蹤視窗基本點擊可開啟。
+- [x] 四個 JS 段落 Node.js 語法檢查通過，CSS/HTML 修改範圍 diff 已人工檢查。
+- [x] ZIP 內僅 index.html、README.md、SECURITY_CHECKLIST.md，CRC 完整。
+- [ ] iPhone Safari／LINE 實機與完整賽事、中場、延長賽、PK、兩張分享圖片及 CSV 回歸未執行。
+
+---
+
+## 先前安全檢查紀錄
+
+# SECURITY CHECKLIST｜v6.164 球員追蹤球衣顏色同步
+
+- [x] 直接以 v6.163 ZIP 為基底；沒有沿用作廢的 v6.52 或 v6.53。
+- [x] 僅替換賽後摘要／追蹤視窗標題的 `👕` 為共用球衣 SVG，補充少量標題對齊 CSS 與版本號；沒有改動追蹤演算法與資料。
+- [x] 共用現有 `applyJerseyColorTheme()` 與 `--roster-jersey` 顏色變數，不增加新設定、儲存機制或外部素材。
+- [x] 本版不變動 Marker CSV 24 欄／球員出賽 CSV 16 欄及其分享機制。
+- [x] 原始檔案差異比對、JS 語法、SVG 結構和獨立畫面配色檢查、ZIP 完整性檢查已執行。
+- [ ] iPhone Safari／LINE 實機操作及完整賽事（含延長賽、PK）回歸尚未驗證。
+
+---
+
+## 上版安全檢查歷史
+
 # SECURITY CHECKLIST｜v6.163 並列 MVP 順序與半場時間標記
 
 - [x] 以 v6.162 ZIP 為直接基底；不使用已作廢 v6.52／v6.53。
