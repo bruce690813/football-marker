@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.166</title>
+<title>足球場邊記錄器 v6.167</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27258,6 +27258,34 @@ body.resultMode #playerTrackingStrip{display:none}
 #playerTrackingModal .ptEdit{background:#244860;border:1px solid #52718a;color:#e2f3ff;border-radius:8px;min-height:30px;padding:4px 9px;font-size:12px;font-weight:700}
 #playerTrackingModal .ptTotal{font-size:14px;color:#b9e5d9;font-weight:800}
 #playerTrackingModal .ptSectionHead{font-weight:800;color:#d4efff;font-size:14px;margin-top:4px}
+/* v6.167: pick tracked player from the actual match roster, not free text. */
+#playerTrackingModal .ptRosterHeading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+#playerTrackingModal .ptRosterCount{color:#93d6ef;font-size:12px;white-space:nowrap}
+#playerTrackingModal .ptRosterGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+#playerTrackingModal .ptRosterGrid button{min-width:0;min-height:46px;border:1px solid #3c6078;border-radius:9px;color:#ecf6ff;background:#1b344c;font-size:15px;font-weight:800;padding:7px 2px}
+#playerTrackingModal .ptRosterGrid button[aria-pressed="true"]{border:2px solid #64d5f6;background:#175a74;color:#fff;box-shadow:inset 0 0 0 1px #0d273b}
+#playerTrackingModal .ptRosterEmpty{padding:10px;border-radius:10px;background:#162d40;border:1px solid #36546a}
+#playerTrackingModal .ptRosterEmpty p{margin:0 0 8px}
+#playerTrackingModal .ptRosterWarning{margin-top:8px;color:#f5d78b}
+#playerTrackingModal .ptApplyBtn{width:100%;margin-top:10px}
+/* One overview bar per played period. Each segment is an independently positioned interval. */
+#playerTrackingModal .ptPeriodRow{border-radius:11px;background:#172f41;padding:12px 11px;border:1px solid #31526a}
+#playerTrackingModal .ptPeriodHead{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:14px}
+#playerTrackingModal .ptPeriodHead .ptPeriodTotal{color:#b9e5d9;font-weight:750;font-size:13px}
+#playerTrackingModal .ptTimeline{height:13px;position:relative;border-radius:30px;background:#385163;overflow:hidden;margin:11px 0 5px}
+#playerTrackingModal .ptTimeline .ptRange{position:absolute;top:0;height:100%;background:#32bd90;border-radius:0}
+#playerTrackingModal .ptAxis{display:flex;justify-content:space-between;gap:8px;color:#a9c4d5;font-size:11px;font-variant-numeric:tabular-nums}
+#playerTrackingModal .ptLegend{display:flex;gap:15px;color:#b8cdd9;font-size:12px;align-items:center}
+#playerTrackingModal .ptLegend span{display:inline-flex;align-items:center;gap:5px}
+#playerTrackingModal .ptLegend i{display:inline-block;width:12px;height:12px;border-radius:3px;background:#385163}
+#playerTrackingModal .ptLegend .ptLegendOn{background:#32bd90}
+#playerTrackingModal .ptDetailToggle{width:100%;min-height:42px;border:1px solid #52718a;background:#182f43;color:#e2f3ff;border-radius:10px;font-size:13px;font-weight:750}
+#playerTrackingModal .ptDetailRow{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 11px;border-radius:10px;background:#172f41;border:1px solid #31526a}
+#playerTrackingModal .ptDetailRow .ptDetailTimes{font-variant-numeric:tabular-nums;color:#c9e2f2;font-size:13px}
+#playerTrackingModal .ptDetailRow .ptDetailTimeName{font-size:13px;font-weight:750}
+#playerTrackingModal .ptDetailRow .ptEdit{min-height:36px}
+#playerTrackingModal [hidden]{display:none!important}
+
 #reportModal #reportPlayerTrackingWrap{border:1px solid #2f5670;background:#102739;border-radius:12px;padding:11px;margin:12px 0;color:#d9edfa}
 #reportModal .reportPtHead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:850;margin-bottom:7px}
 #reportModal .reportPtTitle{display:inline-flex;align-items:center;gap:6px;min-width:0}
@@ -27348,7 +27376,7 @@ body.matchStatePre .matchCard{padding-bottom:18px!important;}
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.166</span>
+      <span class="headerVersion">v6.167</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -27459,7 +27487,7 @@ body.matchStatePre .matchCard{padding-bottom:18px!important;}
     <!-- v6.160: one-line player tracker, hidden in result mode. -->
     <div id="playerTrackingStrip">
       <button type="button" class="ptStripButton" id="playerTrackingQuickBtn" onclick="openPlayerTrackingModal()" aria-label="設定或檢視球員出賽追蹤">
-        <span class="ptStripLabel"><span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="7" r="3.5" fill="currentColor"/><path d="M4.2 20.1c0-4.1 3.5-6.7 7.8-6.7s7.8 2.6 7.8 6.7v.7H4.2z" fill="currentColor"/></svg></span>球員出賽追蹤</span><span class="ptStripValue" id="playerTrackingStripValue">設定 ›</span>
+        <span class="ptStripLabel"><span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="11.5" cy="6.5" r="3.5" fill="currentColor"/><path d="M3.8 20.2c0-4 3.4-6.7 7.7-6.7 2.1 0 3.7.5 4.9 1.5v5.9H3.8z" fill="currentColor"/><circle cx="18.5" cy="17.4" r="4.4" fill="#0d1e2d" stroke="currentColor" stroke-width="1.4"/><path d="m16.4 17.3 1.5 1.4 2.5-2.7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>球員出賽追蹤</span><span class="ptStripValue" id="playerTrackingStripValue">設定 ›</span>
       </button>
     </div>
     <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
@@ -28064,19 +28092,25 @@ body.matchStatePre .matchCard{padding-bottom:18px!important;}
 <!-- v6.160: tracked player's on-field intervals, separate from event markers. -->
 <div class="modalBack" id="playerTrackingModal" role="dialog" aria-modal="true" aria-labelledby="playerTrackingTitle">
   <div class="modal ptModalPanel">
-    <div class="ptModalHead"><h2 id="playerTrackingTitle" class="rosterIconHeading"><span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="7" r="3.5" fill="currentColor"/><path d="M4.2 20.1c0-4.1 3.5-6.7 7.8-6.7s7.8 2.6 7.8 6.7v.7H4.2z" fill="currentColor"/></svg></span> 球員出賽追蹤</h2><button type="button" class="ptClose" onclick="closePlayerTrackingModal()" aria-label="關閉">×</button></div>
+    <div class="ptModalHead"><h2 id="playerTrackingTitle" class="rosterIconHeading"><span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="11.5" cy="6.5" r="3.5" fill="currentColor"/><path d="M3.8 20.2c0-4 3.4-6.7 7.7-6.7 2.1 0 3.7.5 4.9 1.5v5.9H3.8z" fill="currentColor"/><circle cx="18.5" cy="17.4" r="4.4" fill="#0d1e2d" stroke="currentColor" stroke-width="1.4"/><path d="m16.4 17.3 1.5 1.4 2.5-2.7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span> 球員出賽追蹤</h2><button type="button" class="ptClose" onclick="closePlayerTrackingModal()" aria-label="關閉">×</button></div>
     <div class="ptModalBody">
       <p class="ptHint">每場先追蹤一位球員；記錄上場、下場的比賽秒數。中場、延長賽分段計算，不包含休息及 PK。</p>
       <div id="ptSelectArea">
-        <div class="ptNumberRow"><div><label class="ptLabel" for="ptNumberInput">追蹤背號（1～99）</label><input id="ptNumberInput" type="number" inputmode="numeric" min="1" max="99" step="1" list="ptRosterSuggestions" placeholder="例如 36"></div><button class="ptPrimary" type="button" onclick="applyPlayerTrackingSelection()">套用</button></div>
-        <datalist id="ptRosterSuggestions"></datalist>
+        <div class="ptRosterHeading"><span class="ptLabel" id="ptRosterLabel">本場球隊名單</span><span class="ptRosterCount" id="ptRosterCount">0 人可選</span></div>
+        <div class="ptRosterGrid" id="ptRosterGrid" role="group" aria-labelledby="ptRosterLabel"></div>
+        <div class="ptRosterEmpty" id="ptRosterEmpty" hidden><p class="ptHint">請先設定球隊名單，才能選擇追蹤球員。</p><button type="button" class="ptSecondary" onclick="openRosterFromTracking()">前往球隊名單</button></div>
         <label class="ptCheckRow" style="margin-top:10px"><input id="ptStarterInput" type="checkbox">第一段開賽即為先發（自動從 00:00 記錄）</label>
+        <button id="ptApplyBtn" class="ptPrimary ptApplyBtn" type="button" onclick="applyPlayerTrackingSelection()">套用追蹤設定</button>
       </div>
+      <p class="ptHint ptRosterWarning" id="ptRosterWarning" hidden></p>
       <div id="ptNextStarterArea" hidden><label class="ptCheckRow"><input id="ptNextStarterInput" type="checkbox" onchange="setNextPeriodStarter(this.checked)">下一段開賽即在場上（自動記錄 00:00）</label><p class="ptHint">每個新半場／延長賽開始前請確認；預設不自動上場。</p></div>
       <div id="ptStatusArea" class="ptStatus" hidden><div><div id="ptStatusText">未設定</div><div class="ptTotal" id="ptTotalText">累計 00:00</div></div><strong id="ptLiveClock">—</strong></div>
       <div id="ptActionArea" class="ptActionGrid" hidden><button id="ptToggleBtn" class="ptPrimary" onclick="togglePlayerOnfield()">↑ 記錄上場</button><button id="ptUndoBtn" class="ptSecondary" onclick="undoPlayerTrackingAction()">↶ 撤銷上一步</button></div>
       <div class="ptSectionHead">出賽時間軸</div>
       <div id="ptTimelineRows" class="ptRows"><p class="ptHint">尚無上場區間。</p></div>
+      <div class="ptLegend"><span><i class="ptLegendOn"></i>場上</span><span><i class="ptLegendOff"></i>場下</span></div>
+      <button id="ptDetailToggle" class="ptDetailToggle" type="button" onclick="togglePlayerTrackingDetails()" aria-controls="ptDetailRows" aria-expanded="false" hidden>查看詳細上下場時間</button>
+      <div id="ptDetailRows" class="ptRows" hidden></div>
       <button id="ptDownloadBtn" class="ptExport" onclick="sharePlayerOnfieldCSV()" type="button">分享／匯出球員上場時間 CSV</button>
       <p class="ptHint">檔案與原本 Marker CSV 分開保存；現有 Highlight 工具尚需增加「上場區間剪輯」模式才能讀取此檔。</p>
     </div>
@@ -28426,7 +28460,7 @@ body.matchStatePre .matchCard{padding-bottom:18px!important;}
       </div>
 
       <div id="reportPlayerTrackingWrap" hidden>
-        <div class="reportPtHead"><span class="reportPtTitle"><span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="7" r="3.5" fill="currentColor"/><path d="M4.2 20.1c0-4.1 3.5-6.7 7.8-6.7s7.8 2.6 7.8 6.7v.7H4.2z" fill="currentColor"/></svg></span>球員出賽追蹤</span><span id="reportPtTotal"></span></div>
+        <div class="reportPtHead"><span class="reportPtTitle"><span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="11.5" cy="6.5" r="3.5" fill="currentColor"/><path d="M3.8 20.2c0-4 3.4-6.7 7.7-6.7 2.1 0 3.7.5 4.9 1.5v5.9H3.8z" fill="currentColor"/><circle cx="18.5" cy="17.4" r="4.4" fill="#0d1e2d" stroke="currentColor" stroke-width="1.4"/><path d="m16.4 17.3 1.5 1.4 2.5-2.7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>球員出賽追蹤</span><span id="reportPtTotal"></span></div>
         <div id="reportPtSummary" class="reportPtBody"></div>
         <button class="reportPtBtn" type="button" onclick="openPlayerTrackingModal()">檢視時間軸／匯出 CSV</button>
       </div>
@@ -36815,6 +36849,8 @@ function trackerSecondsNow(){return Math.max(0,Math.floor(elapsed()));}
 function playerTrackingStartPeriod(epoch){
   const t=state.playerTracking;
   if(!t?.number)return;
+  // Do not auto-start an off-roster player; keep previous tracked intervals intact.
+  if(!currentRosterNumbers().includes(Number(t.number))){t.open=null;return;}
   const auto=Number(state.currentPeriod)===1?t.starter:t.nextPeriodStarter;
   t.open=null;
   if(auto)t.open={period:Number(state.currentPeriod),startSeconds:0,startEpoch:epoch};
@@ -36852,15 +36888,41 @@ function renderPlayerTrackingQuick(){
   else if(state.started)text.textContent=`#${t.number} ○ 場下 ›`;
   else text.textContent=`#${t.number} ${t.starter?'先發':'替補'} ›`;
 }
+// v6.167: selection is staged until Apply; its source of truth is the current match roster.
+let playerTrackingDraftNumber='';
+let playerTrackingDetailsOpen=false;
+function renderPlayerTrackingRosterPicker(){
+  const roster=currentRosterNumbers(), t=state.playerTracking;
+  const grid=byId('ptRosterGrid');
+  if(!grid)return;
+  const locked=!!(t?.segments?.length || t?.open || state.finished);
+  grid.replaceChildren();
+  roster.forEach(n=>{
+    const b=document.createElement('button');
+    b.type='button'; b.textContent=`#${n}`;
+    b.setAttribute('aria-pressed',String(playerTrackingDraftNumber===String(n)));
+    b.disabled=locked;
+    b.onclick=()=>{playerTrackingDraftNumber=String(n);renderPlayerTrackingRosterPicker();};
+    grid.appendChild(b);
+  });
+  byId('ptRosterCount').textContent=`${roster.length} 人可選`;
+  byId('ptRosterEmpty').hidden=roster.length>0;
+  const warning=byId('ptRosterWarning');
+  const missing=!!t?.number&&!roster.includes(Number(t.number));
+  warning.hidden=!missing;
+  warning.textContent=missing?`已追蹤的 #${t.number} 不在目前球隊名單內；既有時間資料會保留。請先到球隊名單確認，不能直接以其他球員取代歷史紀錄。`:'';
+  byId('ptApplyBtn').disabled=state.finished || !roster.includes(Number(playerTrackingDraftNumber)) || locked && playerTrackingDraftNumber!==t.number;
+}
+function openRosterFromTracking(){
+  closePlayerTrackingModal();
+  openRosterModal();
+}
 function openPlayerTrackingModal(){
   normalizePlayerTracking();
   const root=byId('playerTrackingModal');
   if(!root)return;
-  const number=byId('ptNumberInput');
-  number.value=state.playerTracking.number;
-  const suggestion=byId('ptRosterSuggestions');
-  suggestion.replaceChildren();
-  currentRosterNumbers().forEach(n=>{const option=document.createElement('option');option.value=String(n);suggestion.appendChild(option)});
+  playerTrackingDraftNumber=state.playerTracking.number;
+  playerTrackingDetailsOpen=false;
   byId('ptStarterInput').checked=state.playerTracking.starter;
   renderPlayerTrackingModal();
   root.classList.add('open');
@@ -36868,8 +36930,8 @@ function openPlayerTrackingModal(){
 function closePlayerTrackingModal(){byId('playerTrackingModal')?.classList.remove('open');}
 function applyPlayerTrackingSelection(){
   const t=state.playerTracking;
-  const n=Number(byId('ptNumberInput').value);
-  if(!Number.isInteger(n)||n<1||n>99){alert('請輸入 1～99 的球員背號');return;}
+  const n=Number(playerTrackingDraftNumber);
+  if(!currentRosterNumbers().includes(n)){alert('請先從本場球隊名單選擇追蹤球員');return;}
   if((t.segments.length||t.open)&&String(n)!==t.number){alert('已有出賽紀錄，為避免混合不同球員，不能更換背號。請為下一場重新設定。');return;}
   if(state.finished){alert('比賽已結束，無法變更追蹤設定。');return;}
   if(!state.started&&!state.awaitingNextPeriod){t.starter=byId('ptStarterInput').checked;}
@@ -36884,6 +36946,7 @@ function setNextPeriodStarter(value){
 function togglePlayerOnfield(){
   const t=state.playerTracking;
   if(!t?.number){alert('請先設定追蹤背號');return;}
+  if(!t.open && !currentRosterNumbers().includes(Number(t.number))){alert('追蹤球員已不在本場球隊名單內，請先確認球隊名單。原有出賽紀錄已保留。');return;}
   if(!state.started || state.finished || state.awaitingNextPeriod || state.penalty?.active){alert('只有正在進行的比賽階段可記錄上下場');return;}
   const epoch=nowWholeMs(), sec=trackerSecondsNow();
   if(t.open){closePlayerTrackingForPeriod(sec,epoch)}
@@ -36936,21 +36999,48 @@ function editPlayerTrackingSegment(i){
   if(base){s.startEpoch=base+start*1000;s.endEpoch=base+end*1000;}
   saveState();render();renderPlayerTrackingModal();
 }
-function buildPlayerTimelineRows(){
+// Group every substitution in its actual period, preserving individual segment data for edit and CSV.
+function playerTimelineIntervals(){
   const t=state.playerTracking;
-  const all=[...(t?.segments||[]).map((s,i)=>({...s,index:i})),...(t?.open?[{...t.open,endSeconds:trackerSecondsNow(),index:-1,live:true}]:[])];
-  if(!all.length)return '<p class="ptHint">尚無上場區間。</p>';
-  return all.map(s=>{
-    const max=Math.max(playerPeriodMax(s.period)||s.endSeconds,s.endSeconds,1);
-    const left=Math.min(100,s.startSeconds/max*100), width=Math.max(0,Math.min(100-left,(s.endSeconds-s.startSeconds)/max*100));
-    const canEdit=s.index>=0;
-    return `<div class="ptRow"><div class="ptRowLine"><strong>${escapeHtml(trackingPeriodLabel(s.period))}${s.live?'・場上':''}</strong><span>${fmtMatchClock(s.startSeconds)} → ${fmtMatchClock(s.endSeconds)}　(${fmtMMSS(s.endSeconds-s.startSeconds)})</span>${canEdit?`<button class="ptEdit" onclick="editPlayerTrackingSegment(${s.index})">修正</button>`:''}</div><div class="ptTimeline"><div class="ptRange" style="margin-left:${left}%;width:${width}%"></div></div></div>`;
+  return [...(t?.segments||[]).map((s,i)=>({...s,index:i})),...(t?.open?[{...t.open,endSeconds:trackerSecondsNow(),index:-1,live:true}]:[])];
+}
+function playerTimelinePeriodEnd(p,entries){
+  const rec=(state.periods||[]).find(x=>Number(x.number)===p);
+  if(rec)return Math.max(1,Math.floor(Number(rec.duration)||0),...entries.map(s=>s.endSeconds));
+  const planned=Number(p>=3?state.extraTimeMinutes:state.regulationMinutes)||0;
+  return Math.max(1,planned*60,p===Number(state.currentPeriod)&&state.started?trackerSecondsNow():0,...entries.map(s=>s.endSeconds));
+}
+function buildPlayerTimelineRows(){
+  const all=playerTimelineIntervals();
+  const periods=new Set(all.map(s=>Number(s.period)));
+  (state.periods||[]).forEach(p=>{if(p?.number>=1&&p.number<=4)periods.add(Number(p.number))});
+  if(state.started&&!state.finished)periods.add(Number(state.currentPeriod));
+  if(!periods.size)return '<p class="ptHint">尚無上場區間。</p>';
+  return [...periods].sort((a,b)=>a-b).map(p=>{
+    const entries=all.filter(s=>Number(s.period)===p).sort((a,b)=>a.startSeconds-b.startSeconds);
+    const max=playerTimelinePeriodEnd(p,entries);
+    const total=entries.reduce((n,s)=>n+Math.max(0,s.endSeconds-s.startSeconds),0);
+    const bars=entries.map(s=>{
+      const left=Math.max(0,Math.min(100,s.startSeconds/max*100));
+      const width=Math.max(0,Math.min(100-left,(s.endSeconds-s.startSeconds)/max*100));
+      return `<span class="ptRange" style="left:${left}%;width:${width}%" title="${escapeHtml(fmtMatchClock(s.startSeconds))} 至 ${escapeHtml(fmtMatchClock(s.endSeconds))}${s.live?'（進行中）':''}"></span>`;
+    }).join('');
+    return `<div class="ptPeriodRow"><div class="ptPeriodHead"><strong>${escapeHtml(trackingPeriodLabel(p))}</strong><span class="ptPeriodTotal">${fmtMatchClock(total)}｜${entries.length} 段</span></div><div class="ptTimeline" role="img" aria-label="${escapeHtml(trackingPeriodLabel(p))} 上場 ${fmtMatchClock(total)}，共 ${entries.length} 段">${bars}</div><div class="ptAxis"><span>00:00</span><span>${fmtMatchClock(max)}</span></div></div>`;
   }).join('');
+}
+function buildPlayerTimelineDetails(){
+  const all=playerTimelineIntervals().sort((a,b)=>a.period-b.period||a.startSeconds-b.startSeconds);
+  return all.map(s=>`<div class="ptDetailRow"><span class="ptDetailTimeName">${escapeHtml(trackingPeriodLabel(s.period))}${s.live?'・場上':''}</span><span class="ptDetailTimes">${fmtMatchClock(s.startSeconds)} → ${fmtMatchClock(s.endSeconds)}（${fmtMatchClock(s.endSeconds-s.startSeconds)}）</span>${s.index>=0?`<button class="ptEdit" type="button" onclick="editPlayerTrackingSegment(${s.index})">修正</button>`:''}</div>`).join('') || '<p class="ptHint">尚無上場區間。</p>';
+}
+function togglePlayerTrackingDetails(){
+  playerTrackingDetailsOpen=!playerTrackingDetailsOpen;
+  renderPlayerTrackingModal();
 }
 function renderPlayerTrackingModal(){
   const t=state.playerTracking,has=!!t?.number;
   const pre=!state.started&&!state.finished&&!state.awaitingNextPeriod&&!state.periods.length;
   byId('ptSelectArea').hidden=!!(has && (t.segments.length||t.open||state.finished)) || (!!state.awaitingNextPeriod) || (state.started && has);
+  renderPlayerTrackingRosterPicker();
   byId('ptStarterInput').disabled=!pre;
   byId('ptNextStarterArea').hidden=!(has&&state.awaitingNextPeriod&&!state.finished);
   byId('ptNextStarterInput').checked=!!t?.nextPeriodStarter;
@@ -36962,6 +37052,13 @@ function renderPlayerTrackingModal(){
   byId('ptToggleBtn').textContent=t.open?'↓ 記錄下場':'↑ 記錄上場';
   byId('ptUndoBtn').disabled=!(t.open || t.segments.length&&t.segments[t.segments.length-1].period===state.currentPeriod);
   byId('ptTimelineRows').innerHTML=buildPlayerTimelineRows();
+  const details=byId('ptDetailRows'),toggle=byId('ptDetailToggle');
+  const hasIntervals=!!(t.segments.length||t.open);
+  toggle.hidden=!hasIntervals;
+  toggle.textContent=playerTrackingDetailsOpen?'收合詳細上下場時間':`查看詳細上下場時間（${t.segments.length+(t.open?1:0)} 段）`;
+  toggle.setAttribute('aria-expanded',String(playerTrackingDetailsOpen));
+  details.hidden=!playerTrackingDetailsOpen||!hasIntervals;
+  if(!details.hidden)details.innerHTML=buildPlayerTimelineDetails();
   byId('ptDownloadBtn').disabled=!(has&&t.segments.length>0);
 }
 function renderPlayerTrackingReport(){
