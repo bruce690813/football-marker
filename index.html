@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.165</title>
+<title>足球場邊記錄器 v6.166</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27299,6 +27299,41 @@ body.matchStatePre .matchCard{padding-bottom:14px!important;}
   body.matchStatePre #keeperQuickBtn .preQuickText{font-size:13px!important;gap:3px!important;}
 }
 </style>
+<style id="v6166PreMatchRhythmAndTrackingPerson">
+/* v6.166: pre-match only.  Uniform vertical rhythm between info rows
+   and the three setup controls; preserve all other app states and buttons. */
+body.matchStatePre .matchCard > .matchMetaRow,
+body.matchStatePre .matchCard > .dayMatchMeta,
+body.matchStatePre .matchCard > .broadcastScoreboard,
+body.matchStatePre .matchCard > .preVenueStandalone,
+body.matchStatePre .matchCard > .preRegulationSection,
+body.matchStatePre .matchCard > .preQuickSetup,
+body.matchStatePre .matchCard > #playerTrackingStrip{
+  margin-bottom:9px!important;
+}
+/* Maintain deliberate air below primary actions inside the card. */
+body.matchStatePre .matchCard{padding-bottom:18px!important;}
+/* Safari's bottom toolbar can reduce the visible page while the layout
+   viewport stays larger. Reserve scrollable clearance after the whole app,
+   not an invisible overlay inside the card. */
+@media screen and (max-width:767px){
+  body.matchStatePre #appContent.wrap{
+    padding-bottom:calc(96px + env(safe-area-inset-bottom, 0px))!important;
+    scroll-padding-bottom:calc(104px + env(safe-area-inset-bottom, 0px));
+  }
+  body.matchStatePre{scroll-padding-bottom:calc(104px + env(safe-area-inset-bottom, 0px));}
+}
+/* Single-player silhouette, independent from team jersey palette. */
+.ptPersonIcon{
+  display:inline-flex;align-items:center;justify-content:center;
+  flex:0 0 auto;width:1.35em;height:1.35em;
+  color:#a7ddf4;vertical-align:-.18em;
+}
+.ptPersonIcon svg{display:block;width:100%;height:100%;}
+#playerTrackingQuickBtn .ptPersonIcon{font-size:1.2em;}
+#reportModal .reportPtTitle .ptPersonIcon{width:1.25em;height:1.25em;}
+#playerTrackingModal .ptModalHead .ptPersonIcon{margin-right:4px;}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -27313,7 +27348,7 @@ body.matchStatePre .matchCard{padding-bottom:14px!important;}
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.165</span>
+      <span class="headerVersion">v6.166</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -27424,7 +27459,7 @@ body.matchStatePre .matchCard{padding-bottom:14px!important;}
     <!-- v6.160: one-line player tracker, hidden in result mode. -->
     <div id="playerTrackingStrip">
       <button type="button" class="ptStripButton" id="playerTrackingQuickBtn" onclick="openPlayerTrackingModal()" aria-label="設定或檢視球員出賽追蹤">
-        <span class="ptStripLabel"><span class="rosterJerseyIcon ptRosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span>球員出賽追蹤</span><span class="ptStripValue" id="playerTrackingStripValue">設定 ›</span>
+        <span class="ptStripLabel"><span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="7" r="3.5" fill="currentColor"/><path d="M4.2 20.1c0-4.1 3.5-6.7 7.8-6.7s7.8 2.6 7.8 6.7v.7H4.2z" fill="currentColor"/></svg></span>球員出賽追蹤</span><span class="ptStripValue" id="playerTrackingStripValue">設定 ›</span>
       </button>
     </div>
     <div class="liveMetaStrip" id="liveMetaStrip" aria-live="polite"></div>
@@ -28029,7 +28064,7 @@ body.matchStatePre .matchCard{padding-bottom:14px!important;}
 <!-- v6.160: tracked player's on-field intervals, separate from event markers. -->
 <div class="modalBack" id="playerTrackingModal" role="dialog" aria-modal="true" aria-labelledby="playerTrackingTitle">
   <div class="modal ptModalPanel">
-    <div class="ptModalHead"><h2 id="playerTrackingTitle" class="rosterIconHeading"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span> 球員出賽追蹤</h2><button type="button" class="ptClose" onclick="closePlayerTrackingModal()" aria-label="關閉">×</button></div>
+    <div class="ptModalHead"><h2 id="playerTrackingTitle" class="rosterIconHeading"><span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="7" r="3.5" fill="currentColor"/><path d="M4.2 20.1c0-4.1 3.5-6.7 7.8-6.7s7.8 2.6 7.8 6.7v.7H4.2z" fill="currentColor"/></svg></span> 球員出賽追蹤</h2><button type="button" class="ptClose" onclick="closePlayerTrackingModal()" aria-label="關閉">×</button></div>
     <div class="ptModalBody">
       <p class="ptHint">每場先追蹤一位球員；記錄上場、下場的比賽秒數。中場、延長賽分段計算，不包含休息及 PK。</p>
       <div id="ptSelectArea">
@@ -28391,7 +28426,7 @@ body.matchStatePre .matchCard{padding-bottom:14px!important;}
       </div>
 
       <div id="reportPlayerTrackingWrap" hidden>
-        <div class="reportPtHead"><span class="reportPtTitle"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span>球員出賽追蹤</span><span id="reportPtTotal"></span></div>
+        <div class="reportPtHead"><span class="reportPtTitle"><span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="7" r="3.5" fill="currentColor"/><path d="M4.2 20.1c0-4.1 3.5-6.7 7.8-6.7s7.8 2.6 7.8 6.7v.7H4.2z" fill="currentColor"/></svg></span>球員出賽追蹤</span><span id="reportPtTotal"></span></div>
         <div id="reportPtSummary" class="reportPtBody"></div>
         <button class="reportPtBtn" type="button" onclick="openPlayerTrackingModal()">檢視時間軸／匯出 CSV</button>
       </div>
