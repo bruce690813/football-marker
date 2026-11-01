@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.159</title>
+<title>足球場邊記錄器 v6.163</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27278,7 +27278,7 @@ body.resultMode #playerTrackingStrip{display:none}
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.161</span>
+      <span class="headerVersion">v6.163</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28007,7 +28007,7 @@ body.resultMode #playerTrackingStrip{display:none}
       <div id="ptActionArea" class="ptActionGrid" hidden><button id="ptToggleBtn" class="ptPrimary" onclick="togglePlayerOnfield()">↑ 記錄上場</button><button id="ptUndoBtn" class="ptSecondary" onclick="undoPlayerTrackingAction()">↶ 撤銷上一步</button></div>
       <div class="ptSectionHead">出賽時間軸</div>
       <div id="ptTimelineRows" class="ptRows"><p class="ptHint">尚無上場區間。</p></div>
-      <button id="ptDownloadBtn" class="ptExport" onclick="downloadPlayerOnfieldCSV()" type="button">⬇ 匯出球員上場時間 CSV</button>
+      <button id="ptDownloadBtn" class="ptExport" onclick="sharePlayerOnfieldCSV()" type="button">分享／匯出球員上場時間 CSV</button>
       <p class="ptHint">檔案與原本 Marker CSV 分開保存；現有 Highlight 工具尚需增加「上場區間剪輯」模式才能讀取此檔。</p>
     </div>
   </div>
@@ -30261,6 +30261,10 @@ function footballGoalMinute(seconds){
   const sec=Math.max(0,Math.floor(Number(seconds)||0));
   return `${Math.floor(sec/60)+1}′`;
 }
+function compareMVPGoalMoment(a,b){
+  // v6.163：跨上下半場必須先比賽段，再比該段秒數；同一秒以原始標記順序為準。
+  return a.period-b.period || a.seconds-b.seconds || a.index-b.index;
+}
 function scorerMVPInfo(){
   // v5.177：賽後進球焦點依比賽結果切換語意。
   // 勝場＝單場 MVP；平手／敗場＝我方最多進球。
@@ -30268,23 +30272,31 @@ function scorerMVPInfo(){
   if(!state.finished) return null;
 
   const counts=new Map();
-  state.markers
-    .filter(m=>m.event==='GOAL' && m.team==='OUR' && !m.own_goal && m.player_number)
-    .forEach(m=>{
-      const name=`我方#${m.player_number}`;
-      const current=counts.get(name)||{name,goals:0,goalSeconds:[]};
-      current.goals+=1;
-      current.goalSeconds.push(Math.max(0,Math.floor(Number(m.seconds)||0)));
-      counts.set(name,current);
-    });
+  state.markers.forEach((m,index)=>{
+    if(m.event!=='GOAL' || m.team!=='OUR' || m.own_goal || !m.player_number) return;
+    const name=`我方#${m.player_number}`;
+    const current=counts.get(name)||{name,goals:0,goalMoments:[]};
+    current.goals+=1;
+    const period=Math.max(1,Math.floor(Number(m.period)||1));
+    const seconds=Math.max(0,Math.floor(Number(m.seconds)||0));
+    current.goalMoments.push({period,seconds,index,label:String(m.period_label||'').trim()||periodLabel(period)});
+    counts.set(name,current);
+  });
 
   const stats=[...counts.values()]
-    .map(item=>({
-      ...item,
-      goalSeconds:[...item.goalSeconds].sort((a,b)=>a-b),
-      goalTimes:[...item.goalSeconds].sort((a,b)=>a-b).map(footballGoalMinute)
-    }))
-    .sort((a,b)=>b.goals-a.goals || a.name.localeCompare(b.name,'zh-Hant'));
+    .map(item=>{
+      const goalMoments=[...item.goalMoments].sort(compareMVPGoalMoment);
+      return {
+        ...item,
+        goalMoments,
+        firstGoal:goalMoments[0],
+        goalSeconds:goalMoments.map(g=>g.seconds),
+        // 明確標示段落及精確時分秒，避免下半場進球被誤認為上半場。
+        goalTimes:goalMoments.map(g=>`${g.label} ${fmtMMSS(g.seconds)}`)
+      };
+    })
+    // 先比較進球數；並列時依第一顆進球的真實先後排序，不再依背號排序。
+    .sort((a,b)=>b.goals-a.goals || compareMVPGoalMoment(a.firstGoal,b.firstGoal) || a.name.localeCompare(b.name,'zh-Hant'));
   if(!stats.length) return null;
 
   let result='DRAW';
@@ -36904,6 +36916,24 @@ function downloadPlayerOnfieldCSV(){
   saveState();
   const filename=`${stamp()}_${safeName()}_player_${t.number}_onfield.csv`;
   downloadBlob(playerOnfieldCSVText(),'text/csv;charset=utf-8',filename);
+}
+async function sharePlayerOnfieldCSV(){
+  const t=state.playerTracking;
+  if(!t?.number || !t.segments?.length){alert('尚無已完成的出賽區間，請先記錄下場或結束該比賽階段。');return;}
+  saveState();
+  const filename=`${stamp()}_${safeName()}_player_${t.number}_onfield.csv`;
+  const file=new File([playerOnfieldCSVText()],filename,{type:'text/csv'});
+  if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+    try{
+      await navigator.share({title:`球員 #${t.number} 上場時間 CSV`,files:[file]});
+      return;
+    }catch(e){
+      if(e && e.name==='AbortError')return;
+      console.warn('Player CSV share failed; downloading instead:',e);
+    }
+  }
+  alert('這個瀏覽器目前無法直接分享檔案，將改為下載球員上場時間 CSV。');
+  downloadBlob(file,'text/csv;charset=utf-8',filename);
 }
 // ===== END v6.160 =====
 
