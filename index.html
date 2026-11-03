@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.174</title>
+<title>足球場邊記錄器 v6.175</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27276,6 +27276,8 @@ body.resultMode #playerTrackingStrip{display:none}
 #playerTrackingModal .ptStarterOption:disabled{opacity:.55;cursor:not-allowed}
 #playerTrackingModal .ptStarterHelp{margin:8px 0 0;font-size:12px;color:#bed4e3}
 #playerTrackingModal .ptApplyBtn{width:100%;margin-top:10px}
+/* v6.175: reset is a separate, secondary action, only shown when clearing is safe. */
+#playerTrackingModal .ptClearBtn{width:100%;margin-top:0;background:#274159;border-color:#52718a}
 /* One overview bar per played period. Each segment is an independently positioned interval. */
 #playerTrackingModal .ptPeriodRow{border-radius:11px;background:#172f41;padding:12px 11px;border:1px solid #31526a}
 #playerTrackingModal .ptPeriodHead{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:14px}
@@ -27561,7 +27563,7 @@ body.matchStatePre .preRosterIcon .rosterJerseyIcon,
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.174</span>
+      <span class="headerVersion">v6.175</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28296,6 +28298,7 @@ body.matchStatePre .preRosterIcon .rosterJerseyIcon,
         <p id="ptLiveStartHint" class="ptHint" hidden>比賽進行中才啟用：套用後會從目前的比賽時間開始記錄，不會補記開賽前的上場時間。</p>
         <button id="ptApplyBtn" class="ptPrimary ptApplyBtn" type="button" onclick="applyPlayerTrackingSelection()">套用追蹤設定</button>
       </div>
+      <button id="ptClearBtn" class="ptSecondary ptClearBtn" type="button" onclick="clearPlayerTrackingSelection()" hidden>清除追蹤設定</button>
       <p class="ptHint ptRosterWarning" id="ptRosterWarning" hidden></p>
       <div id="ptNextStarterArea" hidden><label class="ptCheckRow"><input id="ptNextStarterInput" type="checkbox" onchange="setNextPeriodStarter(this.checked)">下一段開賽即在場上（自動記錄 00:00）</label><p class="ptHint">每個新半場／延長賽開始前請確認；預設不自動上場。</p></div>
       <div id="ptStatusArea" class="ptStatus" hidden><div><div id="ptStatusText">未設定</div><div class="ptTotal" id="ptTotalText">累計 00:00</div></div><strong id="ptLiveClock">—</strong></div>
@@ -37190,7 +37193,13 @@ function renderPlayerTrackingRosterPicker(){
     b.type='button'; b.textContent=`#${n}`;
     b.setAttribute('aria-pressed',String(playerTrackingDraftNumber===String(n)));
     b.disabled=locked;
-    b.onclick=()=>{playerTrackingDraftNumber=String(n);renderPlayerTrackingRosterPicker();renderPlayerTrackingStarterOptions();};
+    b.onclick=()=>{
+      // v6.175: tapping the selected jersey again cancels the unsaved draft.
+      const unselect=playerTrackingDraftNumber===String(n);
+      playerTrackingDraftNumber=unselect?'':String(n);
+      if(unselect)playerTrackingDraftStarter=false;
+      renderPlayerTrackingRosterPicker();renderPlayerTrackingStarterOptions();
+    };
     grid.appendChild(b);
   });
   byId('ptRosterCount').textContent=`${roster.length} 人可選`;
@@ -37200,6 +37209,8 @@ function renderPlayerTrackingRosterPicker(){
   warning.hidden=!missing;
   warning.textContent=missing?`已追蹤的 #${t.number} 不在目前球隊名單內；既有時間資料會保留。請先到球隊名單確認，不能直接以其他球員取代歷史紀錄。`:'';
   byId('ptApplyBtn').disabled=state.finished || !roster.includes(Number(playerTrackingDraftNumber)) || locked && playerTrackingDraftNumber!==t.number;
+  // Clear only an uncommitted choice or a saved setting with no recorded intervals.
+  byId('ptClearBtn').hidden=state.finished || !!(t?.open || t?.segments?.length) || !(t?.number || playerTrackingDraftNumber);
 }
 function openRosterFromTracking(){
   closePlayerTrackingModal();
@@ -37232,10 +37243,29 @@ function applyPlayerTrackingSelection(){
     t.open={period:Number(state.currentPeriod),startSeconds:trackerSecondsNow(),startEpoch:nowWholeMs()};
   }
   saveState(); render();
+  // v6.175: both pre-match and late activation must close after successful Apply.
+  closePlayerTrackingModal();
   if(startNow){
-    closePlayerTrackingModal();
     showQuickNotice(`✓ 已開始追蹤 #${n}`,`從${trackingPeriodLabel(state.currentPeriod)} ${fmtMatchClock(t.open.startSeconds)} 起記錄`);
-  }else renderPlayerTrackingModal();
+  }
+}
+function clearPlayerTrackingSelection(){
+  const t=state.playerTracking;
+  if(!t || state.finished)return;
+  if(t.open || t.segments.length){
+    alert('已有上場時間紀錄，為避免資料遺失，無法直接清除追蹤設定。');
+    return;
+  }
+  if(t.number){
+    if(!confirm(`確定清除本場球員 #${t.number} 的追蹤設定？`))return;
+    state.playerTracking=emptyPlayerTracking();
+    saveState();
+    render();
+  }
+  // No existing saved setting: clear only the temporary selection, without saving.
+  playerTrackingDraftNumber='';
+  playerTrackingDraftStarter=false;
+  renderPlayerTrackingModal();
 }
 function setNextPeriodStarter(value){
   if(!state.awaitingNextPeriod || !state.playerTracking?.number)return;
