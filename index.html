@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.171</title>
+<title>足球場邊記錄器 v6.173</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27446,6 +27446,92 @@ body.matchStatePre #playerTrackingStrip{display:block;}
   body:not(.matchStatePre) #playerTrackingQuickBtn .ptStripLabel{font-size:12px;}
 }
 </style>
+
+<style id="v6172TrackerLiveVisualHierarchy">
+/* v6.172: only the active one-tap player tracker is visually refined.
+   The pre-match and break tracker, all other controls and event buttons stay intact. */
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive{
+  display:grid;grid-template-columns:minmax(0,1.85fr) minmax(116px,1fr);
+  gap:7px;align-items:stretch;margin:2px 0 3px;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive #playerTrackingQuickBtn,
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive #playerTrackingOneTapBtn{
+  box-sizing:border-box;min-height:58px;height:58px;max-height:58px;margin:0;
+  border-radius:11px;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive #playerTrackingQuickBtn{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  gap:1px;padding:5px 10px;min-width:0;
+  background:#122b42;border-color:#345a74;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptStripLabel{
+  display:flex;align-items:center;gap:6px;width:100%;min-width:0;overflow:hidden;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptPersonIcon{
+  flex:0 0 23px;width:23px;height:23px;color:#9bdeee;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive #playerTrackingStripLabelText{
+  display:inline-flex;align-items:center;gap:7px;min-width:0;white-space:nowrap;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveNumber{
+  font-size:21px;line-height:1.12;font-weight:900;color:#fff;letter-spacing:.15px;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveState{
+  display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;color:#8de3c2;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveState::before{
+  content:"";width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#47d6a0;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveState.ptLiveOut{color:#bdd0df;}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveState.ptLiveOut::before{background:#829bad;}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive #playerTrackingStripValue{
+  display:inline-flex;align-items:baseline;gap:6px;min-width:0;max-width:100%;
+  color:#ffe079;line-height:1.18;white-space:nowrap;overflow:visible;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveTotalLabel{
+  font-size:11px;font-weight:700;color:#a9c4d6;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveTotalTime{
+  font-size:17px;font-weight:900;font-variant-numeric:tabular-nums;color:#ffe079;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveChevron{
+  font-size:17px;font-weight:750;color:#90bdcf;margin-left:1px;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive #playerTrackingOneTapBtn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0;min-width:0;width:100%;padding:3px 4px;
+  font-size:14px;font-weight:850;line-height:1.15;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive #playerTrackingOneTapBtn.ptActionOff{
+  background:#994b59;border-color:#da7c8c;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive #playerTrackingOneTapBtn:not(.ptActionOff){
+  background:#147b66;border-color:#39baa4;
+}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveActionIcon{font-size:19px;line-height:1.05;}
+body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveActionText{font-size:14px;line-height:1.2;white-space:nowrap;}
+@media(max-width:350px){
+  body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive{grid-template-columns:minmax(0,1fr) 108px;gap:6px;}
+  body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive #playerTrackingQuickBtn{padding:4px 7px;}
+  body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveNumber{font-size:19px;}
+  body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveState{font-size:11px;}
+  body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveTotalTime{font-size:16px;}
+  body:not(.matchStatePre) #playerTrackingStrip.ptCompactActive .ptLiveActionText{font-size:13px;}
+}
+
+</style>
+<style id="v6173TrackingSmartVisibility">
+/* v6.173: Hide the optional live tracker when the match has no tracked player.
+   Keep pre-match setup and the existing one-tap layout untouched. */
+#playerTrackingStrip[hidden],#rosterTrackingEntry[hidden],#ptLiveStartHint[hidden]{display:none!important;}
+#rosterTrackingEntry{display:flex;justify-content:center;align-items:center;gap:8px;
+  width:100%;box-sizing:border-box;min-height:44px;border-radius:11px;
+  border:1px solid #386b87;background:#173b54;color:#d7f1ff;
+  font-size:14px;font-weight:800;cursor:pointer;}
+#rosterTrackingEntry:focus-visible{outline:2px solid #5ecfed;outline-offset:2px;}
+#ptLiveStartHint{padding:9px 10px;border-radius:9px;background:#173548;
+  color:#bce8df;border:1px solid #326a71;line-height:1.5;}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -27460,7 +27546,7 @@ body.matchStatePre #playerTrackingStrip{display:block;}
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.171</span>
+      <span class="headerVersion">v6.173</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28192,6 +28278,7 @@ body.matchStatePre #playerTrackingStrip{display:block;}
           </div>
           <p class="ptHint ptStarterHelp" id="ptStarterHelp">請先從本場球隊名單選擇背號，再設定先發或替補。</p>
         </div>
+        <p id="ptLiveStartHint" class="ptHint" hidden>比賽進行中才啟用：套用後會從目前的比賽時間開始記錄，不會補記開賽前的上場時間。</p>
         <button id="ptApplyBtn" class="ptPrimary ptApplyBtn" type="button" onclick="applyPlayerTrackingSelection()">套用追蹤設定</button>
       </div>
       <p class="ptHint ptRosterWarning" id="ptRosterWarning" hidden></p>
@@ -28274,6 +28361,7 @@ body.matchStatePre #playerTrackingStrip{display:block;}
         <button class="rosterResetLearnedBtn" type="button" onclick="resetLearnedRosterPool()">↺ 重設快捷背號</button>
         <button class="rosterClearBtn" type="button" onclick="clearRoster()">↻ 清空名單</button>
       </div>
+      <button id="rosterTrackingEntry" type="button" hidden onclick="openPlayerTrackingFromRoster()" aria-label="比賽中啟用球員出賽追蹤"> <span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="11.5" cy="6.5" r="3.5" fill="currentColor"/><path d="M3.8 20.2c0-4 3.4-6.7 7.7-6.7 2.1 0 3.7.5 4.9 1.5v5.9H3.8z" fill="currentColor"/><circle cx="18.5" cy="17.4" r="4.4" fill="#0d1e2d" stroke="currentColor" stroke-width="1.4"/><path d="m16.4 17.3 1.5 1.4 2.5-2.7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>啟用球員出賽追蹤</button>
       <button class="rosterDoneBtn" type="button" onclick="closeRosterModal()">完成</button>
     </div>
   </div>
@@ -31283,6 +31371,8 @@ function renderRosterModal(){
   applyJerseyColorTheme();
   renderJerseyColorPicker();
   const roster=currentRosterNumbers();
+  const trackingEntry=byId('rosterTrackingEntry');
+  if(trackingEntry)trackingEntry.hidden=!state.started||!!state.finished||!!state.penalty?.active||!!state.playerTracking?.number;
   const presetGrid=byId('rosterPresetGrid');
   const grid=byId('rosterGrid');
   const extraWrap=byId('rosterExtraWrap');
@@ -31421,6 +31511,13 @@ function openRosterModal(){
     const scroll=byId('rosterModal')?.querySelector('.rosterModalScroll');
     if(scroll) scroll.scrollTop=0;
   });
+}
+
+// v6.173: optional mid-match tracking entry lives inside the existing roster UI.
+function openPlayerTrackingFromRoster(){
+  if(!state.started||state.finished||state.penalty?.active||state.playerTracking?.number)return;
+  closeRosterModal();
+  openPlayerTrackingModal();
 }
 
 function closeRosterModal(){
@@ -36990,9 +37087,16 @@ function renderPlayerTrackingQuick(){
   const label=byId('playerTrackingStripLabelText'), action=byId('playerTrackingOneTapBtn');
   if(!text||!btn||!label||!action)return;
   const live=!!state.started&&!state.finished&&!state.awaitingNextPeriod&&!state.penalty?.active;
+  // v6.173: no tracking means no live/break strip; the roster dialog retains an entry.
+  const strip=byId('playerTrackingStrip');
+  if(strip)strip.hidden=!!state.started&&!state.finished&&!t?.number;
   const canToggle=live && !!t?.number;
   const pre=!state.started&&!state.finished&&!state.awaitingNextPeriod;
   btn.classList.toggle('ptIsOn',!!t?.open);
+  // v6.172: activate the compact visual treatment only during playable tracking.
+  // Pre-match, intermission and penalty UI continue using the original markup.
+  btn.classList.toggle('ptCompactLive',canToggle);
+  byId('playerTrackingStrip').classList.toggle('ptCompactActive',canToggle);
   action.hidden=!canToggle;
   if(pre){
     label.textContent='球員出賽追蹤';
@@ -37002,7 +37106,24 @@ function renderPlayerTrackingQuick(){
     text.textContent=t?.number?`累計 ${fmtMatchClock(playerTrackingTotal())}　›`:'設定追蹤球員 ›';
     if(state.awaitingNextPeriod&&t?.number)text.textContent=`下段${t.nextPeriodStarter?'先發':'待上場'}　›`;
   }
-  action.textContent=t?.open?'↓ 記錄下場':'↑ 記錄上場';
+  if(canToggle){
+    // Use text nodes instead of HTML injection; # and times come from the saved match.
+    const number=document.createElement('span'); number.className='ptLiveNumber'; number.textContent=`#${t.number}`;
+    const status=document.createElement('span'); status.className=`ptLiveState ${t.open?'':'ptLiveOut'}`;
+    status.textContent=t.open?'場上':'場下';
+    label.replaceChildren(number,status);
+    const totalLabel=document.createElement('span');totalLabel.className='ptLiveTotalLabel';totalLabel.textContent='累計';
+    const totalTime=document.createElement('span');totalTime.className='ptLiveTotalTime';
+    totalTime.textContent=fmtMatchClock(playerTrackingTotal());
+    const chevron=document.createElement('span');chevron.className='ptLiveChevron';chevron.setAttribute('aria-hidden','true');chevron.textContent='›';
+    text.replaceChildren(totalLabel,totalTime,chevron);
+    const icon=document.createElement('span');icon.className='ptLiveActionIcon';icon.setAttribute('aria-hidden','true');
+    icon.textContent=t.open?'↓':'↑';
+    const actionText=document.createElement('span');actionText.className='ptLiveActionText';actionText.textContent=t.open?'記錄下場':'記錄上場';
+    action.replaceChildren(icon,actionText);
+  }else{
+    action.textContent=t?.open?'↓ 記錄下場':'↑ 記錄上場';
+  }
   action.classList.toggle('ptActionOff',!!t?.open);
   action.setAttribute('aria-label',t?.open?`記錄球員 #${t.number} 下場`:`記錄球員 #${t?.number||''} 上場`);
 }
@@ -37087,8 +37208,19 @@ function applyPlayerTrackingSelection(){
   if((t.segments.length||t.open)&&String(n)!==t.number){alert('已有出賽紀錄，為避免混合不同球員，不能更換背號。請為下一場重新設定。');return;}
   if(state.finished){alert('比賽已結束，無法變更追蹤設定。');return;}
   if(!state.started&&!state.awaitingNextPeriod){t.starter=!!playerTrackingDraftStarter;}
+  const newlyActivated=!t.number;
+  const startNow=newlyActivated&&state.started&&!state.awaitingNextPeriod&&!state.penalty?.active;
   t.number=String(n);
-  saveState(); render();renderPlayerTrackingModal();
+  if(startNow){
+    // Do not backdate a late entrant to 00:00. Use the current match clock.
+    t.starter=false;
+    t.open={period:Number(state.currentPeriod),startSeconds:trackerSecondsNow(),startEpoch:nowWholeMs()};
+  }
+  saveState(); render();
+  if(startNow){
+    closePlayerTrackingModal();
+    showQuickNotice(`✓ 已開始追蹤 #${n}`,`從${trackingPeriodLabel(state.currentPeriod)} ${fmtMatchClock(t.open.startSeconds)} 起記錄`);
+  }else renderPlayerTrackingModal();
 }
 function setNextPeriodStarter(value){
   if(!state.awaitingNextPeriod || !state.playerTracking?.number)return;
@@ -37190,7 +37322,16 @@ function togglePlayerTrackingDetails(){
 }
 function renderPlayerTrackingModal(){
   const t=state.playerTracking,has=!!t?.number;
-  byId('ptSelectArea').hidden=!!(has && (t.segments.length||t.open||state.finished)) || (!!state.awaitingNextPeriod) || (state.started && has);
+  byId('ptSelectArea').hidden=!!(has && (t.segments.length||t.open||state.finished)) || (state.started && has);
+  const lateSetup=state.started&&!state.finished&&!state.penalty?.active&&!has;
+  const lateStart=lateSetup&&!state.awaitingNextPeriod;
+  const liveHint=byId('ptLiveStartHint');
+  liveHint.hidden=!lateSetup;
+  liveHint.textContent=state.awaitingNextPeriod
+    ?'中場／休息期間設定：先選擇球員並套用；下一段開始後再記錄上場，或設定「下一段開賽即在場上」。'
+    :'比賽進行中才啟用：套用後會從目前的比賽時間開始記錄，不會補記開賽前的上場時間。';
+  byId('ptStarterChoices').hidden=lateSetup;
+  byId('ptApplyBtn').textContent=lateStart?'從目前時間開始追蹤':'套用追蹤設定';
   renderPlayerTrackingRosterPicker();
   renderPlayerTrackingStarterOptions();
   byId('ptNextStarterArea').hidden=!(has&&state.awaitingNextPeriod&&!state.finished);
