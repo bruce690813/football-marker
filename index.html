@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.175</title>
+<title>足球場邊記錄器 v6.176</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27295,6 +27295,17 @@ body.resultMode #playerTrackingStrip{display:none}
 #playerTrackingModal .ptDetailRow .ptDetailTimeName{font-size:13px;font-weight:750}
 #playerTrackingModal .ptDetailRow .ptEdit{min-height:36px}
 #playerTrackingModal [hidden]{display:none!important}
+/* v6.176: tracker dialog only — separate settings from records, quiet the clear action,
+   and keep the empty record state compact until tracking data exists. */
+#playerTrackingModal .ptModalHead{flex:0 0 auto;position:relative;z-index:1;background:#0d1e2d;box-shadow:0 4px 10px rgba(0,0,0,.16)}
+#playerTrackingModal .ptModalBody{min-height:0;-webkit-overflow-scrolling:touch}
+#playerTrackingModal .ptGroupHeading{font-size:14px;font-weight:800;color:#d4efff;letter-spacing:.02em;margin-bottom:10px}
+#playerTrackingModal .ptSettingsGroup{min-width:0}
+#playerTrackingModal .ptRecordsGroup{min-width:0;border-top:1px solid #2b455c;padding-top:12px;display:flex;flex-direction:column;gap:9px}
+#playerTrackingModal .ptRecordsGroup .ptGroupHeading{margin:0 0 1px}
+#playerTrackingModal .ptClearBtn{display:block;width:auto;min-height:44px;margin:4px 0 0 auto;padding:8px 5px;border-color:transparent;background:transparent;color:#abc4d7;font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+#playerTrackingModal .ptClearBtn:focus-visible{outline:2px solid #64d5f6;outline-offset:2px}
+#playerTrackingModal .ptEmptyTimeline{border-radius:9px;border:1px solid #29495f;background:#112838;padding:10px 11px;font-size:12px;line-height:1.5;color:#afc9d9}
 
 #reportModal #reportPlayerTrackingWrap{border:1px solid #2f5670;background:#102739;border-radius:12px;padding:11px;margin:12px 0;color:#d9edfa}
 #reportModal .reportPtHead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:850;margin-bottom:7px}
@@ -27563,7 +27574,7 @@ body.matchStatePre .preRosterIcon .rosterJerseyIcon,
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.175</span>
+      <span class="headerVersion">v6.176</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28283,6 +28294,8 @@ body.matchStatePre .preRosterIcon .rosterJerseyIcon,
     <div class="ptModalHead"><h2 id="playerTrackingTitle" class="rosterIconHeading"><span class="ptPersonIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="11.5" cy="6.5" r="3.5" fill="currentColor"/><path d="M3.8 20.2c0-4 3.4-6.7 7.7-6.7 2.1 0 3.7.5 4.9 1.5v5.9H3.8z" fill="currentColor"/><circle cx="18.5" cy="17.4" r="4.4" fill="#0d1e2d" stroke="currentColor" stroke-width="1.4"/><path d="m16.4 17.3 1.5 1.4 2.5-2.7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span> 球員出賽追蹤</h2><button type="button" class="ptClose" onclick="closePlayerTrackingModal()" aria-label="關閉">×</button></div>
     <div class="ptModalBody">
       <p class="ptHint">每場先追蹤一位球員；記錄上場、下場的比賽秒數。中場、延長賽分段計算，不包含休息及 PK。</p>
+      <section id="ptSettingsGroup" class="ptSettingsGroup" aria-labelledby="ptSettingsHeading">
+        <div id="ptSettingsHeading" class="ptGroupHeading">追蹤設定</div>
       <div id="ptSelectArea">
         <div class="ptRosterHeading"><span class="ptLabel" id="ptRosterLabel">本場球隊名單</span><span class="ptRosterCount" id="ptRosterCount">0 人可選</span></div>
         <div class="ptRosterGrid" id="ptRosterGrid" role="group" aria-labelledby="ptRosterLabel"></div>
@@ -28301,15 +28314,20 @@ body.matchStatePre .preRosterIcon .rosterJerseyIcon,
       <button id="ptClearBtn" class="ptSecondary ptClearBtn" type="button" onclick="clearPlayerTrackingSelection()" hidden>清除追蹤設定</button>
       <p class="ptHint ptRosterWarning" id="ptRosterWarning" hidden></p>
       <div id="ptNextStarterArea" hidden><label class="ptCheckRow"><input id="ptNextStarterInput" type="checkbox" onchange="setNextPeriodStarter(this.checked)">下一段開賽即在場上（自動記錄 00:00）</label><p class="ptHint">每個新半場／延長賽開始前請確認；預設不自動上場。</p></div>
+      </section>
+      <section id="ptRecordsGroup" class="ptRecordsGroup" aria-labelledby="ptRecordsHeading">
+      <div id="ptRecordsHeading" class="ptGroupHeading">出賽紀錄</div>
       <div id="ptStatusArea" class="ptStatus" hidden><div><div id="ptStatusText">未設定</div><div class="ptTotal" id="ptTotalText">累計 00:00</div></div><strong id="ptLiveClock">—</strong></div>
       <div id="ptActionArea" class="ptActionGrid" hidden><button id="ptToggleBtn" class="ptPrimary" onclick="togglePlayerOnfield()">↑ 記錄上場</button><button id="ptUndoBtn" class="ptSecondary" onclick="undoPlayerTrackingAction()">↶ 撤銷上一步</button></div>
-      <div class="ptSectionHead">出賽時間軸</div>
+      <div id="ptEmptyTimeline" class="ptEmptyTimeline" role="status">尚未產生上場紀錄；比賽開始後即可記錄。</div>
+      <div id="ptTimelineHeading" class="ptSectionHead">出賽時間軸</div>
       <div id="ptTimelineRows" class="ptRows"><p class="ptHint">尚無上場區間。</p></div>
-      <div class="ptLegend"><span><i class="ptLegendOn"></i>場上</span><span><i class="ptLegendOff"></i>場下</span></div>
+      <div id="ptLegend" class="ptLegend"><span><i class="ptLegendOn"></i>場上</span><span><i class="ptLegendOff"></i>場下</span></div>
       <button id="ptDetailToggle" class="ptDetailToggle" type="button" onclick="togglePlayerTrackingDetails()" aria-controls="ptDetailRows" aria-expanded="false" hidden>查看詳細上下場時間</button>
       <div id="ptDetailRows" class="ptRows" hidden></div>
       <button id="ptDownloadBtn" class="ptExport" onclick="sharePlayerOnfieldCSV()" type="button">分享／匯出球員上場時間 CSV</button>
-      <p class="ptHint">檔案與原本 Marker CSV 分開保存；現有 Highlight 工具尚需增加「上場區間剪輯」模式才能讀取此檔。</p>
+      <p id="ptCsvHint" class="ptHint">檔案與原本 Marker CSV 分開保存；現有 Highlight 工具尚需增加「上場區間剪輯」模式才能讀取此檔。</p>
+      </section>
     </div>
   </div>
 </div>
@@ -37381,6 +37399,10 @@ function renderPlayerTrackingModal(){
   renderPlayerTrackingStarterOptions();
   byId('ptNextStarterArea').hidden=!(has&&state.awaitingNextPeriod&&!state.finished);
   byId('ptNextStarterInput').checked=!!t?.nextPeriodStarter;
+  // Hide the whole settings section when only historical records are available.
+  byId('ptSettingsGroup').hidden=['ptSelectArea','ptClearBtn','ptRosterWarning','ptNextStarterArea'].every(id=>byId(id).hidden);
+  // Before a player is applied, keep the dialog focused on selection only.
+  byId('ptRecordsGroup').hidden=!has;
   byId('ptStatusArea').hidden=!has;
   byId('ptActionArea').hidden=!(has&&state.started&&!state.finished&&!state.penalty?.active);
   byId('ptStatusText').textContent=has?`#${t.number}　${t.open?'● 場上':state.awaitingNextPeriod?'⏸ 等待下一段':'○ 場下'}`:'未追蹤';
@@ -37388,15 +37410,25 @@ function renderPlayerTrackingModal(){
   byId('ptLiveClock').textContent=t.open?fmtMMSS(Math.max(0,trackerSecondsNow()-t.open.startSeconds)):'—';
   byId('ptToggleBtn').textContent=t.open?'↓ 記錄下場':'↑ 記錄上場';
   byId('ptUndoBtn').disabled=!(t.open || t.segments.length&&t.segments[t.segments.length-1].period===state.currentPeriod);
-  byId('ptTimelineRows').innerHTML=buildPlayerTimelineRows();
   const details=byId('ptDetailRows'),toggle=byId('ptDetailToggle');
   const hasIntervals=!!(t.segments.length||t.open);
+  byId('ptTimelineHeading').hidden=!hasIntervals;
+  byId('ptTimelineRows').hidden=!hasIntervals;
+  byId('ptTimelineRows').innerHTML=hasIntervals?buildPlayerTimelineRows():'';
+  byId('ptLegend').hidden=!hasIntervals;
+  byId('ptEmptyTimeline').hidden=hasIntervals;
+  if(!hasIntervals)byId('ptEmptyTimeline').textContent=has
+    ?'尚未產生上場區間；記錄上場後，時間軸會顯示在這裡。'
+    :'選擇球員並套用設定後，即可開始記錄出賽時間。';
   toggle.hidden=!hasIntervals;
   toggle.textContent=playerTrackingDetailsOpen?'收合詳細上下場時間':`查看詳細上下場時間（${t.segments.length+(t.open?1:0)} 段）`;
   toggle.setAttribute('aria-expanded',String(playerTrackingDetailsOpen));
   details.hidden=!playerTrackingDetailsOpen||!hasIntervals;
   if(!details.hidden)details.innerHTML=buildPlayerTimelineDetails();
-  byId('ptDownloadBtn').disabled=!(has&&t.segments.length>0);
+  const exportReady=!!(has&&t.segments.length>0);
+  byId('ptDownloadBtn').disabled=!exportReady;
+  byId('ptDownloadBtn').hidden=!exportReady;
+  byId('ptCsvHint').hidden=!exportReady;
 }
 function renderPlayerTrackingReport(){
   const host=byId('reportPlayerTrackingWrap');
