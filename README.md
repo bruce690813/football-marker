@@ -1,3 +1,25 @@
+# 足球場邊記錄器 v6.174｜事件紀錄間距及名單球衣圖示一致性
+
+版本日期：2026-11-03
+
+## 開發基底與修改範圍
+- **直接從使用者提供的正式累計版 `football_marker_v6_173(1).zip` 產生**；以 v6.51 為最初設計及功能基準，不採用作廢的 v6.52、v6.53。
+- **只修正兩個 UI 問題**：比賽進行中的黃／紅牌與事件紀錄過度緊貼；賽前名單與進行中名單球衣圖示尺寸不一致。
+- 未修改任何 JavaScript 函式、比賽資料、計時、PK、球員出賽追蹤、摘要、CSV 與儲存／分享圖片邏輯。
+
+## v6.174 修改項目
+1. 上半場、下半場與延長賽等 `matchStateLive / matchStateSecondHalf / matchStateExtraActive` 狀態：將事件紀錄區改為 `margin-top: 7px; padding-top: 1px`，連同既有 1px 分隔線，黃紅牌按鈕下緣到事件紀錄按鈕上緣約 9px。特別覆蓋 iPhone Safari `liveViewportUltra` 先前將間隔壓到約 3px 的樣式。
+2. 賽前 `preRosterIcon` 與比賽進行中 `liveQuickSetup` 內同一支球衣 SVG 統一為 `28 × 28px`；原先分別是 `1.48em`（390px 模擬約 31.08px）與 `1.30em`（約 20.66px）。不變更其他 modal 或摘要中的 icon 大小。
+3. 標題與頁首版本更新至 v6.174；舊版 CSS／JS 與歷史內容原樣保留。
+
+## 驗證說明
+- 程式與 v6.173 差異限兩處版本字樣、一個新增 style 區塊、README 與安全清單新增的 v6.174 紀錄。
+- 使用隔離的 Chromium DOM/CSS 模擬進行尺寸與事件列位置測量；瀏覽器真實 URL 導覽受到測試環境限制，採用 `set_content` 並模擬本機儲存 API，因此**不等同 iPhone Safari 實機測試**。
+- JavaScript 語法、UI 尺寸與互不重疊、賽況與功能入口之保留情形詳見本版安全清單。
+- 尚未完成 iPhone Safari 真機、LINE 分享、整場實際事件與雙圖分享端到端驗收。
+
+---
+
 # 足球場邊記錄器 v6.173｜球員追蹤智慧顯示與比賽中途啟用
 
 版本日期：2026-11-02
