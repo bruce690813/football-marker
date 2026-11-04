@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.178</title>
+<title>足球場邊記錄器 v6.181</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27230,6 +27230,78 @@ body.matchStatePre #playerTrackingQuickBtn{
 .ptStripButton .ptStripLabel{display:flex;gap:7px;align-items:center;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ptStripButton .ptStripValue{color:#f5cc6b;white-space:nowrap;font-size:13px}
 .ptStripButton.ptIsOn .ptStripValue{color:#7ee2b3}
+/* v6.180: pre-match tracker status number/value should visually match the
+   adjacent goalkeeper quick-control status size and weight. */
+body.matchStatePre #playerTrackingQuickBtn .ptStripValue{
+  font-size:14.5px;
+  font-weight:950;
+  letter-spacing:.1px;
+}
+@media(max-width:390px){
+  body.matchStatePre #playerTrackingQuickBtn .ptStripValue{
+    font-size:13.5px;
+  }
+}
+/* v6.180: make the three pre-match quick-entry rows feel like one system.
+   Keep layout and height; only normalize icon/text alignment for tracking. */
+body.matchStatePre #playerTrackingQuickBtn{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  column-gap:8px!important;
+}
+body.matchStatePre #playerTrackingQuickBtn .ptStripLabel{
+  min-width:0;
+  gap:6px!important;
+  font-size:18px!important;
+  line-height:1.15!important;
+  font-weight:900!important;
+  color:#dbe7f5!important;
+}
+body.matchStatePre #playerTrackingQuickBtn #playerTrackingStripLabelText{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:18px!important;
+  line-height:1.15!important;
+  font-weight:900!important;
+  color:#dbe7f5!important;
+}
+body.matchStatePre #playerTrackingQuickBtn .ptPersonIcon{
+  width:32px!important;
+  height:32px!important;
+  min-width:32px!important;
+  color:#9fd4ec!important;
+  font-size:1em!important;
+  vertical-align:0!important;
+}
+body.matchStatePre #playerTrackingQuickBtn .ptStripValue{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  min-width:0;
+  max-width:100%;
+  font-size:18px!important;
+  line-height:1.15!important;
+  font-weight:900!important;
+  letter-spacing:-.1px!important;
+}
+@media(max-width:390px){
+  body.matchStatePre #playerTrackingQuickBtn{
+    column-gap:7px!important;
+  }
+  body.matchStatePre #playerTrackingQuickBtn .ptStripLabel,
+  body.matchStatePre #playerTrackingQuickBtn #playerTrackingStripLabelText,
+  body.matchStatePre #playerTrackingQuickBtn .ptStripValue{
+    font-size:16px!important;
+  }
+  body.matchStatePre #playerTrackingQuickBtn .ptPersonIcon{
+    width:30px!important;
+    height:30px!important;
+    min-width:30px!important;
+  }
+}
 body.resultMode #playerTrackingStrip{display:none}
 #playerTrackingModal .ptModalPanel{box-sizing:border-box;width:min(94vw,460px);max-height:min(85dvh,780px);display:flex;flex-direction:column;padding:0;overflow:hidden;border:1px solid #375874;background:#0d1e2d;color:#ecf6ff;border-radius:20px}
 #playerTrackingModal .ptModalHead{padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #2b455c;gap:10px}
@@ -27561,7 +27633,7 @@ body.matchStatePre .preRosterIcon .rosterJerseyIcon,
 }
 </style>
 <style id="v6178PrematchGuidancePolish">
-/* v6.178: pre-match vertical rhythm only. Original heights, paddings, layout and other states stay unchanged. */
+/* v6.180: pre-match vertical rhythm only. Original heights, paddings, layout and other states stay unchanged. */
 body.matchStatePre .matchMetaRow{row-gap:7px!important;}
 body.matchStatePre .matchCard > .matchMetaRow,
 body.matchStatePre .matchCard > .dayMatchMeta,
@@ -27580,6 +27652,39 @@ body.matchStatePre #rosterQuickBtn.set #rosterQuickText,
 body.matchStatePre #keeperQuickBtn.set #keeperQuickText,
 body.matchStatePre #playerTrackingQuickBtn.ptConfigured .ptStripValue{color:#d7e4ef!important;}
 </style>
+<style id="v6181PreQuickAlignment">
+/* v6.181: match the tracker entry's left text/icon rhythm to the two existing
+   pre-match quick entries. Keep the right status aligned to the right and
+   preserve all button heights, hit areas, colors and non-pre-match styles. */
+body.matchStatePre #playerTrackingQuickBtn{
+  padding-left:11px!important;
+}
+body.matchStatePre #playerTrackingQuickBtn .ptStripLabel{
+  gap:9px!important;
+}
+body.matchStatePre #playerTrackingQuickBtn #playerTrackingStripLabelText{
+  font-size:15.5px!important;
+  line-height:1.15!important;
+  font-weight:900!important;
+}
+body.matchStatePre #playerTrackingQuickBtn .ptStripValue{
+  font-size:16px!important;
+  line-height:1.15!important;
+  font-weight:950!important;
+}
+@media(max-width:390px){
+  body.matchStatePre #playerTrackingQuickBtn{padding-left:9px!important;}
+  body.matchStatePre #playerTrackingQuickBtn .ptStripLabel{gap:7px!important;}
+  body.matchStatePre #playerTrackingQuickBtn #playerTrackingStripLabelText{font-size:15px!important;}
+  body.matchStatePre #playerTrackingQuickBtn .ptStripValue{font-size:15.5px!important;}
+}
+@media(max-width:350px){
+  body.matchStatePre #playerTrackingQuickBtn{padding-left:5px!important;}
+  body.matchStatePre #playerTrackingQuickBtn .ptStripLabel{gap:3px!important;}
+  body.matchStatePre #playerTrackingQuickBtn #playerTrackingStripLabelText{font-size:14px!important;}
+  body.matchStatePre #playerTrackingQuickBtn .ptStripValue{font-size:14.5px!important;}
+}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -27594,7 +27699,7 @@ body.matchStatePre #playerTrackingQuickBtn.ptConfigured .ptStripValue{color:#d7e
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.178</span>
+      <span class="headerVersion">v6.181</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -29702,7 +29807,7 @@ function focusFirstMissingPreMatchField(){
   return false;
 }
 
-/* v6.178: pre-match errors are quiet until Start is pressed, then use the existing
+/* v6.180: pre-match errors are quiet until Start is pressed, then use the existing
    non-blocking notice and focus the first invalid field. No permanent help labels. */
 function validatePreMatchGuideField(id,label,maxLength,teamName=false){
   const el=byId(id);
@@ -37173,7 +37278,7 @@ function renderPlayerTrackingQuick(){
   if(strip)strip.hidden=!!state.started&&!state.finished&&!t?.number;
   const canToggle=live && !!t?.number;
   const pre=!state.started&&!state.finished&&!state.awaitingNextPeriod;
-  btn.classList.toggle('ptConfigured',!!t?.number); // v6.178: pre-match semantic state color only
+  btn.classList.toggle('ptConfigured',!!t?.number); // v6.180: pre-match semantic state color only
   btn.classList.toggle('ptIsOn',!!t?.open);
   // v6.172: activate the compact visual treatment only during playable tracking.
   // Pre-match, intermission and penalty UI continue using the original markup.
