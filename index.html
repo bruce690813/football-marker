@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.177</title>
+<title>足球場邊記錄器 v6.178</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27560,6 +27560,26 @@ body.matchStatePre .preRosterIcon .rosterJerseyIcon,
   height:28px;
 }
 </style>
+<style id="v6178PrematchGuidancePolish">
+/* v6.178: pre-match vertical rhythm only. Original heights, paddings, layout and other states stay unchanged. */
+body.matchStatePre .matchMetaRow{row-gap:7px!important;}
+body.matchStatePre .matchCard > .matchMetaRow,
+body.matchStatePre .matchCard > .dayMatchMeta,
+body.matchStatePre .matchCard > .broadcastScoreboard,
+body.matchStatePre .matchCard > .preVenueStandalone,
+body.matchStatePre .matchCard > .preRegulationSection,
+body.matchStatePre .matchCard > .preQuickSetup,
+body.matchStatePre .matchCard > #playerTrackingStrip{
+  margin-bottom:7px!important;
+}
+/* Set/unset use exactly the same semantic colors for the three pre-match setup entries. */
+body.matchStatePre #rosterQuickBtn:not(.set) #rosterQuickText,
+body.matchStatePre #keeperQuickBtn:not(.set) #keeperQuickText,
+body.matchStatePre #playerTrackingQuickBtn:not(.ptConfigured) .ptStripValue{color:#f1c873!important;}
+body.matchStatePre #rosterQuickBtn.set #rosterQuickText,
+body.matchStatePre #keeperQuickBtn.set #keeperQuickText,
+body.matchStatePre #playerTrackingQuickBtn.ptConfigured .ptStripValue{color:#d7e4ef!important;}
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -27574,7 +27594,7 @@ body.matchStatePre .preRosterIcon .rosterJerseyIcon,
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.177</span>
+      <span class="headerVersion">v6.178</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -29682,7 +29702,32 @@ function focusFirstMissingPreMatchField(){
   return false;
 }
 
+/* v6.178: pre-match errors are quiet until Start is pressed, then use the existing
+   non-blocking notice and focus the first invalid field. No permanent help labels. */
+function validatePreMatchGuideField(id,label,maxLength,teamName=false){
+  const el=byId(id);
+  if(!el)return true;
+  const value=String(el.value||'').trim();
+  let reason='';
+  if(value.length>maxLength)reason=`最多 ${maxLength} 個字`;
+  else if(/[<>\r\n]/.test(value))reason='不可包含 <、> 或換行字元';
+  else if(containsBopomofo(value))reason='請完成選字，不可使用注音符號';
+  else if(teamName && /^\d+$/.test(value))reason='不可全部使用數字';
+  if(!reason){el.classList.remove('requiredError');return true;}
+  el.classList.add('requiredError');
+  showQuickNotice('請修正賽前資料',`${label}：${reason}`,4200);
+  focusMatchRequiredField(id);
+  return false;
+}
 function validateMatchTextFields(){
+  // The initial pre-match is non-blocking for blanks. Only invalid entered text is flagged.
+  if(!state.started && !state.finished && !state.awaitingNextPeriod){
+    return validatePreMatchGuideField('ourTeam','我方隊伍名稱',15,true)
+      && validatePreMatchGuideField('oppTeam','對手隊伍名稱',15,true)
+      && validatePreMatchGuideField('venue','比賽場地',30)
+      && validatePreMatchGuideField('competition','比賽賽事',40)
+      && validatePreMatchGuideField('competitionStage','賽事階段／輪次',24);
+  }
   // v4.93：我方 / 對手 / 場地 / 賽事名稱都可稍後補充。
   // 空白不阻擋開賽；只有「有填內容但格式不合法」才需要修正。
   const our=validateTextField('ourTeam','我方隊伍名稱',false,15);
@@ -37128,6 +37173,7 @@ function renderPlayerTrackingQuick(){
   if(strip)strip.hidden=!!state.started&&!state.finished&&!t?.number;
   const canToggle=live && !!t?.number;
   const pre=!state.started&&!state.finished&&!state.awaitingNextPeriod;
+  btn.classList.toggle('ptConfigured',!!t?.number); // v6.178: pre-match semantic state color only
   btn.classList.toggle('ptIsOn',!!t?.open);
   // v6.172: activate the compact visual treatment only during playable tracking.
   // Pre-match, intermission and penalty UI continue using the original markup.
@@ -37195,9 +37241,9 @@ function renderPlayerTrackingStarterOptions(){
   bench.setAttribute('aria-pressed',String(selected && !playerTrackingDraftStarter));
   first.disabled=bench.disabled=!(editable && selected);
   byId('ptStarterHelp').textContent=!selected
-    ?'請先從本場球隊名單選擇背號，再設定先發或替補。'
+    ?'先選球員，再選先發或替補；先發將從開賽 00:00 記錄。'
     :editable
-      ?(playerTrackingDraftStarter?'先發：第一段開賽自動從 00:00 記錄':'替補：實際上場時再按「記錄上場」')
+      ?(playerTrackingDraftStarter?'先發：開賽從 00:00 自動記錄；下一段需另外確認。':'替補：開賽不自動記錄，實際上場再按「記錄上場」。')
       :'比賽已開始，無法補設第一段先發狀態；仍可記錄上場。';
 }
 function renderPlayerTrackingRosterPicker(){
@@ -37392,7 +37438,7 @@ function renderPlayerTrackingModal(){
   liveHint.hidden=!lateSetup;
   liveHint.textContent=state.awaitingNextPeriod
     ?'中場／休息期間設定：先選擇球員並套用；下一段開始後再記錄上場，或設定「下一段開賽即在場上」。'
-    :'比賽進行中才啟用：套用後會從目前的比賽時間開始記錄，不會補記開賽前的上場時間。';
+    :'比賽中途啟用：從套用時的比賽時間開始記錄，不會回補至 00:00。';
   byId('ptStarterChoices').hidden=lateSetup;
   byId('ptApplyBtn').textContent=lateStart?'從目前時間開始追蹤':'套用追蹤設定';
   renderPlayerTrackingRosterPicker();
