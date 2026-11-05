@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.182</title>
+<title>足球場邊記錄器 v6.184</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27686,7 +27686,7 @@ body.matchStatePre #playerTrackingQuickBtn .ptStripValue{
 }
 </style>
 <style id="v6182CompactPlayerTrackingModal">
-/* v6.182: use the available visual viewport for the player-tracking dialog.
+/* v6.183: use the available visual viewport for the player-tracking dialog.
    Compact whitespace only; keep existing 5-column roster, colors, buttons,
    tracking behavior, and inner scrolling for exceptionally short screens. */
 @media screen and (max-width:767px){
@@ -27748,6 +27748,159 @@ body.matchStatePre #playerTrackingQuickBtn .ptStripValue{
   }
 }
 </style>
+<style id="v6184TrackingLightConsistency">
+/* =========================
+   v6.183 球員出賽追蹤改為與名單/守門員一致的淺色視窗風格
+   ========================= */
+#playerTrackingModal .ptModalPanel{
+  border:1px solid #cfd9e4!important;
+  background:#f2f4f8!important;
+  color:#18243a!important;
+  box-shadow:0 18px 42px rgba(0,0,0,.22)!important;
+}
+#playerTrackingModal .ptModalHead{
+  border-bottom:1px solid #d6dee8!important;
+  background:transparent!important;
+}
+#playerTrackingModal .ptModalHead h2{color:#101827!important;font-weight:1000!important}
+#playerTrackingModal .ptClose{
+  background:#d9e3ef!important;color:#34455b!important;border:1px solid #bdd0e1!important;
+}
+#playerTrackingModal .ptModalBody{background:transparent!important}
+#playerTrackingModal .ptHint{color:#6f8096!important}
+#playerTrackingModal .ptLabel,
+#playerTrackingModal .ptSectionHead{color:#334155!important}
+#playerTrackingModal .ptRosterCount{color:#4b86b5!important}
+#playerTrackingModal .ptRosterGrid button{
+  border:1px solid #c7d5e5!important;background:#eef4fb!important;color:#1d2b3f!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.88)!important;
+}
+#playerTrackingModal .ptRosterGrid button[aria-pressed="true"]{
+  border:2px solid #64d5f6!important;background:#227796!important;color:#fff!important;
+  box-shadow:inset 0 0 0 1px rgba(10,34,53,.18)!important;
+}
+#playerTrackingModal .ptRosterEmpty{
+  background:#eef2f7!important;border:1px dashed #c4ceda!important;color:#64748b!important;
+}
+#playerTrackingModal .ptRosterWarning{color:#8a6a1d!important}
+#playerTrackingModal .ptStarterChoices{
+  margin-top:14px;padding:12px;border-radius:12px;background:#dfe8f1!important;border:1px solid #cfdae6!important;
+}
+#playerTrackingModal .ptStarterChoices .ptSectionHead{color:#23344b!important}
+#playerTrackingModal .ptStarterOption{
+  border:1px solid #b9c7d6!important;background:#556b82!important;color:#f7fbff!important;
+}
+#playerTrackingModal .ptStarterOption[aria-pressed="true"]{
+  background:#1d9184!important;border-color:#37c5ae!important;color:#fff!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)!important;
+}
+#playerTrackingModal .ptStarterHelp{color:#5f7388!important}
+#playerTrackingModal .ptPrimary,#playerTrackingModal .ptApplyBtn{
+  background:linear-gradient(180deg,#23a08e 0%,#198978 100%)!important;border-color:#37c5ae!important;color:#fff!important;
+}
+#playerTrackingModal .ptSecondary{
+  background:#e7eef6!important;border:1px solid #bfd0e1!important;color:#29435d!important;
+}
+#playerTrackingModal .ptExport{
+  background:linear-gradient(180deg,#3a78f0 0%,#2557d8 100%)!important;border-color:#1d4ed8!important;color:#fff!important;
+}
+#playerTrackingModal .ptClearBtn{
+  background:transparent!important;border-color:transparent!important;color:#c24137!important;
+  text-decoration:none!important; box-shadow:none!important; padding-right:0!important; padding-left:0!important;
+  justify-content:flex-end!important;
+}
+#playerTrackingModal .ptStatus,
+#playerTrackingModal .ptRow,
+#playerTrackingModal .ptPeriodRow{
+  background:#e7eef6!important;border:1px solid #c7d5e5!important;color:#1d2b3f!important;
+}
+#playerTrackingModal .ptStatus strong{color:#b4891b!important}
+#playerTrackingModal .ptRowLine,
+#playerTrackingModal .ptPeriodHead{color:#243246!important}
+#playerTrackingModal .ptTotal{color:#166a52!important}
+#playerTrackingModal .ptTimeline{background:#c8d6e4!important}
+#playerTrackingModal .ptRange{background:#31b68d!important}
+#playerTrackingModal .ptEdit{background:#e8eef7!important;border:1px solid #c6d2de!important;color:#22324a!important}
+#playerTrackingModal .ptCheckRow{color:#22324a!important}
+#playerTrackingModal .ptCheckRow input{accent-color:#238e7d!important}
+#playerTrackingModal .ptNumberRow input{border:1px solid #c7d5e5!important;background:#ffffff!important;color:#142032!important}
+@media(max-width:390px){
+  #playerTrackingModal .ptModalPanel{width:min(95vw,460px)!important}
+}
+
+/* v6.184: three-modal header typography and title-row alignment.
+   Header body content may differ (roster has hints/actions); do NOT force equal total modal heights. */
+#rosterModal .rosterModalFixedHead h2,
+#keeperModal .keeperModalTitle,
+#playerTrackingModal .ptModalHead h2{
+  display:flex!important;
+  align-items:center!important;
+  min-height:36px!important;
+  font-size:23px!important;
+  font-weight:950!important;
+  line-height:1.18!important;
+  letter-spacing:0!important;
+}
+#playerTrackingModal .ptModalHead{
+  padding:12px 14px!important;
+  background:#f6f7fb!important;
+  border-bottom:1px solid #dbe3ee!important;
+  box-shadow:none!important;
+}
+#playerTrackingModal .ptModalHead .ptPersonIcon{
+  color:#436d86!important;
+}
+#playerTrackingModal .ptModalHead .ptPersonIcon svg circle:last-of-type{
+  fill:#f6f7fb!important;
+}
+#playerTrackingModal .ptGroupHeading{color:#334155!important;}
+#playerTrackingModal .ptRecordsGroup{border-top-color:#d8e3ee!important;}
+/* Light-mode clear is a SECONDARY red-outlined action, matching the keeper dialog. */
+#playerTrackingModal .ptClearBtn{
+  display:block;
+  box-sizing:border-box!important;
+  width:calc(50% - 4px)!important;
+  min-height:46px!important;
+  margin:8px 0 0 auto!important;
+  padding:8px 10px!important;
+  border:1px solid #fca5a5!important;
+  border-radius:12px!important;
+  background:transparent!important;
+  color:#b91c1c!important;
+  font-size:14px!important;
+  line-height:1.2!important;
+  font-weight:950!important;
+  text-decoration:none!important;
+  text-align:center!important;
+  box-shadow:none!important;
+  cursor:pointer;
+}
+#playerTrackingModal .ptClearBtn:active{
+  background:#fff1f2!important;
+  transform:scale(.985);
+}
+#playerTrackingModal .ptClearBtn:focus-visible{
+  outline:2px solid #ef4444!important;
+  outline-offset:2px;
+}
+/* Record card finish: warm white surface, consistent 14px curves and soft depth. */
+#playerTrackingModal .ptRecordsGroup .ptStatus,
+#playerTrackingModal .ptRecordsGroup .ptRow,
+#playerTrackingModal .ptRecordsGroup .ptPeriodRow{
+  background:#ffffff!important;
+  border:1px solid #cbd5e1!important;
+  border-radius:14px!important;
+  box-shadow:0 3px 10px rgba(30,58,90,.08),inset 0 1px 0 rgba(255,255,255,.90)!important;
+}
+#playerTrackingModal .ptRecordsGroup .ptEmptyTimeline{
+  background:#f8fafc!important;
+  border:1px dashed #cbd5e1!important;
+  border-radius:14px!important;
+  color:#64748b!important;
+  box-shadow:none!important;
+}
+
+</style>
 </head>
 <body>
 <div id="appBootStatus" role="status" aria-live="polite">
@@ -27762,7 +27915,7 @@ body.matchStatePre #playerTrackingQuickBtn .ptStripValue{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.182</span>
+      <span class="headerVersion">v6.184</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -37200,6 +37353,85 @@ ${mvpInfo?`<div class="card"><h2>${escapeHtml(mvpInfo.title)}</h2><p>${mvpInfo.w
   html.iosBrowserUI body.keyboardOpen .finalToolsCard{
     display:none!important;
   }
+}
+
+/* =========================
+   v6.183 球員出賽追蹤改為與名單/守門員一致的淺色視窗風格
+   ========================= */
+#playerTrackingModal .ptModalPanel{
+  border:1px solid #cfd9e4!important;
+  background:#f2f4f8!important;
+  color:#18243a!important;
+  box-shadow:0 18px 42px rgba(0,0,0,.22)!important;
+}
+#playerTrackingModal .ptModalHead{
+  border-bottom:1px solid #d6dee8!important;
+  background:transparent!important;
+}
+#playerTrackingModal .ptModalHead h2{color:#101827!important;font-weight:1000!important}
+#playerTrackingModal .ptClose{
+  background:#d9e3ef!important;color:#34455b!important;border:1px solid #bdd0e1!important;
+}
+#playerTrackingModal .ptModalBody{background:transparent!important}
+#playerTrackingModal .ptHint{color:#6f8096!important}
+#playerTrackingModal .ptLabel,
+#playerTrackingModal .ptSectionHead{color:#334155!important}
+#playerTrackingModal .ptRosterCount{color:#4b86b5!important}
+#playerTrackingModal .ptRosterGrid button{
+  border:1px solid #c7d5e5!important;background:#eef4fb!important;color:#1d2b3f!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.88)!important;
+}
+#playerTrackingModal .ptRosterGrid button[aria-pressed="true"]{
+  border:2px solid #64d5f6!important;background:#227796!important;color:#fff!important;
+  box-shadow:inset 0 0 0 1px rgba(10,34,53,.18)!important;
+}
+#playerTrackingModal .ptRosterEmpty{
+  background:#eef2f7!important;border:1px dashed #c4ceda!important;color:#64748b!important;
+}
+#playerTrackingModal .ptRosterWarning{color:#8a6a1d!important}
+#playerTrackingModal .ptStarterChoices{
+  margin-top:14px;padding:12px;border-radius:12px;background:#dfe8f1!important;border:1px solid #cfdae6!important;
+}
+#playerTrackingModal .ptStarterChoices .ptSectionHead{color:#23344b!important}
+#playerTrackingModal .ptStarterOption{
+  border:1px solid #b9c7d6!important;background:#556b82!important;color:#f7fbff!important;
+}
+#playerTrackingModal .ptStarterOption[aria-pressed="true"]{
+  background:#1d9184!important;border-color:#37c5ae!important;color:#fff!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)!important;
+}
+#playerTrackingModal .ptStarterHelp{color:#5f7388!important}
+#playerTrackingModal .ptPrimary,#playerTrackingModal .ptApplyBtn{
+  background:linear-gradient(180deg,#23a08e 0%,#198978 100%)!important;border-color:#37c5ae!important;color:#fff!important;
+}
+#playerTrackingModal .ptSecondary{
+  background:#e7eef6!important;border:1px solid #bfd0e1!important;color:#29435d!important;
+}
+#playerTrackingModal .ptExport{
+  background:linear-gradient(180deg,#3a78f0 0%,#2557d8 100%)!important;border-color:#1d4ed8!important;color:#fff!important;
+}
+#playerTrackingModal .ptClearBtn{
+  background:transparent!important;border-color:transparent!important;color:#c24137!important;
+  text-decoration:none!important; box-shadow:none!important; padding-right:0!important; padding-left:0!important;
+  justify-content:flex-end!important;
+}
+#playerTrackingModal .ptStatus,
+#playerTrackingModal .ptRow,
+#playerTrackingModal .ptPeriodRow{
+  background:#e7eef6!important;border:1px solid #c7d5e5!important;color:#1d2b3f!important;
+}
+#playerTrackingModal .ptStatus strong{color:#b4891b!important}
+#playerTrackingModal .ptRowLine,
+#playerTrackingModal .ptPeriodHead{color:#243246!important}
+#playerTrackingModal .ptTotal{color:#166a52!important}
+#playerTrackingModal .ptTimeline{background:#c8d6e4!important}
+#playerTrackingModal .ptRange{background:#31b68d!important}
+#playerTrackingModal .ptEdit{background:#e8eef7!important;border:1px solid #c6d2de!important;color:#22324a!important}
+#playerTrackingModal .ptCheckRow{color:#22324a!important}
+#playerTrackingModal .ptCheckRow input{accent-color:#238e7d!important}
+#playerTrackingModal .ptNumberRow input{border:1px solid #c7d5e5!important;background:#ffffff!important;color:#142032!important}
+@media(max-width:390px){
+  #playerTrackingModal .ptModalPanel{width:min(95vw,460px)!important}
 }
 </style>
 
