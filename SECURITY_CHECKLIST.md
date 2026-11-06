@@ -1,3 +1,181 @@
+# 足球場邊記錄器 v6.193｜安全與發布前檢查（2026-11-06）
+
+## 來源與最小修改檢查
+- [x] 正式 `football_marker_v6_51.zip` 可存取，作為原始設計與功能基準；沒有使用已作廢的 v6.52／v6.53。
+- [x] 直接沿用完整累計 `football_marker_v6_192.zip` 進行修改。
+- [x] HTML/CSS/JS 差異範圍只包含 `makeVisualSummaryCanvas()` 及兩處版本文字；所有其他程式段落與 v6.192 逐字一致。
+- [x] 沒有新增外部圖片、第三方程式庫、網路請求、儲存欄位或資料傳送功能。
+
+## 實際測試
+- [x] 4 段內嵌 JavaScript 分別通過 `node --check`。
+- [x] 完整 HTML 經 Chromium 載入，未出現 JavaScript `pageerror`。
+- [x] `makeVisualSummaryCanvas()` 成功輸出 900×1125 Canvas，平手、長隊名／大比分、無進球、多人並列皆已產圖。
+- [x] `buildVisualSummaryImageFile()` 成功輸出非空 `image/png` File。
+- [x] 目視比較 v6.192 與 v6.193：雙眼無被遮擋、球體方形邊界與中央霧感改善，球衣及比分等資訊未被移動。
+- [x] ZIP 含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md` 三檔，通過 CRC 驗證。
+
+## 尚未完成，不宣稱通過
+- [ ] iPhone Safari、LINE 分享、相簿儲存的實機驗證。
+- [ ] 完整比賽流程、PK、詳細摘要、儲存圖片、CSV 的端到端回歸測試。
+
+---
+
+# 足球場邊記錄器 v6.192｜發布前測試與安全檢查（2026-11-06）
+
+## 版本保護
+- [x] 正式 `football_marker_v6_51.zip` 作為原始設計與功能基準。
+- [x] 直接以 `v6.191` 累加製作 `v6.192`，未改用其他分支版本。
+- [x] 主要修改集中於 `makeVisualSummaryCanvas()` 內樂樂與記憶球的疊圖位置／光效參數，以及版本字樣；其他賽前、比賽中、延長賽、PK、摘要、CSV、球員追蹤與守門員等程式區塊維持原狀。
+- [x] 未新增第三方函式庫、外部網路資源或新的資料傳輸邏輯。
+
+## 已實際執行
+- [x] 內嵌 JavaScript 使用 `node --check` 驗證通過。
+- [x] Chromium 實載 `index.html`，未出現 JS `pageerror`。
+- [x] `makeVisualSummaryCanvas()` 可正常輸出 `900 × 1125` Canvas。
+- [x] 已實際產出 `v6192_sample.png`、`v6192_long_win.png`、`v6192_no_goals.png`、`v6192_three_tied.png` 做視覺驗證。
+- [x] 已確認樂樂雙眼可見，右眼不再被記憶球主體與強光遮蔽；主要動態資料仍可正常顯示。
+- [x] ZIP 內含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`，並通過壓縮檔 CRC 測試。
+
+## 尚待實機驗證，不宣稱通過
+- [ ] iPhone Safari / LINE 分享與相簿儲存。
+- [ ] 極端隊名、更多並列球員、不同 Emoji／字型在 iOS 實機的視覺細節。
+- [ ] 與完整比賽操作流程串接後的主觀海報審美驗收。
+
+---
+
+# 足球場邊記錄器 v6.191｜安全與發版檢查（2026-11-06）
+
+## 已核對
+- [x] 正式 `football_marker_v6_51.zip` 存在並可讀取；沒有使用 v6.52 或 v6.53 作為開發基底。
+- [x] 直接承接 v6.190 完整累加程式；本版修改限於 `makeVisualSummaryCanvas()` 三個指定視覺部位與版本文字。
+- [x] 其他 HTML、CSS、JavaScript 在回退海報函式及版本字樣後與 v6.190 逐字相同。
+- [x] 沒有引入外部服務、CDN、腳本套件或新的敏感資料處理。
+- [x] 所有四段內嵌 JavaScript 語法檢查通過；隔離 Chromium 完整頁面載入無 `pageerror`。
+- [x] Canvas 900 × 1125 PNG 產圖，長賽事／長隊名、0:0、多人並列及八人並列案例輸出成功。
+- [x] `buildVisualSummaryImageFile()` 產生非空 PNG File；ZIP 三檔及 CRC 完整性檢查通過。
+- [x] 320／375／390／430px Chromium 手機寬度模擬沒有主頁水平溢出。
+
+## 尚待實機驗證（不宣稱通過）
+- [ ] iPhone Safari／LINE 分享及儲存至相簿。
+- [ ] 賽前、上下半場、中場、延長賽、PK、賽後摘要、分享、CSV 的完整端到端比賽流程。
+- [ ] iOS 特定字型、Emoji 與極端長字串的最終視覺表現。
+
+---
+
+# 足球場邊記錄器 v6.190｜發布前測試與安全檢查（2026-11-06）
+
+## 版本保護
+- [x] 正式 `football_marker_v6_51.zip` 作為原始設計與功能基準。
+- [x] 直接以 `v6.189` 累加製作 `v6.190`，未改用其他分支版本。
+- [x] 主要修改集中於 `makeVisualSummaryCanvas()` 與版本字樣；其他賽前、比賽中、延長賽、PK、摘要、CSV、球員追蹤與守門員等程式區塊維持原狀。
+- [x] 未新增第三方函式庫、外部網路資源或新的資料傳輸邏輯。
+
+## 已實際執行
+- [x] 內嵌 JavaScript 使用 `node --check` 驗證通過。
+- [x] Chromium 實載 `index.html`，未出現 JS `pageerror`。
+- [x] `makeVisualSummaryCanvas()` 可正常輸出 `900 × 1125` Canvas。
+- [x] 已實際產出 `v6190_sample.png`、`v6190_long_win.png`、`v6190_no_goals.png`、`v6190_three_tied.png` 做視覺驗證。
+- [x] 已確認統計區、比分主視覺與右下標語區皆完成本版海報化微調，且動態資料仍可正常顯示。
+- [x] ZIP 內含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`，並通過壓縮檔 CRC 測試。
+
+## 尚待實機驗證，不宣稱通過
+- [ ] iPhone Safari / LINE 分享與相簿儲存。
+- [ ] 極端隊名、更多並列球員、不同 Emoji／字型在 iOS 實機的視覺細節。
+- [ ] 與完整比賽操作流程串接後的主觀海報審美驗收。
+
+---
+
+# 足球場邊記錄器 v6.189｜發布前測試與安全檢查（2026-11-06）
+
+## 版本保護
+- [x] 正式 `football_marker_v6_51.zip` 可讀取，作為原始設計及功能基準。v6.52、v6.53 未用作開發基底。
+- [x] 直接沿用完整累計 `v6.188`，僅調整 `makeVisualSummaryCanvas()` 與兩處版本顯示。
+- [x] `makeReportCanvas()`、`buildVisualSummaryImageFile()`、分享／儲存、CSV、計時、比賽階段、PK 與球員追蹤等其他原始程式區段與 v6.188 保持一致。
+- [x] 不加入第三方函式庫、遠端資源、資料傳輸或新的儲存欄位。
+
+## 已實際執行
+- [x] HTML 內嵌 JavaScript 使用 `node --check` 驗證通過。
+- [x] 隔離 Chromium 以完整 `index.html` 載入，頁面沒有 JS `pageerror`。
+- [x] `makeVisualSummaryCanvas()` 可輸出 `900 × 1125` Canvas；`buildVisualSummaryImageFile()` 可產出非空 `image/png` File。
+- [x] 已實際產出 `v6189_sample.png`、`v6189_long_win.png`、`v6189_no_goals.png`、`v6189_three_tied.png`，檢查金色記憶球完整顯示、球體位置往中央聚焦、右側榮耀區／下方標語區更海報化，且沒有遮住樂樂頭部、球衣與主要動態資料。
+- [x] 差異檢查確認主要改動集中在 `makeVisualSummaryCanvas()` 與版本字樣。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md` 三檔，並通過 CRC 檢查。
+
+## 尚待實機驗證，不宣稱通過
+- [ ] iPhone Safari / LINE 分享、相簿儲存與 Emoji／字型渲染。
+- [ ] 賽前、上半場、中場、下半場、延長賽、PK、全場、摘要、詳細圖片和 CSV 的完整端到端比賽流程。
+- [ ] 實際不同場次與極端字串的視覺主觀驗收；Canvas 輸出不保證與概念海報逐像素相同。
+
+---
+
+# 足球場邊記錄器 v6.188｜發布前測試與安全檢查（2026-11-06）
+
+## 版本保護
+- [x] 正式 `football_marker_v6_51.zip` 可讀取，作為原始設計及功能基準。v6.52、v6.53 未用作開發基底。
+- [x] 直接沿用完整累計 `v6.187`，僅調整 `makeVisualSummaryCanvas()` 與兩處版本顯示。
+- [x] `makeReportCanvas()`、`buildVisualSummaryImageFile()`、分享／儲存、CSV、計時、比賽階段、PK 與球員追蹤等其他原始程式區段與 v6.187 保持一致。
+- [x] 不加入第三方函式庫、遠端資源、資料傳輸或新的儲存欄位。
+
+## 已實際執行
+- [x] HTML 四段內嵌 JavaScript 分別通過 `node --check`。
+- [x] 隔離 Chromium 以完整 `index.html` 載入，頁面沒有 JS `pageerror`。
+- [x] `makeVisualSummaryCanvas()` 可輸出 `900 × 1125` Canvas；`buildVisualSummaryImageFile()` 可產出非空 `image/png` File。
+- [x] 已實際產出 `v6188_sample.png`、`v6188_long_win.png`、`v6188_no_goals.png`，檢查金色記憶球完整顯示、球體位置往中央移動、中段空白減少，且沒有遮住樂樂頭部、球衣與主要動態資料。
+- [x] 差異檢查確認主要改動集中在 `makeVisualSummaryCanvas()` 與版本字樣。
+- [x] ZIP 包含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md` 三檔，並通過 CRC 檢查。
+
+## 尚待實機驗證，不宣稱通過
+- [ ] iPhone Safari / LINE 分享、相簿儲存與 Emoji／字型渲染。
+- [ ] 賽前、上半場、中場、下半場、延長賽、PK、全場、摘要、詳細圖片和 CSV 的完整端到端比賽流程。
+- [ ] 實際不同場次與極端字串的視覺主觀驗收；Canvas 輸出不保證與先前 AI 概念海報逐像素相同。
+
+---
+
+# 足球場邊記錄器 v6.186｜發布前檢查（2026-11-06）
+
+## 開發基準及界線
+- [x] 正式 `football_marker_v6_51.zip` 可讀取，以其原始設計與功能為基準；已作廢的 v6.52／v6.53 未用作基底。
+- [x] 本版直接從完整累加的 v6.185 修改，沒有重新建立簡化版。
+- [x] `index.html` 只替換 `makeVisualSummaryCanvas()` 的內部繪圖內容、加上說明註記，以及更新兩處版本顯示。
+- [x] 沒有新增遠端服務、外部圖片、第三方套件或新的使用者資料存取。
+
+## 已執行測試
+- [x] 四段內嵌 JavaScript 使用 `node --check` 驗證語法。
+- [x] Chromium 隔離載入 HTML；背景與球衣素材可由現有內嵌資料載入。
+- [x] 視覺精簡版 PNG 匯出：900 × 1125，檔案大小非零；`buildVisualSummaryImageFile()` 產出 PNG File。
+- [x] 情境：2:2 平手（#5、#63 並列）、1:0 勝場（單人）、0:0 無進球、3:3 三人並列、8:6 八人並列與極長隊名，均成功產生圖片。
+- [x] 前景保護：與原背景比較，樂樂頭部 x=20–220/y=649–815、記憶球 x=251–502/y=850–1019 的畫素一致；八人並列時第二排球衣未被引言區遮蓋。
+- [x] 圖片產生時瀏覽器無本次測試的 JS pageerror。
+- [x] 新舊程式差異只限海報函式與版本文字；`makeReportCanvas`、`shareImageFile`、比分、計時、PK、CSV、球員追蹤、摘要邏輯未修改。
+- [x] ZIP 僅含 `index.html`、`README.md`、`SECURITY_CHECKLIST.md`，CRC 完整性檢查。
+
+## 尚未驗證，不宣稱通過
+- [ ] iPhone Safari 實機 Web Share、LINE 分享、相簿儲存與字型渲染。
+- [ ] 另一台 iPhone 的視覺檢查，包含不同系統表情符號與字型。
+- [ ] 完整比賽計時、換場、中場、下半場、延長賽、PK、摘要、詳細圖片及 CSV 匯出端到端實機測試。
+- [ ] 超過 8 名並列最多進球球員的顯示行為（與前版同樣只呈現前 8 位）。
+
+---
+
+# 足球場邊記錄器 v6.185｜發布前檢查（2026-11-06）
+
+## 範圍確認
+- [x] 正式 v6.51 原始 ZIP 可讀取，直接延續完整累計 v6.184；v6.52／v6.53 未採用。
+- [x] 僅新增 `v6185PrematchStartSpacing` 賽前限定樣式，將追蹤入口下方間距 7px 改為 10px，兩處版本顯示改為 v6.185。
+- [x] 原有 JavaScript 及其他 HTML／CSS 順序與內容未變更；沒有新增依賴、權限、資料儲存或網路連線。
+
+## 測試結果
+- [x] 原始碼差異逆向比對：去除新增 CSS、還原兩處版本文字，完全等於 v6.184 原始 `index.html`。
+- [x] 原有內嵌 JavaScript 與 v6.184 逐段相同，執行 `node --check` 語法檢查。
+- [x] 隔離 Chromium 樣式排版：320、375、390、430px 寬度，賽前追蹤入口 computed margin-bottom 由 7px 變為 10px，入口高度／開始按鈕高度維持原值，沒有橫向溢出。此測試僅驗證 CSS 呈現，並非完整 UI 操作測試。
+- [x] ZIP 包含 index.html、README.md、SECURITY_CHECKLIST.md，通過 CRC 檢查。
+
+## 尚待測試
+- [ ] iPhone Safari 實機：底部瀏覽器工具列展開／收合、真實資料與捲動操作。
+- [ ] 賽前到賽後所有狀態、完整球員追蹤／計時／PK／摘要／分享圖片／CSV 操作流程的端到端回歸。
+
+---
+
 # 足球場邊記錄器 v6.184｜發布前檢查（2026-11-05）
 
 ## 變更範圍
