@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.193</title>
+<title>足球場邊記錄器 v6.195</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -53,6 +53,11 @@ html.appBootFailed #appBootError{display:block}
 }
 
 /* v5.163：本場球員名單球衣顏色目前支援預設／藍／黃／白／紅／灰／綠／黑／橘／紫，主畫面與摘要球衣 icon 同步。 */
+/* v6.195：僅第一段平手的結束決策，依 PK → 下半場 → 全場結束排列。 */
+#finishDecisionBtns.directFirstPeriodPK #finishPenaltyBtn{order:1}
+#finishDecisionBtns.directFirstPeriodPK #finishHalfBtn{order:2}
+#finishDecisionBtns.directFirstPeriodPK #finishWholeBtn{order:3}
+#finishDecisionBtns.directFirstPeriodPK > button{min-height:46px}
 </style>
 <script>
 // 保護必須在主程式之前建立；即使主程式載入失敗，也不開放未還原的比賽操作。
@@ -1388,10 +1393,15 @@ body.keyboardOpen .finalToolsCard{display:none}
   position:absolute;right:13px;top:50%;transform:translateY(-50%);
   font-size:12px;font-weight:850;color:#75808d;pointer-events:none
 }
-.editMarkerTime{
-  margin-top:12px;padding:9px 11px;border-radius:11px;
-  background:#edf1f5;color:#66717d;font-size:12px;text-align:center
-}
+/* v6.194: only the event editor receives time inputs; preserve other modal styles. */
+.editMarkerTimeSection{margin-top:14px}
+.editTimeInputRow{display:flex;align-items:center;justify-content:center;gap:10px}
+.editTimePart{display:flex;flex:1 1 0;min-width:0;align-items:center;flex-direction:column;gap:3px;color:#64748b;font-size:12px;font-weight:850}
+.editTimePart input{box-sizing:border-box;width:100%;min-width:0;height:48px;border-radius:12px;border:1.5px solid #bbcbdc;background:#fff;color:#15223a;font-size:24px;font-weight:950;text-align:center;outline:none}
+.editTimePart input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.13)}
+.editTimeColon{align-self:flex-start;padding-top:7px;color:#4b5563;font-size:24px;font-weight:950}
+.editTimeHint{margin-top:8px;color:#6b7684;font-size:12px;line-height:1.4}
+
 .editMarkerActions{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 18px calc(12px + env(safe-area-inset-bottom));border-top:1px solid #d7dde5;background:rgba(246,247,251,.98);box-shadow:0 -8px 20px rgba(0,0,0,.05)}
 .editMarkerCancel{background:#6b7280}
 .editMarkerSave{background:#1f6feb}.editMarkerActions button{min-height:48px;font-size:15px}
@@ -27922,7 +27932,7 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.193</span>
+      <span class="headerVersion">v6.195</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28885,7 +28895,7 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
         <span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span>
         <span>
           <b>編輯事件</b>
-          <small>修改事件類型、球隊或球員背號</small>
+          <small>修改事件類型、球隊、球員背號或時間</small>
         </span>
       </button>
 
@@ -28907,7 +28917,7 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
   <div class="modal editMarkerModal" role="dialog" aria-modal="true" aria-labelledby="editMarkerTitle">
     <div class="editMarkerHead">
       <h2 id="editMarkerTitle" class="uiIconHeading"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span><span>編輯事件紀錄</span></h2>
-      <div class="editMarkerHint">只修改事件內容，原本標記時間會保留不變。</div>
+      <div class="editMarkerHint">可修正事件內容與發生時間；儲存後依時間排序，原始記錄時間保留。</div>
     </div>
     <div class="editMarkerBody">
 
@@ -28955,7 +28965,15 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
       </div>
     </div>
 
-    <div class="editMarkerTime">標記時間：<b id="editMarkerTime">00:00</b>（不可修改）</div>
+    <div class="editSection editMarkerTimeSection">
+      <div class="editSectionLabel">事件發生時間</div>
+      <div class="editTimeInputRow">
+        <label class="editTimePart" for="editMarkerMinute"><input id="editMarkerMinute" type="number" min="0" max="999" step="1" inputmode="numeric" aria-label="事件時間分鐘"><span>分鐘</span></label>
+        <span class="editTimeColon" aria-hidden="true">:</span>
+        <label class="editTimePart" for="editMarkerSecond"><input id="editMarkerSecond" type="number" min="0" max="59" step="1" inputmode="numeric" aria-label="事件時間秒數"><span>秒數</span></label>
+      </div>
+      <div class="editTimeHint" id="editMarkerTimeHint">同一比賽階段內調整，儲存後依新時間排序並重新計算事件比分。</div>
+    </div>
     </div>
 
     <div class="editMarkerActions">
@@ -32536,7 +32554,10 @@ function finishMatch(){
   const tied=state.ourScore===state.oppScore;
   const title=state.currentPeriod===1 ? '本段比賽已結束' : state.currentPeriod===2 ? '下半場已結束' : state.currentPeriod===3 && state.extraTimeSplit ? '延長賽上半場已結束' : '延長賽已結束';
   byId('finishDecisionTitle').textContent=title;
-  byId('finishDecisionInfo').textContent=`目前比分 ${state.ourScore}:${state.oppScore}｜本段時間 ${fmtMatchClock(pendingFinishElapsed)}${tied && state.currentPeriod>=2 ? '｜目前平手' : ''}`;
+  // v6.195：臨場才決定是否直接 PK，不要求賽前預選賽制。
+  // 第一段平手時可選直接 PK / 還有下半場 / 全場結束；取消則繼續計時。
+  const directFirstPeriodPK=state.currentPeriod===1 && tied && !state.multiPeriod;
+  byId('finishDecisionInfo').textContent=`目前比分 ${state.ourScore}:${state.oppScore}｜本段時間 ${fmtMatchClock(pendingFinishElapsed)}${directFirstPeriodPK ? '｜平手：依現場規則選擇直接 PK 或下半場' : (tied && state.currentPeriod>=2 ? '｜目前平手' : '')}`;
 
   const wholeBtn=byId('finishWholeBtn');
   // v6.108：延長賽上半場只能進入下半場；不開放提早全場結束 / PK。
@@ -32549,8 +32570,11 @@ function finishMatch(){
   halfBtn.textContent=state.currentPeriod===3 ? '延長賽下半場' : '還有下半場';
   halfBtn.onclick=state.currentPeriod===3 ? confirmFinishExtraFirstHalf : confirmFinishHalf;
   extraBtn.style.display=(state.currentPeriod===2 && tied) ? '' : 'none';
-  pkBtn.style.display=(state.currentPeriod>=2 && tied && !(state.currentPeriod===3 && state.extraTimeSplit)) ? '' : 'none';
-  btns.classList.toggle('three', state.currentPeriod===2 && tied);
+  pkBtn.style.display=(tied && (state.currentPeriod>=2 || directFirstPeriodPK) && !(state.currentPeriod===3 && state.extraTimeSplit)) ? '' : 'none';
+  pkBtn.textContent=directFirstPeriodPK ? '進入 PK' : 'PK 點球';
+  // 只在第一段平手時，依現場決策的優先順序顯示；既有賽事畫面排列不動。
+  btns.classList.toggle('directFirstPeriodPK',directFirstPeriodPK);
+  btns.classList.toggle('three', (state.currentPeriod===2 && tied) || directFirstPeriodPK);
   byId('finishDecisionModal').classList.add('open');
 }
 
@@ -32755,7 +32779,10 @@ function penaltyGoals(side){
 }
 function penaltyResultLabel(result){ return result==='GOAL'?'✓ 進球':result==='MISS'?'× 未進':'○ 待定'; }
 function beginPenaltyShootout(){
+  // v6.195：首段平手可直接 PK。必須由有效的結束視窗進入，避免誤啟動。
+  if(pendingFinishEnd===null || state.ourScore!==state.oppScore || (state.currentPeriod===3 && state.extraTimeSplit)) return;
   if(pendingFinishEnd!==null){
+    // 單節制維持 multiPeriod=false，periodLabel(1) 即為「全場」。
     const label=state.currentPeriod===2?'下半場':periodLabel(state.currentPeriod);
     closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
     archiveCurrentPeriod(label);
@@ -33646,6 +33673,101 @@ function setEditMarkerTeam(team){
   });
 }
 
+// v6.194：事件時間以該段實際已進行／封存秒數為上限，與原始 recorded_at 分開。
+function markerEditMaxSeconds(marker){
+  const period=Number(marker?.period)||1;
+  const saved=(state.periods||[]).find(p=>Number(p.number)===period);
+  if(saved && Number.isFinite(Number(saved.duration))){
+    return Math.max(0,Math.floor(Number(saved.duration)));
+  }
+  if(state.started && period===(Number(state.currentPeriod)||1)){
+    return Math.max(0,Math.floor(elapsed()));
+  }
+  const currentSeconds=(state.markers||[]).filter(m=>(Number(m.period)||1)===period)
+    .reduce((max,m)=>Math.max(max,wholeSecondMarkerSeconds(m.seconds)),0);
+  if(!state.multiPeriod && state.finished){
+    return Math.max(currentSeconds,Math.floor(Number(state.finalElapsed)||0));
+  }
+  return Math.max(currentSeconds,Math.floor(Number(state.finalElapsed)||0));
+}
+
+// 確認時間有效後再更新；不把手動輸入誤認為新事件的記錄時間。
+function readEditedMarkerSeconds(marker){
+  const minute=String(byId('editMarkerMinute')?.value??'').trim();
+  const second=String(byId('editMarkerSecond')?.value??'').trim();
+  if(!/^\d{1,3}$/.test(minute)||!/^\d{1,2}$/.test(second)){
+    alert('事件時間請輸入有效的分鐘與秒數（秒數 0～59）。');
+    return null;
+  }
+  const mm=Number(minute),ss=Number(second);
+  if(!Number.isInteger(mm)||!Number.isInteger(ss)||ss<0||ss>59){
+    alert('秒數必須介於 00～59。');
+    return null;
+  }
+  const secs=mm*60+ss,limit=markerEditMaxSeconds(marker);
+  if(secs>limit){
+    alert(`事件時間不能超過本段已進行的 ${fmtMMSS(limit)}。`);
+    return null;
+  }
+  return secs;
+}
+
+// 依 period → seconds → 原始陣列順序穩定排序，讓事件清單、摘要、CSV 一致。
+function sortMarkersChronologically(items){
+  return items.map((m,i)=>({m,i})).sort((a,b)=>(Number(a.m.period)||1)-(Number(b.m.period)||1)
+    || wholeSecondMarkerSeconds(a.m.seconds)-wholeSecondMarkerSeconds(b.m.seconds)
+    || a.i-b.i).map(item=>item.m);
+}
+
+// 正規賽即時比分不變，僅重建「各事件發生後」應顯示的比分。
+// 若曾以比分編輯器手動調整比分，差額視為全場起始校正值，不可憑空新增進球。
+function rebuildChronologicalScoreSnapshots(items,ourFinal,oppFinal){
+  let ourGoals=0,oppGoals=0;
+  items.forEach(m=>{if(m.event==='GOAL'){
+    if(m.team==='OUR')ourGoals++;
+    if(m.team==='OPP')oppGoals++;
+  }});
+  const startOur=ourFinal-ourGoals,startOpp=oppFinal-oppGoals;
+  if(startOur<0||startOpp<0) return false;
+  let our=startOur,opp=startOpp;
+  items.forEach(m=>{
+    if(m.event==='GOAL'){
+      if(m.team==='OUR')our++;
+      if(m.team==='OPP')opp++;
+    }
+    m.score_after=`${our}:${opp}`;
+  });
+  return true;
+}
+
+// 編輯時間不可產生「紅牌退場後仍參與事件」或無效助攻。
+function validateEditedMarkerChronology(items){
+  const sentOff={OUR:new Set(),OPP:new Set()};
+  const priorYellow={OUR:new Set(),OPP:new Set()};
+  for(const m of items){
+    if(!m||!['OUR','OPP'].includes(m.team))continue;
+    const actingTeam=m.event==='GOAL'&&m.own_goal
+      ? String(m.own_goal_team||oppositeTeamCode(m.team)||'') : m.team;
+    const number=String(m.player_number||'').trim();
+    if(number&&sentOff[actingTeam]?.has(number)){
+      alert(`修改後 #${number} 將在紅牌退場後再次參與事件，請先調整相關事件時間。`);
+      return false;
+    }
+    const assist=String(m.assist_number||'').trim();
+    if(m.event==='GOAL' && !m.own_goal && assist && sentOff[m.team]?.has(assist)){
+      alert(`修改後助攻 #${assist} 發生在紅牌退場之後，請先調整相關事件。`);
+      return false;
+    }
+    if(m.event==='RED_CARD' && m.second_yellow && number && !priorYellow[m.team].has(number)){
+      alert(`#${number} 的兩黃轉紅需要先有黃牌紀錄，請確認事件時間先後。`);
+      return false;
+    }
+    if(m.event==='YELLOW_CARD'&&number)priorYellow[m.team].add(number);
+    if(m.event==='RED_CARD'&&number) sentOff[m.team].add(number);
+  }
+  return true;
+}
+
 function openEditMarker(index){
   const marker=state.markers[index];
   if(!marker) return;
@@ -33660,7 +33782,11 @@ function openEditMarker(index){
   byId('editTeamOPP').textContent=state.oppTeam||'對手';
   byId('editMarkerNumber').value=marker.player_number||'';
   byId('editAssistNumber').value=marker.assist_number||'';
-  byId('editMarkerTime').textContent=fmtMMSS(marker.seconds);
+  const editSecs=wholeSecondMarkerSeconds(marker.seconds);
+  byId('editMarkerMinute').value=String(Math.floor(editSecs/60));
+  byId('editMarkerSecond').value=String(editSecs%60).padStart(2,'0');
+  const maxSecs=markerEditMaxSeconds(marker);
+  byId('editMarkerTimeHint').textContent=`本段可設定 00:00～${fmtMMSS(maxSecs)}；儲存後依時間排序並重算進球後比分。`;
 
   setEditMarkerEvent(editingMarkerEvent);
   setEditMarkerTeam(editingMarkerTeam);
@@ -33687,6 +33813,8 @@ function saveEditMarker(){
   if(editingMarkerIndex===null) return;
   const marker=state.markers[editingMarkerIndex];
   if(!marker || !editingMarkerEvent) return;
+  const newSeconds=readEditedMarkerSeconds(marker);
+  if(newSeconds===null) return;
 
   let playerNumber='';
   if(true){
@@ -33701,12 +33829,21 @@ function saveEditMarker(){
     }
   }
 
-  if(playerNumber && !canPlayerParticipateAfterRed(editingMarkerTeam,playerNumber,editingMarkerEvent,editingMarkerIndex)) return;
+  const timeChanged=newSeconds!==wholeSecondMarkerSeconds(marker.seconds);
+  // 調整事件時間時，以新的時間順序判定紅牌先後；不可繼續用舊陣列索引判斷。
+  if(!timeChanged && playerNumber && !canPlayerParticipateAfterRed(editingMarkerTeam,playerNumber,editingMarkerEvent,editingMarkerIndex)) return;
 
   const editSecondYellow=
     editingMarkerEvent==='YELLOW_CARD' &&
     !!playerNumber &&
-    isSecondYellowCard(editingMarkerTeam,playerNumber,editingMarkerIndex);
+    (timeChanged
+      ? state.markers.some((m,i)=>i!==editingMarkerIndex && m?.event==='YELLOW_CARD'
+          && m.team===editingMarkerTeam && String(m.player_number||'')===playerNumber
+          && ((Number(m.period)||1)<(Number(marker.period)||1)
+              || ((Number(m.period)||1)===(Number(marker.period)||1)
+                  && (wholeSecondMarkerSeconds(m.seconds)<newSeconds
+                      || (wholeSecondMarkerSeconds(m.seconds)===newSeconds && i<editingMarkerIndex)))))
+      : isSecondYellowCard(editingMarkerTeam,playerNumber,editingMarkerIndex));
   if(editSecondYellow){
     editingMarkerEvent='RED_CARD';
   }
@@ -33734,7 +33871,7 @@ function saveEditMarker(){
         alert('助攻球員不能與進球球員為同一背號');
         return;
       }
-      if(editingMarkerTeam && isRedCardedPlayer(editingMarkerTeam,assistNumber,editingMarkerIndex)){
+      if(!timeChanged && editingMarkerTeam && isRedCardedPlayer(editingMarkerTeam,assistNumber,editingMarkerIndex)){
         alert(`#${assistNumber} 在此進球之前已領紅牌退場，不能列為助攻球員。`);
         return;
       }
@@ -33770,6 +33907,28 @@ function saveEditMarker(){
   if(nextOur>99 || nextOpp>99){
     alert('修改後比分會超過 99，請先確認比分。');
     return;
+  }
+
+  // 先在副本試算排序、比分與紅牌先後；所有檢查通過後才寫入正式紀錄。
+  const nextMarker={...marker,
+    event:editingMarkerEvent,
+    team:editingMarkerEvent==='GOAL'?editedScoreTeam:editingMarkerTeam,
+    player_number:playerNumber,
+    assist_number:editingMarkerEvent==='GOAL'&&!editingMarkerOwnGoal?assistNumber:'',
+    seconds:newSeconds,time:fmtMMSS(newSeconds)
+  };
+  if(editingMarkerEvent==='GOAL'&&editingMarkerOwnGoal){
+    nextMarker.own_goal=true;nextMarker.own_goal_team=editingMarkerTeam;
+  }else{delete nextMarker.own_goal;delete nextMarker.own_goal_team;}
+  if(timeChanged){
+    const trialMarkers=state.markers.map((m,i)=>i===editingMarkerIndex?nextMarker:{...m});
+    if(editSecondYellow) trialMarkers[editingMarkerIndex].second_yellow=true;
+    const chronological=sortMarkersChronologically(trialMarkers);
+    if(!validateEditedMarkerChronology(chronological)) return;
+    if(!rebuildChronologicalScoreSnapshots(chronological,nextOur,nextOpp)){
+      alert('目前最終比分低於進球紀錄總數，無法安全重算事件比分；請先核對比分與進球紀錄。');
+      return;
+    }
   }
 
   const keeperBeforeFromOldRed=
@@ -33821,7 +33980,9 @@ function saveEditMarker(){
     delete marker.keeper_before_red;
   }
 
-  // 時間 seconds / time / recorded_at 完全保留。
+  // 只更正事件發生秒數；原始 recorded_at 為歷史稽核資訊，必須保留。
+  marker.seconds=newSeconds;
+  marker.time=fmtMMSS(newSeconds);
   if(editingMarkerTeam==='OUR' && marker.player_number){
     rememberPlayerNumber(marker.player_number);
     buildNumberGrid();
@@ -33833,9 +33994,16 @@ function saveEditMarker(){
 
   state.ourScore=nextOur;
   state.oppScore=nextOpp;
-  adjustScoreSnapshotsFrom(editingMarkerIndex,dOur,dOpp);
-
-  // 若把較早事件改成紅牌，清除該球員之後才出現的無效助攻紀錄。
+  // 時間調整可能跨越進球。依新順序重排原始物件、重算每筆 score_after，
+  // 避免摘要／事件清單／CSV 顯示舊比分；新事件後續仍會正常附加在末尾。
+  if(timeChanged){
+    hideMarkerUndo();
+    state.markers=sortMarkersChronologically(state.markers);
+    rebuildChronologicalScoreSnapshots(state.markers,nextOur,nextOpp);
+  }else{
+    adjustScoreSnapshotsFrom(editingMarkerIndex,dOur,dOpp);
+  }
+  // 維持原有「較早紅牌會使較晚助攻失效」保護。
   sanitizeInvalidAssistsAfterRed();
 
   saveState();
@@ -36102,8 +36270,8 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       if(win){
         const sx=win==='OUR'?pad+300:W-pad-300, sy=y+88;
         ctx.fillStyle='#fff5f3';ctx.strokeStyle='#f43f53';ctx.lineWidth=4;
-        ctx.beginPath();ctx.arc(sx,sy,24,0,Math.PI*2);ctx.fill();ctx.stroke();
-        centered('勝',sx,sy,30,'#c51e36',950);
+        ctx.beginPath();ctx.arc(sx,sy,28,0,Math.PI*2);ctx.fill();ctx.stroke();
+        centered('勝',sx,sy,34,'#c51e36',950);
       }
 
     }else if(b.type==='eventStats'){
@@ -36925,12 +37093,22 @@ function shareSummaryText(){
   const our=String(state.ourTeam||'我方').trim() || '我方';
   const opp=String(state.oppTeam||'').trim() || '對手';
   const dayMatchLabel=formatDayMatchLabel(state.dayMatchNumber);
-  // v5.179：LINE／訊息 App 以「賽果＋日期／本日場次」辨識一天多場比賽。
-  // 星期採日期自動計算；本日場次為系統預填並在開賽後鎖定。
+  const stage=String(state.competitionStage||'').trim();
+  const competition=String(state.competition||'').trim();
+  // v6.194：只在選擇了賽事階段時附上「賽事｜冠軍賽」；不增加空白訊息行。
+  const stageLine=stage?`🏆 ${[competition,stage].filter(Boolean).join('｜')}`:'';
+  let penaltyLine='';
+  if(state.penalty?.completed){
+    const pOur=penaltyGoals('our'),pOpp=penaltyGoals('opp');
+    const winner=pOur>pOpp?our:pOpp>pOur?opp:'';
+    penaltyLine=`🥅 PK ${pOur}：${pOpp}${winner?`｜${winner} 勝`:''}`;
+  }
   return [
     `⚽ ${our} ${state.ourScore}：${state.oppScore} ${opp}`,
-    `${shareSummaryShortDate(start)} (${shareSummaryWeekday(start)})${dayMatchLabel?`｜${dayMatchLabel}`:''}`
-  ].join('\n');
+    stageLine,
+    `📅 ${shareSummaryShortDate(start)}（${shareSummaryWeekday(start)}）${dayMatchLabel?`｜${dayMatchLabel}`:''}`,
+    penaltyLine
+  ].filter(Boolean).join('\n');
 }
 
 async function shareImageFile(mode='share',variant='detailed'){
