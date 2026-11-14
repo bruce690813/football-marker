@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.195</title>
+<title>足球場邊記錄器 v6.197</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -2486,6 +2486,52 @@ body.matchStateExtraWait .new{
   border-color:#22c55e;
   box-shadow:0 0 0 2px rgba(34,197,94,.12);
 }
+/* v6.196: PK qualification + per-cycle used numbers; preserve the existing picker layout. */
+.penaltyRosterBtn.pkUsed{
+  background:#e5e7eb;
+  border-color:#cbd5e1;
+  color:#8792a2;
+  cursor:not-allowed;
+  opacity:.86;
+}
+.penaltyRosterBtn.pkUsed .pkUsedNote{
+  display:block;
+  font-size:10px;
+  font-weight:750;
+  line-height:1.2;
+  margin-top:2px;
+}
+.penaltyRosterBtn.pkUsed:disabled{transform:none}
+.penaltyRosterManage{
+  margin:0 0 12px;
+  padding:9px 10px;
+  border:1px solid #d2dce8;
+  border-radius:11px;
+  background:#ebf1f7;
+  font-size:12px;
+  color:#40536b;
+}
+.penaltyRosterManageBar{display:flex;align-items:center;justify-content:space-between;gap:7px}
+.penaltyRosterManageBar span{line-height:1.4;min-width:0}
+.penaltyRosterManageBar button{font-size:12px;font-weight:850;min-height:44px;padding:5px 9px;border-radius:8px;background:#e0ecff;color:#1d4ed8;border:1px solid #b9cdf4;white-space:nowrap}
+.penaltyEligibilityEditor[hidden]{display:none!important}
+.penaltyEligibilityEditor{margin-top:8px}
+.penaltyEligibilityEditor .pkEligibilityTip{font-size:12px;line-height:1.45;color:#566a7e;margin:6px 0 10px}
+.penaltyEligibilityGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:8px 0 10px}
+.penaltyEligibilityBtn{min-height:48px;border-radius:10px;border:1px solid #bdccdc;background:#fff;color:#334155;font-size:17px;font-weight:900}
+.penaltyEligibilityBtn.isEligible{border:2px solid #22a06b;background:#d9f9e8;color:#136746}
+.penaltyEligibilityActions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.penaltyEligibilityActions button{min-height:44px;padding:7px 4px;border-radius:10px;font-size:13px;font-weight:850}
+.penaltyEligibilityAll{grid-column:1/-1;background:#e3eaf2;color:#1f3d59;border:1px solid #c4d1df}
+.penaltyEligibilityApply{background:#198978;color:#fff}
+.penaltyEligibilityCancel{background:#d6dee8;color:#334155}
+.penaltyRosterPicker.pkEligibilityEditing > .penaltyRosterHint,
+.penaltyRosterPicker.pkEligibilityEditing > .penaltyRosterGrid,
+.penaltyRosterPicker.pkEligibilityEditing > .penaltyRosterActions{display:none!important}
+.penaltyCycleWarning{display:none;margin-top:8px;padding:8px 10px;border:1px solid #e7ae59;border-radius:9px;background:#fff5df;color:#965c17;font-weight:750;font-size:12px;line-height:1.45}
+.penaltyCycleWarning:not(:empty){display:block}
+.penaltyNumberPickBtn.pkCycleConflict{border:2px solid #e89b36;background:#fff3d9;color:#925419}
+@media(max-width:390px){.penaltyEligibilityGrid{gap:7px}}
 
 .penaltyRosterActions{
   display:grid;
@@ -27932,7 +27978,7 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.195</span>
+      <span class="headerVersion">v6.197</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28530,12 +28576,13 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
   <div class="modal penaltyModal">
     <div class="penaltyHead">
       <h2>⚽ PK 點球大戰</h2>
-      <div class="penaltyHint">預設雙方各 5 點。若已設定本場球員名單，我方背號可直接點選；對手背號可留白。結果按鈕可切換「待定 → 進球 → 未進」。</div>
+      <div class="penaltyHint">預設雙方各 5 點。我方已選球員本循環不可重複選；裁判若指定合格人數，可在選背號時調整。對手背號可留白。結果按鈕可切換「待定 → 進球 → 未進」。</div>
       <div class="penaltyScore"><span id="penaltyOurName">我方</span><strong id="penaltyScoreText">0 : 0</strong><span id="penaltyOppName">對手</span></div>
     </div>
     <div class="penaltyBody">
       <div class="penaltyTableHead"><div>輪</div><div id="penaltyOurHead">我方</div><div id="penaltyOppHead">對手</div></div>
       <div id="penaltyRounds"></div>
+      <div class="penaltyCycleWarning" id="penaltyCycleWarning" role="status" aria-live="polite"></div>
       <button class="penaltyAdd" type="button" onclick="addPenaltyRound()">＋ 加一輪</button>
     </div>
     <div class="penaltyActions">
@@ -28548,8 +28595,20 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
 <!-- PK roster picker -->
 <div class="modalBack" id="penaltyRosterModal">
   <div class="modal penaltyRosterPicker">
-    <h2 class="rosterIconHeading"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span>選擇 PK 球員背號</span></h2>
+    <h2 class="rosterIconHeading"><span class="rosterJerseyIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path class="rosterJerseyBody" d="M8.2 2.3 5.3 3.2 1.6 6.4l2.5 4.1 2.6-1.5V21h10.6V9l2.6 1.5 2.5-4.1-3.7-3.2-2.9-.9c-.5 1.6-1.8 2.6-3.8 2.6s-3.3-1-3.8-2.6Z"/><path class="rosterJerseyCollar" d="M8.55 2.72c.67 1.17 1.82 1.78 3.45 1.78s2.78-.61 3.45-1.78l.92.29C15.55 4.57 14.05 5.38 12 5.38S8.45 4.57 7.63 3.01Z"/></svg></span><span id="penaltyRosterPickerTitle">選擇 PK 球員背號</span></h2>
     <div class="penaltyRosterHint" id="penaltyRosterHint">從本場球員名單點選背號。</div>
+    <div class="penaltyRosterManage" id="penaltyRosterManage">
+      <div class="penaltyRosterManageBar"><span id="penaltyEligibilitySummary">合格球員：本場全部名單</span><button type="button" onclick="openPenaltyEligibilityEditor()">調整合格球員</button></div>
+      <div class="penaltyEligibilityEditor" id="penaltyEligibilityEditor" hidden>
+        <div class="pkEligibilityTip">依裁判指示選擇本場可主罰 PK 的球員。若只有 5 人合格，請只勾選這 5 人；全數踢過後才會自動開放下一循環。</div>
+        <div class="penaltyEligibilityGrid" id="penaltyEligibilityGrid"></div>
+        <div class="penaltyEligibilityActions">
+          <button type="button" class="penaltyEligibilityAll" onclick="chooseAllPenaltyEligible()">使用本場全部合格球員</button>
+          <button type="button" class="penaltyEligibilityCancel" onclick="cancelPenaltyEligibilityEditor()">返回選背號</button>
+          <button type="button" class="penaltyEligibilityApply" onclick="applyPenaltyEligibility()">套用合格名單</button>
+        </div>
+      </div>
+    </div>
     <div class="penaltyRosterGrid" id="penaltyRosterGrid"></div>
     <div class="penaltyRosterActions">
       <button type="button" class="penaltyRosterClear" onclick="clearPenaltyRosterNumber()">清除背號</button>
@@ -32676,98 +32735,189 @@ function confirmExtraTime(){
 }
 
 let pendingPenaltyRosterIndex=null;
+// v6.196: PK eligibility can be adjusted during the shootout; default is all rostered,
+// non-sent-off players. A chosen number counts as used even while its result is pending.
+let penaltyEligibilityDraft=null;
+let penaltyEligibilityDraftAll=true;
 
+function penaltyAvailableRoster(){
+  const redOut=redCardedPlayerNumbers('OUR');
+  return currentRosterNumbers().filter(n=>!redOut.has(String(n)));
+}
+function penaltyEligibleOurNumbers(){
+  const all=penaltyAvailableRoster();
+  const custom=state.penalty?.eligibleOurNumbers;
+  if(!Array.isArray(custom)) return all;
+  const allowed=new Set(custom.map(Number));
+  return all.filter(n=>allowed.has(n));
+}
+function penaltyCycleContext(index, eligible=penaltyEligibleOurNumbers()){
+  const roster=new Set(eligible.map(n=>String(n)));
+  const used=new Set();
+  let cycle=1;
+  const previous=state.penalty?.our||[];
+  for(let i=0;i<index;i++){
+    const number=String(Number(previous[i]?.number||0));
+    if(!roster.has(number) || used.has(number)) continue;
+    used.add(number);
+    if(used.size===roster.size){cycle++;used.clear();}
+  }
+  return {used,cycle,eligible};
+}
+function penaltyCycleConflicts(){
+  if(!currentRosterNumbers().length) return [];
+  const eligible=penaltyEligibleOurNumbers();
+  const allowed=new Set(eligible.map(String));
+  const conflicts=[];
+  (state.penalty?.our||[]).forEach((kick,i)=>{
+    if(!kick.number) return;
+    const num=String(Number(kick.number));
+    const ctx=penaltyCycleContext(i,eligible);
+    if(!allowed.has(num) || ctx.used.has(num)) conflicts.push(i);
+  });
+  return conflicts;
+}
 function openPenaltyRosterPicker(index){
   const roster=currentRosterNumbers();
-
   // 沒有設定本場名單時仍使用原本手動輸入方式。
   if(!roster.length){
     const input=byId(`pk_our_${index}`);
-    if(input){
-      input.focus();
-      input.select?.();
-    }
+    if(input){input.focus();input.select?.();}
     return;
   }
-
   pendingPenaltyRosterIndex=index;
+  cancelPenaltyEligibilityEditor();
   renderPenaltyRosterPicker();
   syncVisualViewport();
   byId('penaltyRosterModal').classList.add('open');
 }
-
 function closePenaltyRosterPicker(){
+  cancelPenaltyEligibilityEditor();
   byId('penaltyRosterModal').classList.remove('open');
   pendingPenaltyRosterIndex=null;
 }
-
 function renderPenaltyRosterPicker(){
   const grid=byId('penaltyRosterGrid');
   if(!grid) return;
-
-  const roster=currentRosterNumbers();
-  const kick=(
-    pendingPenaltyRosterIndex!==null
-      ? state.penalty?.our?.[pendingPenaltyRosterIndex]
-      : null
-  );
+  const kick=pendingPenaltyRosterIndex!==null?state.penalty?.our?.[pendingPenaltyRosterIndex]:null;
   const selected=String(kick?.number||'');
-
+  const eligible=penaltyEligibleOurNumbers();
+  const ctx=penaltyCycleContext(pendingPenaltyRosterIndex??0,eligible);
   const ourName=state.ourTeam||'我方';
   const hint=byId('penaltyRosterHint');
   if(hint){
-    hint.textContent=`${ourName}｜第 ${(pendingPenaltyRosterIndex??0)+1} 輪：點一下本場球員背號即可帶入。`;
+    hint.textContent=`${ourName}｜第 ${(pendingPenaltyRosterIndex??0)+1} 球・第 ${ctx.cycle} 循環：已選 ${ctx.used.size}/${eligible.length} 人。灰色背號本循環不可重複選擇。`;
   }
-
+  const summary=byId('penaltyEligibilitySummary');
+  if(summary){
+    const custom=Array.isArray(state.penalty?.eligibleOurNumbers);
+    summary.textContent=`PK 合格球員：${custom?'指定':'本場全部'} ${eligible.length} 人`;
+  }
   grid.innerHTML='';
-  const redOut=redCardedPlayerNumbers('OUR');
-  const eligibleRoster=roster.filter(n=>!redOut.has(String(n)));
-  if(!eligibleRoster.length && roster.length){
-    grid.innerHTML='<div class="rosterEmpty" style="grid-column:1/-1">本場名單球員皆無可用背號（紅牌退場球員不可參與 PK）。</div>';
+  if(!eligible.length){
+    grid.innerHTML='<div class="rosterEmpty" style="grid-column:1/-1">目前沒有合格球員，請先調整 PK 合格名單或確認紅牌退場紀錄。</div>';
     return;
   }
-  eligibleRoster.forEach(n=>{
+  eligible.forEach(n=>{
+    const used=ctx.used.has(String(n));
     const btn=document.createElement('button');
     btn.type='button';
-    btn.className=`penaltyRosterBtn${selected===String(n)?' selected':''}`;
-    btn.textContent=`#${n}`;
+    btn.className=`penaltyRosterBtn${selected===String(n)?' selected':''}${used?' pkUsed':''}`;
+    btn.disabled=used;
     btn.setAttribute('aria-pressed',selected===String(n)?'true':'false');
+    btn.setAttribute('aria-label',`#${n}${used?'，本循環已選，不可重複':'，可選'}`);
+    const label=document.createElement('span');label.textContent=`#${n}`;btn.appendChild(label);
+    if(used){const note=document.createElement('span');note.className='pkUsedNote';note.textContent='本輪已選';btn.appendChild(note);}
     btn.onclick=()=>choosePenaltyRosterNumber(n);
     grid.appendChild(btn);
   });
 }
-
 function choosePenaltyRosterNumber(number){
   const index=pendingPenaltyRosterIndex;
   const n=Number(number);
-
-  if(
-    index===null ||
-    !state.penalty?.our?.[index] ||
-    !Number.isInteger(n) ||
-    n<1 ||
-    n>99
-  ) return;
-
+  if(index===null || !state.penalty?.our?.[index] || !Number.isInteger(n) || n<1 || n>99) return;
+  const eligible=penaltyEligibleOurNumbers();
+  if(!eligible.includes(n) || penaltyCycleContext(index,eligible).used.has(String(n))){
+    renderPenaltyRosterPicker();
+    return;
+  }
   state.penalty.our[index].number=String(n);
   saveState();
   closePenaltyRosterPicker();
   renderPenaltyModal();
 }
-
 function clearPenaltyRosterNumber(){
   const index=pendingPenaltyRosterIndex;
   if(index===null || !state.penalty?.our?.[index]) return;
-
   state.penalty.our[index].number='';
   saveState();
   closePenaltyRosterPicker();
   renderPenaltyModal();
 }
+function openPenaltyEligibilityEditor(){
+  penaltyEligibilityDraftAll=!Array.isArray(state.penalty?.eligibleOurNumbers);
+  penaltyEligibilityDraft=new Set(penaltyEligibleOurNumbers());
+  const panel=byId('penaltyRosterModal')?.querySelector('.penaltyRosterPicker');
+  if(panel) panel.classList.add('pkEligibilityEditing');
+  byId('penaltyRosterPickerTitle').textContent='設定 PK 合格球員';
+  byId('penaltyEligibilityEditor').hidden=false;
+  renderPenaltyEligibilityEditor();
+}
+function cancelPenaltyEligibilityEditor(){
+  penaltyEligibilityDraft=null;
+  penaltyEligibilityDraftAll=true;
+  const panel=byId('penaltyRosterModal')?.querySelector('.penaltyRosterPicker');
+  if(panel) panel.classList.remove('pkEligibilityEditing');
+  byId('penaltyRosterPickerTitle').textContent='選擇 PK 球員背號';
+  const editor=byId('penaltyEligibilityEditor');
+  if(editor) editor.hidden=true;
+}
+function renderPenaltyEligibilityEditor(){
+  const grid=byId('penaltyEligibilityGrid');
+  if(!grid) return;
+  grid.innerHTML='';
+  const draft=penaltyEligibilityDraft||new Set();
+  penaltyAvailableRoster().forEach(n=>{
+    const active=draft.has(n);
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className=`penaltyEligibilityBtn${active?' isEligible':''}`;
+    btn.textContent=`${active?'✓ ':''}#${n}`;
+    btn.setAttribute('aria-pressed',active?'true':'false');
+    btn.onclick=()=>{
+      penaltyEligibilityDraftAll=false;
+      if(draft.has(n))draft.delete(n);else draft.add(n);
+      renderPenaltyEligibilityEditor();
+    };
+    grid.appendChild(btn);
+  });
+}
+function chooseAllPenaltyEligible(){
+  penaltyEligibilityDraftAll=true;
+  penaltyEligibilityDraft=new Set(penaltyAvailableRoster());
+  renderPenaltyEligibilityEditor();
+}
+function applyPenaltyEligibility(){
+  const all=penaltyAvailableRoster();
+  const chosen=all.filter(n=>penaltyEligibilityDraft?.has(n));
+  if(!chosen.length){alert('請至少選擇一位具有 PK 資格的球員。');return;}
+  const allowed=new Set(chosen.map(String));
+  const excludedIndex=(state.penalty?.our||[]).findIndex(k=>k.number && !allowed.has(String(Number(k.number))));
+  if(excludedIndex>=0){
+    alert(`第 ${excludedIndex+1} 球已有指定背號，若要移除該球員資格，請先返回該輪清除或修正背號。`);
+    return;
+  }
+  state.penalty.eligibleOurNumbers=penaltyEligibilityDraftAll?null:chosen;
+  saveState();
+  cancelPenaltyEligibilityEditor();
+  renderPenaltyRosterPicker();
+  renderPenaltyModal();
+}
 
 function emptyPenaltyKick(){ return {number:'',result:null}; }
 function ensurePenaltyState(){
-  if(!state.penalty) state.penalty={active:true,completed:false,startEpoch:nowWholeMs(),endEpoch:null,our:[],opp:[],baseOurScore:state.ourScore,baseOppScore:state.oppScore};
+  if(!state.penalty) state.penalty={active:true,completed:false,startEpoch:nowWholeMs(),endEpoch:null,our:[],opp:[],eligibleOurNumbers:null,baseOurScore:state.ourScore,baseOppScore:state.oppScore};
+  if(!Array.isArray(state.penalty.eligibleOurNumbers)) state.penalty.eligibleOurNumbers=null;
   if(!Number.isFinite(Number(state.penalty.baseOurScore))) state.penalty.baseOurScore=state.ourScore;
   if(!Number.isFinite(Number(state.penalty.baseOppScore))) state.penalty.baseOppScore=state.oppScore;
   while(state.penalty.our.length<5) state.penalty.our.push(emptyPenaltyKick());
@@ -32913,10 +33063,23 @@ function renderPenaltyModal(){
     html+=`<div class="penaltyRound"><div class="penaltyRoundNo">${i+1}</div>${card('our',ok)}${card('opp',op)}</div>`;
   }
   byId('penaltyRounds').innerHTML=html;
+  const conflicts=penaltyCycleConflicts();
+  const warning=byId('penaltyCycleWarning');
+  if(warning){
+    warning.textContent=conflicts.length
+      ? `⚠ 第 ${conflicts.map(i=>i+1).join('、')} 球背號與目前 PK 合格名單／輪替規則衝突，請點選該輪重新指定。`
+      : '';
+  }
+  conflicts.forEach(i=>byId(`pk_our_${i}`)?.classList.add('pkCycleConflict'));
 }
 function finishPenaltyShootout(){
   savePenaltyInputs();
   ensurePenaltyState();
+  if(penaltyCycleConflicts().length){
+    alert('有 PK 球員重複或不符合合格名單，請先修正標示的輪次。');
+    renderPenaltyModal();
+    return;
+  }
   const ourTaken=state.penalty.our.filter(k=>k.result).length;
   const oppTaken=state.penalty.opp.filter(k=>k.result).length;
   const our=penaltyGoals('our'), opp=penaltyGoals('opp');
@@ -37095,6 +37258,9 @@ function shareSummaryText(){
   const dayMatchLabel=formatDayMatchLabel(state.dayMatchNumber);
   const stage=String(state.competitionStage||'').trim();
   const competition=String(state.competition||'').trim();
+  // v6.197：分享文字直接沿用本場比賽場地；未設定時不顯示空白欄位。
+  const venue=String(state.venue||'').trim();
+  const venueLine=venue?`🏟️ ${venue}`:'';
   // v6.194：只在選擇了賽事階段時附上「賽事｜冠軍賽」；不增加空白訊息行。
   const stageLine=stage?`🏆 ${[competition,stage].filter(Boolean).join('｜')}`:'';
   let penaltyLine='';
@@ -37106,6 +37272,7 @@ function shareSummaryText(){
   return [
     `⚽ ${our} ${state.ourScore}：${state.oppScore} ${opp}`,
     stageLine,
+    venueLine,
     `📅 ${shareSummaryShortDate(start)}（${shareSummaryWeekday(start)}）${dayMatchLabel?`｜${dayMatchLabel}`:''}`,
     penaltyLine
   ].filter(Boolean).join('\n');
