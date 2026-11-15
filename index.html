@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.197</title>
+<title>足球場邊記錄器 v6.198</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27978,7 +27978,7 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.197</span>
+      <span class="headerVersion">v6.198</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -37258,24 +37258,25 @@ function shareSummaryText(){
   const dayMatchLabel=formatDayMatchLabel(state.dayMatchNumber);
   const stage=String(state.competitionStage||'').trim();
   const competition=String(state.competition||'').trim();
-  // v6.197：分享文字直接沿用本場比賽場地；未設定時不顯示空白欄位。
   const venue=String(state.venue||'').trim();
-  const venueLine=venue?`🏟️ ${venue}`:'';
-  // v6.194：只在選擇了賽事階段時附上「賽事｜冠軍賽」；不增加空白訊息行。
-  const stageLine=stage?`🏆 ${[competition,stage].filter(Boolean).join('｜')}`:'';
+  // v6.198：一行依「比分｜賽事・階段｜日期・場次｜場地」排序，缺項自動略過。
+  const eventLabel=[competition,stage].filter(Boolean).join('・');
+  const dateLabel=`${new Date(start).getFullYear()}/${shareSummaryShortDate(start)}（${shareSummaryWeekday(start)}）`;
+  const dateAndMatch=[dateLabel,dayMatchLabel].filter(Boolean).join('・');
+  const summaryLine=[
+    `⚽ ${our} ${state.ourScore}：${state.oppScore} ${opp}`,
+    eventLabel,
+    dateAndMatch,
+    venue
+  ].filter(Boolean).join('｜');
+  // 已完成的 PK 比分仍以獨立補充行呈現，避免單行主摘要過長。
   let penaltyLine='';
   if(state.penalty?.completed){
     const pOur=penaltyGoals('our'),pOpp=penaltyGoals('opp');
     const winner=pOur>pOpp?our:pOpp>pOur?opp:'';
     penaltyLine=`🥅 PK ${pOur}：${pOpp}${winner?`｜${winner} 勝`:''}`;
   }
-  return [
-    `⚽ ${our} ${state.ourScore}：${state.oppScore} ${opp}`,
-    stageLine,
-    venueLine,
-    `📅 ${shareSummaryShortDate(start)}（${shareSummaryWeekday(start)}）${dayMatchLabel?`｜${dayMatchLabel}`:''}`,
-    penaltyLine
-  ].filter(Boolean).join('\n');
+  return [summaryLine,penaltyLine].filter(Boolean).join('\n');
 }
 
 async function shareImageFile(mode='share',variant='detailed'){
