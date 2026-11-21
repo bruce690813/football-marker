@@ -1,3 +1,28 @@
+# v6.202｜發布前檢查：冰川藍白詳細摘要分享圖片（2026-11-21）
+
+## 原始程式與版本保護
+- [x] 正式 `football_marker_v6_51.zip` 為原始設計／功能基準；不採用已作廢的 v6.52、v6.53。
+- [x] 直接以完整 `football_marker_v6_201.zip` 為累加版本，不移除後續既有功能。
+- [x] 修改僅限 `makeReportCanvas()` 色彩、其專用 `lightPeriodTonePalette()` 及兩處版本標示。
+- [x] `reportCanvasLayout()`、`reportLines()`、`buildReportImageFile()`、`makeVisualSummaryCanvas()`、HTML/CSS、賽事、計時、PK、事件編輯、追蹤、CSV 等其他程式部分與 v6.201 完全相同。
+- [x] 未新增遠端連線、第三方套件、資料外傳、儲存鍵或權限。
+
+## 已執行的測試
+- [x] `index.html` 四段內嵌 JS `node --check` 全部通過。
+- [x] Chromium 載入完整 HTML，未出現 JavaScript `pageerror`。
+- [x] 七種摘要資料：雙欄／單欄／無事件／長隊名／大量事件／烏龍球／完成 PK，均能輸出 PNG。
+- [x] 與 v6.201 比對：七個案例的畫布大小、區塊種類、單／雙欄判定與雙欄事件數完全相同。
+- [x] `buildReportImageFile()` 產出非空 `image/png` File。
+- [x] 雙欄正式輸出與先前冰川藍白實際 Canvas 測試圖逐像素相同。
+- [x] 程式差異檢查：除分享圖片色彩及兩處版本顯示之外，其他 HTML、CSS、JS 完全一致。
+- [x] ZIP 僅含三個指定檔案，CRC 驗證通過。
+
+## 尚待驗證（不宣稱通過）
+- [ ] iPhone Safari／LINE 實機分享與儲存至相簿，包含 iOS 字型與 Emoji 呈現。
+- [ ] 完整賽前 → 上下半場／延長賽／PK → 摘要／圖片／CSV 等端到端互動流程。
+
+---
+
 # v6.201｜安全與發佈檢查（2026-11-21）
 
 ## 原始程式保護與變更範圍

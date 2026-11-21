@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.201</title>
+<title>足球場邊記錄器 v6.203</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27996,7 +27996,7 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.201</span>
+      <span class="headerVersion">v6.203</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -29218,9 +29218,10 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
 #reportModal #reportStatGoal{color:#ffd95e}
 #reportModal .reportEventStatsCell small{font-size:10px;color:#a8bfd4}
 #reportModal .reportScoreRow{position:relative}
-#reportModal .reportWinnerStamp{position:absolute;bottom:1px;width:31px;height:31px;display:none;align-items:center;justify-content:center;border:2px solid #f43f53;background:#fff4f3;color:#c61e37;font-size:16px;font-weight:950;border-radius:50%;z-index:2;pointer-events:none}
-#reportModal .reportWinnerStamp.our{left:31%}
-#reportModal .reportWinnerStamp.opp{right:31%}
+/* v6.203：勝方章改以比分中心為基準定位，避免長隊名時與隊名過近。 */
+#reportModal .reportWinnerStamp{position:absolute;bottom:1px;width:31px;height:31px;display:none;align-items:center;justify-content:center;border:2px solid #f43f53;background:#fff4f3;color:#c61e37;font-size:16px;font-weight:950;border-radius:50%;z-index:2;pointer-events:none;transform:translateX(-50%)}
+#reportModal .reportWinnerStamp.our{left:calc(50% - 118px)}
+#reportModal .reportWinnerStamp.opp{left:calc(50% + 118px)}
 #reportModal .reportWinnerStamp.show{display:flex}
 @media(max-width:390px){#reportModal .reportEventStatsCell>span{font-size:11px}#reportModal .reportEventStatsCell strong{font-size:21px}}
 </style>
@@ -36656,6 +36657,12 @@ function reportCanvasLayout(lines,ctx){
   return {width,pad,content,height:Math.ceil(top+80),blocks:laidOut};
 }
 
+function lightPeriodTonePalette(label='',number=0){
+  const tone=normalizedPeriodTone(label,number);
+  if(tone==='first') return {fill:'#EAF2FC',stroke:'#DCA615',cardStroke:'#D3E2F0',title:'#815D00',label:'#60748A',value:'#173653'};
+  if(tone==='second') return {fill:'#EAF2FC',stroke:'#E78231',cardStroke:'#D3E2F0',title:'#A65015',label:'#60748A',value:'#173653'};
+  return {fill:'#EEF5FB',stroke:'#9AB8D0',cardStroke:'#D4E1ED',title:'#125E92',label:'#60748A',value:'#173653'};
+}
 function makeReportCanvas(lines=reportLines(),resolution=1){
   const measure=document.createElement('canvas');measure.width=1;measure.height=1;
   const mctx=measure.getContext('2d');
@@ -36670,7 +36677,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
   if(!ctx){canvas.width=canvas.height=1;throw new Error('無法繪製圖片');}
   ctx.scale(canvas.width/W,canvas.height/H);
   const font=(size,weight=500)=>`${weight} ${size}px -apple-system, BlinkMacSystemFont, sans-serif`;
-  const text=(value,x,y,size=24,color='#b9c9d9',weight=500)=>{
+  const text=(value,x,y,size=24,color='#5F7389',weight=500)=>{
     ctx.font=font(size,weight);ctx.fillStyle=color;ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText(String(value),x,y);
   };
   const emojiText=(value,x,y,size=26)=>{
@@ -36683,38 +36690,40 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
     ctx.fillText(String(value),x,y+(ascent-descent)/2);
   };
   const teamName=(value,cx,cy)=>{
-    ctx.fillStyle='#f3f7fc';
+    ctx.fillStyle='#142B48';
     // v5.147：比分圖片的隊名優先單行顯示；必要時自動縮字，真的過長才拆兩行。
     drawTeamNameTwoLines(ctx,value,cx,cy,300,38,26);
   };
-  ctx.fillStyle='#0b1220';ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='#111b26';roundRect(ctx,32,26,W-64,H-52,16,true,false);
-  ctx.fillStyle='#1f6feb';ctx.fillRect(32,26,W-64,8);
+  ctx.fillStyle='#E7F0FA';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#F8FBFF';roundRect(ctx,32,26,W-64,H-52,16,true,false);
+  ctx.fillStyle='#286FE6';ctx.fillRect(32,26,W-64,8);
   blocks.forEach((b,index)=>{
     const y=b.y;
     if(b.type==='title'){
-      emojiText('⚽',pad,y+3,32);text(b.text,pad+44,y,40,'#f7fafc',800);
+      emojiText('⚽',pad,y+3,32);text(b.text,pad+44,y,40,'#102D50',800);
     }else if(b.type==='score'){
-      ctx.fillStyle='#0c1724';roundRect(ctx,pad,y,content,138,18,true,false);
-      ctx.strokeStyle=b.status==='比賽結束'?'#ff4f5f':'#30465b';ctx.lineWidth=b.status==='比賽結束'?4:2;roundRect(ctx,pad,y,content,138,18,false,true);
-      ctx.fillStyle='#0b1420';roundRect(ctx,W/2-146,y+24,292,94,14,true,false);
+      ctx.fillStyle='#FFFFFF';roundRect(ctx,pad,y,content,138,18,true,false);
+      ctx.strokeStyle=b.status==='比賽結束'?'#ff4f5f':'#B9CDDE';ctx.lineWidth=b.status==='比賽結束'?4:2;roundRect(ctx,pad,y,content,138,18,false,true);
+      ctx.fillStyle='#102D50';roundRect(ctx,W/2-146,y+24,292,94,14,true,false);
       ctx.fillStyle=b.status==='比賽結束'?'#ff4f5f':'#235e7b';roundRect(ctx,W/2-84,y+3,168,28,14,true,false);
-      centered(b.status,W/2,y+17,18,'#f7fafc',700);
+      centered(b.status,W/2,y+17,18,'#FFFFFF',700);
       teamName(b.left,pad+162,y+72);teamName(b.right,W-pad-162,y+72);
-      centered(b.score,W/2,y+76,72,'#ffffff');
+      centered(b.score,W/2,y+76,72,'#FFFFFF');
       const win=reportWinningSide();
       if(win){
-        const sx=win==='OUR'?pad+300:W-pad-300, sy=y+88;
-        ctx.fillStyle='#fff5f3';ctx.strokeStyle='#f43f53';ctx.lineWidth=4;
+        // v6.203：勝方章貼近比分區中央，與較長隊名保留更穩定的安全距離。
+        const winnerOffsetX=120;
+        const sx=W/2+(win==='OUR'?-winnerOffsetX:winnerOffsetX), sy=y+88;
+        ctx.fillStyle='#FFF7F7';ctx.strokeStyle='#F43F53';ctx.lineWidth=4;
         ctx.beginPath();ctx.arc(sx,sy,28,0,Math.PI*2);ctx.fill();ctx.stroke();
-        centered('勝',sx,sy,34,'#c51e36',950);
+        centered('勝',sx,sy,34,'#B51D36',950);
       }
 
     }else if(b.type==='eventStats'){
       // v6.157：詳細版統計四圖示固定同一條中心線；進球比分與小字分層排版。
       // 不再把顏色 Emoji 與中文字交由同一個 font/baseline 繪製。
-      ctx.fillStyle='#122538';roundRect(ctx,pad,y+2,content,166,12,true,false);
-      text('本場事件統計',pad+16,y+9,30,'#eff7ff',850);
+      ctx.fillStyle='#E9F2FB';roundRect(ctx,pad,y+2,content,166,12,true,false);
+      text('本場事件統計',pad+16,y+9,30,'#102D50',850);
       const width=content/4;
       // 以透明像素邊界置中各 Emoji，避免足球、球門、手套、盾牌的字型留白不同造成高低差。
       const statEmoji=(symbol,cx,cy)=>{
@@ -36737,17 +36746,17 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       };
       b.items.forEach((item,i)=>{
         const cx=pad+(i+.5)*width;
-        if(i){const x=pad+i*width;ctx.save();ctx.strokeStyle='#30465a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,y+48);ctx.lineTo(x,y+158);ctx.stroke();ctx.restore();}
+        if(i){const x=pad+i*width;ctx.save();ctx.strokeStyle='#C0D3E5';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,y+48);ctx.lineTo(x,y+158);ctx.stroke();ctx.restore();}
         ctx.save();
         ctx.textAlign='center';ctx.textBaseline='middle';
         statEmoji(item.icon,cx-33,y+69);
-        ctx.font=font(23,800);ctx.fillStyle='#dce9f6';
+        ctx.font=font(23,800);ctx.fillStyle='#153A5E';
         ctx.fillText(item.label,cx+13,y+69);
         ctx.font=font(i===0?45:49,900);
-        ctx.fillStyle=i===0?'#ffda66':'#eef6ff';
+        ctx.fillStyle=i===0?'#102D50':'#142E50';
         ctx.fillText(item.value,cx,y+114,width-28);
         if(item.hint){
-          ctx.font=font(17,700);ctx.fillStyle='#b5cade';
+          ctx.font=font(17,700);ctx.fillStyle='#597087';
           ctx.fillText(item.hint,cx,y+147,width-28);
         }
         ctx.restore();
@@ -36756,10 +36765,10 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       let rowY=y+2;
       b.rows.forEach(row=>{
         if(row.summaryCard){
-          ctx.fillStyle='#162535';roundRect(ctx,pad,rowY,content,row.height,10,true,false);
+          ctx.fillStyle='#E8F1FB';roundRect(ctx,pad,rowY,content,row.height,10,true,false);
           if(row.iconType==='jersey') drawReportJerseyIcon(ctx,pad+18,rowY+14,28);
           else emojiText(row.icon,pad+18,rowY+14,28);
-          row.rows.forEach((value,j)=>text(value,pad+62,rowY+12+j*34,28,'#c8d6e4',700));
+          row.rows.forEach((value,j)=>text(value,pad+62,rowY+12+j*34,28,'#173250',700));
           rowY+=row.height+8;
         }
       });
@@ -36768,7 +36777,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       const gap=12;
       const topY=y+2;
       const cellH=84;
-      const smallLabel=(str,x,ty)=>text(str,x+padX,ty+8,18,'#7dd3fc',800);
+      const smallLabel=(str,x,ty)=>text(str,x+padX,ty+8,18,'#1267A7',800);
       const fittedValue=(str,x,ty,maxWidth,baseSize,color,weight=800)=>{
         const value=String(str||'');
         let size=baseSize;
@@ -36783,22 +36792,22 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         ctx.font=font(size,700);
         const measured=ctx.measureText(value).width;
         if(measured>maxWidth) size=Math.max(13,Math.floor(size*maxWidth/measured));
-        text(value,x+padX,ty+60,size,'#d7e2ef',700);
+        text(value,x+padX,ty+60,size,'#60728C',700);
       };
       if(b.halftime!==null){
         const w=(content-gap)/2;
-        ctx.fillStyle='#162535';roundRect(ctx,pad,topY,w,cellH,10,true,false);
-        ctx.fillStyle='#162535';roundRect(ctx,pad+w+gap,topY,w,cellH,10,true,false);
+        ctx.fillStyle='#E8F1FB';roundRect(ctx,pad,topY,w,cellH,10,true,false);
+        ctx.fillStyle='#E8F1FB';roundRect(ctx,pad+w+gap,topY,w,cellH,10,true,false);
         smallLabel('實際比賽時間',pad,topY);
-        fittedValue(b.actual,pad,topY,w-padX*2,30,'#eef5fc',900);
+        fittedValue(b.actual,pad,topY,w-padX*2,30,'#193753',900);
         fittedSub(b.actualRange,pad,topY,w-padX*2);
         smallLabel('中場休息',pad+w+gap,topY);
-        fittedValue(b.halftime,pad+w+gap,topY,w-padX*2,28,'#eef5fc',850);
+        fittedValue(b.halftime,pad+w+gap,topY,w-padX*2,28,'#193753',850);
         fittedSub(b.halftimeRange,pad+w+gap,topY,w-padX*2);
       }else{
-        ctx.fillStyle='#162535';roundRect(ctx,pad,topY,content,cellH,10,true,false);
+        ctx.fillStyle='#E8F1FB';roundRect(ctx,pad,topY,content,cellH,10,true,false);
         smallLabel('實際比賽時間',pad,topY);
-        fittedValue(b.actual,pad,topY,content-padX*2,30,'#eef5fc',900);
+        fittedValue(b.actual,pad,topY,content-padX*2,30,'#193753',900);
         fittedSub(b.actualRange,pad,topY,content-padX*2);
       }
     }else if(b.type==='timeGrid'){
@@ -36807,62 +36816,62 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         const cellW=(content-12)/2;
         row.cells.forEach((cell,i)=>{
           const x=pad+i*(cellW+12);
-          ctx.fillStyle='#162535';roundRect(ctx,x,rowY,cellW,row.height,10,true,false);
-          text(cell.label,x+14,rowY+10,19,'#7dd3fc',800);
-          cell.valueRows.forEach((value,j)=>text(value,x+14,rowY+36+j*(cell.primary?36:30),cell.primary?31:24,cell.primary?'#38bdf8':'#eef5fc',cell.primary?900:750));
+          ctx.fillStyle='#E8F1FB';roundRect(ctx,x,rowY,cellW,row.height,10,true,false);
+          text(cell.label,x+14,rowY+10,19,'#1267A7',800);
+          cell.valueRows.forEach((value,j)=>text(value,x+14,rowY+36+j*(cell.primary?36:30),cell.primary?31:24,cell.primary?'#116BAA':'#193753',cell.primary?900:750));
         });
         rowY+=row.height+8;
       });
     }else if(b.type==='periodGrid'){
       const timeX=pad+content*.66;
       const scoreX=pad+content-85;
-      text('段落',pad+12,y+4,18,'#8da7ba',750);
-      text('用時',timeX,y+4,18,'#8da7ba',750);
-      text('本段比分',scoreX,y+4,18,'#8da7ba',750);
+      text('段落',pad+12,y+4,18,'#667A91',750);
+      text('用時',timeX,y+4,18,'#667A91',750);
+      text('本段比分',scoreX,y+4,18,'#667A91',750);
       b.items.forEach((p,i)=>{
         const top=y+34+i*62;
-        const palette=periodTonePalette(p.label,p.number);
+        const palette=lightPeriodTonePalette(p.label,p.number);
         ctx.fillStyle=palette.fill;roundRect(ctx,pad,top,content,56,8,true,false);
         ctx.strokeStyle=palette.cardStroke||palette.stroke;ctx.lineWidth=1.5;roundRect(ctx,pad,top,content,56,8,false,true);
         if(normalizedPeriodTone(p.label,p.number)!=='default'){
           ctx.fillStyle=palette.stroke;roundRect(ctx,pad+1,top+7,4,42,2,true,false);
         }
         text(p.label,pad+12,top+12,25,palette.title,850);
-        text(p.duration,timeX,top+13,24,'#d7e2ef',700);
+        text(p.duration,timeX,top+13,24,'#60728C',700);
         text(p.score,scoreX,top+11,27,palette.value,850);
       });
     }else if(b.type==='mvpCard'){
       const topScorer=b.kind==='topScorer';
-      ctx.fillStyle=topScorer?'#193d52':'#29412e';roundRect(ctx,pad,y,content,b.height-6,12,true,false);
+      ctx.fillStyle=topScorer?'#DCEEFF':'#E9F4DE';roundRect(ctx,pad,y,content,b.height-6,12,true,false);
       ctx.strokeStyle=topScorer?'rgba(56,189,248,.46)':'rgba(250,204,21,.46)';ctx.lineWidth=2;roundRect(ctx,pad,y,content,b.height-6,12,false,true);
-      b.titleRows.forEach((value,j)=>text(value,pad+16,y+9+j*33,28,topScorer?'#7dd3fc':'#ffd84d',900));
-      b.nameRows.forEach((value,j)=>text(value,pad+16,y+10+b.titleRows.length*33+j*30,26,'#f7fbff',800));
+      b.titleRows.forEach((value,j)=>text(value,pad+16,y+9+j*33,28,topScorer?'#1267A7':'#906000',900));
+      b.nameRows.forEach((value,j)=>text(value,pad+16,y+10+b.titleRows.length*33+j*30,26,'#193753',800));
     }else if(b.type==='scorerGrid'){
-      text('球員進球統計',pad+8,y+4,30,'#ffffff',800);let rowY=y+42;
+      text('球員進球統計',pad+8,y+4,30,'#102D50',800);let rowY=y+42;
       b.rows.forEach(row=>{
         const cellW=(content-24)/3;
         row.cells.forEach((cell,i)=>{
           const x=pad+i*(cellW+12);
-          ctx.fillStyle='#182837';roundRect(ctx,x,rowY,cellW,row.height-6,8,true,false);
-          cell.forEach((value,j)=>text(value,x+12,rowY+7+j*32,24,'#eaf3fc',700));
+          ctx.fillStyle='#EDF4FC';roundRect(ctx,x,rowY,cellW,row.height-6,8,true,false);
+          cell.forEach((value,j)=>text(value,x+12,rowY+7+j*32,24,'#172F4E',700));
         });rowY+=row.height;
       });
     }else if(b.type==='timelineHeading'){
-      text(b.text,pad+8,y+8,30,'#ffffff',800);
-      ctx.fillStyle='#f9a8c6';ctx.beginPath();ctx.arc(pad+16,y+57,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+44,23,'#f9a8c6',700);
-      ctx.fillStyle='#59c8f1';ctx.beginPath();ctx.arc(pad+120,y+57,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+44,23,'#59c8f1',700);
+      text(b.text,pad+8,y+8,30,'#102D50',800);
+      ctx.fillStyle='#D63E7B';ctx.beginPath();ctx.arc(pad+16,y+57,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+44,23,'#D63E7B',700);
+      ctx.fillStyle='#087EB5';ctx.beginPath();ctx.arc(pad+120,y+57,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+44,23,'#087EB5',700);
     }else if(b.type==='timelineDualRow'){
       // v6.100：上半場在左、下半場在右；延長賽依時間順序成對排列。
       // 所有座標僅影響圖片 Canvas，不改畫面摘要或事件操作。
       b.columns.forEach((column,i)=>{
         const x=pad+i*(b.colWidth+b.gap);
-        const tone=periodTonePalette(column.phase.text,column.phase.period);
+        const tone=lightPeriodTonePalette(column.phase.text,column.phase.period);
         const isHalf=normalizedPeriodTone(column.phase.text,column.phase.period)!=='default';
         const headY=y+3;
-        ctx.fillStyle='#172838';roundRect(ctx,x,headY,b.colWidth,42,9,true,false);
+        ctx.fillStyle='#E8F1FB';roundRect(ctx,x,headY,b.colWidth,42,9,true,false);
         if(isHalf){ctx.fillStyle=tone.stroke;roundRect(ctx,x+9,headY+8,4,26,2,true,false);}
         const titleX=x+(isHalf?21:12);
-        text(column.phase.text,titleX,headY+9,22,isHalf?tone.title:'#dbe8f4',850);
+        text(column.phase.text,titleX,headY+9,22,isHalf?tone.title:'#153452',850);
         let meta='';
         if(column.phase.duration) meta+=`本段時間 ${column.phase.duration}`;
         if(column.phase.score) meta+=`${meta?'  ｜  ':''}本段比分 ${column.phase.score}`;
@@ -36875,22 +36884,22 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
           ctx.font=font(metaFont,700);
           const measured=ctx.measureText(meta).width;
           metaFont=Math.max(10,Math.min(15,Math.floor(metaFont*available/Math.max(measured,1))));
-          text(meta,metaX,headY+12,metaFont,'#b9cde0',700);
+          text(meta,metaX,headY+12,metaFont,'#61758C',700);
         }
         let rowY=y+50;
         column.events.forEach((ev,j)=>{
           const goal=ev.event==='GOAL';
           const dotX=x+80, actorX=x+99;
-          if(goal){ctx.fillStyle='#192D3D';roundRect(ctx,x,rowY,b.colWidth,ev.height-4,7,true,false);}
+          if(goal){ctx.fillStyle='#E8F1FB';roundRect(ctx,x,rowY,b.colWidth,ev.height-4,7,true,false);}
           if(j<column.events.length-1){
-            ctx.strokeStyle='#30465b';ctx.lineWidth=2;
+            ctx.strokeStyle='#B9CDDE';ctx.lineWidth=2;
             ctx.beginPath();ctx.moveTo(dotX,rowY+23);ctx.lineTo(dotX,rowY+ev.height+23);ctx.stroke();
           }
-          ctx.fillStyle=ev.toneTeam==='OUR'?'#f9a8c6':ev.toneTeam==='OPP'?'#59c8f1':'#aeb9c5';
+          ctx.fillStyle=ev.toneTeam==='OUR'?'#D63E7B':ev.toneTeam==='OPP'?'#087EB5':'#7F91A4';
           ctx.beginPath();ctx.arc(dotX,rowY+23,5,0,Math.PI*2);ctx.fill();
-          text(ev.time,x+10,rowY+11,20,'#b9c9d9',650);
+          text(ev.time,x+10,rowY+11,20,'#5F7389',650);
           if(ev.event==='YELLOW_CARD'||ev.event==='RED_CARD'){
-            ctx.fillStyle=ev.event==='YELLOW_CARD'?'#ffd429':'#ff2a1c';
+            ctx.fillStyle=ev.event==='YELLOW_CARD'?'#E9B600':'#E22C2A';
             roundRect(ctx,actorX,rowY+13,13,22,2,true,false);
           }else emojiText(emoji(ev.event),actorX,rowY+9,22);
           if(goal){
@@ -36900,24 +36909,24 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
             const ratio=Math.min(1,maxWidth/Math.max(measured,1));
             // 與 reportSmartTimelineColumns 的 84% 可讀性門檻相同。
             ctx.save();ctx.translate(start,rowY+8);ctx.scale(ratio,1);
-            text(label,0,0,22,'#edf5fc',800);ctx.restore();
-            const tagColor=ev.toneTeam==='OUR'?'#f9a8c6':ev.toneTeam==='OPP'?'#59c8f1':'#aeb9c5';
-            ctx.fillStyle='#192b3b';ctx.strokeStyle=tagColor;ctx.lineWidth=1;
+            text(label,0,0,22,'#1B3554',800);ctx.restore();
+            const tagColor=ev.toneTeam==='OUR'?'#D63E7B':ev.toneTeam==='OPP'?'#087EB5':'#7F91A4';
+            ctx.fillStyle='#F7FBFF';ctx.strokeStyle=tagColor;ctx.lineWidth=1;
             roundRect(ctx,x+b.colWidth-128,rowY+11,49,25,5,true,true);
             text('GOAL',x+b.colWidth-123,rowY+14,16,tagColor,900);
-          }else ev.compactRows.forEach((line,k)=>text(line,actorX+28,rowY+8+k*29,22,'#edf5fc',700));
+          }else ev.compactRows.forEach((line,k)=>text(line,actorX+28,rowY+8+k*29,22,'#1B3554',700));
           if(goal){
-            ctx.font=font(23,900);ctx.fillStyle='#ffd84d';ctx.textAlign='right';ctx.textBaseline='top';
+            ctx.font=font(23,900);ctx.fillStyle='#906000';ctx.textAlign='right';ctx.textBaseline='top';
             ctx.fillText(String(ev.score||''),x+b.colWidth-10,rowY+10);
           }
           rowY+=ev.height;
         });
       });
     }else if(b.type==='timelinePhase'){
-      const tone=periodTonePalette(b.text,b.period);
+      const tone=lightPeriodTonePalette(b.text,b.period);
       const isHalf=normalizedPeriodTone(b.text,b.period)!=='default';
       if(isHalf){ctx.fillStyle=tone.stroke;roundRect(ctx,pad+8,y+8,6,30,2,true,false);}
-      text(b.text,pad+(isHalf?24:8),y+10,25,isHalf?tone.title:'#b3c3d3',800);
+      text(b.text,pad+(isHalf?24:8),y+10,25,isHalf?tone.title:'#5B7087',800);
       // v6.105：單欄圖片的時間與比分亦採同列標籤＋數值。
       const metaItems=[];
       if(b.duration) metaItems.push(['本段時間',b.duration]);
@@ -36928,22 +36937,22 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         ctx.font=font(19,900); const valueW=ctx.measureText(value).width;
         ctx.font=font(14,800); const labelW=ctx.measureText(label).width;
         const itemW=labelW+7+valueW;
-        text(label,right-itemW,y+14,14,'#91a7bd',800);
-        text(value,right-valueW,y+10,19,'#eef5fc',900);
+        text(label,right-itemW,y+14,14,'#667A91',800);
+        text(value,right-valueW,y+10,19,'#193753',900);
         right-=itemW+20;
       }
-      ctx.strokeStyle='#293c4e';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,y+42);ctx.lineTo(W-pad,y+42);ctx.stroke();
+      ctx.strokeStyle='#C2D4E4';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,y+42);ctx.lineTo(W-pad,y+42);ctx.stroke();
     }else if(b.type==='timelineEvent'){
       const nodeX=pad+172, actorX=pad+200, isGoal=b.event==='GOAL';
-      if(isGoal){ctx.fillStyle='#172b3c';roundRect(ctx,pad,y,content,b.height-4,8,true,false);}
+      if(isGoal){ctx.fillStyle='#E8F2FB';roundRect(ctx,pad,y,content,b.height-4,8,true,false);}
       const next=blocks[index+1];
       if(next?.type==='timelineEvent'){
-        ctx.strokeStyle='#30465b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(nodeX,y+24);ctx.lineTo(nodeX,y+b.height+24);ctx.stroke();
+        ctx.strokeStyle='#B9CDDE';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(nodeX,y+24);ctx.lineTo(nodeX,y+b.height+24);ctx.stroke();
       }
-      ctx.fillStyle=b.toneTeam==='OUR'?'#f9a8c6':b.toneTeam==='OPP'?'#59c8f1':'#aeb9c5';ctx.beginPath();ctx.arc(nodeX,y+24,7,0,Math.PI*2);ctx.fill();
-      text(b.time,pad+8,y+10,24,'#b3c3d3',600);
+      ctx.fillStyle=b.toneTeam==='OUR'?'#D63E7B':b.toneTeam==='OPP'?'#087EB5':'#7F91A4';ctx.beginPath();ctx.arc(nodeX,y+24,7,0,Math.PI*2);ctx.fill();
+      text(b.time,pad+8,y+10,24,'#5B7087',600);
       if(b.event==='YELLOW_CARD'||b.event==='RED_CARD'){
-        ctx.fillStyle=b.event==='YELLOW_CARD'?'#ffd429':'#ff2a1c';roundRect(ctx,actorX,y+12,17,27,2,true,false);
+        ctx.fillStyle=b.event==='YELLOW_CARD'?'#E9B600':'#E22C2A';roundRect(ctx,actorX,y+12,17,27,2,true,false);
       }else{
         emojiText(emoji(b.event),actorX,y+8,28);
       }
@@ -36953,23 +36962,23 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         const measured=ctx.measureText(label).width;
         const ratio=Math.min(1,maxWidth/Math.max(measured,1));
         ctx.save();ctx.translate(start,y+8);ctx.scale(ratio,1);
-        text(label,0,0,28,'#edf5fc',800);ctx.restore();
-        const tagColor=b.toneTeam==='OUR'?'#f9a8c6':b.toneTeam==='OPP'?'#59c8f1':'#aeb9c5';
-        ctx.fillStyle='#192b3b';ctx.strokeStyle=tagColor;ctx.lineWidth=1;
+        text(label,0,0,28,'#1B3554',800);ctx.restore();
+        const tagColor=b.toneTeam==='OUR'?'#D63E7B':b.toneTeam==='OPP'?'#087EB5':'#7F91A4';
+        ctx.fillStyle='#F7FBFF';ctx.strokeStyle=tagColor;ctx.lineWidth=1;
         roundRect(ctx,W-pad-154,y+12,66,30,5,true,true);
         text('GOAL',W-pad-147,y+15,20,tagColor,900);
-      }else b.compactRows.forEach((value,j)=>text(value,actorX+38,y+8+j*34,28,'#edf5fc',700));
+      }else b.compactRows.forEach((value,j)=>text(value,actorX+38,y+8+j*34,28,'#1B3554',700));
       // 與螢幕摘要一致：只有進球事件顯示比分，使用單純暖黃色文字，不加膠囊外框。
       if(isGoal){
         const score=String(b.score||'');
         ctx.font=font(28,900);
-        ctx.fillStyle='#ffd84d';
+        ctx.fillStyle='#906000';
         ctx.textAlign='right';
         ctx.textBaseline='top';
         ctx.fillText(score,W-pad,y+10);
       }
     }else if(b.type==='section'){
-      text(b.text,pad+8,y+12,30,b.text==='時間紀錄'?'#ffffff':'#7dd3fc',800);
+      text(b.text,pad+8,y+12,30,b.text==='時間紀錄'?'#102D50':'#1267A7',800);
       if(b.detail){
         const v=String(b.detail);
         let size=20;
@@ -36978,7 +36987,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         const measured=ctx.measureText(v).width;
         if(measured>maxWidth) size=Math.max(14,Math.floor(size*maxWidth/measured));
         ctx.font=font(size,700);
-        ctx.fillStyle='#b3c3d3';ctx.textAlign='right';ctx.textBaseline='top';
+        ctx.fillStyle='#5B7087';ctx.textAlign='right';ctx.textBaseline='top';
         ctx.fillText(v,W-pad,y+17, maxWidth);
         ctx.textAlign='left';
       }
@@ -36986,7 +36995,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       (b.textRows||[]).forEach((value,j)=>text(value,pad+8,y+4+j*32));
     }
   });
-  centered('足球場邊記錄器',W/2,H-42,20,'#8298ae',500);
+  centered('足球場邊記錄器',W/2,H-42,20,'#6B7D92',500);
   return canvas;
 }
 
