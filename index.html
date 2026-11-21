@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.198</title>
+<title>足球場邊記錄器 v6.200</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -58,6 +58,24 @@ html.appBootFailed #appBootError{display:block}
 #finishDecisionBtns.directFirstPeriodPK #finishHalfBtn{order:2}
 #finishDecisionBtns.directFirstPeriodPK #finishWholeBtn{order:3}
 #finishDecisionBtns.directFirstPeriodPK > button{min-height:46px}
+
+/* v6.199: Recovery tools are hidden inside the existing expanded time panel. */
+.recoverTimeTools{display:flex;flex-wrap:wrap;gap:8px;margin:10px 6px 4px;padding:10px 0 2px;border-top:1px solid rgba(105,146,178,.28)}
+.recoverTimeTools[hidden]{display:none!important}
+.recoverTimeTools button{flex:1 1 45%;min-width:0;min-height:44px;border:1px solid #416786;border-radius:10px;background:#1b344b;color:#e7f3ff;font-weight:750;font-size:14px;padding:8px 9px;cursor:pointer}
+.recoverTimeTools button.recoverUndo{color:#ffdeaa;border-color:#a37937}
+.recoverTimeTools button[hidden]{display:none!important}
+.recoverTimeTools .recoverHint{width:100%;font-size:12px;line-height:1.45;color:#a8c0d4;margin:0}
+.fm199Modal .fm199Fields{display:grid;gap:9px;margin:10px 0 14px}
+.fm199Modal .fm199Fields label{display:grid;gap:5px;color:#35485d;font-size:13px;font-weight:800}
+.fm199Modal .fm199Fields input{width:100%;box-sizing:border-box;background:#fff;color:#152338;font-size:16px;min-height:44px;border-radius:9px;border:1px solid #bbcadd;padding:9px}
+.fm199Modal .fm199ClockFields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fm199Modal .fm199Actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.fm199Modal .fm199Actions button{min-height:46px;border-radius:10px;border:0;font-size:16px;font-weight:850}
+.fm199Modal .fm199Actions button:first-child{background:#dae2ea;color:#36465a}
+.fm199Modal .fm199Actions button:last-child{background:#198f82;color:#fff}
+.fm199Modal .fm199Callout{background:#e6edf5;border-radius:10px;padding:10px;color:#3a5068;font-size:13px;line-height:1.5}
+@media(max-width:350px){.recoverTimeTools button{font-size:13px}}
 </style>
 <script>
 // 保護必須在主程式之前建立；即使主程式載入失敗，也不開放未還原的比賽操作。
@@ -27978,7 +27996,7 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.198</span>
+      <span class="headerVersion">v6.200</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28167,6 +28185,15 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
       <div class="timeDetail" id="timeDetail">
         <div class="timeRecordDate" id="timeRecordDate" hidden>
           <span>比賽日期</span><strong id="timeRecordDateValue">----</strong>
+        </div>
+
+        <!-- v6.199: opt-in recovery; main live screen remains untouched. -->
+        <div class="recoverTimeTools" id="recoverTimeTools" hidden>
+          <button id="recoverFalseStartBtn" type="button" onclick="undoAccidentalStart()" hidden>↶ 撤銷誤開賽</button>
+          <button id="recoverClockBtn" type="button" onclick="openMatchClockCorrection()">⏱ 校正比賽時間</button>
+          <button id="recoverMetaBtn" type="button" onclick="openLiveBasicsEdit()">✎ 補充比賽設定</button>
+          <button class="recoverUndo" id="recoverLastCorrectionBtn" type="button" onclick="undoLastMatchClockCorrection()" hidden>↶ 復原上次校正</button>
+          <p class="recoverHint">只校正目前段落；不刪除事件。校正後若新增或修改紀錄，為防止覆蓋資料，將無法一鍵復原。</p>
         </div>
 
         <div class="timelinePairRow matchBoundaryPair" aria-label="整場開始與結束時間">
@@ -28539,6 +28566,49 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
 
 
 <!-- v5.129: long-duration notice moved inline into time record -->
+
+<!-- v6.199: live match clock correction, separate from the original finish flow -->
+<div class="modalBack" id="fm199ClockModal">
+  <div class="modal fm199Modal" role="dialog" aria-modal="true" aria-labelledby="fm199ClockTitle">
+    <h2 id="fm199ClockTitle">⏱ 校正比賽時間</h2>
+    <p>比賽已開始後，可修正誤按造成的起算時間。系統會檢查事件與球員追蹤時間，不會清除比賽紀錄。</p>
+    <div class="fm199Callout">目前計時：<strong id="fm199CurrentClock">00:00</strong>｜目前段落：<strong id="fm199CurrentPeriod">第一段</strong></div>
+    <div class="fm199Fields">
+      <label>實際已進行時間（分：秒）
+        <span class="fm199ClockFields">
+          <input id="fm199Minute" type="number" inputmode="numeric" min="0" max="1439" step="1" aria-label="實際已進行分鐘">
+          <input id="fm199Second" type="number" inputmode="numeric" min="0" max="59" step="1" aria-label="實際已進行秒數">
+        </span>
+      </label>
+    </div>
+    <div class="fm199Callout">若有事件發生於校正後的開賽時間之前，系統會拒絕校正，請先核對事件紀錄。不會自動把負時間改成 00:00。</div>
+    <div class="fm199Actions" style="margin-top:12px">
+      <button type="button" onclick="closeMatchClockCorrection()">取消</button>
+      <button type="button" onclick="applyMatchClockCorrection()">確認校正</button>
+    </div>
+  </div>
+</div>
+
+<!-- v6.199: basic match data can be completed while the game clock keeps running. -->
+<div class="modalBack" id="fm199BasicsModal">
+  <div class="modal fm199Modal" role="dialog" aria-modal="true" aria-labelledby="fm199BasicsTitle">
+    <h2 id="fm199BasicsTitle">✎ 補充比賽設定</h2>
+    <p>可在比賽進行中補填資料；計時與既有事件不會重置。名單及守門員請使用原本快捷入口。</p>
+    <div class="fm199Fields">
+      <label>我方隊名 <input id="fm199OurTeam" type="text" maxlength="15" autocomplete="off"></label>
+      <label>對手隊名 <input id="fm199OppTeam" type="text" maxlength="15" autocomplete="off"></label>
+      <label>比賽賽事 <input id="fm199Competition" type="text" maxlength="40" autocomplete="off"></label>
+      <label>賽事階段／輪次 <input id="fm199Stage" type="text" maxlength="24" autocomplete="off"></label>
+      <label>比賽場地 <input id="fm199Venue" type="text" maxlength="30" autocomplete="off"></label>
+      <label>本日場次（1～99） <input id="fm199MatchNo" type="number" inputmode="numeric" min="1" max="99" step="1"></label>
+      <label>規定時間（分鐘；留白為不設定） <input id="fm199RegMinutes" type="number" inputmode="numeric" min="1" max="45" step="1"></label>
+    </div>
+    <div class="fm199Actions">
+      <button type="button" onclick="closeLiveBasicsEdit()">取消</button>
+      <button type="button" onclick="saveLiveBasicsEdit()">儲存設定</button>
+    </div>
+  </div>
+</div>
 
 <!-- Finish decision modal -->
 <div class="modalBack" id="finishDecisionModal">
@@ -30598,10 +30668,10 @@ function loadState(){
   if(state.goalkeeperNumber!==''){
     const gk=Number(state.goalkeeperNumber);
     state.goalkeeperNumber=(Number.isInteger(gk) && gk>=1 && gk<=99) ? String(gk) : '';
-    // v5.29：守門員也屬於本場球員；舊版既有資料載入時同步補入名單。
-    if(state.goalkeeperNumber && !state.rosterNumbers.includes(gk)){
-      state.rosterNumbers=[...state.rosterNumbers,gk].sort((a,b)=>a-b);
-    }
+  }
+  // v6.200：本場名單為準；重新載入時不可把已移除的舊守門員加回名單。
+  if(syncGoalkeeperWithRoster()){
+    try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
   }
   if(state.penalty){
     if(!Array.isArray(state.penalty.our)) state.penalty.our=[];
@@ -31294,6 +31364,7 @@ function renderRegulationTimeBox(){
   }
 }
 function renderTimeBox(){
+  renderMatchRecoveryTools();
   const box=byId('timeSummary');
   const matchStart=matchStartEpoch();
   const hasBegun=Boolean(matchStart);
@@ -31782,6 +31853,22 @@ function currentRosterNumbers(){
   return [...new Set(state.rosterNumbers.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=99))].sort((a,b)=>a-b);
 }
 
+// v6.200：球隊名單一旦不包含目前守門員，即撤銷其指定與自動入隊來源。
+// 不刪除既有正式事件，也不會在重新加入該背號時自動指定回守門員。
+function syncGoalkeeperWithRoster(){
+  const keeper=String(state.goalkeeperNumber||'').trim();
+  if(keeper && !currentRosterNumbers().includes(Number(keeper))){
+    state.goalkeeperNumber='';
+    state.goalkeeperAutoRosterNumber='';
+    return true;
+  }
+  if(!keeper && state.goalkeeperAutoRosterNumber){
+    state.goalkeeperAutoRosterNumber='';
+    return true;
+  }
+  return false;
+}
+
 function preferredOurNumbers(){
   const roster=currentRosterNumbers();
   return roster.length ? roster : allCommonNumbers();
@@ -32129,6 +32216,7 @@ function toggleRosterNumber(number){
   rosterLearningDirty=true;
   if(roster.includes(n)){
     state.rosterNumbers=roster.filter(v=>v!==n);
+    syncGoalkeeperWithRoster();
     showRosterUndo(n);
   }else{
     const redOut=redCardedPlayerNumbers('OUR');
@@ -32153,6 +32241,7 @@ function removeRosterNumber(number){
   if(state.finished) return;
   const n=Number(number);
   state.rosterNumbers=currentRosterNumbers().filter(v=>v!==n);
+  syncGoalkeeperWithRoster();
   rosterLearningDirty=true;
 
   showRosterUndo(n);
@@ -32178,6 +32267,7 @@ function clearRoster(){
 
   hideRosterUndo();
   state.rosterNumbers=[];
+  syncGoalkeeperWithRoster();
   rosterLearningDirty=true;
   buildNumberGrid();
   buildKeeperGrid();
@@ -32206,6 +32296,7 @@ function applyPreviousRoster(){
   hideRosterUndo();
   previous.forEach(rememberPlayerNumber);
   state.rosterNumbers=[...previous];
+  syncGoalkeeperWithRoster();
   rosterLearningDirty=true;
 
   buildNumberGrid();
@@ -32481,6 +32572,185 @@ function showMatchStateFromTop(){
   setTimeout(goTop,650);
   setTimeout(()=>root?.classList?.remove('stateTopLock'),760);
 }
+
+/* ===== v6.199 start-correction recovery: current playable period only ===== */
+function fm199Playable(){
+  return !!state.started && !state.finished && !state.awaitingNextPeriod && !state.penalty?.active;
+}
+function fm199FalseStartAllowed(){
+  if(!fm199Playable() || Number(state.currentPeriod)!==1 || state.multiPeriod || state.periods?.length || state.halftimeStartEpoch || state.penalty) return false;
+  if((state.markers||[]).length || Number(state.ourScore)!==0 || Number(state.oppScore)!==0) return false;
+  const t=state.playerTracking;
+  if(t?.segments?.length) return false;
+  if(t?.open && (Number(t.open.period)!==1 || Number(t.open.startSeconds)!==0)) return false;
+  return true;
+}
+function fm199CorrectionUndoAvailable(){
+  const u=state.timeCorrectionUndo;
+  return !!(u && fm199Playable() && Number(u.period)===Number(state.currentPeriod) &&
+    state.startEpoch===u.appliedStartEpoch &&
+    JSON.stringify(state.markers)===u.appliedMarkersJSON &&
+    JSON.stringify(state.playerTracking)===u.appliedTrackingJSON);
+}
+function renderMatchRecoveryTools(){
+  const host=byId('recoverTimeTools');
+  if(!host)return;
+  host.hidden=!fm199Playable();
+  if(host.hidden)return;
+  byId('recoverFalseStartBtn').hidden=!fm199FalseStartAllowed();
+  byId('recoverLastCorrectionBtn').hidden=!fm199CorrectionUndoAvailable();
+}
+function undoAccidentalStart(){
+  if(!fm199FalseStartAllowed()){
+    alert('已有事件、比分或球員上下場紀錄，不能直接撤銷開賽。請使用「校正比賽時間」。');return;
+  }
+  const clock=fmtMatchClock(elapsed());
+  if(!confirm(`確定撤銷誤開賽？\n\n目前計時 ${clock}，沒有正式事件紀錄。\n\n將回到賽前、計時歸零，保留賽事、球隊、場地、名單、守門員與追蹤賽前設定。`))return;
+  hideMarkerUndo();
+  if(state.playerTracking) state.playerTracking.open=null;
+  state.started=false;
+  state.startEpoch=null;
+  state.endEpoch=null;
+  state.finalElapsed=0;
+  state.currentPeriod=1;
+  state.periodStartOurScore=0;
+  state.periodStartOppScore=0;
+  state.dayMatchNumberLocked=false;
+  state.dayMatchNumberConfirmed=false;
+  state.timeCorrectionUndo=null;
+  timeExpanded=false;
+  saveState();render();showMatchStateFromTop();
+}
+function openMatchClockCorrection(){
+  if(!fm199Playable())return;
+  const sec=Math.floor(elapsed());
+  byId('fm199CurrentClock').textContent=fmtMatchClock(sec);
+  byId('fm199CurrentPeriod').textContent=trackingPeriodLabel(Number(state.currentPeriod));
+  byId('fm199Minute').value=String(Math.floor(sec/60));
+  byId('fm199Second').value=String(sec%60);
+  syncVisualViewport();byId('fm199ClockModal').classList.add('open');
+}
+function closeMatchClockCorrection(){byId('fm199ClockModal')?.classList.remove('open')}
+function applyMatchClockCorrection(){
+  if(!fm199Playable())return;
+  const minuteRaw=String(byId('fm199Minute')?.value||'').trim();
+  const secondRaw=String(byId('fm199Second')?.value||'').trim();
+  if(!/^\d+$/.test(minuteRaw)||!/^\d+$/.test(secondRaw)||Number(minuteRaw)>1439||Number(secondRaw)>59){
+    alert('請輸入有效的分鐘（0～1439）及秒數（0～59）。');return;
+  }
+  const requested=Number(minuteRaw)*60+Number(secondRaw);
+  const nowSeconds=Math.floor(elapsed());
+  const shift=nowSeconds-requested;
+  if(shift===0){closeMatchClockCorrection();return;}
+  const current=Number(state.currentPeriod);
+  const oldStart=Number(state.startEpoch);
+  const revisedStart=oldStart+shift*1000;
+  if(!Number.isFinite(revisedStart)||revisedStart<=0){alert('開賽時間無效，未修改任何資料。');return;}
+  // Clone all impacted structures first: do not modify live match on validation failure.
+  const markers=structuredClone(state.markers||[]);
+  const tracking=structuredClone(state.playerTracking||emptyPlayerTracking());
+  for(const marker of markers){
+    if(Number(marker.period||1)!==current)continue;
+    const oldSeconds=Math.floor(Number(marker.seconds));
+    if(!Number.isFinite(oldSeconds) || oldSeconds-shift<0){
+      alert('有事件會落在校正後的開賽時間以前。請先核對該事件時間，本次沒有修改資料。');return;
+    }
+    marker.seconds=oldSeconds-shift;
+    marker.time=fmtMMSS(marker.seconds);
+    // Keep recorded_at unchanged: it is the original wall-clock marker timestamp.
+  }
+  for(const segment of tracking.segments||[]){
+    if(Number(segment.period)!==current)continue;
+    const begin=Number(segment.startSeconds),end=Number(segment.endSeconds);
+    if(!Number.isFinite(begin)||!Number.isFinite(end)||end-shift<0 || (begin>0 && begin-shift<0)){
+      alert('有球員出賽區間落在校正後的開賽時間以前。請先核對追蹤紀錄，本次沒有修改資料。');return;
+    }
+    segment.startSeconds=Math.max(0,Math.floor(begin-shift));
+    segment.endSeconds=Math.floor(end-shift);
+    segment.startEpoch=revisedStart+segment.startSeconds*1000;
+    segment.endEpoch=revisedStart+segment.endSeconds*1000;
+  }
+  if(tracking.open && Number(tracking.open.period)===current){
+    const begin=Number(tracking.open.startSeconds);
+    if(!Number.isFinite(begin)||(begin>0 && begin-shift<0)){
+      alert('球員開始上場時間會早於校正後的開賽時間，本次沒有修改資料。');return;
+    }
+    tracking.open.startSeconds=Math.max(0,Math.floor(begin-shift));
+    tracking.open.startEpoch=revisedStart+tracking.open.startSeconds*1000;
+  }
+  const promptText=`將本段計時 ${fmtMatchClock(nowSeconds)} 校正為 ${fmtMatchClock(requested)}。\n事件、球員上下場時間將同步調整；原始標記時間保留。\n\n確定套用？`;
+  if(!confirm(promptText))return;
+  const previous={period:current,startEpoch:oldStart,markers:structuredClone(state.markers||[]),tracking:structuredClone(state.playerTracking||emptyPlayerTracking())};
+  state.startEpoch=revisedStart;
+  state.markers=markers;
+  state.playerTracking=tracking;
+  state.timeCorrectionUndo={...previous,appliedStartEpoch:revisedStart,
+    appliedMarkersJSON:JSON.stringify(markers),appliedTrackingJSON:JSON.stringify(tracking)};
+  closeMatchClockCorrection();
+  saveState();render();
+  showQuickNotice('✓ 已校正比賽時間',`${fmtMatchClock(nowSeconds)} → ${fmtMatchClock(requested)}；事件及球員追蹤同步更新`);
+}
+function undoLastMatchClockCorrection(){
+  if(!fm199CorrectionUndoAvailable()){
+    alert('校正後已有新的事件或追蹤變更，為避免覆蓋資料，無法直接復原。');return;
+  }
+  if(!confirm('復原上一次時間校正？此操作會還原校正前的起算時間與事件／球員追蹤時間。'))return;
+  const u=state.timeCorrectionUndo;
+  state.startEpoch=u.startEpoch;
+  state.markers=structuredClone(u.markers);
+  state.playerTracking=structuredClone(u.tracking);
+  state.timeCorrectionUndo=null;
+  saveState();render();
+  showQuickNotice('✓ 已復原上次校正','已還原原本計時與事件／球員追蹤時間');
+}
+function openLiveBasicsEdit(){
+  if(!fm199Playable())return;
+  const fields={fm199OurTeam:state.ourTeam,fm199OppTeam:state.oppTeam,fm199Competition:state.competition,
+    fm199Stage:state.competitionStage,fm199Venue:state.venue,
+    fm199MatchNo:validDayMatchNumber(state.dayMatchNumber)||1,
+    fm199RegMinutes:state.regulationMinutes==null?'':state.regulationMinutes};
+  for(const [key,value] of Object.entries(fields))byId(key).value=String(value??'');
+  syncVisualViewport();byId('fm199BasicsModal').classList.add('open');
+}
+function closeLiveBasicsEdit(){byId('fm199BasicsModal')?.classList.remove('open')}
+function saveLiveBasicsEdit(){
+  if(!fm199Playable())return;
+  const vals=[['fm199OurTeam',15,'我方隊名'],['fm199OppTeam',15,'對手隊名'],
+    ['fm199Competition',40,'比賽賽事'],['fm199Stage',24,'賽事階段'],['fm199Venue',30,'比賽場地']];
+  const data={};
+  for(const [id,max,label] of vals){
+    const value=String(byId(id)?.value||'').trim();
+    if(value.length>max||/[<>\r\n]/.test(value)||containsBopomofo(value)){
+      alert(`${label}不可包含特殊控制字元或注音，且最多 ${max} 字。`);byId(id)?.focus();return;
+    }
+    data[id]=value;
+  }
+  const numRaw=String(byId('fm199MatchNo')?.value||'').trim();
+  if(!/^\d+$/.test(numRaw)||!validDayMatchNumber(Number(numRaw))){alert('本日場次需為 1～99。');return;}
+  const newNo=Number(numRaw);
+  const regRaw=String(byId('fm199RegMinutes')?.value||'').trim();
+  if(regRaw && (!/^\d+$/.test(regRaw)||Number(regRaw)<1||Number(regRaw)>45)){alert('規定時間需為 1～45 分鐘，或留白。');return;}
+  // Prevent accidental reuse of an existing match number for the same team on the same calendar day.
+  const collision=dayMatchStoredItemsForTeamDay(data.fm199OurTeam,state.startEpoch||Date.now())
+    .some(item=>item.id!==MATCH_ID && validDayMatchNumber(item.saved?.dayMatchNumber)===newNo &&
+      (isConfirmedDayMatch(item.saved)||isReservedDayMatch(item.saved)));
+  if(collision){alert('同一天這支球隊已使用此場次，請選擇其他場次。');return;}
+  state.ourTeam=data.fm199OurTeam;
+  state.oppTeam=data.fm199OppTeam;
+  state.competition=data.fm199Competition;
+  state.competitionStage=data.fm199Stage;
+  state.venue=data.fm199Venue;
+  state.dayMatchNumber=newNo;
+  state.dayMatchNumberManual=true;
+  state.dayMatchNumberLocked=true;
+  state.regulationMinutes=regRaw?Number(regRaw):null;
+  const ids={ourTeam:'fm199OurTeam',oppTeam:'fm199OppTeam',competition:'fm199Competition',competitionStage:'fm199Stage',venue:'fm199Venue'};
+  for(const [target,source] of Object.entries(ids)){if(byId(target))byId(target).value=data[source];}
+  syncRegulationInputsFromState();
+  closeLiveBasicsEdit();saveState();render();
+  showQuickNotice('✓ 已更新比賽基本資料','比賽計時及已記錄事件未重設');
+}
+/* ===== end v6.199 recovery additions ===== */
 
 function startMatch(){
   if(state.started && !state.finished) return;
@@ -37259,7 +37529,7 @@ function shareSummaryText(){
   const stage=String(state.competitionStage||'').trim();
   const competition=String(state.competition||'').trim();
   const venue=String(state.venue||'').trim();
-  // v6.198：一行依「比分｜賽事・階段｜日期・場次｜場地」排序，缺項自動略過。
+  // v6.199：一行依「比分｜賽事・階段｜日期・場次｜場地」排序，缺項自動略過。
   const eventLabel=[competition,stage].filter(Boolean).join('・');
   const dateLabel=`${new Date(start).getFullYear()}/${shareSummaryShortDate(start)}（${shareSummaryWeekday(start)}）`;
   const dateAndMatch=[dateLabel,dayMatchLabel].filter(Boolean).join('・');
