@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.200</title>
+<title>足球場邊記錄器 v6.201</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27996,7 +27996,7 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.200</span>
+      <span class="headerVersion">v6.201</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -36036,6 +36036,9 @@ function reportTimelineEntries(){
     .map(({m,index})=>({
       type:'timelineEvent', sourceIndex:index, event:m.event,
       team:markerPlayerTeamCode(m)==='OUR'?'OUR':markerPlayerTeamCode(m)==='OPP'?'OPP':'UNKNOWN',
+      // 烏龍球保留進球球員所屬隊伍的文字，但時間軸顏色依實際得分方（m.team）。
+      toneTeam:(m.event==='GOAL'?m.team:markerPlayerTeamCode(m))==='OUR'?'OUR':
+        (m.event==='GOAL'?m.team:markerPlayerTeamCode(m))==='OPP'?'OPP':'UNKNOWN',
       period:Number(m.period)||1,
       phase:state.multiPeriod?periodLabel(Number(m.period)||1):'比賽',
       time:fmtMMSS(Number(m.seconds)||0),
@@ -36081,7 +36084,7 @@ function reportTimelineHTML(){
     }
     phase=e.period;
     const compact=reportTimelineCompactParts(e);
-    return heading+`<li class="matchTimelineRow ${e.team==='OUR'?'isOur':e.team==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
+    return heading+`<li class="matchTimelineRow ${e.toneTeam==='OUR'?'isOur':e.toneTeam==='OPP'?'isOpp':'isUnknown'} ${e.event==='GOAL'?'isGoal':''}">
       <div class="matchTimelineTime">${escapeHtml(e.time)}</div><div class="matchTimelineNode" aria-hidden="true"></div>
       <div class="matchTimelineContent"><div class="matchTimelineCompact">${compact.iconHtml}<span class="matchTimelineCompactMain">${escapeHtml(compact.main)}</span>${compact.assist?`<span class="matchTimelineAssistInline">${escapeHtml(compact.assist)}</span>`:''}${e.event==='GOAL'?'<span class="matchTimelineGoalTag" aria-label="進球">GOAL</span>':''}</div></div>
       ${e.event==='GOAL'?`<div class="matchTimelineScore" aria-label="進球後比分 ${escapeHtml(e.score)}">${escapeHtml(e.score)}</div>`:''}
@@ -36883,7 +36886,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
             ctx.strokeStyle='#30465b';ctx.lineWidth=2;
             ctx.beginPath();ctx.moveTo(dotX,rowY+23);ctx.lineTo(dotX,rowY+ev.height+23);ctx.stroke();
           }
-          ctx.fillStyle=ev.team==='OUR'?'#f9a8c6':ev.team==='OPP'?'#59c8f1':'#aeb9c5';
+          ctx.fillStyle=ev.toneTeam==='OUR'?'#f9a8c6':ev.toneTeam==='OPP'?'#59c8f1':'#aeb9c5';
           ctx.beginPath();ctx.arc(dotX,rowY+23,5,0,Math.PI*2);ctx.fill();
           text(ev.time,x+10,rowY+11,20,'#b9c9d9',650);
           if(ev.event==='YELLOW_CARD'||ev.event==='RED_CARD'){
@@ -36898,7 +36901,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
             // 與 reportSmartTimelineColumns 的 84% 可讀性門檻相同。
             ctx.save();ctx.translate(start,rowY+8);ctx.scale(ratio,1);
             text(label,0,0,22,'#edf5fc',800);ctx.restore();
-            const tagColor=ev.team==='OUR'?'#f9a8c6':ev.team==='OPP'?'#59c8f1':'#aeb9c5';
+            const tagColor=ev.toneTeam==='OUR'?'#f9a8c6':ev.toneTeam==='OPP'?'#59c8f1':'#aeb9c5';
             ctx.fillStyle='#192b3b';ctx.strokeStyle=tagColor;ctx.lineWidth=1;
             roundRect(ctx,x+b.colWidth-128,rowY+11,49,25,5,true,true);
             text('GOAL',x+b.colWidth-123,rowY+14,16,tagColor,900);
@@ -36937,7 +36940,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       if(next?.type==='timelineEvent'){
         ctx.strokeStyle='#30465b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(nodeX,y+24);ctx.lineTo(nodeX,y+b.height+24);ctx.stroke();
       }
-      ctx.fillStyle=b.team==='OUR'?'#f9a8c6':b.team==='OPP'?'#59c8f1':'#aeb9c5';ctx.beginPath();ctx.arc(nodeX,y+24,7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=b.toneTeam==='OUR'?'#f9a8c6':b.toneTeam==='OPP'?'#59c8f1':'#aeb9c5';ctx.beginPath();ctx.arc(nodeX,y+24,7,0,Math.PI*2);ctx.fill();
       text(b.time,pad+8,y+10,24,'#b3c3d3',600);
       if(b.event==='YELLOW_CARD'||b.event==='RED_CARD'){
         ctx.fillStyle=b.event==='YELLOW_CARD'?'#ffd429':'#ff2a1c';roundRect(ctx,actorX,y+12,17,27,2,true,false);
@@ -36951,7 +36954,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         const ratio=Math.min(1,maxWidth/Math.max(measured,1));
         ctx.save();ctx.translate(start,y+8);ctx.scale(ratio,1);
         text(label,0,0,28,'#edf5fc',800);ctx.restore();
-        const tagColor=b.team==='OUR'?'#f9a8c6':b.team==='OPP'?'#59c8f1':'#aeb9c5';
+        const tagColor=b.toneTeam==='OUR'?'#f9a8c6':b.toneTeam==='OPP'?'#59c8f1':'#aeb9c5';
         ctx.fillStyle='#192b3b';ctx.strokeStyle=tagColor;ctx.lineWidth=1;
         roundRect(ctx,W-pad-154,y+12,66,30,5,true,true);
         text('GOAL',W-pad-147,y+15,20,tagColor,900);
