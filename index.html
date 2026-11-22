@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.207</title>
+<title>足球場邊記錄器 v6.210</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27996,7 +27996,7 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.207</span>
+      <span class="headerVersion">v6.210</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -29251,6 +29251,14 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
 .youtubeChapterGroupCount{font-size:12px;color:#b9cbd9;white-space:nowrap}
 .youtubeChapterOutput{box-sizing:border-box;width:100%;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;padding:10px;border:1px solid #36546a;border-radius:9px;background:#0b1927;color:#f1f6fc;font-size:13px;line-height:1.65;user-select:text;-webkit-user-select:text}
 .youtubeChapterCopy{display:block;width:100%;min-height:44px;border:1px solid #48667e;border-radius:9px;background:#172b3d;color:#f1f6fc;font:inherit;font-weight:700;margin-top:8px;cursor:pointer}
+/* v6.210：各半場新增緊湊影片檔名及獨立複製，不更動原事件清單的行距、色彩與按鈕。 */
+.youtubeChapterFile{min-width:0;margin:0 0 8px;padding:8px 10px;border:1px solid #36546a;border-radius:9px;background:#102438}
+.youtubeChapterFileHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.youtubeChapterFileTitle{min-width:0;color:#c9ddef;font-size:12px;font-weight:800}
+.youtubeChapterFileCopy{flex:0 0 auto;min-width:66px;min-height:44px;padding:6px 10px;border:1px solid #537b9e;border-radius:8px;background:#23558a;color:#fff;font:inherit;font-size:12px;font-weight:850;cursor:pointer}
+.youtubeChapterFilename{font-size:12px;color:#f1f6fc;line-height:1.5;overflow-wrap:anywhere;word-break:break-word;user-select:text;-webkit-user-select:text}
+.youtubeChapterOverview{font-size:12px;line-height:1.5;color:#bfcedc;margin:0 0 8px;overflow-wrap:anywhere}
+.youtubeChapterFallback{display:block;box-sizing:border-box;width:100%;min-height:60px;resize:vertical;margin:8px 0;padding:8px;border:1px solid #6885a0;border-radius:8px;background:#fff;color:#152238;font-size:14px}
 </style>
 
 <script>
@@ -29747,6 +29755,7 @@ let state={
   extraTimeMinutes:null, extraTimeSplit:false,
   penalty:null,
   goalkeeperNumber:'',
+  goalkeeperTracking:{version:1,segments:[],open:null}, // v6.208：獨立守門員出賽歷程
   // v5.159：記錄「因設定守門員而自動加入名單」的背號來源。
   // 只有這種自動加入的舊守門員，在更換守門員時才會自動移除；
   // 原本就由使用者選進名單的球員，即使不再守門仍會保留。
@@ -30716,6 +30725,7 @@ function saveState(){
   if(!containsBopomofo(competitionValue)) state.competition=competitionValue;
   if(!containsBopomofo(competitionStageValue)) state.competitionStage=competitionStageValue;
   refreshAutoDayMatchNumber();
+  syncActiveGoalkeeperTracking(); // v6.208：包含更換、清除、紅牌及名單移除等操作
   state._savedAt=Date.now();
   localStorage.setItem(KEY, JSON.stringify(state));
   updateMatchRegistryFromState();
@@ -30820,7 +30830,8 @@ function loadState(){
   // 已完成歷史比賽依整秒邊界重算 duration / finalElapsed；舊 marker 的 seconds / time 也同步整秒化。
   // 這裡直接寫回 match state，但不更新 _savedAt / Registry updatedAt；marker recorded_at 亦完整保留。
   const timingNormalized=normalizeMatchTimingToWholeSeconds();
-  if(timingNormalized){
+  const goalkeeperTrackingMigrated=normalizeGoalkeeperTracking();
+  if(timingNormalized || goalkeeperTrackingMigrated){
     try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){}
   }
 
@@ -31991,6 +32002,84 @@ function currentRosterNumbers(){
   return [...new Set(state.rosterNumbers.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=99))].sort((a,b)=>a-b);
 }
 
+// v6.208：守門員正式登錄僅看「單次連續守門 >= 60 個比賽秒」。
+// 各段分開計算，不把中場、PK 或換人間的休息算進去；舊資料不反推歷程。
+const GOALKEEPER_MIN_OFFICIAL_SECONDS=60;
+function emptyGoalkeeperTracking(){return {version:1,segments:[],open:null};}
+function validGoalkeeperNumber(value){
+  const n=Number(value);
+  return Number.isInteger(n)&&n>=1&&n<=99?String(n):'';
+}
+function normalizeGoalkeeperTracking(){
+  const data=state.goalkeeperTracking;
+  const missing=!data || typeof data!=='object' || Array.isArray(data);
+  const clean=emptyGoalkeeperTracking();
+  if(!missing){
+    if(Array.isArray(data.segments)) clean.segments=data.segments.filter(g=>
+      g && validGoalkeeperNumber(g.number) && Number.isInteger(Number(g.period)) && Number(g.period)>=1 && Number(g.period)<=4 &&
+      Number.isFinite(Number(g.startSeconds)) && Number.isFinite(Number(g.endSeconds)) &&
+      Number(g.startSeconds)>=0 && Number(g.endSeconds)>=Number(g.startSeconds)
+    ).map(g=>({number:validGoalkeeperNumber(g.number),period:Number(g.period),
+      startSeconds:Math.floor(Number(g.startSeconds)),endSeconds:Math.floor(Number(g.endSeconds))}));
+    const o=data.open;
+    if(o && validGoalkeeperNumber(o.number) && Number.isInteger(Number(o.period)) &&
+      Number(o.period)>=1 && Number(o.period)<=4 && Number.isFinite(Number(o.startSeconds)) && Number(o.startSeconds)>=0 &&
+      state.started && !state.finished && !state.awaitingNextPeriod && !state.penalty?.active &&
+      Number(o.period)===Number(state.currentPeriod)){
+      clean.open={number:validGoalkeeperNumber(o.number),period:Number(o.period),startSeconds:Math.floor(Number(o.startSeconds))};
+    }
+  }
+  state.goalkeeperTracking=clean;
+  // 從舊版本更新且已開賽：只從升級當下開始計算，不把之前的秒數猜成守門歷程。
+  if(missing && state.started && !state.finished && !state.awaitingNextPeriod && !state.penalty?.active){
+    const current=validGoalkeeperNumber(state.goalkeeperNumber);
+    if(current) clean.open={number:current,period:Number(state.currentPeriod)||1,startSeconds:Math.floor(elapsed())};
+  }
+  return missing;
+}
+function closeGoalkeeperTrackingPeriod(endSeconds){
+  const data=state.goalkeeperTracking;
+  if(!data?.open || Number(data.open.period)!==Number(state.currentPeriod))return;
+  const current=data.open;
+  const end=Math.max(current.startSeconds,Math.floor(Number(endSeconds)||0));
+  if(end>current.startSeconds){
+    data.segments.push({number:current.number,period:current.period,startSeconds:current.startSeconds,endSeconds:end});
+  }
+  data.open=null;
+}
+function startGoalkeeperTrackingPeriod(){
+  if(!state.goalkeeperTracking)state.goalkeeperTracking=emptyGoalkeeperTracking();
+  state.goalkeeperTracking.open=null;
+  const current=validGoalkeeperNumber(state.goalkeeperNumber);
+  if(current && currentRosterNumbers().includes(Number(current))){
+    state.goalkeeperTracking.open={number:current,period:Number(state.currentPeriod)||1,startSeconds:0};
+  }
+}
+function syncActiveGoalkeeperTracking(){
+  if(!state.started || state.finished || state.awaitingNextPeriod || state.penalty?.active)return;
+  const data=state.goalkeeperTracking;
+  if(!data)return;
+  const current=validGoalkeeperNumber(state.goalkeeperNumber);
+  const prior=data.open;
+  if(prior?.number===current && Number(prior.period)===Number(state.currentPeriod))return;
+  const seconds=Math.floor(elapsed());
+  if(prior)closeGoalkeeperTrackingPeriod(seconds);
+  if(current)data.open={number:current,period:Number(state.currentPeriod)||1,startSeconds:seconds};
+}
+function officialGoalkeeperNumbers(){
+  const data=state.goalkeeperTracking;
+  if(!data || !Array.isArray(data.segments))return [];
+  const eligible=data.segments.filter(g=>g.endSeconds-g.startSeconds>=GOALKEEPER_MIN_OFFICIAL_SECONDS)
+    .map(g=>({number:validGoalkeeperNumber(g.number),period:g.period,startSeconds:g.startSeconds}));
+  const open=data.open;
+  if(open && state.started && !state.finished && !state.awaitingNextPeriod && !state.penalty?.active &&
+    Math.floor(elapsed())-open.startSeconds>=GOALKEEPER_MIN_OFFICIAL_SECONDS){
+    eligible.push({number:validGoalkeeperNumber(open.number),period:open.period,startSeconds:open.startSeconds});
+  }
+  eligible.sort((a,b)=>a.period-b.period || a.startSeconds-b.startSeconds);
+  return [...new Set(eligible.map(g=>g.number).filter(Boolean))];
+}
+
 // v6.200：球隊名單一旦不包含目前守門員，即撤銷其指定與自動入隊來源。
 // 不刪除既有正式事件，也不會在重新加入該背號時自動指定回守門員。
 function syncGoalkeeperWithRoster(){
@@ -32728,7 +32817,8 @@ function fm199CorrectionUndoAvailable(){
   return !!(u && fm199Playable() && Number(u.period)===Number(state.currentPeriod) &&
     state.startEpoch===u.appliedStartEpoch &&
     JSON.stringify(state.markers)===u.appliedMarkersJSON &&
-    JSON.stringify(state.playerTracking)===u.appliedTrackingJSON);
+    JSON.stringify(state.playerTracking)===u.appliedTrackingJSON &&
+    (!u.appliedGoalkeepersJSON || JSON.stringify(state.goalkeeperTracking)===u.appliedGoalkeepersJSON));
 }
 function renderMatchRecoveryTools(){
   const host=byId('recoverTimeTools');
@@ -32746,6 +32836,7 @@ function undoAccidentalStart(){
   if(!confirm(`確定撤銷誤開賽？\n\n目前計時 ${clock}，沒有正式事件紀錄。\n\n將回到賽前、計時歸零，保留賽事、球隊、場地、名單、守門員與追蹤賽前設定。`))return;
   hideMarkerUndo();
   if(state.playerTracking) state.playerTracking.open=null;
+  state.goalkeeperTracking=emptyGoalkeeperTracking(); // v6.208：誤開賽歷程不能保留
   state.started=false;
   state.startEpoch=null;
   state.endEpoch=null;
@@ -32787,6 +32878,7 @@ function applyMatchClockCorrection(){
   // Clone all impacted structures first: do not modify live match on validation failure.
   const markers=structuredClone(state.markers||[]);
   const tracking=structuredClone(state.playerTracking||emptyPlayerTracking());
+  const goalkeepers=structuredClone(state.goalkeeperTracking||emptyGoalkeeperTracking());
   for(const marker of markers){
     if(Number(marker.period||1)!==current)continue;
     const oldSeconds=Math.floor(Number(marker.seconds));
@@ -32816,14 +32908,31 @@ function applyMatchClockCorrection(){
     tracking.open.startSeconds=Math.max(0,Math.floor(begin-shift));
     tracking.open.startEpoch=revisedStart+tracking.open.startSeconds*1000;
   }
+  for(const segment of goalkeepers.segments||[]){
+    if(Number(segment.period)!==current)continue;
+    const begin=Number(segment.startSeconds),end=Number(segment.endSeconds);
+    if(!Number.isFinite(begin)||!Number.isFinite(end)||end-shift<0||(begin>0 && begin-shift<0)){
+      alert('守門員出賽區間會落在校正後開賽之前，本次沒有修改資料。');return;
+    }
+    segment.startSeconds=Math.max(0,Math.floor(begin-shift));
+    segment.endSeconds=Math.floor(end-shift);
+  }
+  if(goalkeepers.open && Number(goalkeepers.open.period)===current){
+    const begin=Number(goalkeepers.open.startSeconds);
+    if(!Number.isFinite(begin)||(begin>0 && begin-shift<0)){
+      alert('守門員更換時間會早於校正後的開賽時間，本次沒有修改資料。');return;
+    }
+    goalkeepers.open.startSeconds=Math.max(0,Math.floor(begin-shift));
+  }
   const promptText=`將本段計時 ${fmtMatchClock(nowSeconds)} 校正為 ${fmtMatchClock(requested)}。\n事件、球員上下場時間將同步調整；原始標記時間保留。\n\n確定套用？`;
   if(!confirm(promptText))return;
-  const previous={period:current,startEpoch:oldStart,markers:structuredClone(state.markers||[]),tracking:structuredClone(state.playerTracking||emptyPlayerTracking())};
+  const previous={period:current,startEpoch:oldStart,markers:structuredClone(state.markers||[]),tracking:structuredClone(state.playerTracking||emptyPlayerTracking()),goalkeepers:structuredClone(state.goalkeeperTracking||emptyGoalkeeperTracking())};
   state.startEpoch=revisedStart;
   state.markers=markers;
   state.playerTracking=tracking;
+  state.goalkeeperTracking=goalkeepers;
   state.timeCorrectionUndo={...previous,appliedStartEpoch:revisedStart,
-    appliedMarkersJSON:JSON.stringify(markers),appliedTrackingJSON:JSON.stringify(tracking)};
+    appliedMarkersJSON:JSON.stringify(markers),appliedTrackingJSON:JSON.stringify(tracking),appliedGoalkeepersJSON:JSON.stringify(goalkeepers)};
   closeMatchClockCorrection();
   saveState();render();
   showQuickNotice('✓ 已校正比賽時間',`${fmtMatchClock(nowSeconds)} → ${fmtMatchClock(requested)}；事件及球員追蹤同步更新`);
@@ -32837,6 +32946,7 @@ function undoLastMatchClockCorrection(){
   state.startEpoch=u.startEpoch;
   state.markers=structuredClone(u.markers);
   state.playerTracking=structuredClone(u.tracking);
+  if(u.goalkeepers)state.goalkeeperTracking=structuredClone(u.goalkeepers);
   state.timeCorrectionUndo=null;
   saveState();render();
   showQuickNotice('✓ 已復原上次校正','已還原原本計時與事件／球員追蹤時間');
@@ -32958,6 +33068,7 @@ function startMatch(){
   state.periodStartOurScore=state.ourScore;
   state.periodStartOppScore=state.oppScore;
   playerTrackingStartPeriod(actionEpoch);
+  startGoalkeeperTrackingPeriod();
   saveState();
   render();
   showMatchStateFromTop();
@@ -33074,6 +33185,7 @@ function confirmFinishHalf(){
   if(state.currentPeriod!==1 || pendingFinishEnd===null) return;
   state.multiPeriod=true;
   closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
+  closeGoalkeeperTrackingPeriod(pendingFinishElapsed);
   archiveCurrentPeriod('上半場');
   state.endEpoch=pendingFinishEnd;
   // 上半場時間已完整封存在 periods；等待下半場時，現在這一段的計時歸零。
@@ -33096,6 +33208,7 @@ function confirmFinishHalf(){
 function confirmFinishExtraFirstHalf(){
   if(state.currentPeriod!==3 || !state.extraTimeSplit || pendingFinishEnd===null) return;
   closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
+  closeGoalkeeperTrackingPeriod(pendingFinishElapsed);
   archiveCurrentPeriod('延長賽上半場');
   state.endEpoch=pendingFinishEnd;
   state.finalElapsed=0;
@@ -33128,6 +33241,7 @@ function confirmExtraTime(){
   state.extraTimeMinutes=minutes;
   state.extraTimeSplit=true;
   closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
+  closeGoalkeeperTrackingPeriod(pendingFinishElapsed);
   archiveCurrentPeriod('下半場');
   state.endEpoch=pendingFinishEnd;
   state.finalElapsed=0;
@@ -33345,6 +33459,7 @@ function beginPenaltyShootout(){
     // 單節制維持 multiPeriod=false，periodLabel(1) 即為「全場」。
     const label=state.currentPeriod===2?'下半場':periodLabel(state.currentPeriod);
     closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
+    closeGoalkeeperTrackingPeriod(pendingFinishElapsed);
     archiveCurrentPeriod(label);
     state.endEpoch=pendingFinishEnd;
     state.finalElapsed=state.periods.reduce((sum,p)=>sum+(Number(p.duration)||0),0);
@@ -33545,6 +33660,7 @@ function confirmFinishFull(){
 
   const label=state.multiPeriod ? (state.currentPeriod===1?'上半場':state.currentPeriod===2?'下半場':periodLabel(state.currentPeriod)) : '全場';
   closePlayerTrackingForPeriod(pendingFinishElapsed,pendingFinishEnd);
+  closeGoalkeeperTrackingPeriod(pendingFinishElapsed);
   archiveCurrentPeriod(label);
 
   state.endEpoch=pendingFinishEnd;
@@ -33606,7 +33722,7 @@ function newMatch(){
     currentPeriod:1, awaitingNextPeriod:false, multiPeriod:false,
     periodStartOurScore:0, periodStartOppScore:0, periods:[],
     nextPeriodType:null, extraTime:false, extraTimeMinutes:null, extraTimeSplit:false, penalty:null,
-    goalkeeperNumber:rememberedGoalkeeper, goalkeeperAutoRosterNumber:rememberedGoalkeeperAutoRoster,
+    goalkeeperNumber:rememberedGoalkeeper, goalkeeperAutoRosterNumber:rememberedGoalkeeperAutoRoster, goalkeeperTracking:emptyGoalkeeperTracking(),
     rosterNumbers:[...rememberedRoster], playerTracking:emptyPlayerTracking(), jerseyColor:rememberedJerseyColor, halftimeStartEpoch:null, halftimeEndEpoch:null, halftimeDuration:0,
     longDurationAckStartEpoch:null,
     regulationPulseAckToken:''
@@ -35587,6 +35703,7 @@ function resetPreMatchSetup(){
   state.venue='';
   state.goalkeeperNumber='';
   state.goalkeeperAutoRosterNumber='';
+  state.goalkeeperTracking=emptyGoalkeeperTracking();
   state.rosterNumbers=[];
   state.playerTracking=emptyPlayerTracking();
   state.jerseyColor='default';
@@ -36461,6 +36578,10 @@ function reportLines(){
   if(roster.length){
     metaCards.push({label:'本場球員',icon:'👕',iconType:'jersey',value:roster.map(n=>'#'+n).join(' '),full:true,summaryCard:true});
   }
+  const officialKeepers=officialGoalkeeperNumbers();
+  if(officialKeepers.length){
+    metaCards.push({label:'正式守門員',icon:'🧤',value:officialKeepers.map(n=>'#'+n).join(' '),full:true,summaryCard:true});
+  }
   lines.push({type:'metaGrid',cells:metaCards});
   lines.push({type:'eventStats',items:reportEventStatsData()});
 
@@ -36783,7 +36904,15 @@ function reportCanvasLayout(lines,ctx){
         const height=Math.max(...cells.map(c=>c.length))*32+14;
         b.rows.push({cells,height});b.height+=height;
       }
-    }else if(line.type==='timelineHeading') b.height=76;
+    }else if(line.type==='timelineHeading'){
+      // v6.209：圖例與標題同列，保留 64px 安全間距；極端長標題才回退雙列。
+      ctx.font='800 30px -apple-system, BlinkMacSystemFont, sans-serif';
+      const titleWidth=ctx.measureText(line.text).width;
+      ctx.font='700 23px -apple-system, BlinkMacSystemFont, sans-serif';
+      const legendWidth=ctx.measureText('我方').width+ctx.measureText('對手').width+19*2+34;
+      b.legendWrapped=titleWidth+legendWidth+64>content-16;
+      b.height=b.legendWrapped?76:52;
+    }
     else if(line.type==='timelinePhase') b.height=46;
     else if(line.type==='section') b.height=52;
     else if(line.type==='timelineEvent'){
@@ -37030,8 +37159,25 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       });
     }else if(b.type==='timelineHeading'){
       text(b.text,pad+8,y+8,30,'#102D50',800);
-      ctx.fillStyle='#D63E7B';ctx.beginPath();ctx.arc(pad+16,y+57,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+44,23,'#D63E7B',700);
-      ctx.fillStyle='#087EB5';ctx.beginPath();ctx.arc(pad+120,y+57,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+44,23,'#087EB5',700);
+      if(b.legendWrapped){
+        // 寬度不足時維持原本第二列，避免壓到標題。
+        ctx.fillStyle='#D63E7B';ctx.beginPath();ctx.arc(pad+16,y+57,6,0,Math.PI*2);ctx.fill();text('我方',pad+30,y+44,23,'#D63E7B',700);
+        ctx.fillStyle='#087EB5';ctx.beginPath();ctx.arc(pad+120,y+57,6,0,Math.PI*2);ctx.fill();text('對手',pad+134,y+44,23,'#087EB5',700);
+      }else{
+        // v6.209：依字寬右對齊，標題與圖例共用同一條中心線，保留自然空白。
+        ctx.font=font(23,700);
+        const ourWidth=ctx.measureText('我方').width;
+        const oppWidth=ctx.measureText('對手').width;
+        const right=W-pad-10;
+        const oppTextX=right-oppWidth;
+        const oppDotX=oppTextX-19;
+        const ourTextX=oppDotX-34-ourWidth;
+        const ourDotX=ourTextX-19;
+        ctx.fillStyle='#D63E7B';ctx.beginPath();ctx.arc(ourDotX,y+25,6,0,Math.PI*2);ctx.fill();
+        text('我方',ourTextX,y+12,23,'#D63E7B',700);
+        ctx.fillStyle='#087EB5';ctx.beginPath();ctx.arc(oppDotX,y+25,6,0,Math.PI*2);ctx.fill();
+        text('對手',oppTextX,y+12,23,'#087EB5',700);
+      }
     }else if(b.type==='timelineDualRow'){
       // v6.100：上半場在左、下半場在右；延長賽依時間順序成對排列。
       // 所有座標僅影響圖片 Canvas，不改畫面摘要或事件操作。
@@ -38607,37 +38753,109 @@ function youtubeChapterEventText(m){
   const assist=m.event==='GOAL' && !m.own_goal && m.assist_number?` 助攻 背號${m.assist_number}`:'';
   return `${emoji(m.event)} ${side}${label}${num}${assist}`.trim();
 }
+/* v6.210：影片檔名使用中文欄位與底線；不帶比分，避免修正事件後改名。 */
+function youtubeChapterFileName(period){
+  const start=matchStartEpoch() || Date.now();
+  const day=fmtDateOnly(start).replaceAll('/','');
+  const safePart=value=>String(value||'').trim()
+    .replace(/[\\/:*?"<>|\x00-\x1f]/g,'-').replace(/\s+/g,' ').replace(/[. ]+$/g,'');
+  const teams=`${String(state.ourTeam||'').trim()||'我方'}vs${String(state.oppTeam||'').trim()||'對手'}`;
+  return [day,state.competition,state.competitionStage,teams,periodLabel(period)]
+    .map(safePart).filter(Boolean).join('_')+'.mp4';
+}
+/* 先使用已封存半場比分，進行中則依目前段落起始比分計算。 */
+function youtubeChapterPeriodScore(period){
+  const saved=periodSummaryInfo(period);
+  if(saved) return saved.score;
+  if(Number(state.currentPeriod)===Number(period) && state.started){
+    return `${Math.max(0,(Number(state.ourScore)||0)-(Number(state.periodStartOurScore)||0))}:${Math.max(0,(Number(state.oppScore)||0)-(Number(state.periodStartOppScore)||0))}`;
+  }
+  let our=0,opp=0;
+  (state.markers||[]).forEach(m=>{
+    if(m?.event!=='GOAL'||(Number(m.period)||1)!==Number(period)) return;
+    // m.team 在烏龍球事件同樣代表實際得分方；不以犯規方計算。
+    if(m.team==='OUR')our++;
+    else if(m.team==='OPP')opp++;
+  });
+  return `${our}:${opp}`;
+}
+function youtubeChapterPeriodMeta(period,lastPeriod){
+  const phase=periodLabel(period);
+  const our=String(state.ourTeam||'').trim()||'我方';
+  const opp=String(state.oppTeam||'').trim()||'對手';
+  const score=youtubeChapterPeriodScore(period);
+  const ongoing=!state.finished && Number(state.currentPeriod)===Number(period) && !periodSummaryInfo(period);
+  const scoreLabel=phase==='全場'?(ongoing?'目前比分':'全場比分')
+    :(phase.includes('半場')?(ongoing?'目前本半場比分':'本半場比分'):(ongoing?'目前本段比分':'本段比分'));
+  const finalized=state.finished && Number(lastPeriod)===Number(period);
+  const dateText=[matchDateLabel(matchStartEpoch(),matchEndEpoch()),formatDayMatchLabel(state.dayMatchNumber)].filter(Boolean).join('・');
+  const competition=[String(state.competition||'').trim(),String(state.competitionStage||'').trim()].filter(Boolean).join('・');
+  const venue=String(state.venue||'').trim();
+  const full=[dateText,competition,`${our} vs ${opp}`,venue,phase,`${scoreLabel} ${score}`];
+  if(finalized && phase!=='全場') full.push(`全場比分 ${state.ourScore}:${state.oppScore}`);
+  if(finalized && state.penalty?.completed) full.push(`PK ${penaltyGoals('our')}:${penaltyGoals('opp')}`);
+  // 正規賽尚未結束時只呈現本段比分，不提前宣稱全場已結束。
+  return {
+    full:full.filter(Boolean).join('｜'),
+    short:`${our} vs ${opp}｜${scoreLabel.replace('比分','')} ${score}`
+  };
+}
+/* Safari 無 Clipboard API 時嘗試傳統複製；仍失敗才讓使用者長按選取全文。 */
+async function youtubeChapterCopyValue(value,status,fallbackHost,successText){
+  if(!value){status.textContent='目前沒有可複製的內容。';return;}
+  fallbackHost.querySelectorAll('.youtubeChapterFallback').forEach(el=>el.remove());
+  try{
+    if(!navigator.clipboard?.writeText)throw new Error('Clipboard API unavailable');
+    await navigator.clipboard.writeText(value);
+    status.textContent=successText;
+    return;
+  }catch(e){}
+  const textarea=document.createElement('textarea');
+  textarea.value=value;textarea.readOnly=true;textarea.className='youtubeChapterFallback';
+  textarea.setAttribute('aria-label','請長按複製內容');
+  fallbackHost.appendChild(textarea);textarea.focus();textarea.select();
+  let copied=false;
+  try{copied=!!document.execCommand('copy');}catch(e){}
+  if(copied){status.textContent=successText;textarea.remove();}
+  else{status.textContent='無法自動複製，已選取全文；請長按下方文字複製。';}
+}
 function youtubeChapterSetup(){
   const groups=byId('youtubeChapterGroups');
   if(!groups)return;
   groups.textContent='';
   const phases=[...new Set(state.markers.filter(m=>m && m.event && Number.isFinite(Number(m.seconds))).map(m=>Number(m.period)||1))].sort((a,b)=>a-b);
+  const lastPeriod=phases[phases.length-1];
   phases.forEach(period=>{
+    const phase=periodLabel(period);
     const section=document.createElement('section');section.className='youtubeChapterGroup';
     const headingRow=document.createElement('div');headingRow.className='youtubeChapterGroupHeading';
-    const heading=document.createElement('div');heading.className='youtubeChapterGroupTitle';heading.textContent=`${periodLabel(period)}｜事件時間軸`;
+    const heading=document.createElement('div');heading.className='youtubeChapterGroupTitle';heading.textContent=`${phase}｜事件時間軸`;
     const count=document.createElement('span');count.className='youtubeChapterGroupCount';
     headingRow.append(heading,count);
+    const file=document.createElement('div');file.className='youtubeChapterFile';
+    const fileHead=document.createElement('div');fileHead.className='youtubeChapterFileHead';
+    const fileTitle=document.createElement('span');fileTitle.className='youtubeChapterFileTitle';fileTitle.textContent=`🎬 ${phase}影片檔名`;
+    const fileCopy=document.createElement('button');fileCopy.className='youtubeChapterFileCopy';fileCopy.type='button';fileCopy.textContent='複製';fileCopy.setAttribute('aria-label',`複製${phase}影片檔名`);
+    fileHead.append(fileTitle,fileCopy);
+    const fileValue=document.createElement('div');fileValue.className='youtubeChapterFilename';
+    const filename=youtubeChapterFileName(period);
+    fileValue.textContent=filename;file.append(fileHead,fileValue);
+    const overview=document.createElement('div');overview.className='youtubeChapterOverview';
+    const meta=youtubeChapterPeriodMeta(period,lastPeriod);overview.textContent=meta.short;
     const output=document.createElement('div');output.className='youtubeChapterOutput';
-    output.setAttribute('aria-label',`${periodLabel(period)} YouTube 時間軸文字`);
-    const copy=document.createElement('button');copy.className='youtubeChapterCopy';copy.type='button';copy.textContent=`複製${periodLabel(period)}時間軸`;
+    output.setAttribute('aria-label',`${phase} YouTube 時間軸文字`);
+    const copy=document.createElement('button');copy.className='youtubeChapterCopy';copy.type='button';copy.textContent=`複製${phase}時間軸`;
     const status=document.createElement('p');status.className='youtubeChapterHint';status.setAttribute('role','status');
     const timeline=state.markers.filter(m=>m && m.event && (Number(m.period)||1)===period && Number.isFinite(Number(m.seconds)))
       .map(m=>({seconds:Math.max(0,wholeSecondMarkerSeconds(m.seconds)-10),text:youtubeChapterEventText(m)}))
       .sort((a,b)=>a.seconds-b.seconds);
     const content=timeline.map(e=>`${youtubeChapterTime(e.seconds)} ${e.text}`).join('\n');
+    const fullContent=[meta.full,content].filter(Boolean).join('\n\n');
     count.textContent=`${timeline.length} 筆事件`;
     output.textContent=content;
-    copy.addEventListener('click',async()=>{
-      if(!content){status.textContent='目前沒有可複製的事件。';return;}
-      try{await navigator.clipboard.writeText(content);status.textContent='已複製時間軸文字。';}
-      catch(e){
-        const selection=window.getSelection(),range=document.createRange();range.selectNodeContents(output);
-        selection.removeAllRanges();selection.addRange(range);
-        status.textContent='無法自動複製，已選取文字，請長按複製。';
-      }
-    });
-    section.append(headingRow,output,copy,status);groups.append(section);
+    fileCopy.addEventListener('click',()=>youtubeChapterCopyValue(filename,status,section,'已複製影片檔名。'));
+    copy.addEventListener('click',()=>youtubeChapterCopyValue(fullContent,status,section,'已複製完整時間軸文字。'));
+    section.append(headingRow,file,overview,output,copy,status);groups.append(section);
   });
   byId('youtubeChapterStatus').textContent=phases.length?'':'目前沒有可輸出的事件。';
 }
