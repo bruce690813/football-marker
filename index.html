@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="足球場邊記錄器">
 
 <meta name="theme-color" content="#0b1220">
-<title>足球場邊記錄器 v6.203</title>
+<title>足球場邊記錄器 v6.207</title>
 <!-- v5.32：在解析主畫面之前啟用載入保護，避免先繪出賽前 0:0 與未收起的按鈕。 -->
 <style id="appBootStyles">
 html.appBooting{background:#0b1220}
@@ -27996,7 +27996,7 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
   <div class="top titleBlock">
     <div class="titleBrand">
       <h1>足球場邊記錄器</h1>
-      <span class="headerVersion">v6.203</span>
+      <span class="headerVersion">v6.207</span>
     </div>
     <span class="headerCenterBall" aria-hidden="true">⚽</span>
     <div class="versionInfo">
@@ -28008,9 +28008,13 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
 
   <div class="card matchCard idleState" id="matchCard">
     <div class="matchMetaRow">
-      <div class="preMetaField">
+      <div class="preMetaField competitionMetaField">
         <span class="preMetaIcon preCompetitionIcon" aria-hidden="true">🏆</span>
-        <input id="competition" type="text" inputmode="text" lang="zh-Hant" placeholder="比賽賽事" maxlength="40" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="比賽賽事">
+        <div class="venueInputWrap">
+          <input id="competition" type="text" inputmode="text" lang="zh-Hant" placeholder="比賽賽事" maxlength="40" enterkeyhint="next" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="比賽賽事，可手動輸入或從最近使用賽事選擇">
+          <button id="competitionDropdownBtn" class="venueDropdownBtn" type="button" aria-label="選擇最近使用賽事" aria-expanded="false" aria-controls="competitionMenu" onclick="toggleCompetitionMenu(event)" onmousedown="event.preventDefault()">▾</button>
+        </div>
+        <div id="competitionMenu" class="venueMenu" role="menu" aria-label="最近使用賽事"></div>
       </div>
       <div class="preMetaField stageMetaField">
         <span class="preMetaIcon preStageIcon" aria-hidden="true">☷</span>
@@ -29218,10 +29222,13 @@ body.matchStatePre .matchCard > #playerTrackingStrip{
 #reportModal #reportStatGoal{color:#ffd95e}
 #reportModal .reportEventStatsCell small{font-size:10px;color:#a8bfd4}
 #reportModal .reportScoreRow{position:relative}
-/* v6.203：勝方章改以比分中心為基準定位，避免長隊名時與隊名過近。 */
-#reportModal .reportWinnerStamp{position:absolute;bottom:1px;width:31px;height:31px;display:none;align-items:center;justify-content:center;border:2px solid #f43f53;background:#fff4f3;color:#c61e37;font-size:16px;font-weight:950;border-radius:50%;z-index:2;pointer-events:none;transform:translateX(-50%)}
-#reportModal .reportWinnerStamp.our{left:calc(50% - 118px)}
-#reportModal .reportWinnerStamp.opp{left:calc(50% + 118px)}
+/* v6.204：長隊名時，勝方章要避開隊名字樣。
+   1. 勝方章再往比分中央靠近一些。
+   2. 勝方隊名額外保留下方空間，避免被圓章蓋住。 */
+#reportModal .reportWinnerStamp{position:absolute;bottom:6px;width:31px;height:31px;display:none;align-items:center;justify-content:center;border:2px solid #f43f53;background:#fff4f3;color:#c61e37;font-size:16px;font-weight:950;border-radius:50%;z-index:2;pointer-events:none;transform:translateX(-50%)}
+#reportModal .reportWinnerStamp.our{left:calc(50% - 94px)}
+#reportModal .reportWinnerStamp.opp{left:calc(50% + 94px)}
+#reportModal .reportTeam.reportWinnerReserve{padding-bottom:28px}
 #reportModal .reportWinnerStamp.show{display:flex}
 @media(max-width:390px){#reportModal .reportEventStatsCell>span{font-size:11px}#reportModal .reportEventStatsCell strong{font-size:21px}}
 </style>
@@ -29701,6 +29708,7 @@ resolveInitialMatchIdentity();
 const LAST_OUR_TEAM_KEY='football_marker_last_our_team';
 const LAST_VENUE_KEY='football_marker_last_venue';
 const RECENT_VENUES_KEY='football_marker_recent_venues_v1';
+const RECENT_COMPETITIONS_KEY='football_marker_recent_competitions_v1'; // v6.206：獨立於各場比賽的最近使用賽事
 let guidedSetupStep=null; // 'our' -> 'opp' -> 'competition' -> 'venue' during pre-match guided input
 let nextMatchOpponentOnly=false; // v5.159：沿用上一場資料時，只需重新輸入對手
 const LEARNED_NUMBERS_KEY='football_marker_learned_numbers_v1'; // 舊版相容保留，不再直接驅動快捷背號
@@ -30270,6 +30278,135 @@ function deleteRecentVenue(value){
   renderVenueMenu();
 }
 
+// v6.206：賽事名稱最近使用紀錄，規則比照場地，但使用賽事本身的文字驗證。
+// 只在第一次開始比賽時新增／更新排序；不因輸入、選取、刪除或重新整理改動歷史。
+function isEligibleCompetitionValue(value){
+  const name=String(value||'').trim();
+  return Boolean(name && name.length<=40 && !/[<>\r\n]/.test(name) && !containsBopomofo(name));
+}
+function getRecentCompetitions(){
+  let items=[];
+  try{
+    const raw=JSON.parse(localStorage.getItem(RECENT_COMPETITIONS_KEY)||'[]');
+    if(Array.isArray(raw)) items=raw;
+  }catch(e){}
+  return [...new Set(items.filter(v=>typeof v==='string').map(v=>v.trim()).filter(isEligibleCompetitionValue))].slice(0,8);
+}
+function rememberRecentCompetition(value){
+  const name=String(value||'').trim();
+  if(!isEligibleCompetitionValue(name)) return false;
+  const items=getRecentCompetitions().filter(v=>v!==name);
+  items.unshift(name);
+  localStorage.setItem(RECENT_COMPETITIONS_KEY,JSON.stringify(items.slice(0,8)));
+  return true;
+}
+function deleteRecentCompetition(value){
+  const name=String(value||'').trim();
+  if(!name) return;
+  localStorage.setItem(RECENT_COMPETITIONS_KEY,JSON.stringify(getRecentCompetitions().filter(v=>v!==name)));
+  renderCompetitionMenu();
+}
+function renderCompetitionMenu(){
+  const menu=byId('competitionMenu');
+  if(!menu) return;
+  const items=getRecentCompetitions();
+  let html='<div class="venueMenuTitle">最近使用賽事</div>';
+  if(items.length){
+    html+=items.map((name,index)=>`<div class="venueMenuRow">
+      <button class="venueMenuItem venueMenuSelect" type="button" role="menuitem" data-competition-index="${index}">
+        <span class="venueName">${escapeHtml(name)}</span><span class="venueRecentIcon">最近</span>
+      </button>
+      <button class="venueDeleteBtn" type="button" data-delete-competition-index="${index}" aria-label="刪除 ${escapeHtml(name)}">×</button>
+    </div>`).join('');
+  }else{
+    html+='<div class="venueMenuEmpty">尚無最近使用賽事<br><span>開始比賽後會自動加入</span></div>';
+  }
+  html+='<button class="venueMenuItem venueMenuManual" type="button" data-competition-manual="1"><span class="uiLineIcon uiEditIcon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.75 19.25h3.4L18.6 8.8a2.35 2.35 0 0 0 0-3.32l-.08-.08a2.35 2.35 0 0 0-3.32 0L4.75 15.85z"/><path d="m13.85 6.75 3.4 3.4"/><path d="M4.75 19.25 8.3 18.4 5.6 15.7z"/></svg></span><span>手動輸入其他賽事</span></button>';
+  menu.innerHTML=html;
+  menu.querySelectorAll('[data-competition-index]').forEach(btn=>btn.addEventListener('click',()=>{
+    chooseRecentCompetition(items[Number(btn.getAttribute('data-competition-index'))]||'');
+  }));
+  menu.querySelectorAll('[data-delete-competition-index]').forEach(btn=>btn.addEventListener('click',e=>{
+    e.preventDefault();e.stopPropagation();
+    const name=items[Number(btn.getAttribute('data-delete-competition-index'))]||'';
+    if(name) deleteRecentCompetition(name);
+  }));
+  menu.querySelector('[data-competition-manual="1"]')?.addEventListener('click',()=>{
+    closeCompetitionMenu();
+    const input=byId('competition');
+    if(!input) return;
+    input.focus();
+    try{input.setSelectionRange(input.value.length,input.value.length)}catch(e){}
+  });
+}
+function ensureCompetitionMenuPortal(){
+  const menu=byId('competitionMenu');
+  if(!menu) return null;
+  if(menu.parentElement!==document.body) document.body.appendChild(menu);
+  menu.classList.add('venueMenuPortal');
+  return menu;
+}
+function positionCompetitionMenu(){
+  const menu=byId('competitionMenu');
+  const field=document.querySelector('.competitionMetaField');
+  if(!menu||!field||!menu.classList.contains('open')) return;
+  const rect=field.getBoundingClientRect();
+  const vv=window.visualViewport;
+  const vw=vv?.width||window.innerWidth||document.documentElement.clientWidth;
+  const vh=vv?.height||window.innerHeight||document.documentElement.clientHeight;
+  const ox=vv?.offsetLeft||0, oy=vv?.offsetTop||0, gap=10;
+  const width=Math.min(292,Math.max(220,vw-gap*2));
+  menu.style.width=`${Math.round(width)}px`;
+  const left=Math.max(ox+gap,Math.min(rect.right-width,ox+vw-width-gap));
+  const topEdge=oy+gap, bottomEdge=oy+vh-gap;
+  const below=Math.max(0,bottomEdge-(rect.bottom+6));
+  const above=Math.max(0,(rect.top-6)-topEdge);
+  const desired=Math.min(menu.scrollHeight||220,360);
+  let top,available;
+  if(below>=Math.min(desired,180)||below>=above){top=rect.bottom+6;available=below}
+  else{available=above;top=rect.top-6-Math.min(desired,available)}
+  const maxH=Math.max(120,Math.min(360,available));
+  menu.style.maxHeight=`${Math.round(maxH)}px`;
+  top=Math.max(topEdge,Math.min(top,bottomEdge-Math.min(desired,maxH)));
+  menu.style.left=`${Math.round(left)}px`;
+  menu.style.top=`${Math.round(top)}px`;
+}
+function openCompetitionMenu(){
+  if(state.started||state.finished) return;
+  closeVenueMenu();closeCompetitionStageMenu();
+  const btn=byId('competitionDropdownBtn');
+  const menu=ensureCompetitionMenuPortal();
+  if(!btn||!menu) return;
+  renderCompetitionMenu();
+  menu.classList.add('open');btn.classList.add('open');btn.setAttribute('aria-expanded','true');
+  requestAnimationFrame(()=>{positionCompetitionMenu();requestAnimationFrame(positionCompetitionMenu)});
+}
+function closeCompetitionMenu(){
+  const menu=byId('competitionMenu'),btn=byId('competitionDropdownBtn');
+  menu?.classList.remove('open');
+  if(menu){menu.style.left='';menu.style.top='';menu.style.width='';menu.style.maxHeight=''}
+  btn?.classList.remove('open');btn?.setAttribute('aria-expanded','false');
+}
+function toggleCompetitionMenu(e){
+  e?.preventDefault();e?.stopPropagation();
+  if(byId('competitionMenu')?.classList.contains('open')) closeCompetitionMenu();
+  else openCompetitionMenu();
+}
+function chooseRecentCompetition(value){
+  const name=String(value||'').trim();
+  if(!isEligibleCompetitionValue(name)) return;
+  const input=byId('competition');
+  if(input) input.value=name;
+  state.competition=name;
+  saveState();closeCompetitionMenu();
+  input?.classList.remove('guidedInput');
+  updatePreMetaInputFit(input);
+  render();
+  // 階段／輪次留在原狀，只在原本的賽前輸入引導中移動焦點。
+  if(isPreMatchGuidedSetup() && guidedSetupStep==='competition') advanceGuidedSetup('competition');
+  else input?.blur();
+}
+
 const COMPETITION_STAGE_GROUPS=[
   {key:'league',title:'聯賽常用輪次',items:['第1輪','第2輪','第3輪','第4輪','第5輪','第6輪','第7輪','第8輪','第9輪','第10輪','第11輪','第12輪']},
   {key:'cup',title:'盃賽',items:['小組賽','淘汰賽','32強賽','16強賽','8強賽','4強賽','冠軍賽','季軍賽']}
@@ -30350,7 +30487,7 @@ function positionCompetitionStageMenu(){
 }
 function openCompetitionStageMenu(){
   if(state.started||state.finished) return;
-  closeVenueMenu();
+  closeVenueMenu();closeCompetitionMenu();
   const btn=byId('competitionStageDropdownBtn');
   const menu=ensureCompetitionStageMenuPortal();
   if(!btn||!menu) return;
@@ -30493,7 +30630,7 @@ function ensureVenueMenuPortal(){
 
 function openVenueMenu(){
   if(state.started || state.finished) return;
-  closeCompetitionStageMenu();
+  closeCompetitionStageMenu();closeCompetitionMenu();
   const btn=byId('venueDropdownBtn');
   if(!btn) return;
 
@@ -32777,6 +32914,7 @@ function startMatch(){
   state.ourTeam=ourName;
   state.oppTeam=byId('oppTeam').value.trim();
   state.venue=byId('venue').value.trim();
+  state.competition=byId('competition').value.trim();
   state.competitionStage=byId('competitionStage')?.value.trim()||'';
 
   // 只有真的有輸入名稱才更新「最近我方隊名」。
@@ -32790,6 +32928,7 @@ function startMatch(){
   if(!state.awaitingNextPeriod){
     rememberVenueIfEligible(state.venue);
     rememberRecentVenue(state.venue);
+    rememberRecentCompetition(state.competition); // v6.206：第一段正式開賽才更新賽事歷史
   }
 
   // 同一次「開始」操作共用同一個整秒時間，避免剛好跨秒時
@@ -36207,6 +36346,11 @@ function buildReportDOM(){
   byId('reportPenalty').innerHTML=state.penalty ? penaltySummaryHTML() : '';
   const reportScoreRow=byId('reportScoreRow');
   if(reportScoreRow) reportScoreRow.classList.toggle('finished', !!state.finished);
+  const winSide=reportWinningSide();
+  const reportOurTeamEl=byId('reportOurTeam');
+  const reportOppTeamEl=byId('reportOppTeam');
+  if(reportOurTeamEl) reportOurTeamEl.classList.toggle('reportWinnerReserve', winSide==='OUR');
+  if(reportOppTeamEl) reportOppTeamEl.classList.toggle('reportWinnerReserve', winSide==='OPP');
 
   const badge=byId('reportStatusBadge');
   badge.className='reportStatusBadge ' + (state.finished ? 'finished' : (state.started ? 'running' : 'idle'));
@@ -36595,13 +36739,16 @@ function reportCanvasLayout(lines,ctx){
     if(line.type==='title') b.height=62;
     else if(line.type==='score') b.height=154;
     else if(line.type==='metaGrid'){
-      b.rows=[];b.height=8;
+      // v6.207：四項賽事資訊共用一張卡片，按文字實際行數量測高度。
+      // 上下各保留 6px 內距與區塊下方 2px；取消原本四張卡片間的 8px 間隔。
+      b.rows=[];b.height=16;
       for(const current of line.cells){
         if(current?.summaryCard){
-          const rows=reportWrapText(ctx,current.value,content-92,mainFont);
-          const height=Math.max(58,rows.length*34+20);
+          const metaFont=current.label==='比賽賽事／階段'?'850 29px -apple-system, BlinkMacSystemFont, sans-serif':mainFont;
+          const rows=reportWrapText(ctx,current.value,content-92,metaFont);
+          const height=Math.max(52,rows.length*34+18);
           b.rows.push({summaryCard:true,icon:current.icon,iconType:current.iconType,label:current.label,rows,height});
-          b.height+=height+8;
+          b.height+=height;
         }
       }
     }else if(line.type==='eventStats'){
@@ -36711,12 +36858,13 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       centered(b.score,W/2,y+76,72,'#FFFFFF');
       const win=reportWinningSide();
       if(win){
-        // v6.203：勝方章貼近比分區中央，與較長隊名保留更穩定的安全距離。
-        const winnerOffsetX=120;
-        const sx=W/2+(win==='OUR'?-winnerOffsetX:winnerOffsetX), sy=y+88;
+        // v6.205：固定於中央比分牌上緣的獨立角章安全區；
+        // 與兩側隊名的最大文字寬度留 9px 以上，與下方大比分錯開。
+        // 不修改比分、隊名測量與原有 138px 比分牌高度。
+        const sx=W/2+(win==='OUR'?-128:128), sy=y+12;
         ctx.fillStyle='#FFF7F7';ctx.strokeStyle='#F43F53';ctx.lineWidth=4;
-        ctx.beginPath();ctx.arc(sx,sy,28,0,Math.PI*2);ctx.fill();ctx.stroke();
-        centered('勝',sx,sy,34,'#B51D36',950);
+        ctx.beginPath();ctx.arc(sx,sy,27,0,Math.PI*2);ctx.fill();ctx.stroke();
+        centered('勝',sx,sy,33,'#B51D36',950);
       }
 
     }else if(b.type==='eventStats'){
@@ -36762,16 +36910,36 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         ctx.restore();
       });
     }else if(b.type==='metaGrid'){
-      let rowY=y+2;
-      b.rows.forEach(row=>{
-        if(row.summaryCard){
-          ctx.fillStyle='#E8F1FB';roundRect(ctx,pad,rowY,content,row.height,10,true,false);
-          if(row.iconType==='jersey') drawReportJerseyIcon(ctx,pad+18,rowY+14,28);
-          else emojiText(row.icon,pad+18,rowY+14,28);
-          row.rows.forEach((value,j)=>text(value,pad+62,rowY+12+j*34,28,'#173250',700));
-          rowY+=row.height+8;
+      // v6.207：維持原本的賽事、日期、場地、名單順序，整合單卡片及細分隔線。
+      const cardY=y+2, cardHeight=b.height-4;
+      ctx.fillStyle='#F8FBFF';roundRect(ctx,pad,cardY,content,cardHeight,10,true,false);
+      ctx.save();
+      roundRect(ctx,pad,cardY,content,cardHeight,10,false,false);
+      ctx.clip();
+      let rowY=y+8;
+      b.rows.forEach((row,i)=>{
+        if(!row.summaryCard)return;
+        const competition=row.label==='比賽賽事／階段';
+        if(competition){
+          ctx.fillStyle='#DCEBFC';
+          ctx.fillRect(pad,cardY,content,rowY+row.height-cardY);
+          ctx.fillStyle='#2D74D2';
+          roundRect(ctx,pad+2,rowY+10,4,Math.max(12,row.height-20),2,true,false);
+        }
+        const iconY=rowY+(row.height-28)/2;
+        if(row.iconType==='jersey') drawReportJerseyIcon(ctx,pad+18,iconY,28);
+        else emojiText(row.icon,pad+18,iconY,28);
+        const textY=rowY+(row.height-row.rows.length*34)/2;
+        row.rows.forEach((value,j)=>text(value,pad+62,textY+j*34,competition?29:28,competition?'#102D50':'#354E68',competition?850:700));
+        rowY+=row.height;
+        if(i<b.rows.length-1){
+          ctx.strokeStyle='#D8E5F1';ctx.lineWidth=1;
+          ctx.beginPath();ctx.moveTo(pad+16,rowY+.5);ctx.lineTo(pad+content-16,rowY+.5);ctx.stroke();
         }
       });
+      ctx.restore();
+      ctx.strokeStyle='#D4E2F0';ctx.lineWidth=1;
+      roundRect(ctx,pad,cardY,content,cardHeight,10,false,true);
     }else if(b.type==='compactTime'){
       const padX=14;
       const gap=12;
@@ -36852,8 +37020,12 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         const cellW=(content-24)/3;
         row.cells.forEach((cell,i)=>{
           const x=pad+i*(cellW+12);
-          ctx.fillStyle='#EDF4FC';roundRect(ctx,x,rowY,cellW,row.height-6,8,true,false);
-          cell.forEach((value,j)=>text(value,x+12,rowY+7+j*32,24,'#172F4E',700));
+          // v6.205：三欄卡片等高、等距；文字依實際換行數垂直置中。
+          const cardH=row.height-6;
+          ctx.fillStyle='#EDF4FC';roundRect(ctx,x,rowY,cellW,cardH,8,true,false);
+          ctx.strokeStyle='#D6E5F2';ctx.lineWidth=1;roundRect(ctx,x,rowY,cellW,cardH,8,false,true);
+          const textTop=rowY+Math.max(2,(cardH-cell.length*32)/2);
+          cell.forEach((value,j)=>text(value,x+12,textTop+j*32,24,'#172F4E',750));
         });rowY+=row.height;
       });
     }else if(b.type==='timelineHeading'){
@@ -36868,7 +37040,7 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         const tone=lightPeriodTonePalette(column.phase.text,column.phase.period);
         const isHalf=normalizedPeriodTone(column.phase.text,column.phase.period)!=='default';
         const headY=y+3;
-        ctx.fillStyle='#E8F1FB';roundRect(ctx,x,headY,b.colWidth,42,9,true,false);
+        ctx.fillStyle='#DFECF9';roundRect(ctx,x,headY,b.colWidth,42,9,true,false);
         if(isHalf){ctx.fillStyle=tone.stroke;roundRect(ctx,x+9,headY+8,4,26,2,true,false);}
         const titleX=x+(isHalf?21:12);
         text(column.phase.text,titleX,headY+9,22,isHalf?tone.title:'#153452',850);
@@ -36890,7 +37062,8 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
         column.events.forEach((ev,j)=>{
           const goal=ev.event==='GOAL';
           const dotX=x+80, actorX=x+99;
-          if(goal){ctx.fillStyle='#E8F1FB';roundRect(ctx,x,rowY,b.colWidth,ev.height-4,7,true,false);}
+          // v6.205：保持事件高度，只用微量行色差引導長時間軸閱讀。
+          if(goal || j%2===1){ctx.fillStyle=goal?'#E5F0FC':'#F2F7FC';roundRect(ctx,x,rowY,b.colWidth,ev.height-4,7,true,false);}
           if(j<column.events.length-1){
             ctx.strokeStyle='#B9CDDE';ctx.lineWidth=2;
             ctx.beginPath();ctx.moveTo(dotX,rowY+23);ctx.lineTo(dotX,rowY+ev.height+23);ctx.stroke();
@@ -36925,8 +37098,15 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
     }else if(b.type==='timelinePhase'){
       const tone=lightPeriodTonePalette(b.text,b.period);
       const isHalf=normalizedPeriodTone(b.text,b.period)!=='default';
-      if(isHalf){ctx.fillStyle=tone.stroke;roundRect(ctx,pad+8,y+8,6,30,2,true,false);}
-      text(b.text,pad+(isHalf?24:8),y+10,25,isHalf?tone.title:'#5B7087',800);
+      // v6.205：標題採深海藍小標籤，不增加原 46px 高度。
+      if(isHalf){
+        ctx.font=font(24,850);
+        const labelW=Math.min(content*.45,ctx.measureText(b.text).width+40);
+        ctx.fillStyle='#164E87';roundRect(ctx,pad+5,y+4,labelW,36,9,true,false);
+        text(b.text,pad+20,y+9,24,'#FFFFFF',850);
+      }else{
+        text(b.text,pad+8,y+10,25,tone.title,800);
+      }
       // v6.105：單欄圖片的時間與比分亦採同列標籤＋數值。
       const metaItems=[];
       if(b.duration) metaItems.push(['本段時間',b.duration]);
@@ -36944,7 +37124,11 @@ function makeReportCanvas(lines=reportLines(),resolution=1){
       ctx.strokeStyle='#C2D4E4';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,y+42);ctx.lineTo(W-pad,y+42);ctx.stroke();
     }else if(b.type==='timelineEvent'){
       const nodeX=pad+172, actorX=pad+200, isGoal=b.event==='GOAL';
-      if(isGoal){ctx.fillStyle='#E8F2FB';roundRect(ctx,pad,y,content,b.height-4,8,true,false);}
+      // v6.205：奇偶交錯的淡色行，避免長紀錄變成難以追蹤的白色長條。
+      if(isGoal || (!isGoal && index%2===0)){
+        ctx.fillStyle=isGoal?'#E5F0FC':'#F2F7FC';
+        roundRect(ctx,pad,y,content,b.height-4,8,true,false);
+      }
       const next=blocks[index+1];
       if(next?.type==='timelineEvent'){
         ctx.strokeStyle='#B9CDDE';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(nodeX,y+24);ctx.lineTo(nodeX,y+b.height+24);ctx.stroke();
@@ -39382,6 +39566,9 @@ byId('competitionStage').addEventListener('blur', ()=>{
 });
 
 document.addEventListener('click',e=>{
+  const inCompetitionField=e.target.closest?.('.competitionMetaField');
+  const inCompetitionMenu=e.target.closest?.('#competitionMenu');
+  if(!inCompetitionField && !inCompetitionMenu) closeCompetitionMenu();
   const inField=e.target.closest?.('.venueMetaField');
   const inMenu=e.target.closest?.('#venueMenu');
   if(!inField && !inMenu) closeVenueMenu();
@@ -39391,24 +39578,28 @@ document.addEventListener('click',e=>{
 });
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ closeVenueMenu(); closeCompetitionStageMenu(); }
+  if(e.key==='Escape'){ closeVenueMenu(); closeCompetitionStageMenu(); closeCompetitionMenu(); }
 });
 
 window.addEventListener('resize',()=>{
+  if(byId('competitionMenu')?.classList.contains('open')) positionCompetitionMenu();
   if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
   if(byId('competitionStageMenu')?.classList.contains('open')) positionCompetitionStageMenu();
   updateTeamNameDisplays();
 },{passive:true});
 window.addEventListener('scroll',()=>{
+  if(byId('competitionMenu')?.classList.contains('open')) positionCompetitionMenu();
   if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
   if(byId('competitionStageMenu')?.classList.contains('open')) positionCompetitionStageMenu();
 },{passive:true});
 window.visualViewport?.addEventListener('resize',()=>{
+  if(byId('competitionMenu')?.classList.contains('open')) positionCompetitionMenu();
   if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
   if(byId('competitionStageMenu')?.classList.contains('open')) positionCompetitionStageMenu();
   updateTeamNameDisplays();
 },{passive:true});
 window.visualViewport?.addEventListener('scroll',()=>{
+  if(byId('competitionMenu')?.classList.contains('open')) positionCompetitionMenu();
   if(byId('venueMenu')?.classList.contains('open')) positionVenueMenu();
 },{passive:true});
 
